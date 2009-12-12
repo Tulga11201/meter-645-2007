@@ -693,11 +693,5 @@ void Card_Set_Para_Notice()
   Set_Para_Modify(0x04000201); //随便设一个标识，通知其他任务参数修改
 }
 
-//非法卡插入处理
-INT8U UpdataUnlawCardInsetEvent()
-{
-  
-}
-
 //void Prepaid_Card_Para_Set(INT8U *pSrc, INT
 #undef PREPAID_C

@@ -647,8 +647,8 @@ void PwrCtrl_ExtDevice_HigSpeed(void)
 ********************************************************************************/
 void PwrCtrl_ExtDevice_HigSpeed(void)
 {
-  LARGE_TOOGLE_OFF_SET;   //将常闭的关闭 
-  LARGE_TOOGLE_ON_CLR;
+  //LARGE_TOOGLE_OFF_SET;   //将常闭的关闭 
+  //LARGE_TOOGLE_ON_CLR;
   
   CLOSE_MEASU_PWR;           //计量芯片电源关闭
   Init_Pulse_Port(0);       

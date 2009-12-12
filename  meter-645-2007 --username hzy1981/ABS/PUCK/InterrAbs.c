@@ -43,10 +43,10 @@ void Inter_CF1(void)
     {
       Pulse_Num_Temp.Ac_Pulse_Num++;  
       if(Pulse_Num_Temp.Ac_Pulse_Num>=Sys_Pulse_Var.Ac_Pulse_Freq)
-      {
-        Pulse_Num_Temp.Ac_Pulse_Num-=Sys_Pulse_Var.Ac_Pulse_Freq;
+      {        
         Send_Acpower_Pulse();
-        Prepaid_Power_Ctrl_Pulse_Hook();
+        Pulse_Num_Temp.Ac_Pulse_Num-=Sys_Pulse_Var.Ac_Pulse_Freq;
+        //Prepaid_Power_Ctrl_Pulse_Hook();
       }
     }
   }
@@ -69,8 +69,8 @@ void Inter_CF2(void)
       Pulse_Num_Temp.Rea_Pulse_Num++;
       if(Pulse_Num_Temp.Rea_Pulse_Num>=Sys_Pulse_Var.Reac_Pulse_Freq)
       {   
-        Pulse_Num_Temp.Rea_Pulse_Num-=Sys_Pulse_Var.Reac_Pulse_Freq;
         Send_Reacpower_Pulse();
+        Pulse_Num_Temp.Rea_Pulse_Num-=Sys_Pulse_Var.Reac_Pulse_Freq;
       }
     }
   }

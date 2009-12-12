@@ -295,6 +295,8 @@ void Save_Event_PD_Data()
     mem_cpy((void *)&Event_Data.Prg_Key_Status, (void *)&Prg_Key_Status, sizeof(Prg_Key_Status),\
             (void *)&Event_Data.Prg_Key_Status, sizeof(Event_Data.Prg_Key_Status));
     
+    Event_Data.Relay_Status = Relay_Status.Switch_Status;
+    
     Event_Data.PD_Flag = 1;
     SET_STRUCT_SUM(Event_Data);
     
@@ -431,6 +433,7 @@ void PowerOn_Event_Proc()
     mem_cpy((void *)&Prg_Key_Status, (void *)&Event_Data.Prg_Key_Status, sizeof(Event_Data.Prg_Key_Status),\
             (void *)&Prg_Key_Status, sizeof(Prg_Key_Status));
     
+    Relay_Status.Switch_Status = Event_Data.Relay_Status;
     //设置掉电前时间为当前时间，用于处理掉电前事件
     Set_BCD_Array_Time((S_BCD_Time  *)&Event_Data.Time, (S_Event_Time *)&Cur_Time2, (S_Event_Time *)&Cur_Time2, sizeof(Cur_Time2));
 

@@ -128,6 +128,8 @@ typedef struct
     INT8U Temp12;
     
     S_BCD_Time Time;
+    
+    INT8U Relay_Status;
     //INT8U Temp13;
  
     INT8U CS[CS_BYTES];

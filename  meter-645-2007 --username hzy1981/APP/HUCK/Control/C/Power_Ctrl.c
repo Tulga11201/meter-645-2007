@@ -879,6 +879,16 @@ INT8U Get_Relay_Status()
     return SWITCH_ON;
 }
 
+void Set_Relay_Status(INT8U Status, INT8U Cause)
+{
+  DIS_PD_INT;
+  
+  Relay_Status.Switch_Status = Status;
+  Relay_Status.Switch_Cause = Cause;  
+
+  EN_PD_INT;
+}
+
 //#pragma optimize=none
 //跳闸直接控制
 void Switch_Ctrl(INT8U Switch_Flag, INT8U Cause)
@@ -918,8 +928,9 @@ void Switch_Ctrl(INT8U Switch_Flag, INT8U Cause)
       //Relay_Status.On_Delay = 0;
       if(Relay_Status.Off_Delay EQ 0) //如果设定延时为0，马上拉闸
       {       
-        Relay_Status.Switch_Status = SWITCH_OFF;
-        Relay_Status.Switch_Cause = Cause;
+        //Relay_Status.Switch_Status = SWITCH_OFF;
+        //Relay_Status.Switch_Cause = Cause;
+        Set_Relay_Status(SWITCH_OFF, Cause);
         Clr_Event_Instant(ID_EVENT_RELAY_ON); //合闸事件结束      
         Set_Event_Instant(ID_EVENT_RELAY_OFF);//拉闸事件发生  
       } 
@@ -930,8 +941,9 @@ void Switch_Ctrl(INT8U Switch_Flag, INT8U Cause)
     if(Get_Hand_Switch_On_Flag() != NEED_HAND_SWITCH_ON_FLAG) //已经手动合闸?
     {
       Relay_Status.Off_Delay = 0;
-      Relay_Status.Switch_Status = SWITCH_ON;
-      Relay_Status.Switch_Cause = Cause;
+      //Relay_Status.Switch_Status = SWITCH_ON;
+      //Relay_Status.Switch_Cause = Cause;
+      Set_Relay_Status(SWITCH_ON, Cause);
       Clr_Event_Instant(ID_EVENT_RELAY_OFF);//拉闸事件结束
       Set_Event_Instant(ID_EVENT_RELAY_ON); //合闸事件发生      
     }
@@ -949,8 +961,9 @@ void Switch_Ctrl(INT8U Switch_Flag, INT8U Cause)
         //Relay_Status.On_Delay = 0;
         if(Relay_Status.Off_Delay EQ 0) //如果设定延时为0，马上拉闸
         {       
-          Relay_Status.Switch_Status = SWITCH_OFF;
-          Relay_Status.Switch_Cause = Cause;
+          //Relay_Status.Switch_Status = SWITCH_OFF;
+          //Relay_Status.Switch_Cause = Cause;
+          Set_Relay_Status(SWITCH_OFF, Cause);
           Clr_Event_Instant(ID_EVENT_RELAY_ON); //合闸事件结束      
           Set_Event_Instant(ID_EVENT_RELAY_OFF);//拉闸事件发生  
         } 
@@ -973,8 +986,9 @@ void Switch_Ctrl(INT8U Switch_Flag, INT8U Cause)
       Relay_Status.Off_Delay--;
       if(Relay_Status.Off_Delay EQ 0)
       {
-        Relay_Status.Switch_Status = SWITCH_OFF;
-        Relay_Status.Switch_Cause = Cause;
+        //Relay_Status.Switch_Status = SWITCH_OFF;
+        //Relay_Status.Switch_Cause = Cause;
+        Set_Relay_Status(SWITCH_OFF, Cause);
         Clr_Event_Instant(ID_EVENT_RELAY_ON); //合闸事件结束      
         Set_Event_Instant(ID_EVENT_RELAY_OFF);//拉闸事件发生
         

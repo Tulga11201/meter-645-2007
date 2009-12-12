@@ -383,7 +383,7 @@ INT8U Dis_Meter_System_Err(void)
   
   if(Sys_Err_Info.ErrNum && Sys_Err_Info.LoopDis EQ 0)  //有错误且不是巡显才显示
   {
-    dispoffset=MODE_A_NUM+1;    //此显示是在第一屏插入的
+    dispoffset=-1;    //此显示是在第一屏插入的
     if(LOOP_SEC_TIMER_DIFF>=CYCLE)     //巡显错误代码和信息
     {  
       Flag=0;
@@ -401,6 +401,8 @@ INT8U Dis_Meter_System_Err(void)
       {
         Sys_Err_Info.DisIndex=0;
         Sys_Err_Info.LoopDis=1;
+        disproll();
+        START_LOOP_DIS;
         return 0;
       }      
 
@@ -473,7 +475,7 @@ void Dis_Meter_Loop(void)
      if(Light_Mode EQ LIGHT_ON_KEY && LIGHT_SEC_TIMER_DIFF>KEY_LIGHT_ON_TIME)
      {
 #if SYS_ERR_DIS_EN >0
-       Sys_Err_Info.LoopDis=0;
+       //Sys_Err_Info.LoopDis=0;
 #endif  
        //Light_Mode=LIGHT_ON_NONE;
        CLR_LIGHT_ON;     

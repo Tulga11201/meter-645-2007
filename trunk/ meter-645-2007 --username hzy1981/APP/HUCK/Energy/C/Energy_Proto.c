@@ -471,7 +471,7 @@ INT16U Get_Rate_Info_Data(PROTO_DI PDI, INT8U* pDst, INT8U* pDst_Start, INT16U D
   else if(PDI EQ 0x0E010007) //当前预付费方式,电量型为0，电费型为1
     *pDst = (PREPAID_MODE EQ ENERGY_MODE)?0:1;
   else if(PDI EQ 0x0E010008) //当前扣费方式,分时为0，阶梯为1
-    *pDst = (PREPAID_MONEY_MODE EQ 0)?0:1;
+    *pDst = (PREPAID_MONEY_MODE EQ PREPAID_RATE)?0:1;
   else if(PDI EQ 0x0E010009) //当前分时费率方案
     *pDst = (Cur_Rate_Info.Rate_Scheme EQ RATE_SCHEME0)?1:2;
   else if(PDI EQ 0x0E01000A) //当前分时电价

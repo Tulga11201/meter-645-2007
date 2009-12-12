@@ -405,6 +405,18 @@ void Check_Curr_NoEven(void)
   else
     tempmin=Get_Min_Num(Measu_InstantData_ToPub_PUCK.Curr.A,B_Curr,Measu_InstantData_ToPub_PUCK.Curr.C);
   
+  if(tempmax<=(Get_Start_Current()*UNIT_A*5))  //启动电流的5倍
+  {
+    Clr_Event_Instant(ID_EVENT_CURR_NO_EVEN);  //电流不平衡结束
+    if(Not_Even_Data_PUCK.Curr_Not_Even!=0)
+    {
+      DIS_PD_INT;  //关掉电中断
+      Not_Even_Data_PUCK.Curr_Not_Even=0;
+      SET_STRUCT_SUM(Not_Even_Data_PUCK);
+      EN_PD_INT; //开掉电中断      
+    }
+    return ;
+  }
   tempeven=((FP32S)Measu_InstantData_ToPub_PUCK.Curr.A+B_Curr+Measu_InstantData_ToPub_PUCK.Curr.C)/3.0;
   
   NoEvenRate=(tempmax-tempmin)/tempeven;
@@ -697,6 +709,12 @@ void Check_Cur_Very_Noeven(void)
     tempmin=Get_Min_Num(Measu_InstantData_ToPub_PUCK.Curr.A,Measu_InstantData_ToPub_PUCK.Curr.A,Measu_InstantData_ToPub_PUCK.Curr.C);
   else
     tempmin=Get_Min_Num(Measu_InstantData_ToPub_PUCK.Curr.A,B_Curr,Measu_InstantData_ToPub_PUCK.Curr.C);
+  
+  if(tempmax<=(Get_Start_Current()*UNIT_A*5))  //启动电流的5倍
+  {
+    Clr_Event_Instant(ID_EVENT_CURR_NO_EVEN);  //电流不平衡结束
+    return ;
+  }
   
   tempeven=((FP32S)Measu_InstantData_ToPub_PUCK.Curr.A+B_Curr+Measu_InstantData_ToPub_PUCK.Curr.C)/3;
   

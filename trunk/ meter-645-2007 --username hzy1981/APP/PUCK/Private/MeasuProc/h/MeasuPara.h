@@ -126,6 +126,10 @@ EEPROM_PUCK_EXT CS_STRUCT  MeasuPara_CS;
  #define LOSSV_INIT_PARA LOSSV_INIT_341
 #endif
 
+
+#define Get_SysTHF_Mode() TH_MODE    //Ë«·½Ïò
+
+
 EEPROM_PUCK_EXT  INT8U Measu_ParaWrFlag;
 
 INT8U Get_Buf_MulitByte_Sum(INT8U *Src,INT16U SrcLen,INT8U ByteGroup,INT8U *Dst,INT8U DstLen);
@@ -148,9 +152,7 @@ FP32S Sqrt_Cal(float x);
 INT8U InitMeasuAfterPwrOn(void);
 void Clr_Cal_Requst(void);
 INT8U ChkMeasuICWorkStatus(void);
-INT8U Get_SysTHF_Mode(void);
 void Refresh_MeasuParaBuf(void);
-
 INT8U Read_Storage_Data_PUCK(INT32U DI,void *pDst,INT16U DstLen);
 INT8U Get_IC_ParaSum3(INT32U *Cs);
 INT8U Get_User_All_ParaSum3(INT32U *Cs);

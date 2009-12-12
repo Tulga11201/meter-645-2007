@@ -47,8 +47,6 @@ void Remoter_Cmd_Decode(INT8U Cmd)
       Key_Value_Pub.Key.Bit.RightKey=1;
       break;
     case IR_ENTER_A:
-      Key_Value_Pub.Key.Bit.A_Key=1;
-      break; 
     case IR_ENTER_B:
       Key_Value_Pub.Key.Bit.B_Key=1;
       break;

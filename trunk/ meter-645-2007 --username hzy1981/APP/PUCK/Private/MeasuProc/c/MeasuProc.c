@@ -284,10 +284,10 @@ INT8U GetSysModeProc(void)
   INT8U Flag;
   INT8U temp[3];
       
-  Flag=Read_Storage_Data_PUCK(DI_MODE1,temp,1);  //T_FH模式字
-  MeasuSysMode.T_FH=GET_BIT(temp[0],6);        //T_FH模式字
+  //Flag=Read_Storage_Data_PUCK(DI_MODE1,temp,1);  //T_FH模式字
+  MeasuSysMode.T_FH=TH_MODE;//GET_BIT(temp[0],6);        //T_FH模式字
   
-  Flag&=Read_Storage_Data_PUCK(DI_P_U_I_SPEC,temp,3);   
+  Flag=Read_Storage_Data_PUCK(DI_P_U_I_SPEC,temp,3);   
   MeasuSysMode.P_Spec=temp[2];
   MeasuSysMode.V_Spec=temp[1];
   MeasuSysMode.I_Spec=temp[0];

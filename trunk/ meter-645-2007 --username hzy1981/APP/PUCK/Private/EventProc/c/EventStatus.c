@@ -1070,9 +1070,9 @@ void Get_Meter_Run_Status(void)
   
    //超有功需量报警事件
    if(Meter_Run_Status.Meter_Stat7.Bit.Bit6)
-    ReNew_Err_Code(DIS_VOLT_EXCEED_ERR); 
+    ReNew_Err_Code(DIS_DEMAND_EXCEED_ERR); 
    else
-    Clr_Err_Code(DIS_VOLT_EXCEED_ERR); 
+    Clr_Err_Code(DIS_DEMAND_EXCEED_ERR); 
    
    
    //内部电池欠压

@@ -38,12 +38,21 @@ INT8U Cpu_Esam_Hard_Operate(INT8U Type,INT8U Operate)  //8U pDstLen,INT8U *pDst,
   switch(Operate)
   {
     case CPU_ESAM_DRV_RST_COOL:
+      if(Type EQ PAY_ESAM)
+      {
+        CONST_PAY_IO[Type].Set_Io_Pwr(CONST_PAY_IO[Type].Pwr_Valid);  
+        WAITFOR_DRV_CYCLE_TIMEOUT(6000)
+      }
       CONST_PAY_IO[Type].Set_Io_Rst(CONST_PAY_IO[Type].Rst_Valid);
       WAITFOR_DRV_CYCLE_TIMEOUT(1200)
       CONST_PAY_IO[Type].Set_Io_Clk(!CONST_PAY_IO[Type].Clk_Valid);
-      WAITFOR_DRV_CYCLE_TIMEOUT(1200)
-      CONST_PAY_IO[Type].Set_Io_Pwr(CONST_PAY_IO[Type].Pwr_Valid);
-      WAITFOR_DRV_CYCLE_TIMEOUT(6000)
+      WAITFOR_DRV_CYCLE_TIMEOUT(1200)      
+      if(Type EQ PAY_CPU_CARD)
+      {
+        CONST_PAY_IO[Type].Set_Io_Pwr(CONST_PAY_IO[Type].Pwr_Valid);  
+        WAITFOR_DRV_CYCLE_TIMEOUT(6000)
+      }
+      
       CONST_PAY_IO[Type].Set_Io_Clk(CONST_PAY_IO[Type].Clk_Valid);
       WAITFOR_DRV_CYCLE_TIMEOUT(1200)
       CONST_PAY_IO[Type].Set_Io_Rst(!CONST_PAY_IO[Type].Rst_Valid);

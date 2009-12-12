@@ -339,7 +339,7 @@ void Init_LCD_Mode(INT32U Mode,INT8U Status)
         
         temp[0]=BL55076_NORMAL_EN|0x80;         
         Write_55076_Cmd(2,temp); 
-        FillAllScreen();
+        //FillAllScreen();
     break;
     
     case SYS_RESUME:

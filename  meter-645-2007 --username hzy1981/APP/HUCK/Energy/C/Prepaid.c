@@ -89,6 +89,9 @@ INT8U Prepaid_Buy_Energy_Proc(INT32U Eng)
 {
   INT8U Re;
   
+  if(PREPAID_MODE != PREPAID_ENG)
+    return 0;
+  
   Check_Energy_Data_Avail(); //先检查电量数据是否合法
   
   Re = CHECK_STRUCT_SUM(Cur_Prepaid);
@@ -161,6 +164,9 @@ INT8U Check_Buy_Money_Exceed_Limit(INT32U Money)
 INT8U Prepaid_Buy_Money_Proc(INT32U Money)
 {
   INT8U Re;
+
+  if(PREPAID_MODE != PREPAID_MONEY)
+    return 0;
   
   Check_Energy_Data_Avail(); //先检查电量数据是否合法
   
@@ -339,8 +345,8 @@ void Check_Cur_Step()
 void Prepaid_Proc(MEASU_ENERG* pEnergy)
 {
   INT32U Pos_Act_Energy, Temp_Energy;
-  INT32U Money,Min;
-  INT8U i,Step, Rate;
+  INT32U Money;
+  INT8U Step, Rate;
   static INT32U Eng = 0;
   //DIS_PD_INT;
   
@@ -408,7 +414,7 @@ void Prepaid_Proc(MEASU_ENERG* pEnergy)
     //电费型预付费走过的电量应该×PT×CT
     Temp_Energy = ((pEnergy->Chang_Plus_AcEnerg[3] + pEnergy->Chang_Nega_AcEnerg[3]) / ENERGY_RATIO) * Prepaid_Para.CT_Ratio * Prepaid_Para.PT_Ratio;    
     
-    if(PREPAID_MONEY_MODE EQ 0)
+    if(PREPAID_MONEY_MODE EQ PREPAID_RATE)
       Rate = Cur_Rate_Info.Rate;      
     else
       Rate = 0;    
@@ -425,7 +431,7 @@ void Prepaid_Proc(MEASU_ENERG* pEnergy)
     
     Eng += Pos_Act_Energy;
     
-    if(PREPAID_MONEY_MODE EQ 0) //分时计费方式
+    if(PREPAID_MONEY_MODE EQ PREPAID_RATE) //分时计费方式
     {   
       Cur_Energy.Prepaid_Info.Temp_Cumu_Money += Pos_Act_Energy * Rate_Scheme_Para.Fee[Cur_Rate_Info.Rate - 1];
       Money = Cur_Energy.Prepaid_Info.Temp_Cumu_Money / MONEY_RATIO;

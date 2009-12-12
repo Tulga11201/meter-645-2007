@@ -121,6 +121,7 @@ PUCK:
 ********************************************************************************/
 void LCD_Init_PUCK(void)  //LCD显示初始化，满足速度需要
 {
+  FillAllScreen();
   Init_Event_Instant_Para();
   
    Check_Loss_Volt();

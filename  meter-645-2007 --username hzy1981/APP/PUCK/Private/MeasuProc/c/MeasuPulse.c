@@ -109,7 +109,7 @@ void Send_Acpower_Pulse(void)
   
   Port_Pulse_Out(GERNAL_ID_ACPOWER,Sys_Pulse_Var.Pulse_Width);      
   Port_Pulse_Out(EXT_ID_ACPOWER,Sys_Pulse_Var.Pulse_Width);
-  if(MeasuSysMode.T_FH==TF_MODE)
+  if(Get_SysTHF_Mode()==TF_MODE)
   {
     Port_Level_Out(EXT_ID_AP_DIR,PORT_START);
     return ;
@@ -122,8 +122,7 @@ void Send_Acpower_Pulse(void)
   else   //反有功脉冲
   { 
     Port_Level_Out(EXT_ID_AP_DIR,PORT_END);     //反有功脉冲:端口输出1
-  }     
-   
+  }   
 }
 /**********************************************************************************
 函数功能：发总无功脉冲，正向无功脉冲，反向无功脉冲
@@ -138,7 +137,7 @@ void Send_Reacpower_Pulse(void)
   
   Port_Pulse_Out(GERNAL_ID_REACPOWER,Sys_Pulse_Var.Pulse_Width);      
   Port_Pulse_Out(EXT_ID_REACPOWER,Sys_Pulse_Var.Pulse_Width);
-  if(MeasuSysMode.T_FH==TF_MODE)
+  if(Get_SysTHF_Mode()==TF_MODE)
   {
     Port_Level_Out(EXT_ID_RP_DIR,PORT_START);
     return ;

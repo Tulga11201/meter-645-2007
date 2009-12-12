@@ -323,7 +323,7 @@ void Test_CPU_Output_IO(void)
     EXT_DEMAND_SET;  
 
     //时段切换关闭
-    EXT_PARSE_SET;    
+    //EXT_PARSE_SET;    
     
    // Debug_Print("Trun Off All Ext Ports");
   }
@@ -367,7 +367,7 @@ void Test_CPU_Output_IO(void)
     EXT_DEMAND_CLR;  
     
     //时段切换打开
-    EXT_PARSE_CLR;  
+    //EXT_PARSE_CLR;  
   }
 }
 

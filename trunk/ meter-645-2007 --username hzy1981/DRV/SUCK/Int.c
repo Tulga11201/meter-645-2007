@@ -129,7 +129,8 @@ void KEY_Init( void )
         PM7_bit.no0= 0;        //P70/EX16/KR0	16-SCL	24C16时钟线
         
         LARGE_TOOGLE_OFF_SET;   //将常闭的关闭
-        LARGE_TOOGLE_ON_CLR;  
+        LARGE_TOOGLE_ON_SET;
+        //LARGE_TOOGLE_ON_CLR;  
       
         PU7_bit.no3=0;
         PM7_bit.no3= 1;        // P73/EX19/KR3	KEY4	上翻

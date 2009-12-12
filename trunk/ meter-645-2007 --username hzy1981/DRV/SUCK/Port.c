@@ -48,7 +48,8 @@ void PORT_Init(INT32U Mode )
         
         PM7_bit.no0=0; 
         LARGE_TOOGLE_OFF_SET;   //将常闭的关闭
-        LARGE_TOOGLE_ON_CLR;  
+        LARGE_TOOGLE_ON_SET;
+        //LARGE_TOOGLE_ON_CLR;  
         
         PM7_bit.no5=0;   //按钮共用，且为NC，设定为输出，09－04－05
         PM8_bit.no0=0; 

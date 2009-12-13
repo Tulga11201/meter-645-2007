@@ -98,14 +98,13 @@ void LCD_Task_Monitor(void)
        (dispmode EQ modeB && (Sec_Timer_Pub-Sleep_Sec_Countr.Var>=30)) )   //键显模式
     {
 
-        Debug_Print("Lcd Task Enter To Sleep!"); 
-        Refresh_Sleep_Countr(0);        
-        Task_Sleep();   
-        
+        Debug_Print("Lcd Task Enter To Sleep!");            
+        Task_Sleep();         
         //醒来了，重新初始化
         dispmode = modeA;
         dispoffset = -1;   
         START_LOOP_DIS;
+        Refresh_Sleep_Countr(0);    
     
     
     }

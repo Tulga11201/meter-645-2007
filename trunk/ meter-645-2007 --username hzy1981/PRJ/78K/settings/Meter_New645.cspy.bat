@@ -22,12 +22,12 @@
 @REM but they are listed at the end of this file for reference.
 
 
-"C:\Program Files\IAR Systems\Embedded Workbench 5.4 Evaluation\common\bin\cspybat" "C:\Program Files\IAR Systems\Embedded Workbench 5.4 Evaluation\78k\bin\78k0rproc.dll" "C:\Program Files\IAR Systems\Embedded Workbench 5.4 Evaluation\78k\bin\78k0rminitks.dll"  %1 --plugin "C:\Program Files\IAR Systems\Embedded Workbench 5.4 Evaluation\78k\bin\<libsupport_plugin>" --backend -B "--core" "78k0r" "--near_const_location" "rom0" "--near_const_start" "0xf1000" "--near_const_size" "47.75" "-p" "C:\Program Files\IAR Systems\Embedded Workbench 5.4 Evaluation\78k\CONFIG\DDF\io78f1166_a0.ddf" "-d" "minicube" 
+"C:\Program Files\IAR Systems\Embedded Workbench Evaluation 4.62\common\bin\cspybat" "C:\Program Files\IAR Systems\Embedded Workbench Evaluation 4.62\78k\bin\78k0rproc.dll" "C:\Program Files\IAR Systems\Embedded Workbench Evaluation 4.62\78k\bin\78k0rminitks.dll"  %1 --plugin "C:\Program Files\IAR Systems\Embedded Workbench Evaluation 4.62\78k\bin\<libsupport_plugin>" --backend -B "--core" "78k0r" "--near_const_location" "rom0" "--near_const_start" "0xf1000" "--near_const_size" "47.75" "-p" "C:\Program Files\IAR Systems\Embedded Workbench Evaluation 4.62\78k\CONFIG\DDF\io78f1166_a0.ddf" "-d" "minicube" 
 
 
 @REM Loaded plugins:
-@REM    C:\Program Files\IAR Systems\Embedded Workbench 5.4 Evaluation\78k\bin\78kLibSupport.dll
-@REM    C:\Program Files\IAR Systems\Embedded Workbench 5.4 Evaluation\common\plugins\CodeCoverage\CodeCoverage.dll
-@REM    C:\Program Files\IAR Systems\Embedded Workbench 5.4 Evaluation\common\plugins\Profiling\Profiling.dll
-@REM    C:\Program Files\IAR Systems\Embedded Workbench 5.4 Evaluation\common\plugins\stack\stack.dll
-@REM    C:\Program Files\IAR Systems\Embedded Workbench 5.4 Evaluation\common\plugins\SymList\SymList.dll
+@REM    C:\Program Files\IAR Systems\Embedded Workbench Evaluation 4.62\78k\bin\78kLibSupport.dll
+@REM    C:\Program Files\IAR Systems\Embedded Workbench Evaluation 4.62\common\plugins\CodeCoverage\CodeCoverage.dll
+@REM    C:\Program Files\IAR Systems\Embedded Workbench Evaluation 4.62\common\plugins\Profiling\Profiling.dll
+@REM    C:\Program Files\IAR Systems\Embedded Workbench Evaluation 4.62\common\plugins\stack\stack.dll
+@REM    C:\Program Files\IAR Systems\Embedded Workbench Evaluation 4.62\common\plugins\SymList\SymList.dll

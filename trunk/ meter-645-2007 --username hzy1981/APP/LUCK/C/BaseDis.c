@@ -623,21 +623,40 @@ stat_t getstat (void)
   
   data = 0;
   
-  if(0==disflag)
+  if(poweroff())
   {
-    SecTimerBak=Sec_Timer_Pub;
-    disflag=1;
-    Init_Event_DIS_PUCK(&stat); 
-    return stat;
-  }
-  else if(disflag==1 &&Sec_Timer_Pub-SecTimerBak<65)  //事件判定机制还没有走完
-  {
-     Init_Event_DIS_PUCK(&stat); 
-     return stat;
+    stat.loss_volt_a  = 1;
+    stat.loss_volt_b  = 1;
+    stat.loss_volt_c  = 1;
+
+  //断相
+    stat.cut_volt_a  = 1;
+    stat.cut_volt_b  = 1;
+    stat.cut_volt_c  = 1;
+    
+    stat.loss_cut_a  =  1;
+    stat.loss_cut_b  =  1;
+    stat.loss_cut_c  =  1;
+    stat.jumper_short  = (B_TEST_FAC_STATUS && B_TEST_HARD_STATUS EQ 0);
+    return (stat);
   }
   else
-    disflag=2;
-    
+  {
+    if(0==disflag)
+    {
+      SecTimerBak=Sec_Timer_Pub;
+      disflag=1;
+      Init_Event_DIS_PUCK(&stat); 
+      return stat;
+    }
+    else if(disflag==1 &&Sec_Timer_Pub-SecTimerBak<65)  //事件判定机制还没有走完
+    {
+       Init_Event_DIS_PUCK(&stat); 
+       return stat;
+    }
+    else
+      disflag=2;
+  }
   //失压
   stat.loss_volt_a  = Meter_Run_Status.Meter_Stat4.Bit.Bit0;
   stat.loss_volt_b  = Meter_Run_Status.Meter_Stat5.Bit.Bit0;

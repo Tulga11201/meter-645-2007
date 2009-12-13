@@ -507,7 +507,7 @@ void Loop_Dis_LCD_Proc(void)
     LCD_Loop_Num.Var=TASK_RUN_TIME/10;
   }
   
-  //全屏显示20秒内
+  //全屏显示20秒内:138年翻转1次
   if(Sec_Timer_Pub<=20 && (Get_Sys_Status()==SYS_NORMAL))  //正常模式下，20秒内全屏显示
     return ;
   

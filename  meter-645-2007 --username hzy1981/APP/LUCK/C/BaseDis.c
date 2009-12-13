@@ -640,7 +640,12 @@ stat_t getstat (void)
     stat.fac_status    = ((B_TEST_FAC_STATUS EQ 0) && B_TEST_HARD_STATUS);         //工厂模式
     stat.jumper_short  = ((B_TEST_FAC_STATUS EQ 0) || (B_TEST_HARD_STATUS EQ 0));   //低功耗下，提示跳线块
     stat.num_tariff    =3;  //显示主副时段1：主时段；2：副时段，其他：不显示
+    //拉闸
+    if(Get_Relay_Status() EQ SWITCH_OFF)
+    stat.RelayOff=1;
+  
     return (stat);
+    
   }
   else
   {
@@ -754,6 +759,10 @@ stat_t getstat (void)
       Light_Mode=LIGHT_ON_MONEY;
     } 
   }
+  
+  //拉闸
+  if(Get_Relay_Status() EQ SWITCH_OFF)
+    stat.RelayOff=1;
   
   return (stat);
 }

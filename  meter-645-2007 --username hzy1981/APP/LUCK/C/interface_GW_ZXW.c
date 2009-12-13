@@ -933,13 +933,13 @@ void lcd_events (void)
   }
   
 //--------------预付费功能未打开，以下不显示：显示保护-------------------------------------------- 
-  //拉闸
-  if(Get_Relay_Status() EQ SWITCH_OFF)
-    SetOnDevice_PUCK(S_LAZHA);
-    
-  
   if(PREPAID_EN EQ 0)  //无预付费功能，跳闸、跳闸 LED 指示、跳闸 LCD指示 均不点亮。
     return ;
+  
+  //拉闸
+  if(stat.RelayOff)
+    SetOnDevice_PUCK(S_LAZHA);
+  
   
   if(PREPAID_MONEY_MODE EQ PREPAID_STEP)    //0表示分时计费，1表示阶梯计费
   {

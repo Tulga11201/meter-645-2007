@@ -151,8 +151,8 @@ INT8U Get_MeterKey_PUCK(INT8U Id)
 
   temp=Key_Value_Pub.Key.Byte&0x7f;  
   Key_Value_Pub.Key.Byte&=0x80;
-  if(Check_AB_Switch())
-    SET_BIT(temp,4);   //AB模式切换
+  //if(Check_AB_Switch())
+  //  SET_BIT(temp,4);   //AB模式切换
 
   return temp;
 }

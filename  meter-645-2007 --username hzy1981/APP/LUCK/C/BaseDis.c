@@ -509,7 +509,7 @@ void lcdlight (u8 stat) {
 *********************************************************************************/
 void Init_Event_DIS_PUCK(stat_t *stat)
 {  
-  INT8U temp;
+  INT8U temp[13];
   //-------------------------断相-------------------------  
   stat->cut_volt_a=Get_Event_Instant(ID_EVENT_A_LOSS_PARSE);//A相断相：0--没发生；1----发生；
   stat->cut_volt_b=Get_Event_Instant(ID_EVENT_B_LOSS_PARSE);//B相断相：0--没发生；1----发生；
@@ -583,27 +583,41 @@ void Init_Event_DIS_PUCK(stat_t *stat)
   stat->jumper_short  = (B_TEST_FAC_STATUS && (B_TEST_HARD_STATUS EQ 0));     //调试模式
   stat->fac_status    = ((B_TEST_FAC_STATUS EQ 0) && B_TEST_HARD_STATUS);      //工厂模式
   stat->switch_opened =  Key_Value_Pub.Key.Bit.PrgKey;
-    
   
-  temp=Get_Prepaid_Status();  //本地费控，才显示与电费相关信息;远程费控：此函数不会返回与电费相关信息
-  if(temp != PREPAID_MONEY_ENOUGH)
-  {
-    stat->BuyFee =1;
-    if(Light_Mode!= LIGHT_ON_MONEY)
+   //< 显示当前费率，"尖, 峰, 平, 谷, T5, ...Tx",
+  Get_Cur_Rate_Info(temp,temp,sizeof(temp));
+  stat->status_tariff =temp[5]; 
+  stat->num_tariff =temp[2]; ///当前运行时段：0第一套，1第二套 
+  stat->SetpScheme =PREPAID_STEP_SCHEME;                //电价方案：1～2
+  stat->SetpRate   =PREPAID_STEP_NO;                    //电价：1～4 
+  
+  
+  if(PREPAID_EN)  //无预付费功能，跳闸、跳闸 LED 指示、跳闸 LCD指示 均不点亮。
+  {  
+    temp[0]=Get_Prepaid_Status();  //本地费控，才显示与电费相关信息;远程费控：此函数不会返回与电费相关信息
+    if(temp[0] != PREPAID_MONEY_ENOUGH)
     {
-      START_LIGHT_ON;
-      Light_Mode=LIGHT_ON_MONEY;
+      stat->BuyFee =1;
+      if(Light_Mode!= LIGHT_ON_MONEY)
+      {
+        START_LIGHT_ON;
+        Light_Mode=LIGHT_ON_MONEY;
+      }
     }
-  }
-  
-  if(temp EQ PREPAID_MONEY_OVERDRAFT  || PREPAID_MONEY_ZERO EQ temp)
-  {
-    stat->TouZhi =1;
-    if(Light_Mode!= LIGHT_ON_MONEY)
+    
+    if(temp[0] EQ PREPAID_MONEY_OVERDRAFT  || PREPAID_MONEY_ZERO EQ temp[0])
     {
-      START_LIGHT_ON;
-      Light_Mode=LIGHT_ON_MONEY;
-    } 
+      stat->TouZhi =1;
+      if(Light_Mode!= LIGHT_ON_MONEY)
+      {
+        START_LIGHT_ON;
+        Light_Mode=LIGHT_ON_MONEY;
+      } 
+    }
+    
+    //拉闸
+    if(Get_Relay_Status() EQ SWITCH_OFF)
+      stat->RelayOff=1;
   }
   
   SET_STRUCT_SUM(Meter_Run_Status);  
@@ -612,8 +626,6 @@ void Init_Event_DIS_PUCK(stat_t *stat)
 // 获取状态字
 stat_t getstat (void) 
 {
-  static u8 disflag;
-  static INT32U SecTimerBak=0;
   u8 temp[13];
   
   u16 data;
@@ -642,27 +654,18 @@ stat_t getstat (void)
     stat.num_tariff    =3;  //显示主副时段1：主时段；2：副时段，其他：不显示
     //拉闸
     if(Get_Relay_Status() EQ SWITCH_OFF)
-    stat.RelayOff=1;
+      stat.RelayOff=1;
   
     return (stat);
     
   }
   else
   {
-    if(0==disflag)
+    if(Sec_Timer_Pub<65)
     {
-      SecTimerBak=Sec_Timer_Pub;
-      disflag=1;
       Init_Event_DIS_PUCK(&stat); 
       return stat;
     }
-    else if(disflag==1 &&Sec_Timer_Pub-SecTimerBak<65)  //事件判定机制还没有走完
-    {
-       Init_Event_DIS_PUCK(&stat); 
-       return stat;
-    }
-    else
-      disflag=2;
   }
   //失压
   stat.loss_volt_a  = Meter_Run_Status.Meter_Stat4.Bit.Bit0;

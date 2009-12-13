@@ -1094,6 +1094,12 @@ void Check_LPWBat_Low(void)
 #ifdef ID_EVENT_AB_FUNC_KEY
 void Check_AB_Func_Key(void)
 {
+ if(Get_Sys_Status()!=SYS_NORMAL)    //VCC
+ {
+    Clr_Event_Instant(ID_EVENT_AB_FUNC_KEY);
+    return ;
+ }
+ 
   if((Inter_Up_Key_STATUS==1)&&(Inter_Down_Key_STATUS==1))  //没有按钮按下
     Clr_Event_Instant(ID_EVENT_AB_FUNC_KEY);
   else                         //有一个按钮按下

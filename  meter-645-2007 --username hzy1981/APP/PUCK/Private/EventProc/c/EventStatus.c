@@ -1131,6 +1131,7 @@ INT8U Check_Man_ClrDemd_En(void)
 入口： 
 出口：0---------不是AB显示模式切换状态；1---------是AB显示模式切换状态；
 *********************************************************************************/
+#ifdef ID_EVENT_AB_FUNC_KEY
 INT8U Check_AB_Switch(void)
 {
   static INT8U KeyStatus=0;
@@ -1151,6 +1152,7 @@ INT8U Check_AB_Switch(void)
   }
   return 0;
 }
+#endif
 /********************************************************************************
 函数原型：void Check_Event_StruCS(void)
 函数功能：检查与事件相关的所有结构体的校验和
@@ -1394,6 +1396,12 @@ void Emerg_Event_Proc(void)
 void Check_RelayOn_Key(void)
 {
  
+  if(Get_Sys_Status()!=SYS_NORMAL)
+  {
+    Relay_On_Key_Countr=0;
+    return ;
+  }
+  
   if(Inter_Up_Key_STATUS EQ Inter_Down_Key_STATUS)  //同时按下或者同时没按下
   {
     Relay_On_Key_Countr=0;

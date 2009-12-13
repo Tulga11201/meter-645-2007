@@ -71,38 +71,32 @@ typedef union
     {
         u32 loss_volt_a   : 1; ///< 失压 A 闪烁
         u32 loss_volt_b   : 1; ///< 失压 B 闪烁
-        u32 loss_volt_c   : 1; ///< 失压 C 闪烁
-        
-        u32 cut_volt_a   : 1; ///< 断相A: 消失
-        u32 cut_volt_b   : 1; ///< 断相A: 消失
-        u32 cut_volt_c   : 1; ///< 断相A: 消失
-        
+        u32 loss_volt_c   : 1; ///< 失压 C 闪烁        
+        u32 cut_volt_a    : 1; ///< 断相A: 消失
+        u32 cut_volt_b    : 1; ///< 断相A: 消失
+        u32 cut_volt_c    : 1; ///< 断相A: 消失        
         u32 over_volt_a   : 1; ///< 过压(Ua)
         u32 over_volt_b   : 1; ///< 过压(Ub)
-        u32 over_volt_c   : 1; ///< 过压(Uc)
         
+        u32 over_volt_c   : 1; ///< 过压(Uc)        
         u32 down_volt_a   : 1; ///< 欠压(Ua)
         u32 down_volt_b   : 1; ///< 欠压(Ub)
-        u32 down_volt_c   : 1; ///< 欠压(Uc)
-        
+        u32 down_volt_c   : 1; ///< 欠压(Uc)        
         u32 loss_cur_a    : 1; ///< 失流 A
         u32 loss_cur_b    : 1; ///< 失流 B
-        u32 loss_cur_c    : 1; ///< 失流 C
-        
+        u32 loss_cur_c    : 1; ///< 失流 C        
         u32 loss_cut_a    : 1; ///< 断流 A：小于启动电流
-        u32 loss_cut_b    : 1; ///< 断流 B：小于启动电流
-        u32 loss_cut_c    : 1; ///< 断流 C：小于启动电流
         
+        u32 loss_cut_b    : 1; ///< 断流 B：小于启动电流
+        u32 loss_cut_c    : 1; ///< 断流 C：小于启动电流        
         u32 cur_rers_a    : 1; ///< 电流反极性 A
         u32 cur_rers_b    : 1; ///< 电流反极性 B
-        u32 cur_rers_c    : 1; ///< 电流反极性 C
-          
+        u32 cur_rers_c    : 1; ///< 电流反极性 C          
         u32 cell_low1     : 1; ///< 时钟电池低电压
         u32 cell_low2     : 1; ///< 低功耗电池低电压
         u32 cell_low3     : 1; ///< 预留
         
-        u32 stat_communi  : 4; ///< 通信状态(RS1,RS2,红外)(常亮)
-        
+        u32 stat_communi  : 4; ///< 通信状态(RS1,RS2,红外)(常亮)        
         u32 volt_reverse  : 1; ///< 电压"逆相序"(闪烁)
         u32 curr_reverse  : 1; ///< 电流"逆相序"(闪烁)
         u32 event_warning : 1; ///< 事件告警(闪烁)
@@ -113,18 +107,18 @@ typedef union
         u32 jumper_short  : 1; ///< 跳线短接(常亮)
         u32 reset_demand  : 1; ///< 需量复位(常亮)        
         u32 signal_scale  : 3; ///< 通讯模块信号强度指示(常亮)
-        u32 status_tariff : 4; ///< 显示当前费率，"尖, 峰, 平, 谷, T5, ...Tx",
+        u32  num_tariff   : 2; //显示主副时段1：主时段；2：副时段，其他：不显示
+        
+        u32 status_tariff : 4; ///< 显示当前费率，"尖, 峰, 平, 谷, T5, ...Tx", 
+        u32  SetpRate     : 2; //电价：1～4 
+        u32  SetpScheme   : 2; //电价方案：1～2
         
         u32 meter_locked  : 1; ///< 电表上锁(常亮)
-        u32 status_online : 1; ///< 通讯模块在线指示(常亮)
-        u32  num_tariff   : 1; //显示主副时段1：主时段；2：副时段 
-        u32  CalMeter     : 1; //校表事件
-        u32  SetpScheme   : 2; //电价方案：1～2
-        u32  SetpRate     : 2; //电价：1～4
-        
-        u32  BuyFee       : 1; //请购电
+        u32 status_online : 1; ///< 通讯模块在线指示(常亮)        
+        u32  BuyFee       : 1; //请购电        
+        u32  CalMeter     : 1; //校表事件       
         u32  TouZhi       : 1; //透支
-        u32  reserved     : 12; //预留        
+        u32  reserved     : 11; //预留        
     };
     struct 
     {

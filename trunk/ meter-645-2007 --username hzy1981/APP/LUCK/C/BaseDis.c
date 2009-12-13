@@ -580,8 +580,8 @@ void Init_Event_DIS_PUCK(stat_t *stat)
     Meter_Run_Status.NegCurr_Qudrant.Byte&=0xf0;
 
 
-  stat->jumper_short  = (B_TEST_FAC_STATUS && B_TEST_HARD_STATUS EQ 0); 
-  stat->fac_status    = (B_TEST_FAC_STATUS EQ 0 && B_TEST_HARD_STATUS);      //工厂模式
+  stat->jumper_short  = (B_TEST_FAC_STATUS && (B_TEST_HARD_STATUS EQ 0));     //调试模式
+  stat->fac_status    = ((B_TEST_FAC_STATUS EQ 0) && B_TEST_HARD_STATUS);      //工厂模式
   stat->switch_opened =  Key_Value_Pub.Key.Bit.PrgKey;
     
   
@@ -636,8 +636,10 @@ stat_t getstat (void)
     
     stat.loss_cut_a  =  1;
     stat.loss_cut_b  =  1;
-    stat.loss_cut_c  =  1;
-    stat.jumper_short  = (B_TEST_FAC_STATUS && B_TEST_HARD_STATUS EQ 0);
+    stat.loss_cut_c  =  1;    
+    stat.fac_status    = ((B_TEST_FAC_STATUS EQ 0) && B_TEST_HARD_STATUS);         //工厂模式
+    stat.jumper_short  = ((B_TEST_FAC_STATUS EQ 0) || (B_TEST_HARD_STATUS EQ 0));   //低功耗下，提示跳线块
+    stat.num_tariff    =3;  //显示主副时段1：主时段；2：副时段，其他：不显示
     return (stat);
   }
   else
@@ -711,7 +713,7 @@ stat_t getstat (void)
   stat.reset_demand  = Meter_Run_Status.Key_Event.Bit.Bit2;       //< 需量复位(常亮)
   stat.meter_locked  = Meter_Run_Status.Key_Event.Bit.Bit3;       //< 电表上锁(常亮)
   stat.event_warning = Meter_Run_Status.Key_Event.Bit.Bit4;       //< 事件告警(闪烁)
-  stat.jumper_short  = (B_TEST_FAC_STATUS && B_TEST_HARD_STATUS EQ 0);  //调试模式 Meter_Run_Status.Key_Event.Bit.Bit5;       // 跳线短接(闪烁)
+  stat.jumper_short  = (B_TEST_FAC_STATUS && (B_TEST_HARD_STATUS EQ 0));  //调试模式 Meter_Run_Status.Key_Event.Bit.Bit5;       // 跳线短接(闪烁)
   stat.CalMeter      =Meter_Run_Status.Key_Event.Bit.Bit6;
   
   data = 0;

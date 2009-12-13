@@ -230,6 +230,7 @@ void Initial (void)
     dispcursor = MODE_A_B_BITS;
     dispmode = modeA;
     dispcode.code = 0;    
+    START_LOOP_DIS;
     
 #ifdef DIS_PARA_JUMP_EN
     mem_set((void *)(&Para_Dis_Var),0x00,sizeof(Para_Dis_Var),(void *)(&Para_Dis_Var),sizeof(Para_Dis_Var));
@@ -356,7 +357,7 @@ void Key_Fast_LCD_Proc(void)
   screen(dispmode, dispcursor);  //刷屏----------PUCK
   LCD_Loop_Ms10Timr.Var=Ms10_Timer_Pub;
   LCD_Loop_Num.Var=0;
-  START_LOOP_DIS;
+  RESET_LOOP_DIS;
   
 #if SYS_ERR_DIS_EN >0
   Sys_Err_Info.LoopDis=1;  
@@ -402,7 +403,7 @@ INT8U Dis_Meter_System_Err(void)
         Sys_Err_Info.DisIndex=0;
         Sys_Err_Info.LoopDis=1;
         disproll();
-        START_LOOP_DIS;
+        RESET_LOOP_DIS;
         return 0;
       }      
 
@@ -416,7 +417,7 @@ INT8U Dis_Meter_System_Err(void)
       
       if(Sys_Err_Info.DisIndex>=DIS_ERR_NUM)
         Sys_Err_Info.DisIndex=0;
-      START_LOOP_DIS;      
+      RESET_LOOP_DIS;      
     }
     return 1;
   }
@@ -442,15 +443,15 @@ void Dis_Meter_Loop(void)
      
    if((LOOP_SEC_TIMER_DIFF>CYCLE)&&disproll()) // A模式下，在1个周期后，没有按键按下，获取A模式下的显示信息--------PUCK
    {
-     START_LOOP_DIS;
+     RESET_LOOP_DIS;
      Refresh_Sleep_Countr(1);
    }
    
    if((LOOP_SEC_TIMER_DIFF>2*CYCLE)&& (poweroff() EQ 0) && modeBtoA())// B模式下，在2个循显周期后，没有按键按下，进入A模式，获取A模式下的信息--------PUCK
-      START_LOOP_DIS;
+      RESET_LOOP_DIS;
   
    if((LOOP_SEC_TIMER_DIFF>120)&&modeCtoA())   // C模式下，在2分钟后无按键按下，进入A模式，获取A模式下的信息--------PUCK
-      START_LOOP_DIS;
+      RESET_LOOP_DIS;
 
    
    if (LIGHT_SEC_TIMER_DIFF== 0) 
@@ -482,6 +483,11 @@ void Dis_Meter_Loop(void)
        lcdlight(FALSE);
      }
    }
+   
+ 
+if((dispmode EQ modeA && Sleep_Sec_Countr.Var>MODE_A_NUM) && dispoffset EQ 0)   //循显模式
+  return ;
+   
    screen(dispmode, dispcursor);  //刷屏----------PUCK
 }
 /********************************************************************************
@@ -526,7 +532,7 @@ void Dis_Jump_Para(void)
         if(DI_TIME EQ modipara)  //时/分/秒不跳屏
           return ;
         
-        START_LOOP_DIS;
+        RESET_LOOP_DIS;
         START_LIGHT_ON;
         dispmode=modeC; 
         dispcursor = MINBITS;        

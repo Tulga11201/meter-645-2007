@@ -89,7 +89,8 @@ LCD_MAIN_EXT INT32U  LCDLightSecTimer;
 #define TURN_OFF_LIGHT          {LCDLightSecTimer=Sec_Timer_Pub-0xFFFF;}
 #define LIGHT_SEC_TIMER_DIFF    (Sec_Timer_Pub-LCDLightSecTimer)
 
-#define START_LOOP_DIS       {LCDLoopSecTimer=Sec_Timer_Pub;}
+#define START_LOOP_DIS       {LCDLoopSecTimer=0xFFFFFFFF;}
+#define RESET_LOOP_DIS       {LCDLoopSecTimer=Sec_Timer_Pub;}
 #define LOOP_SEC_TIMER_DIFF  (Sec_Timer_Pub-LCDLoopSecTimer)
 
 #ifdef DIS_PARA_JUMP_EN

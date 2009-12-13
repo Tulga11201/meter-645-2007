@@ -74,7 +74,7 @@ TriggerName=main
 LimitSize=0
 ByteLimit=50
 [DebugChecksum]
-Checksum=-1397766858
+Checksum=1783785310
 [InstructionProfiling]
 Enabled=_ 0
 [DriverProfiling]
@@ -101,8 +101,11 @@ LogFile=_ ""
 Enabled=0
 ShowSource=1
 [Breakpoints]
-Bp0=_ "STD_CODE" "{F:\work\Prog\Meter_New645_GD\Meter-645-2007-GD-3Phase\ABS\PUCK\CpuEsamAbs.c}.252.5@1" 0 0 0 0 "" 0 ""
-Bp1=_ "STD_CODE" "{F:\work\Prog\Meter_New645_GD\Meter-645-2007-GD-3Phase\APP\Main\C\Main_Proc.c}.75.3@1" 0 0 0 0 "" 0 ""
+Bp0=_ "STD_CODE" "{C:\Program Files\IAR Systems\Embedded Workbench Evaluation 4.62\common\bin}.252.5@1" 0 0 0 0 "" 0 ""
+Bp1=_ "STD_CODE" "{F:\work\Prog\Meter_New645_GD\Meter-645-2007-GD-3Phase}.75.3@1" 0 0 0 0 "" 0 ""
 Bp2=_ "STD_CODE" "{E:\work\Ammeter\DLT645-2007\MeterNewDLT645\APP\HUCK\Demand\C\Demand.c}.780.5@1" 0 0 0 0 "" 0 ""
-Bp3=_ "STD_CODE" "{F:\work\Prog\Meter_New645_GD_IBE\APP\TASK\C\TaskProc.c}.120.1@1" 1 0 0 0 "" 0 ""
-Count=4
+Bp3=_ "STD_CODE" "{F:\work\Prog\Meter_New645_GD_IBE\ABS\PUCK\DeviceAbs.c}.631.9@1" 0 0 0 0 "" 0 ""
+Bp4=_ "STD_CODE" "{F:\work\Prog\Meter_New645_GD_IBE\APP\LUCK\C\process.c}.446.6@1" 0 0 0 0 "" 0 ""
+Bp5=_ "STD_CODE" "{F:\work\Prog\Meter_New645_GD_IBE\ABS\PUCK\DeviceAbs.c}.638.9@1" 1 0 0 0 "" 0 ""
+Bp6=_ "STD_CODE" "{F:\work\Prog\Meter_New645_GD_IBE\APP\TASK\C\TaskProc.c}.140.3@1" 1 0 0 0 "" 0 ""
+Count=7

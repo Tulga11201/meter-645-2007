@@ -259,7 +259,7 @@ void CPU_Card_Main_Proc(void)
         SET_STRUCT_SUM(Curr_Media_Status);
         Realse_Local_Pay_Source();
         OS_TimeDly_Sec(1);//1sË¯Ãß
-        START_LOOP_DIS;
+        RESET_LOOP_DIS;
         dispmode = modeA;
     }
   }

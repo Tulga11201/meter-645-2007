@@ -427,6 +427,7 @@ void Goto_Sleep_PUCK(void)
 返回：
     无
 ********************************************************************************/
+#define WAKE_UP_TIMES 5
 void Cpu_Sleep_Proc(void)
 {
   static S_Int8U Counts={CHK_BYTE,0,CHK_BYTE};
@@ -445,12 +446,12 @@ void Cpu_Sleep_Proc(void)
     
     Clear_CPU_Dog(); 
     
-    if(Counts.Var<3)
+    if(Counts.Var<WAKE_UP_TIMES)
       break;
     
     //当天唤醒次数超过，清除本次按钮和红外唤醒源
     if(Counts.Var==254)  //避免翻转
-      Counts.Var=3;
+      Counts.Var=WAKE_UP_TIMES;
     Resume_Src.Src_Flag&=(INT8U)(~(IRAD_RESUME|KEY_RESUME));  //清除按钮和红外唤醒源
   }
 }

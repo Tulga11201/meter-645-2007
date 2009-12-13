@@ -2681,10 +2681,11 @@ void Check_Cal_Status(void)
 **********************************************************************************/	
 void Init_Measu_PUCK(void)
 {
-  Init_Para();           //计量相关参数初始化
+  
   if(Get_Sys_Status()!=SYS_NORMAL) //只有在正常模式下，才初始化计量任务
     return ;        
    
+  Init_Para();           //计量相关参数初始化
   Check_Cal_Status();
   Init_Measure_IC(); 
   Deal_PerSec_Main();

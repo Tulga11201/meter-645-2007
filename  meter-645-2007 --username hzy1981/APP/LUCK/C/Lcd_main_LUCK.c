@@ -122,17 +122,17 @@ PUCK:
 void LCD_Init_PUCK(void)  //LCD显示初始化，满足速度需要
 {
   FillAllScreen();
-  Init_Event_Instant_Para();
-  
-   Check_Loss_Volt();
-   Check_Loss_Curr();
-   Check_Volt_Curr_Seq();
-   //Check_Down_Volt();
-   //Check_RTCBat_Low();
-   //Check_LPWBat_Low();
-   Check_Loss_Parse();
-   Check_Neg_Curr();
-   Check_Cut_Curr();  
+  if(Get_Sys_Status()==SYS_NORMAL)
+  {
+    Init_Event_Instant_Para();
+    
+     Check_Loss_Volt();
+     Check_Loss_Curr();
+     Check_Volt_Curr_Seq();
+     Check_Loss_Parse();
+     Check_Neg_Curr();
+     Check_Cut_Curr();
+  }
    //一旦进入，说明任务唤醒或者正常模式,正常上电或者按钮红外唤醒,液晶的初始化已经在Init_ExtDevice_PUCK()完成
   if((Get_Sys_Status()==SYS_NORMAL) || (Check_Resume_Source(IRAD_RESUME|KEY_RESUME)))
   {

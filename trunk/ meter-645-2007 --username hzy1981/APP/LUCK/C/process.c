@@ -390,10 +390,7 @@ INT8U Dis_Meter_System_Err(void)
   if(poweroff())  //掉电情况下
     return 0;
   
-  Sys_Err_Info.ErrNum=3;
-  Sys_Err_Info.ErrCode[0]=4;
-  Sys_Err_Info.ErrCode[1]=1;
-  Sys_Err_Info.ErrCode[4]=1;
+  //Sys_Err_Info.ErrNum=3;  Sys_Err_Info.ErrCode[0]=4;  Sys_Err_Info.ErrCode[1]=1;  Sys_Err_Info.ErrCode[4]=1;
     
   if(CHECK_STRUCT_VAR(Sys_Err_Info) EQ 0 || Sys_Err_Info.ErrNum>DIS_ERR_NUM)
    ASSERT_FAILED();

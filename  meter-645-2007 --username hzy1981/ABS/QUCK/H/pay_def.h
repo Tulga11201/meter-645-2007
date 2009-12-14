@@ -21,9 +21,9 @@ typedef struct {
     unsigned char Meter_Run_State;  //电表运行状态，00厂内/01安装/02运行 "表第一次上电值为0，被存在e方中，上电时从e方取，当是补卡或开户卡时修改
     unsigned     char    BcdMeterID[6];//表号，对表第一次上电值不作要求，被表号设置卡修改 和开户卡修改
     
-    unsigned long Remain_Money; //剩余金额，插卡后，从黄工那里得到,购电后通知黄工更新
-    unsigned long Remain_Money_Hoard_Limit;           //剩余电费囤积门限 0.01元   黄工已经有了，
-    unsigned long Buy_Count;// 购电次数   插卡后 从黄工那里得到,购电后通知黄工更新该变量
+    //unsigned long Remain_Money; //剩余金额，插卡后，从黄工那里得到,购电后通知黄工更新
+    //unsigned long Remain_Money_Hoard_Limit;           //剩余电费囤积门限 0.01元   黄工已经有了，
+    //unsigned long Buy_Count;// 购电次数   插卡后 从黄工那里得到,购电后通知黄工更新该变量
     
     
     //一下参数使用了宏定义转换

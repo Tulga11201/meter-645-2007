@@ -923,7 +923,11 @@ void Switch_Ctrl(INT8U Switch_Flag, INT8U Cause)
     Set_Hand_Switch_On_Flag(NEED_HAND_SWITCH_ON_FLAG); //需要手动合闸 
     if(Relay_Status.Switch_Status != SWITCH_OFF && Relay_Status.Off_Delay EQ 0)
     {
-      Relay_Status.Off_Delay = Relay_Delay_Para.Relay_Off_Delay;
+      if(Cause EQ S_OFF_PREPAID)
+        Relay_Status.Off_Delay = 0;
+      else
+        Relay_Status.Off_Delay = Relay_Delay_Para.Relay_Off_Delay;
+        
       Counts.Var = 0;
       //Relay_Status.On_Delay = 0;
       if(Relay_Status.Off_Delay EQ 0) //如果设定延时为0，马上拉闸
@@ -949,25 +953,22 @@ void Switch_Ctrl(INT8U Switch_Flag, INT8U Cause)
     }
     else //还没有手动合闸则保持拉闸状态
     {/*
-      Relay_Status.Switch_Status = SWITCH_OFF;
-      Relay_Status.Switch_Cause = Cause;
-      Clr_Event_Instant(ID_EVENT_RELAY_ON); //合闸事件结束      
-      Set_Event_Instant(ID_EVENT_RELAY_OFF);//拉闸事件发生
-      */
       if(Relay_Status.Switch_Status != SWITCH_OFF && Relay_Status.Off_Delay EQ 0)
       {
-        Relay_Status.Off_Delay = Relay_Delay_Para.Relay_Off_Delay;
+        if(Cause EQ S_OFF_PREPAID)
+          Relay_Status.Off_Delay = 0;
+        else
+          Relay_Status.Off_Delay = Relay_Delay_Para.Relay_Off_Delay;
+        
         Counts.Var = 0;
-        //Relay_Status.On_Delay = 0;
-        if(Relay_Status.Off_Delay EQ 0) //如果设定延时为0，马上拉闸
+
+        if(Relay_Status.Off_Delay EQ 0) //如果设定延时为0，马上拉闸*/
         {       
-          //Relay_Status.Switch_Status = SWITCH_OFF;
-          //Relay_Status.Switch_Cause = Cause;
           Set_Relay_Status(SWITCH_OFF, Cause);
           Clr_Event_Instant(ID_EVENT_RELAY_ON); //合闸事件结束      
           Set_Event_Instant(ID_EVENT_RELAY_OFF);//拉闸事件发生  
         } 
-      }      
+      //}      
     }
   }
   

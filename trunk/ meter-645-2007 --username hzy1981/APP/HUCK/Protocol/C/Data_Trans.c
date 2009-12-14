@@ -5248,7 +5248,7 @@ CONST S_P_Data_Info P_Data_Info[] =
   INIT(Dst_Len, 2),
   INIT(Num, 0),
   INIT(Spec_Flag, SPEC_NO)},
-*/
+
  //密码正确开放写时间
   {INIT(PDI, 0x0E000200),
   INIT(DI_Set_Flag, 0),
@@ -5289,7 +5289,7 @@ CONST S_P_Data_Info P_Data_Info[] =
   INIT(Dst_Len, 2),
   INIT(Num, 0x02),
   INIT(Spec_Flag, SPEC_NO)},
-  
+*/  
  //密码错误解锁剩余次数
   {INIT(PDI, 0x0E000204),
   INIT(DI_Set_Flag, 0),

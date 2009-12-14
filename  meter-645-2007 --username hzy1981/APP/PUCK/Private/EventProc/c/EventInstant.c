@@ -644,7 +644,7 @@ void Check_Demand_Exceed(void)
   //正向有功需量超限
   if(Measu_InstantData_ToPub_PUCK.Quadrant.Sum EQ QUADRANT1 || Measu_InstantData_ToPub_PUCK.Quadrant.Sum EQ QUADRANT4)
   {
-    if((FP32S)CUR_POS_ACT_DEMAND>=(FP32S)EventInsParaVar.OverDe_Acpow_Down)
+    if(CUR_POS_ACT_DEMAND>=EventInsParaVar.OverDe_Acpow_Down)
       Set_Event_Instant(ID_EVENT_POS_ACT_DEMAND_EXCEED);   //正向有功需量超限
     else
       Clr_Event_Instant(ID_EVENT_POS_ACT_DEMAND_EXCEED);    //正向有功需量超限恢复
@@ -656,7 +656,7 @@ void Check_Demand_Exceed(void)
     Clr_Event_Instant(ID_EVENT_POS_ACT_DEMAND_EXCEED);    //正向有功需量超限恢复
     
     //反向有功需量超限
-    if((FP32S)CUR_NEG_ACT_DEMAND>=(FP32S)EventInsParaVar.OverDe_Acpow_Down)
+    if(CUR_NEG_ACT_DEMAND>=EventInsParaVar.OverDe_Acpow_Down)
       Set_Event_Instant(ID_EVENT_NEG_ACT_DEMAND_EXCEED);   //反向有功需量超限
     else
       Clr_Event_Instant(ID_EVENT_NEG_ACT_DEMAND_EXCEED);    //反向有功需量超限恢复    
@@ -667,7 +667,7 @@ void Check_Demand_Exceed(void)
   {    
     if(i+1 EQ Measu_InstantData_ToPub_PUCK.Quadrant.Sum)  //当前象限无功需量
     {
-      if((FP32S)Demand_Accu.Phase_Cur[0].Quad_Reactive[i]>=((FP32S)EventInsParaVar.OverDe_Reacpow_Down))
+      if(Demand_Accu.Phase_Cur[0].Quad_Reactive[i]>=(EventInsParaVar.OverDe_Reacpow_Down))
         Set_Event_Instant(ID_EVENT_Q1_REAC_DEMAND_EXCEED+i);   //当前1～ 4象限 无功需量超限
       else
         Clr_Event_Instant(ID_EVENT_Q1_REAC_DEMAND_EXCEED+i);    //当前1～ 4象限 无功需量恢复      

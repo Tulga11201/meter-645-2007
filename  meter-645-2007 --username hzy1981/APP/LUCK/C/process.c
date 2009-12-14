@@ -267,18 +267,29 @@ INT8U Chk_Light_Condition(void)
 ********************************************************************************/
 void Refresh_Sleep_Countr(INT8U Flag)
 {         
-  if(dispmode EQ modeA) //循显模式
+  if(Get_Sys_Status()==SYS_RESUME)
   {
-    if(Flag)
-      Sleep_Sec_Countr.Var++; 
-    else
+    if(dispmode EQ modeA) //循显模式
+    {
+      if(Flag)
+        Sleep_Sec_Countr.Var++; 
+      else
+        Sleep_Sec_Countr.Var=0;
+      return ;
+    }  
+    
+    if(dispmode EQ modeB) //键显模式
+    { 
+      Sleep_Sec_Countr.Var=Sec_Timer_Pub;  
+    }
+  }
+  else
+  {
+    if(dispmode EQ modeA) //循显模式
       Sleep_Sec_Countr.Var=0;
-    return ;
-  }  
-  
-  if(dispmode EQ modeB) //键显模式
-  { 
-    Sleep_Sec_Countr.Var=Sec_Timer_Pub;  
+    
+    if(dispmode EQ modeB) //键显模式
+      Sleep_Sec_Countr.Var=Sec_Timer_Pub;
   }
 }
 /********************************************************************************
@@ -379,6 +390,11 @@ INT8U Dis_Meter_System_Err(void)
   if(poweroff())  //掉电情况下
     return 0;
   
+  Sys_Err_Info.ErrNum=3;
+  Sys_Err_Info.ErrCode[0]=4;
+  Sys_Err_Info.ErrCode[1]=1;
+  Sys_Err_Info.ErrCode[4]=1;
+    
   if(CHECK_STRUCT_VAR(Sys_Err_Info) EQ 0 || Sys_Err_Info.ErrNum>DIS_ERR_NUM)
    ASSERT_FAILED();
   
@@ -484,9 +500,11 @@ void Dis_Meter_Loop(void)
      }
    }
    
- 
-if((dispmode EQ modeA && Sleep_Sec_Countr.Var>MODE_A_NUM) && dispoffset EQ 0)   //循显模式
-  return ;
+  if(Get_Sys_Status()==SYS_RESUME)
+  {
+    if((dispmode EQ modeA && Sleep_Sec_Countr.Var>MODE_A_NUM) && dispoffset EQ 0)   //循显模式
+      return ;
+  }
    
    screen(dispmode, dispcursor);  //刷屏----------PUCK
 }

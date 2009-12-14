@@ -661,7 +661,7 @@ stat_t getstat (void)
   }
   else
   {
-    if(Sec_Timer_Pub<65)
+    if(Sec_Timer_Pub<100)
     {
       Init_Event_DIS_PUCK(&stat); 
       return stat;

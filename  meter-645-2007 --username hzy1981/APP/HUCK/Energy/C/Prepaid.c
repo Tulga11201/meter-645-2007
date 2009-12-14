@@ -359,12 +359,12 @@ void Prepaid_Proc(MEASU_ENERG* pEnergy)
     if(Cur_Energy.Prepaid_Info.Left_Energy > Pos_Act_Energy)
     {
       Cur_Energy.Prepaid_Info.Left_Energy -= Pos_Act_Energy;  
-      if(Cur_Energy.Prepaid_Info.Left_Energy / 10 < Prepaid_Para.Warn_Energy2) //低于门限二
+      if(Cur_Energy.Prepaid_Info.Left_Energy / 10 <= Prepaid_Para.Warn_Energy2) //低于门限二
       {
         Prepaid_Status_Proc(PREPAID_ENERGY_LEFT2);
         Prepaid_Ctrl_Proc(PREPAID_ENERGY_LEFT2);
       }
-      else if(Cur_Energy.Prepaid_Info.Left_Energy / 10 < Prepaid_Para.Warn_Energy1) //低于门限一
+      else if(Cur_Energy.Prepaid_Info.Left_Energy / 10 <= Prepaid_Para.Warn_Energy1) //低于门限一
       {
         Prepaid_Status_Proc(PREPAID_ENERGY_LEFT1);        
         Prepaid_Ctrl_Proc(PREPAID_ENERGY_LEFT1);
@@ -380,7 +380,7 @@ void Prepaid_Proc(MEASU_ENERG* pEnergy)
       Cur_Energy.Prepaid_Info.Overdraft_Energy += Pos_Act_Energy - Cur_Energy.Prepaid_Info.Left_Energy;
       Cur_Energy.Prepaid_Info.Left_Energy = 0;
       
-      if(Cur_Energy.Prepaid_Info.Overdraft_Energy / 10 > Prepaid_Para.Overdraft_Energy_Limit) //超过透支门限
+      if(Cur_Energy.Prepaid_Info.Overdraft_Energy / 10 >= Prepaid_Para.Overdraft_Energy_Limit) //超过透支门限
       {
         Prepaid_Status_Proc(PREPAID_ENERGY_OVERDRAFT);
         Prepaid_Ctrl_Proc(PREPAID_ENERGY_OVERDRAFT);
@@ -464,17 +464,17 @@ void Prepaid_Proc(MEASU_ENERG* pEnergy)
       Cur_Energy.Prepaid_Info.Left_Money -= Money;
       
       if(Ctrl_Status_Flag.Buy_Money_Switch_Limit_Flag &&\
-         (Cur_Energy.Prepaid_Info.Left_Money / 10) < Prepaid_Para.Switch_On_Money_Limit)//充值金额低于合闸门限
+         (Cur_Energy.Prepaid_Info.Left_Money / 10) <= Prepaid_Para.Switch_On_Money_Limit)//充值金额低于合闸门限
       {
         Prepaid_Status_Proc(PREPAID_MONEY_SWITCH_LIMIT);
         Prepaid_Ctrl_Proc(PREPAID_MONEY_SWITCH_LIMIT);        
       }
-      else if((Cur_Energy.Prepaid_Info.Left_Money / 10) < Prepaid_Para.Warn_Money2) //低于门限2
+      else if((Cur_Energy.Prepaid_Info.Left_Money / 10) <= Prepaid_Para.Warn_Money2) //低于门限2
       {
         Prepaid_Status_Proc(PREPAID_MONEY_LEFT2);
         Prepaid_Ctrl_Proc(PREPAID_MONEY_LEFT2);
       }
-      else if((Cur_Energy.Prepaid_Info.Left_Money / 10) < Prepaid_Para.Warn_Money1) //低于门限1
+      else if((Cur_Energy.Prepaid_Info.Left_Money / 10) <= Prepaid_Para.Warn_Money1) //低于门限1
       {
         Prepaid_Status_Proc(PREPAID_MONEY_LEFT1);        
         Prepaid_Ctrl_Proc(PREPAID_MONEY_LEFT1);     
@@ -490,7 +490,7 @@ void Prepaid_Proc(MEASU_ENERG* pEnergy)
       Cur_Energy.Prepaid_Info.Overdraft_Money += Money - Cur_Energy.Prepaid_Info.Left_Money; 
       Cur_Energy.Prepaid_Info.Left_Money = 0;
       
-      if((Cur_Energy.Prepaid_Info.Overdraft_Money / 10) > Prepaid_Para.Overdraft_Money_Limit) //超过透支上限
+      if((Cur_Energy.Prepaid_Info.Overdraft_Money / 10) >= Prepaid_Para.Overdraft_Money_Limit) //超过透支上限
       {
         Prepaid_Status_Proc(PREPAID_MONEY_OVERDRAFT);         
         Prepaid_Ctrl_Proc(PREPAID_MONEY_OVERDRAFT);
@@ -537,7 +537,7 @@ INT8U Get_Prepaid_Status()
       
   if(PREPAID_MODE EQ PREPAID_MONEY)
   {
-    if((Cur_Energy.Prepaid_Info.Overdraft_Money / 10) > Prepaid_Para.Overdraft_Money_Limit)
+    if((Cur_Energy.Prepaid_Info.Overdraft_Money / 10) >= Prepaid_Para.Overdraft_Money_Limit)
     {
       return PREPAID_MONEY_OVERDRAFT; //超透支门限
     }
@@ -545,11 +545,11 @@ INT8U Get_Prepaid_Status()
     {
       return PREPAID_MONEY_ZERO; //透支      
     }
-    else if((Cur_Energy.Prepaid_Info.Left_Money / 10) < Prepaid_Para.Warn_Money2)
+    else if((Cur_Energy.Prepaid_Info.Left_Money / 10) <= Prepaid_Para.Warn_Money2)
     {
       return PREPAID_MONEY_LEFT2; //低于门限1
     }
-    else if((Cur_Energy.Prepaid_Info.Left_Money / 10) < Prepaid_Para.Warn_Money1)
+    else if((Cur_Energy.Prepaid_Info.Left_Money / 10) <= Prepaid_Para.Warn_Money1)
     {
       return PREPAID_MONEY_LEFT1; //低于门限2
     }
@@ -558,7 +558,7 @@ INT8U Get_Prepaid_Status()
   }
   else
   {
-    if((Cur_Energy.Prepaid_Info.Overdraft_Energy / 10) > Prepaid_Para.Overdraft_Energy_Limit)
+    if((Cur_Energy.Prepaid_Info.Overdraft_Energy / 10) >= Prepaid_Para.Overdraft_Energy_Limit)
     {
       return PREPAID_MONEY_OVERDRAFT; //超透支门限
     }
@@ -566,11 +566,11 @@ INT8U Get_Prepaid_Status()
     {
       return PREPAID_MONEY_ZERO; //透支      
     }  
-    else if((Cur_Energy.Prepaid_Info.Left_Energy / 10) < Prepaid_Para.Warn_Energy2)
+    else if((Cur_Energy.Prepaid_Info.Left_Energy / 10) <= Prepaid_Para.Warn_Energy2)
     {
       return PREPAID_MONEY_LEFT2; //低于门限1
     }
-    else if((Cur_Energy.Prepaid_Info.Left_Energy / 10) < Prepaid_Para.Warn_Energy1)
+    else if((Cur_Energy.Prepaid_Info.Left_Energy / 10) <= Prepaid_Para.Warn_Energy1)
     {
       return PREPAID_MONEY_LEFT1; //低于门限2
     }

@@ -295,7 +295,10 @@ void Save_Event_PD_Data()
     mem_cpy((void *)&Event_Data.Prg_Key_Status, (void *)&Prg_Key_Status, sizeof(Prg_Key_Status),\
             (void *)&Event_Data.Prg_Key_Status, sizeof(Event_Data.Prg_Key_Status));
     
-    Event_Data.Relay_Status = Relay_Status.Switch_Status;
+    if(Get_Meter_Hard_Mode()==MODE_TEST) //自检模式掉电合闸
+      Event_Data.Relay_Status = SWITCH_ON;
+    else  
+      Event_Data.Relay_Status = Relay_Status.Switch_Status;
     
     Event_Data.PD_Flag = 1;
     SET_STRUCT_SUM(Event_Data);

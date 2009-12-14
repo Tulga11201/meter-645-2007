@@ -162,7 +162,21 @@ CONST INT8U Const_Drv_Test[MAX_ID_TEST_NUM][5]=
 
 
 
-// PREPAID_METER Cpu_Esam_All_Operate
+/**********************************************************************************
+**********************************************************************************/
+INT8U Judge_Test_Succeed(void)
+{
+  INT8U i;
+    
+  for(i=MIN_ID_TEST;i<=MAX_ID_TEST;i++)
+  {
+    if(Drv_Test_Buf[i]==0)
+    {
+      return 0;
+    }
+  }
+  return 1;
+}
 
 /**********************************************************************************
 蜂鸣器报警异常
@@ -324,8 +338,9 @@ void Test_CPU_Output_IO(void)
 
     //时段切换关闭
     //EXT_PARSE_SET;    
-    
-   // Debug_Print("Trun Off All Ext Ports");
+   
+    if(Judge_Test_Succeed() EQ 0)
+      LCD_BACK_LIGHT_0;
   }
   else
   {
@@ -368,6 +383,9 @@ void Test_CPU_Output_IO(void)
     
     //时段切换打开
     //EXT_PARSE_CLR;  
+    
+    if(Judge_Test_Succeed())
+      LCD_BACK_LIGHT_1;
   }
 }
 
@@ -933,6 +951,9 @@ void Dis_Per_Item(INT8U Item)
   
   UpdataLcdShow();
 }
+
+
+
 /**********************************************************************************
 LCD显示输出结果
 **********************************************************************************/
@@ -946,7 +967,8 @@ void LCD_Dis_Result(void)
   {
         case UP_KEY_VALUE :
         case RIGHT_KEY_VALUE:
-            Turn_Light_On();
+            if(Judge_Test_Succeed()) //自检成功
+              Turn_Light_On();
             KeyNum++;
             
             if(KeyNum>MAX_ID_TEST)
@@ -958,7 +980,9 @@ void LCD_Dis_Result(void)
  
         case DOWN_KEY_VALUE:
         case LEFT_KEY_VALUE:
-            Turn_Light_On();
+            if(Judge_Test_Succeed()) //自检成功
+              Turn_Light_On();
+            
             KeyNum--;
             if(KeyNum>MAX_ID_TEST)
               KeyNum=MAX_ID_TEST;           
@@ -973,14 +997,17 @@ void LCD_Dis_Result(void)
             if(KeyNum>MAX_ID_TEST)
               KeyNum=0;
             
-            if(KeyNum%2)
-              Turn_Light_Off();
-            else
-              Turn_Light_On();              
-            Dis_Per_Item(KeyNum);
-            Temp_Timer_Bak=Sec_Timer_Pub;
-            Beep_For_Err();
-            
+            if(Judge_Test_Succeed() EQ 0) //自检失败
+            {
+              strcpy((char *)Temp_Buf_PUCK," FAILED");              
+            }
+            else                        //自检成功
+            {     
+              strcpy((char *)Temp_Buf_PUCK,"SUCCEED ");              
+            }
+           Main_Dis_Info((char *)Temp_Buf_PUCK); 
+           Temp_Timer_Bak=Sec_Timer_Pub;
+           Beep_For_Err();            
           }
           break;            
    }  
@@ -1065,6 +1092,8 @@ void Test_HardWare_PUCK(void)
     return ;   
   
 
+  Ext_Device_Stat.Status=TEST_STATUS_PUCK;  //置自检模式
+  
   Init_DebugChanel_PUCK(0);
   //Test_Sumi_I2c_Epprom();
 

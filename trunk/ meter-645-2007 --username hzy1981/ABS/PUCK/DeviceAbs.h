@@ -104,6 +104,7 @@
 #define  NORMAL_STATUS_PUCK 0x23
 #define  RESUME_STATUS_PUCK 0xe5
 #define  SLEEP_STATUS_PUCK  0x32
+#define  TEST_STATUS_PUCK   0x1e  //×Ô¼ìÄ£Ê½
 
 typedef struct{
   INT8U Head;

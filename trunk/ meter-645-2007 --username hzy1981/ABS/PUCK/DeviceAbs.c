@@ -648,8 +648,14 @@ void PwrCtrl_ExtDevice_HigSpeed(void)
 ********************************************************************************/
 void PwrCtrl_ExtDevice_HigSpeed(void)
 {
-  //LARGE_TOOGLE_OFF_SET;   //将常闭的关闭 
-  //LARGE_TOOGLE_ON_CLR;
+  INT32U Temp_Timer;
+  INT16U i;
+    
+  if((Ext_Device_Stat.Status EQ TEST_STATUS_PUCK) &&(Get_Main_Init_Flag() EQ  MAIN_INITING))  //主任务初始化未完成),以最快的速度执行
+  {
+     LARGE_TOOGLE_OFF_SET;   //将常闭的关闭 
+     LARGE_TOOGLE_ON_CLR;
+  }
   
   CLOSE_MEASU_PWR;           //计量芯片电源关闭
   Init_Pulse_Port(0);       
@@ -666,4 +672,17 @@ void PwrCtrl_ExtDevice_HigSpeed(void)
   
   IRDA_Rec_Disable();         //红接收关闭
   MAIN_POWER_FOR_IRDA;       //远红外电源由主电源供给;实际是关闭红外电源！
+  
+  if((Ext_Device_Stat.Status EQ TEST_STATUS_PUCK) &&(Get_Main_Init_Flag() EQ  MAIN_INITING))  //主任务初始化未完成),以最快的速度执行
+  {
+    Ms_Timer_Pub = 0;    
+    for(i=0;i<22;i++)
+      WAITFOR_DRV_MS_TIMEOUT(10)
+        
+    STOP_1MS;  
+    Temp_Timer=Ms_Timer_Pub;
+    START_1MS;
+    
+    Write_Storage_Data(_SDI_SAVE_PD_DATA_TIME,(void *)&Temp_Timer,4);  
+  }
 }

@@ -133,8 +133,8 @@ struct Authentication_Responsion
 struct Far_Identity_Authentication_Define
 {
 	struct Authentication_Instruction Instruction;					/*"身份认证指令"*/
-	struct Authentication_Responsion Responsion;					/*"应答并返回随机数2"*/
+        //struct Authentication_Responsion Responsion;					////应答并返回随机数2//
 };
 EXT struct Far_Identity_Authentication_Define Far_Identity_Auth_Data;	//该变量在远程身份认证函数Far_Esamcard_Internal_Auth中初始化
- 
+INT8U Check_Remote_Prog_Status();
 #endif

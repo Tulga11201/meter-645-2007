@@ -5,7 +5,7 @@
 
 
 #undef Debug_Print
-#define Debug_Print(...)
+ #define Debug_Print(...)
 //#define Debug_Print _Debug_Print
 
 //远程认证命令接口(控制码为03)
@@ -39,7 +39,7 @@ INT8U Esam_Remote_Auth(INT8U *pSrc, INT8U SrcLen, INT8U *pDst, INT8U *pLen, INT8
         //远程数据初始化：
         Read_Storage_Data(_SDI_INVALID_COUNTS_AllOW ,&FarPrePayment.ID_Ins_Counter,&FarPrePayment.ID_Ins_Counter, 1) ;
         if(FarPrePayment.ID_Ins_Counter != 0 )//判断是否需要更新ID_Ins_Counter ，
-        {//Cur_Time1.Date
+        {//Cur_Time0.Date
           Read_Storage_Data(_SDI_FAR_AUTH_DAY_FOLLOW ,&Far_Auth_Day_Follow, &Far_Auth_Day_Follow, 1) ;
           //Get_Array_Time(T_BCD, DataTemp,DataTemp, 5);//从黄工那里得到5个字节的当前时间bcd编码，DataTemp[0]开始分别为：分，时，日，月年，没必要反相了
           if(Cur_Time1.Date != Far_Auth_Day_Follow )//判断日期有没有变更
@@ -65,7 +65,6 @@ INT8U Esam_Remote_Auth(INT8U *pSrc, INT8U SrcLen, INT8U *pDst, INT8U *pLen, INT8
                   mem_cpy(pDst,pSrc,4,pDst_Start,DstLen);// 是有特殊的含义的， 意味着下层的函数，只要管N1N2---Nm   即可
 	          mem_cpy(pDst+4, FarPaidBuff ,FarPrePayment.Far_SendLen,pDst,DstLen);
                   FarPrePayment.Far_SendLen+=4;//这里加4 是有特殊的含义的， 意味着下层的函数，只要管N1N2---Nm 的长度即可
-                  //pLen=&FarPrePayment.Far_SendLen;
                   *pLen = FarPrePayment.Far_SendLen;
                   OS_Mutex_Post(PUB_BUF0_SEM_ID);
                   OS_Mutex_Post(PUB_BUF_SEM_ID);
@@ -181,7 +180,6 @@ unsigned char Far_Deal_070000FF(unsigned char * Data_Point )
 		FarPrePayment.Far_SendLen=12;//不要管数据标示的长度，在上面会自动加4
                 //FarPrePayment.Far_SendLen=0;//不要管数据标示的长度，在上面会自动加4
                 //身份认证有效时长初始化 
-                WhenCardInsertedOrFarControlInitPrePayData();//当ddd
 		Far_Identity_Auth_Ok_Flag=1;	
 		if(Far_Read_Esam(04,Read_Binary,0x80+ESAM_PARA_INF_FILE,IDENTITY_AUTH_TIME_ESAM, 2, 0)!=OK)
                 {
@@ -268,7 +266,8 @@ unsigned char Far_Write_Esam(unsigned char cla,unsigned char ins,unsigned char t
 		if((FarPrePayment.ID_Ins_Counter %3)==0 ||  FarPrePayment.ID_Ins_Counter >=15){
                         Reset_Pay_Timer(0);
 			Far_Identity_Auth_Ok_Flag=0;
-			//Esam_PowOff();					// ESAM下电 //
+	                Cpu_Esam_All_Operate(ESAM,CPU_ESAM_DRV_POWER_OFF,receive_send_buffer,receive_send_buffer,Length_receive_send_buffer );
+
 		}
                 ASSERT_FAILED();
 		return ERR;
@@ -362,7 +361,7 @@ LC是所要读取的明文数据＋MAC+分散因子的总长度，它是1字节的十六进制数。"*/
 	}
         //组装发送的数据域，不管数据标示，/////////0x33类型函数中转站, 0x33类型的函数，的数据域的入口参数数据都为除去数据标示和操作者代码的 数据域，
 //出口都为：也不要管数据标示，的直接存放在FarPaidBuff
-        mem_cpy(FarPaidBuff,Data_Point,8,FarPaidBuff,Length_FarPaidBuff);
+        mem_cpy(FarPaidBuff,Data_Point,8,FarPaidBuff,Length_FarPaidBuff);//8字节数据回抄标识
 	My_memcpyRev( FarPaidBuff+8,receive_send_buffer,((unsigned char)(Far_Read_078001FF_Format.Data_Length)) );
 	My_memcpyRev( FarPaidBuff+8+((unsigned char)(Far_Read_078001FF_Format.Data_Length)),receive_send_buffer+((unsigned char)(Far_Read_078001FF_Format.Data_Length)), 4);
 	FarPrePayment.Far_SendLen = 8+((unsigned char)(Far_Read_078001FF_Format.Data_Length))+4;
@@ -396,7 +395,7 @@ unsigned char Far_Deal_07810201(unsigned char *Data_Point )
 	struct Far_Read_07810201_Format	 Far_Read_07810201_Format;
         //mem_cpy(&Far_Read_07810201_Format,Data_Point,sizeof(Far_Read_07810201_Format),&Far_Read_07810201_Format,sizeof(Far_Read_07810201_Format));
 	//Esam_Remain_Money_Dec();
-
+        //组装剩余金额文件
 	if(Far_Read_Esam(0x04,Read_Record,1,0x0c,4,0)!=OK)
         {
           ASSERT_FAILED();
@@ -405,17 +404,17 @@ unsigned char Far_Deal_07810201(unsigned char *Data_Point )
 		
 	My_memcpyRev((unsigned char *)&(Far_Read_07810201_Format.Remain_Money), receive_send_buffer,4);
 	My_memcpyRev((unsigned char *)&(Far_Read_07810201_Format.Remain_Money_Mac[0]), receive_send_buffer+4,4);
-	
+	//组装购电次数
 	if(Far_Read_Esam(0x04,Read_Record,3,0x0c,4,0)!=OK)
 		return ERR;
 	My_memcpyRev((unsigned char *)&(Far_Read_07810201_Format.Buy_Count), receive_send_buffer,4);
 	My_memcpyRev((unsigned char *)&(Far_Read_07810201_Format.Buy_Count_MAC[0]), receive_send_buffer+4,4);
-
+        //组装客户编号
 	if( Get_File_Data(ESAM,ESAM_PARA_INF_FILE,CLIENT_ID_ESAM,6,(unsigned char *)&(Far_Read_07810201_Format.Client_ID[0])) != OK )
 		return ERR;
 
 	Reverse_data((unsigned char *)&(Far_Read_07810201_Format.Client_ID[0]),6);
-	
+	//组装远程密钥信息
 	if( Get_File_Data(ESAM,ESAM_FAR_PASSWORD_INF_FILE,0,4,(unsigned char *)&(Far_Read_07810201_Format.Password_Info[0])) != OK )
 		return ERR;
 
@@ -459,25 +458,26 @@ unsigned char Far_Deal_070001FF(unsigned char * Data_Point ){
         {
             return ERR;
         }
-		
+	//把 从主站传来的认证时效值 写到esam中去
 	if( Far_Write_Esam(0x04,Update_Binary,0x80+ESAM_PARA_INF_FILE,IDENTITY_AUTH_TIME_ESAM,0x02,Data_Point,0)!=OK)
         {
                 ASSERT_FAILED();
 		return ERR;
 	}//
-//更新RAM该参数 //
+        //读取esam中的认证时效值，
 	if(Far_Read_Esam(04,Read_Binary,0x80+ESAM_PARA_INF_FILE,IDENTITY_AUTH_TIME_ESAM, 2, 0)!=OK)
         {
            ASSERT_FAILED();
            return ERR;
         }
         Reverse_data((unsigned char *) &receive_send_buffer[0],2);	
-        //ValidTimeTemp=Bcd2Hex((unsigned char *)&ValidTimeTemp , 2);
+        
         ValidTimeTemp=Bcd2Hex((unsigned char *) &receive_send_buffer[0], 2);
         if(ValidTimeTemp EQ 0 )
         { 
             ValidTimeTemp=5;
         }
+        //设置 认证时效
         Reset_Pay_Timer(ValidTimeTemp*60);
 	FarPrePayment.Far_SendLen  = 0;
 	
@@ -502,25 +502,25 @@ unsigned char Far_Deal_07000201(unsigned char * Data_Point ){
 	struct Far_Deal_07000201_format   Far_Deal_07000201_format;
 
 	//mem_cpy(&Far_Deal_07000201_format,Data_Point,sizeof(Far_Deal_07000201_format),&Far_Deal_07000201_format,sizeof(Far_Deal_07000201_format));
-	
+	// 从esam取出剩余金额数据
 	if(Far_Read_Esam(0x04,Read_Record,1,0x0c,4,0)!=OK)
 		return ERR;
 	My_memcpyRev((unsigned char *)&(Far_Deal_07000201_format.Remain_Money), receive_send_buffer,4);
-	
+	//从esam中取出购电次数数据
 	if(Far_Read_Esam(0x04,Read_Record,3,0x0c,4,0)!=OK)
 		return ERR;
 	My_memcpyRev((unsigned char *)&(Far_Deal_07000201_format.Buy_Count), receive_send_buffer,4);
-
+        //得到客户编号数据
 	if( Get_File_Data(ESAM,ESAM_PARA_INF_FILE,CLIENT_ID_ESAM,6,(unsigned char *)&(Far_Deal_07000201_format.Client_ID[0])) != OK )
 		return ERR;
-
+ 
 	Reverse_data((unsigned char *)&(Far_Deal_07000201_format.Client_ID[0]),6);
-	
+	//得到密钥信息
 	if( Get_File_Data(ESAM,ESAM_FAR_PASSWORD_INF_FILE,0,4,(unsigned char *)&(Far_Deal_07000201_format.Password_Info[0])) != OK )
 		return ERR;
 
 	Reverse_data((unsigned char *)&(Far_Deal_07000201_format.Password_Info[0]),4);
-
+        //把 身份认证时效清0 ， 身份认证标志位清0
 	Far_Identity_Auth_Ok_Flag=0;
         Reset_Pay_Timer(0);
         mem_cpy(FarPaidBuff,&Far_Deal_07000201_format,sizeof(Far_Deal_07000201_format),FarPaidBuff,Length_FarPaidBuff);
@@ -554,7 +554,7 @@ struct Far_Deal_070101FF_format
 	unsigned long	Remain_Money;//正常顺序的，判断时不要反转
 	unsigned long	Buy_Count;//正常顺序的
 	unsigned char BagMoney_Mac[4];//正常顺序的
-	unsigned char Client_ID[6];//写e方时 要反转, 因为传过来的是正常顺序，表中一直保存的是反得
+	unsigned char Client_ID[6];//  因为传过来的是反得顺序表   中一  直保存的是正常顺序
 	unsigned char Client_ID_Mac[4];//
 	};
 #define LENGTH_FAR_DEAL_070101FF_FORMAT      sizeof(struct Far_Deal_070101FF_format)
@@ -565,25 +565,26 @@ unsigned char Far_Deal_070101FF(unsigned char * Data_Point )
 
 	mem_cpy(&Far_Deal_070101FF_format,Data_Point,sizeof(Far_Deal_070101FF_format),&Far_Deal_070101FF_format,sizeof(Far_Deal_070101FF_format));
 	
-	if( Pre_Payment_Para.Meter_Run_State!=MeterRunState_Test_0 )
+        C_Read_Storage_Data( _SDI_PREPAID_RUN_STATUS, &Pre_Payment_Para.Meter_Run_State ,  &Pre_Payment_Para.Meter_Run_State,sizeof(Pre_Payment_Para.Meter_Run_State)  );    
+     	if( Pre_Payment_Para.Meter_Run_State!=MeterRunState_Test_0 )
 		return ERR;
  
 	if( Read_Esam_Moneybag_File((unsigned char *)&Moneybag_Data) != OK )
 		return ERR;
-
+       // 判断购电次数
 	if( Far_Deal_070101FF_format.Buy_Count != (Moneybag_Data.Buy_Count+1))
 	{
 		BUY_COUNT_ERR_DEFINE=1 ;
 		return ERR;
 	}
-
+        //这个 函数会自动反相数据然后写到esam，但是数据本身不会反转
 	CPU_ESAM_CARD_Control(ESAM);
 	if( Far_Write_Esam(0x04,Update_Binary,0x80+ESAM_PARA_INF_FILE,CLIENT_ID_ESAM,0x06,(Far_Deal_070101FF_format.Client_ID),0)!=OK)
         {
            ASSERT_FAILED();
            return ERR;
         }
-	/*" 判断本次购电的囤积门限  "*/
+	//判断本次购电的囤积门限、、//
 	if( Judge_Remain_Money_Over( Far_Deal_070101FF_format.Remain_Money ) != OK )
 	{
                 ASSERT_FAILED();
@@ -605,9 +606,8 @@ unsigned char Far_Deal_070101FF(unsigned char * Data_Point )
         //mem_cpy((INT8U*)&Moneybag_Data.Remain_Money,(INT8U *)&(Far_Deal_070101FF_format.Remain_Money),4,(INT8U)&Moneybag_Data.Remain_Money,4);
         Meter_Money_And_Count_Updata(Far_Deal_070101FF_format.Remain_Money,Far_Deal_070101FF_format.Buy_Count );
 	
-        /*" 更新户号和表计状态 "*///这个全局变量必须更新 后面会用到
+        //这个全局变量必须更新 后面会用到,这里客户编号使用被反相了两次， 所这里使用正常顺序到e方
 	My_memcpyRev(Pre_Payment_Para.UserID,Far_Deal_070101FF_format.Client_ID,6);
-
 	Write_Storage_Data(SDI_CUTOMER_ID , Pre_Payment_Para.UserID , 6);
 	Pre_Payment_Para.Meter_Run_State=0x03;
 	Write_Storage_Data(_SDI_PREPAID_RUN_STATUS  ,&Pre_Payment_Para.Meter_Run_State , 1);
@@ -637,28 +637,28 @@ unsigned char Far_Deal_070102FF(unsigned char * Data_Point )
 {
 	struct Far_Deal_070102FF_format    Far_Deal_070102FF_format;
 	struct Moneybag_Data Moneybag_Data;
-
+        
+        C_Read_Storage_Data( _SDI_PREPAID_RUN_STATUS, &Pre_Payment_Para.Meter_Run_State ,  &Pre_Payment_Para.Meter_Run_State,sizeof(Pre_Payment_Para.Meter_Run_State)  ); 
 	if( Pre_Payment_Para.Meter_Run_State!=MeterRunState_Run_3 ) 	
         {
            ASSERT_FAILED();
            return ERR;
         }
 		
-        // 
+        // 读ESAM钱包文件剩余电费和购电次数 并反相
 	if( Read_Esam_Moneybag_File((unsigned char *)&Moneybag_Data) != OK )
         {
            ASSERT_FAILED();
            return ERR;
         }
-		
-      
 	mem_cpy(&Far_Deal_070102FF_format,Data_Point,sizeof(Far_Deal_070102FF_format),&Far_Deal_070102FF_format,sizeof(Far_Deal_070102FF_format));
 	
 	Reverse_data((unsigned char *)&(Far_Deal_070102FF_format.Client_ID[0]),6);
 	Reverse_data((unsigned char *)&(Far_Deal_070102FF_format.Client_ID_Mac[0]),4);
-        
-        
-	if( My_Memcmp(Pre_Payment_Para.UserID,&Far_Deal_070102FF_format.Client_ID[0],6) != 0 ){
+        // 比较客户编号， 在e方中 
+        C_Read_Storage_Data( SDI_CUTOMER_ID, Pre_Payment_Para.UserID,  Pre_Payment_Para.UserID,sizeof(Pre_Payment_Para.UserID)  ); 
+	if( My_Memcmp(Pre_Payment_Para.UserID,&Far_Deal_070102FF_format.Client_ID[0],6) != 0 )
+        {
                 ASSERT_FAILED();
 		CLIENT_ID_ERR_DEFINE = 1;
 		return ERR;
@@ -676,20 +676,23 @@ unsigned char Far_Deal_070102FF(unsigned char * Data_Point )
         }
 		
  
-	if( Far_Deal_070102FF_format.Buy_Count == Moneybag_Data.Buy_Count){
+	if( Far_Deal_070102FF_format.Buy_Count == Moneybag_Data.Buy_Count)
+        {
                 ASSERT_FAILED();
 		REPEAT_INCREASE_ERR_DEFINE = 1;
 		return ERR;
 	}
 	
-	if( Far_Deal_070102FF_format.Buy_Count != (Moneybag_Data.Buy_Count+1)){
+	if( Far_Deal_070102FF_format.Buy_Count != (Moneybag_Data.Buy_Count+1))
+        {
                 ASSERT_FAILED();
 		BUY_COUNT_ERR_DEFINE = 1;
 		return ERR;
 	}
 
 	//判断本次购电的囤积门限 //
-	if( Judge_Remain_Money_Over(Far_Deal_070102FF_format.Remain_Money) != OK ){
+	if( Judge_Remain_Money_Over(Far_Deal_070102FF_format.Remain_Money) != OK )
+        {
                 ASSERT_FAILED();
 		BUY_MONEY_OVER_ERR_DEFINE=1;
 		return ERR;
@@ -699,7 +702,8 @@ unsigned char Far_Deal_070102FF(unsigned char * Data_Point )
 	Reverse_data((unsigned char *)&(Far_Deal_070102FF_format.Buy_Count),4);
 	Reverse_data((unsigned char *)&(Far_Deal_070102FF_format.BagMoney_Mac[0]),4);
         //判断完毕，开始正式充值
-	if( Write(0x84,Increase,0x01,0x0C,0x0C,((unsigned char *)&Far_Deal_070102FF_format.Remain_Money))!=OK){
+	if( Write(0x84,Increase,0x01,0x0C,0x0C,((unsigned char *)&Far_Deal_070102FF_format.Remain_Money))!=OK)
+        {
                 ASSERT_FAILED();
 		return ERR;
 	}
@@ -833,7 +837,8 @@ INT8U Esam_Decrypt(INT8U *pSrc, INT16U SrcLen)
 	   }else{
               return 0;
            }
-  }else{
+  }else
+  {
         ASSERT_FAILED();
 	ESAM_AUTH_ERR_DEFINE=1;
         return 0;
@@ -853,6 +858,18 @@ INT16U GetSecurity_Auth_Err_Info(void)
       Temp=Far_Security_Auth_Err_Info.intd;
       return Temp;
     
+}
+//判断是否 远程身份有效， 给别人调
+//返回1  处于，  0 不处于
+INT8U Check_Remote_Prog_Status()
+{
+  if(Chk_Pay_Time_Arrive())
+  {
+     return 0;
+  }else{
+     return 1;
+  }
+
 }
 ////////////////
  

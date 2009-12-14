@@ -38,7 +38,7 @@
 
 #define SHELL_EN      0//shell使能
 
-#define SET_ENERGY_EN 0//Mode_Word.Mode[0].Bit.Bit3 //是否允许设置初始电量
+#define SET_ENERGY_EN 1//Mode_Word.Mode[0].Bit.Bit3 //是否允许设置初始电量
 
 #define METER_CLR_EN        1 //Mode_Word.Mode[0].Bit.Bit1 //是否允许出厂电表清零?
 #define NEG_ADD_POS_ACT_EN  0 //Mode_Word.Mode[0].Bit.Bit0 //反向有功是否计入正向
@@ -54,7 +54,7 @@
 #define PREPAID_EN            1//((PREPAID_METER > 0)?Mode_Word.Mode[1].Bit.Bit5:0) //预付费使能
 #define PREPAID_MODE          PREPAID_MONEY//Mode_Word.Mode[1].Bit.Bit4////预付费模式，PREPAID_MONEY表示电费型，PREPAID_ENG表示电量型, ENERGY_TYPE
 #define PREPAID_MONEY_MODE    PREPAID_RATE//Prepaid_Para.Mode[1].Bit.Bit4//PREPAID_RATE表示分时计费，PREPAID_STEP表示阶梯计费
-#define PREPAID_LOCAL_REMOTE  PREPAID_REMOTE//Prepaid_Para.Mode[1].Bit.Bit3//PREPAID_LOCAL表示本地，PREPAID_REMOTE表示远程
+#define PREPAID_LOCAL_REMOTE  PREPAID_LOCAL//Prepaid_Para.Mode[1].Bit.Bit3//PREPAID_LOCAL表示本地，PREPAID_REMOTE表示远程
 
 #define PREPAID_WARN_EN 1//Prepaid_Para.Mode[2].Bit.Bit7 //预付费声报警是否打开?
 #define PREPAID_LIMIT1_WARN_EN    1//Prepaid_Para.Mode[2].Bit.Bit6 //低于门限1报警使能     

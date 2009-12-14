@@ -13,11 +13,11 @@ unsigned char Cpucard_Esamcard_Internal_Auth(void)   /*"内部认证"*/
     {
     
     if(Check_CPU_Occur())			
-        {
+    {
         ASSERT_FAILED();   
         Card_Error_State.CardErrorState.CPU_CARD_LOSE=1;
         return ERR;
-        } 
+    } 
     CPU_ESAM_CARD_Control(CPU);
     //
     Debug_Print(" 从cpu卡得到8字节随机数" );
@@ -294,72 +294,7 @@ unsigned char Read_Esam_Moneybag_File(unsigned char * Moneybag_Data_Point)
 //unsigned long Reamin_Money_ESAM;
 unsigned long Reamin_Money_ESAM_Dec_Time;
 void Esam_Remain_Money_Do(unsigned char Flag)
-	{/*
-	unsigned long Esam_Money_Temp;
-	unsigned char Esam_Do_Flag;
-	unsigned char Esam_Err_Flag;
-	
-	Esam_Do_Flag = 0;
-	if( Flag )
-		{
-//		Esam_Money_Temp = 100L;
-		Esam_Do_Flag = 0xFF;
-		Reamin_Money_ESAM_Dec_Time=GetNowTime();
-		}
-	else
-		{
-		if(GetTimeCount(Reamin_Money_ESAM_Dec_Time,900000l)==0)
-//		if(GetTimeCount(Reamin_Money_ESAM_Dec_Time,60000l)==0)
-			{
-			Esam_Do_Flag = 0xFF;
-			Reamin_Money_ESAM_Dec_Time=GetNowTime();
-			}
-		}
-	
-//		Esam_Money_Temp = Reamin_Money_ESAM;
-//		if( Esam_Money_Temp>=Pre_Power_Down_Save_Data.Remain_Money )
-//			{
-//			if( Esam_Money_Temp!=0 && Pre_Power_Down_Save_Data.Remain_Money==0 )
-//				Esam_Money_Temp=100L;
-//			else
-//				Esam_Money_Temp-=Pre_Power_Down_Save_Data.Remain_Money;
-//			}
-//		else
-//			Esam_Money_Temp=100L;
-
-//		}
-	
-	
-	if( Esam_Do_Flag == 0xFF )
-		{
-//		ESAM_ERR_DEFINE = 0;
-		Esam_Err_Flag = 0;
-		CPU_ESAM_CARD_Control(ESAM);
-		Cpucard_Serial_Init();
-
-		if( Esamcard_Atr() != OK )
-			Esam_Err_Flag = 1;
-		else
-			{
-    		if( ((Meter_Parameter.MeterMode[1].byte)&0x20)==0x20 )    
-    			{
-				if( Esam_Remain_Money_Dec() != OK)
-					Esam_Err_Flag = 1;
-    			}
-//			Reamin_Money_ESAM = Pre_Power_Down_Save_Data.Remain_Money;
-			}
-		if( Esam_Err_Flag )
-			Esam_Err_Count++;
-		else
-			Esam_Err_Count = 0;
-		if( Esam_Err_Count>=4 )
-			ESAM_ERR_DEFINE = 1;
-		else
-			ESAM_ERR_DEFINE = 0;
-		
-		Cpu_Card_IO_Reset();
-		}
-        */
+	{
 	}
 
 /*"**************************************************************************"*/
@@ -614,8 +549,8 @@ unsigned char Esam_Safe_Password_Updata(unsigned char Password_Addr,
 	Order_Head[2] = 0x1E;
 	Order_Head[3] = Password_Addr;
 	temp_buffer_2[0] = 0;
-	temp_buffer_2[1] = 0;
-	My_Memcpy(temp_buffer_2+2, Pre_Payment_Para.BcdMeterID,6); 
+	temp_buffer_2[1] = 0;//
+	My_Memcpy(temp_buffer_2+2,Pre_Payment_Para.BcdMeterID  ,6); 
 	if( Card_ID==GWFAR_RES_PASSWORD_CARD )
 		{
 		for( i=0;i<8;i++ )
@@ -623,11 +558,7 @@ unsigned char Esam_Safe_Password_Updata(unsigned char Password_Addr,
 		temp_buffer_2[7] = 1;
 		}
 	if( CPU_Card_Driver((const unsigned char *)Order_Head,8,temp_buffer_2,0,CommunicationPortMode,0)!= OK )
-        {
-          ASSERT_FAILED();
-          return ERR;
-        }
-		
+		return ERR;
 
 	Order_Head[0] = 0xBF;
 	Order_Head[1] = 0xE6;
@@ -638,11 +569,7 @@ unsigned char Esam_Safe_Password_Updata(unsigned char Password_Addr,
 	temp_buffer_2[1] = Password_Off;
 	temp_buffer_2[2] = 0x00;
 	if( CPU_Card_Driver((const unsigned char *)Order_Head,3,temp_buffer_2,0,CommunicationPortMode,0)!= OK )
-        {
-          ASSERT_FAILED();
-          return ERR;
-        }
-		
+		return ERR;
 
 	My_Memcpy(temp_buffer_2,receive_send_buffer,0x20); 
 
@@ -652,10 +579,7 @@ unsigned char Esam_Safe_Password_Updata(unsigned char Password_Addr,
 	Order_Head[2] = 0x01;
 	Order_Head[3] = 0xFF;
 	if( CPU_Card_Driver((const unsigned char *)Order_Head,0x20,temp_buffer_2,0,CommunicationPortMode,0)!= OK )
-	{
-         ASSERT_FAILED();
-          return ERR;
-        }	
+		return ERR;
 
 	return OK;
 	}
@@ -770,14 +694,15 @@ void Deal_Run_Inf_Data(unsigned char * Source_Point,unsigned char Mode)
         mem_cpy(&Run_Inf_Data,Source_Point, sizeof(struct Run_Inf_Data),&Run_Inf_Data, sizeof(struct Run_Inf_Data));
           
 //" 用户编号，表号，用户类型"
+        
         My_memcpyRev(&Run_Inf_Data.Client_ID[0],Pre_Payment_Para.UserID,6);
         My_memcpyRev(&Run_Inf_Data.Meter_ID[0],Pre_Payment_Para.BcdMeterID,6);
         Run_Inf_Data.User_Kind=CardType;
- ///剩余电费  //
+ ///剩余电费  //这个地方要改
  	My_memcpyRev( (unsigned char *)&(Run_Inf_Data.Remain_Money),(INT8U *)&Pre_Payment_Para.Remain_Money ,4);
-// 购电次数 //
+// 购电次数 //这个地方要改
 	My_memcpyRev( (unsigned char *)&(Run_Inf_Data.Buy_Count),(unsigned char *)&Pre_Payment_Para.Buy_Count,4);
-//  过零电费//
+//  过零电费//这个地方肯能会出问题
         Temp=Get_Overdraft_Money();
         Hex2Bcd(Temp, DataTemp,4,DataTemp,4);//从黄工哪里得到INT32U的hex型的 透支金额，并转换为4个字节的BCD码
  	My_memcpyRev( (unsigned char *)&(Run_Inf_Data.Low_Zero_Money),DataTemp,4);
@@ -795,9 +720,10 @@ void Deal_Run_Inf_Data(unsigned char * Source_Point,unsigned char Mode)
         Hex2Bcd(Temp, DataTemp,3,DataTemp,3);//
         My_memcpyRev( (unsigned char *)&(Run_Inf_Data.Unlawful_Card_Count[0]),(unsigned char *)DataTemp,3);
         //" 返写日期时间 "//
-        test();//不知道是要bcd的还是要 hex的   就给个bcd的
-        Get_Array_Time(T_BCD, DataTemp,DataTemp, 5);//从黄工那里得到5个字节的当前时间bcd编码，分别为：分，时，日，月年，没必要反相了
+        //test();//不知道是要bcd的还是要 hex的   就给个bcd的
+        //Get_Array_Time(T_BCD, DataTemp,DataTemp, 5);//从黄工那里得到5个字节的当前时间bcd编码，分别为：分，时，日，月年，没必要反相了
  	//My_Memcpy((unsigned char *)&(Run_Inf_Data->Return_DT[0]),DataTemp,5);
+        
         mem_cpy(  &Run_Inf_Data.Return_DT[0] ,DataTemp,5, &Run_Inf_Data.Return_DT[0],5 );
         
         //把更新了的  数据 复制到 函数实参数
@@ -812,12 +738,6 @@ unsigned char Esam_Remain_Money_Dec(void)
         MeterRemainMoney=Get_Left_Money();
        // Debug_Print("//从esam 读取 钱包文件 ，4字节， 并反相，  " );
   	Read_Esam_Moneybag_File((unsigned char *)&Moneybag_Data);
-
-        //mem_cpy(Order_Head,(INT8U *)&Moneybag_Data,4,Order_Head,4);
-        //Debug_Print(" 从esam卡得到的购电金额为： %x  %x  %x  %x", Order_Head[ 3], Order_Head[ 2], Order_Head[1 ], Order_Head[0 ]  );
-       
-        //mem_cpy(Order_Head,(INT8U *)&Pre_Payment_Para.Remain_Money,4,Order_Head,4);
-       // Debug_Print(" 从表中得到购电金额为： %x  %x  %x  %x", Order_Head[ 3], Order_Head[ 2], Order_Head[1 ], Order_Head[0 ]  );
         //与表中的 钱包金额 比较， 并相减 得到差额
 	if( MeterRemainMoney>0 )
         {

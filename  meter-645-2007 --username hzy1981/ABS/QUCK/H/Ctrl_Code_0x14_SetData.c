@@ -49,7 +49,7 @@ const struct Far_Deal_Para_Flag_T1 Far_Deal_Para_List_T1[] = {
 //得到明文+mac 对esam进行设置 ,pSrc为从数据标示开始的数据，  SrcLen为数据长度 即 645帧中L字段的值
 //不需要告诉黄工  修改esam参数， 
 INT8U Set_Esam_Para(  INT8U *pSrc, INT8U SrcLen)
-{
+{//一类数据修改
         INT8U DataPdi[4];
         unsigned char i,j;
   
@@ -67,7 +67,6 @@ INT8U Set_Esam_Para(  INT8U *pSrc, INT8U SrcLen)
         Far_Identity_Auth_Ok_Flag=!Chk_Pay_Time_Arrive();
         if(Far_Identity_Auth_Ok_Flag != 1)
         {
-           Cpu_Esam_All_Operate(ESAM,CPU_ESAM_DRV_POWER_OFF,receive_send_buffer,receive_send_buffer,Length_receive_send_buffer );
            Reset_Pay_Timer(0);
            ASSERT_FAILED();
            return 0;
@@ -104,9 +103,9 @@ INT8U Set_Esam_Para(  INT8U *pSrc, INT8U SrcLen)
 		*(((unsigned char *)(&Far_Deal_Para_Flag_T1))+j) = *(((const unsigned char *)&Far_Deal_Para_List_T1[i])+j);
 
 	if(Far_Write_Esam(0x04,Update_Binary,0x80+Far_Deal_Para_Flag_T1.Esam_File,
-										(unsigned char)Far_Deal_Para_Flag_T1.Esam_Offset,
-										Far_Deal_Para_Flag_T1.Esam_Length,
-										pSrc+LENGTH_FAR_645_FRAME_T1+4,0)!=OK)
+			(unsigned char)Far_Deal_Para_Flag_T1.Esam_Offset,
+			Far_Deal_Para_Flag_T1.Esam_Length,
+			pSrc+LENGTH_FAR_645_FRAME_T1+4,0)!=OK)//这里为偏移16个字节即实际数据为N1N2...Nm
 	{
             ASSERT_FAILED();
             return 0;
@@ -187,7 +186,7 @@ const unsigned char Data_ID_Offset[]=
 //返回值 权限正确且解密成功返回1，否则返回0
 //注意：该函数传入的pSrc和pDst可能是同一地址。
 INT8U  Esam_Auth_Check(  INT8U *pSrc, INT16U SrcLen, INT8U * DstLen)
-{
+{//二类数据修改
         INT8U i,j,Block_Flag;
 	//INT8U Length; 
         INT8U DataPdi[4];

@@ -323,7 +323,7 @@ unsigned char CPU_Card_Driver(const unsigned char *Order_Head,
         {
                ASSERT_FAILED();
                return ERR; 
-         }
+        }
         //ÅĞ¶Ï´Ócpu¿¨½ÓÊÕµÄ1¸öÊı¾İ  ÊÇ·ñºÍ ÃüÁîÍ·µÄins  ÏàµÈ
         if(  receive_send_buffer[0]!=*(Order_Head+1) )
 	{
@@ -363,7 +363,7 @@ unsigned char CPU_Card_Driver(const unsigned char *Order_Head,
 			else
 				i = receive_send_buffer[1+Length_LE];
 	        	if(	Read(0,Get_Response,0,0,i )==OK ) 
-	       	    	return OK;
+	       	    	        return OK;
 		        else
 				return ERR;
 			}
@@ -389,8 +389,14 @@ INT16U C_Read_Storage_Data(STORA_DI SDI, void* pDst, void* pDst_Start, INT16U Ds
        
 }
 //
-INT8U  WhenCardInsertedOrFarControlInitPrePayData(void) { //ÉÏµç´Óe·½¶ÁÈ¡Êı¾İµ½È«¾Ö±äÁ¿
-     //ÓÃ»§±àºÅ, Êı¾İ³¤¶ÈÎª6
+INT8U  WhenCardInsertedInitPrePayData(void) { //ÉÏµç´Óe·½¶ÁÈ¡Êı¾İµ½È«¾Ö±äÁ¿
+     //ÓÃ»§±àºÅ, Êı¾İ³¤¶ÈÎª6//ÔÚ¿¨»§¿¨Á÷³ÌÖĞ£¬ÊÇÖ±½Ó¶ÁÈ¡¿¨ÖĞµÄÖµ£¬ºÍÖ±½Ó¶Á³öe·½ÖĞµÄÖµ£¬Á½ÕßÏà±È½Ï£¬  È»ºóĞ´µÄÊ±ºòÒ²ÊÇÒ»ÑùµÄ Ö±½Ó¶Á³öÀ´£¬Ö±½ÓĞ´·¢Å¶e·½
+     //ÔÚÔ¶³ÌÍ¨Ñ¶ÖĞ £¬½ø³Ì¿ª»§²Ù×÷µÄÊ±£¬Ê£Óà½ğ¶î£¬¹ºµç´ÎÊı£¬ÊÇÕı³£Ë³Ğò£¬¿Í»§±àºÅ£¬ºÍÈí¼şÉÏµÄÏà·´£¬ 
+ // µ±¿ª»§µÄÊ±ºò£¬ÊÇ·´Ïà¿Í»§±àºÅºóÔÙĞ´µ½esamµÄ    Ğ´µ½e·½ÖĞµÄÎªÕı³£Ë³Ğò
+  //µ±Êı¾İ²éÑ¯Ê±£¬´ÓesamÖĞ¶Á³öÀ´µÄÊı¾İÎª·´ÏàºóÔÙ·´Ïà ºó ²ÅµÃµ½Õı³£Ë³Ğò   £¬ÔÙ·¢¸øÖ÷Õ¾
+     //  µ±³äÖµµÄÊ±ºò£¬ÊÇÏÈ·´ÏàÖ÷Õ¾µÄ¿Í»§±àºÅºóÔÙÓëe·½ÖĞµÄ¿Í»§±àºÅÏà±È½ÏµÄ
+      //ÓÉ´Ë¿ÉÒÔ¿´³ö,Ö÷Õ¾À´µÄÊı¾İÊÇÕı³£Ë³Ğò£¬°ÑÊı¾İ¸øesamÒª·´ÏàË³Ğò£¬  È»¶ø¸ø e·½ÓÃÕı³£Ë³Ğò
+    //³ıÈ¥¡¡¿Í»§±àºÅÍâ£¬¡¡¿Í»§±àºÅ´ÓÖ÷Õ¾À´Ê±·´ÊÇµÄË³Ğò£¬Ğ´µ½£å·½ÖĞÒª·´Ïà  ·¢¸øÖ÷Õ¾ÒªÓÃ·´µÃË³Ğò
      C_Read_Storage_Data( SDI_CUTOMER_ID, Pre_Payment_Para.UserID,  Pre_Payment_Para.UserID,sizeof(Pre_Payment_Para.UserID)  ); 
      //Èç¹ûÊÇ¶ÁĞ´ÔËĞĞ×´Ì¬
      //SDI²ÎÊıÌî³ä_SDI_PREPAID_RUN_STATUS£¬ Êı¾İ³¤¶ÈÎª1
@@ -423,14 +429,11 @@ INT8U  WhenCardInsertedOrFarControlInitPrePayData(void) { //ÉÏµç´Óe·½¶ÁÈ¡Êı¾İµ½È
 }
 
 void PrintErrState(void ){
-  INT8U Temp[4];
-  mem_cpy(Temp,(INT8U *)&Card_Error_State.CardErrorState_INT32U,4,Temp,4);
-  Debug_Print("´íÎó×´Ì¬×Ö:%x,%x   ,%x ,%x" ,Temp[0],Temp[1],Temp[2],Temp[3] );
-  //Debug_Print("   ´íÎó×´Ì¬×Ö:%lX" ,Card_Error_State.CardErrorState_INT32U);
-  Debug_Print("  sizeof(Card_Error_State.CardErrorState_INT32U):%d", sizeof(Card_Error_State.CardErrorState_INT32U));
+ 
   if(Card_Error_State.CardErrorState_INT32U EQ 0 )
   {
      Debug_Print("   ´íÎó×´Ì¬×ÖÎª0"  );
+     return;
   }
   if(Card_Error_State.CardErrorState. CardKindErr ){
      Debug_Print(" ¿¨ÀàĞÍ´í£¨¹ºµç¿¨£¬ ²ÎÊıÔ¤ÖÃ¿¨¡£¡££©¼ÆÈë·Ç·¨¿¨²åÈë´ÎÊı   "  );

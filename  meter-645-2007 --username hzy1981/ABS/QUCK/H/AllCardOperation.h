@@ -11,7 +11,7 @@
 //来自 ICcard.h
 INT8U ICcardMain(void);
 INT8U ICcardProcess(void);
-unsigned int CardProgrammeEvent(void);
+void CardProgrammeEvent(void);
 unsigned int ProgrammeEvent(unsigned long progman,unsigned long progdata);
 // 判断文件数据结构的帧头帧尾和效验和是否合法 "
 unsigned char Frame_Judge(unsigned char * Point,unsigned char length);

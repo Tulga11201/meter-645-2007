@@ -1197,7 +1197,8 @@ CONST S_Def_Para_Info Def_Para[] =
   { _SDI_INVALID_CARD_COUNTS, 1, (INT8U *)Zero}, //非法卡插入次数
   { _SDI_INVALID_COUNTS_AllOW, 1, (INT8U *)Zero}, //非法卡插入次数
   { _SDI_FAR_AUTH_DAY_FOLLOW, 1, (INT8U *)Zero},//身份认证跟随日
-
+  { _SDI_SINGLE_OR_COMPLEX_USER_KIND, 1, (INT8U *)Zero}, //用户类型
+  
   {SDI_RELAY_OFF_DELAY, 1, Def_SDI_RELAY_OFF_DELAY}, //跳闸延时
   {SDI_CUTOMER_ID, 1, (INT8U *)Zero}, //客户编号
   {0x04090101, 2, Def_04090101_2}, //失压判定电压触发上限、恢复下限

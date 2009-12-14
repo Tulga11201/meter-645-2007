@@ -97,8 +97,8 @@ CONST S_Data_Para_Storage_Info Data_Para_Storage[] =
   { _SDI_PREPAID_PSW_KIND, IMP_IMP_PARA, 1, 1}, // (0x0303|EXT_PARA_DATA)//密钥类型数据长度为1
   { _SDI_INVALID_CARD_COUNTS, IMP_IMP_PARA, 4, 1}, //非法卡插入次数
   { _SDI_INVALID_COUNTS_AllOW, IMP_IMP_PARA, 1, 1}, //
-  { _SDI_FAR_AUTH_DAY_FOLLOW, IMP_IMP_PARA, 1, 1}, //远程认证跟随日
-  
+  { _SDI_FAR_AUTH_DAY_FOLLOW, IMP_IMP_PARA, 4, 1}, //远程认证跟随日
+  { _SDI_SINGLE_OR_COMPLEX_USER_KIND, IMP_IMP_PARA, 1, 1}, //用户类型 
   ///////////////////////////////////////////////////////////
   {SDI_BAT_RUN_TIME, IMP_IMP_PARA, 4, 1},  //0x0280000A  //电池工作时间 
   {SDI_DEMAND_PERIOD, IMP_IMP_PARA, 1, 1},  //0x04000103 //需量周期

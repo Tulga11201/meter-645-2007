@@ -635,31 +635,26 @@ unsigned char PassWord_Updata(unsigned char Card_ID)
 //-----------------------------------------------------------------
 //根据电表信息，更新esam返写文件 "
 unsigned char Updata_Esam_Return_File(unsigned char Order_Kind)
-	{
-	unsigned char i;
+{
         //缓冲清0， 因为缓冲中有的数据 在下面的流程中并不会覆盖，  但是又想要设置为0
-	for( i=0;i<LENGTH_RUN_INF_DATA+6 ;i++)
-        {
-           Card_WR_Buff[i]=0;
-        }
-		
+        mem_set(Card_WR_Buff,0x00,sizeof(LENGTH_RUN_INF_DATA)+6,Card_WR_Buff,Length_Card_WR_Buff);
 	
 	Card_WR_Buff[0] = 0x68;
 	Card_WR_Buff[1] = Order_Kind;//卡类型
 	Card_WR_Buff[2] = 0;
-	Card_WR_Buff[3] = LENGTH_RUN_INF_DATA;// LENGTH_RUN_INF_DATA+6为 整个二进制文件的长度
+	Card_WR_Buff[3] = LENGTH_RUN_INF_DATA;//这个地方减去1 是因为 字节对齐问题，在该结构体前插入了一个无用的字节
         //从esam 以及电能表中读取数据  
-	Deal_Run_Inf_Data(Card_WR_Buff+4,0x80);
-	
-	Card_WR_Buff[LENGTH_RUN_INF_DATA+4] = Cal_Add_CS(Card_WR_Buff+1,LENGTH_RUN_INF_DATA+3);//倒数最后一个为效验位
-	Card_WR_Buff[LENGTH_RUN_INF_DATA+5] = 0x16;//结束标志
+	Deal_Run_Inf_Data(Card_WR_Buff+4,0x80);//加4 是因为 传给的地址 为 除去 0x68头段 ，卡类型段，长度段  的地址
+	//LENGTH_RUN_INF_DATA+4-1 是因为 该地址为 效验和段， Cal_Add_CS为计算效验和函数，第一个地址为卡类型段地址，，第二个为除去头尾及效验和段长度 再减去 插入的无用字节
+	Card_WR_Buff[LENGTH_RUN_INF_DATA+4-1] = Cal_Add_CS(Card_WR_Buff+1,LENGTH_RUN_INF_DATA-1+3);//倒数最后一个为效验位
+	Card_WR_Buff[LENGTH_RUN_INF_DATA+5-1] = 0x16;//结束标志// 减去， 是因为多了一个无用字节
 	
 	CPU_ESAM_CARD_Control(ESAM);
-        //写esam
+        //写esam  
 	if( Write(0,Update_Binary,0x80+ESAM_RUN_INF_FILE,0,LENGTH_RUN_INF_DATA+6,Card_WR_Buff) != OK )
 		return ERR;
 	return OK;
-	}
+}
 //------------------------------------------------------------------
 /*"Mode:函数调用模式，1：写调用，0：读调用 "*/
 /*"BIT7 :1：写调用，0：读调用 "*/
@@ -688,6 +683,8 @@ unsigned char Updata_Esam_Return_File(unsigned char Order_Kind)
 void Deal_Run_Inf_Data(unsigned char * Source_Point,unsigned char Mode)
 {
 	struct Run_Inf_Data  Run_Inf_Data;
+        INT32U CurrMeter_MoneyCount;
+        
         INT32U Temp ;
         INT8U  DataTemp[5];
 	//Run_Inf_Data = (struct Run_Inf_Data *)Source_Point;
@@ -699,10 +696,12 @@ void Deal_Run_Inf_Data(unsigned char * Source_Point,unsigned char Mode)
         My_memcpyRev(&Run_Inf_Data.Meter_ID[0],Pre_Payment_Para.BcdMeterID,6);
         Run_Inf_Data.User_Kind=CardType;
  ///剩余电费  //这个地方要改
- 	My_memcpyRev( (unsigned char *)&(Run_Inf_Data.Remain_Money),(INT8U *)&Pre_Payment_Para.Remain_Money ,4);
+        CurrMeter_MoneyCount=Get_Left_Money();
+ 	My_memcpyRev( (unsigned char *)&(Run_Inf_Data.Remain_Money),(INT8U *)&(CurrMeter_MoneyCount),4);
 // 购电次数 //这个地方要改
-	My_memcpyRev( (unsigned char *)&(Run_Inf_Data.Buy_Count),(unsigned char *)&Pre_Payment_Para.Buy_Count,4);
-//  过零电费//这个地方肯能会出问题
+        CurrMeter_MoneyCount=Get_Buy_Eng_Counts();
+	My_memcpyRev( (unsigned char *)&(Run_Inf_Data.Buy_Count),(unsigned char *)&(CurrMeter_MoneyCount),4);
+//  过零电费//这个地方可能会出问题
         Temp=Get_Overdraft_Money();
         Hex2Bcd(Temp, DataTemp,4,DataTemp,4);//从黄工哪里得到INT32U的hex型的 透支金额，并转换为4个字节的BCD码
  	My_memcpyRev( (unsigned char *)&(Run_Inf_Data.Low_Zero_Money),DataTemp,4);
@@ -720,15 +719,14 @@ void Deal_Run_Inf_Data(unsigned char * Source_Point,unsigned char Mode)
         Hex2Bcd(Temp, DataTemp,3,DataTemp,3);//
         My_memcpyRev( (unsigned char *)&(Run_Inf_Data.Unlawful_Card_Count[0]),(unsigned char *)DataTemp,3);
         //" 返写日期时间 "//
-        //test();//不知道是要bcd的还是要 hex的   就给个bcd的
-        //Get_Array_Time(T_BCD, DataTemp,DataTemp, 5);//从黄工那里得到5个字节的当前时间bcd编码，分别为：分，时，日，月年，没必要反相了
- 	//My_Memcpy((unsigned char *)&(Run_Inf_Data->Return_DT[0]),DataTemp,5);
-        
+        DataTemp[0 ]=Cur_Time1.Year;
+        DataTemp[ 1]=Cur_Time1.Month;
+        DataTemp[ 2]=Cur_Time1.Date;
+        DataTemp[ 3]=Cur_Time1.Hour;
+        DataTemp[ 4]=Cur_Time1.Min;        
         mem_cpy(  &Run_Inf_Data.Return_DT[0] ,DataTemp,5, &Run_Inf_Data.Return_DT[0],5 );
-        
-        //把更新了的  数据 复制到 函数实参数
-        mem_cpy( Source_Point,(INT8U *)&Run_Inf_Data + 1, sizeof(struct Run_Inf_Data) - 1,Source_Point, Length_Card_WR_Buff-4 );
-        
+        //把更新了的  数据 复制到 函数实参数(INT8U *)&Run_Inf_Data + 1 是应为考虑到该结构体的字节对齐问题，在其添加了一个多余的字 
+        mem_cpy( Source_Point,((INT8U *)&Run_Inf_Data) + 1, sizeof(struct Run_Inf_Data) - 1,Source_Point, Length_Card_WR_Buff-4 );   
 }
 unsigned char Esam_Remain_Money_Dec(void)
 {

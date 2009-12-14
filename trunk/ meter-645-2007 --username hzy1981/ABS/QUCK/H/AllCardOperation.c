@@ -612,29 +612,20 @@ unsigned char Set_In_Card(void){///出厂预制卡"
         }
         // 从esam 中读取被更新后的钱包文件，用他来更新到电表中 读出来后会反相
 	Read_Esam_Moneybag_File( (INT8U * )&Moneybag_Data);
-        mem_cpy(Order_Head,(INT8U *)&Moneybag_Data.Buy_Count,4,Order_Head,4);
-        //从esam卡得到的购电次数为： %x  %x  %x  %x", Order_Head[ 3], Order_Head[ 2], Order_Head[1 ], Order_Head[0 ]  );
-        mem_cpy(Order_Head,(INT8U *)&Moneybag_Data,4,Order_Head,4);
-	//从esam卡得到的购电金额为 ： %x  %x  %x  %x", Order_Head[ 3], Order_Head[ 2], Order_Head[1 ], Order_Head[0 ]  );
-	
-        
+
         // " 开始更新电表中的数据"  );
         //更新购电次数,更新剩余金额
         Prepaid_Set_Buy_Money_Counts(Moneybag_Data.Remain_Money, Moneybag_Data.Buy_Count);
-        Pre_Payment_Para.Remain_Money=Get_Left_Money();//从黄工那里获得剩余金额
-        mem_cpy(Order_Head,(INT8U *)&Pre_Payment_Para.Remain_Money,4,Order_Head,4);
-        Debug_Print(" 读取电能表中的剩余金额： %x  %x  %x  %x", Order_Head[ 3], Order_Head[ 2], Order_Head[1 ], Order_Head[0 ]  );
-        
-        
-        
-	test();
         //参数设置卡，版本号
 	Pre_Payment_Para.Para_Card_Version=0;
         Write_Storage_Data( _SDI_PREPAID_PARA_CARD_VER,&Pre_Payment_Para.Para_Card_Version  , 4 );
         //表的运行状态
 	Pre_Payment_Para.Meter_Run_State=0;
         Write_Storage_Data(_SDI_PREPAID_RUN_STATUS ,&Pre_Payment_Para.Meter_Run_State  , 1 );
-        
+        //清除远程非法攻击次数
+        FarPrePayment.ID_Ins_Counter  =0;
+	Write_Storage_Data(_SDI_INVALID_COUNTS_AllOW, &FarPrePayment.ID_Ins_Counter, 1);
+        //
 	return OK;
 }
 ///
@@ -658,7 +649,7 @@ void Deal_Init_Para_Inf_File(unsigned char * Source_Point,unsigned char Mode)
 //	unsigned char Para_UpData_Flag;          参数更新标志位  d
 void Deal_Para_Table2(unsigned char * Source_Point ){
          
-  /*//struct Para_Table2 *Para_Table2;
+  //struct Para_Table2 *Para_Table2;
         INT8U SingleKing_OrComplexKing;
         SingleKing_OrComplexKing=*Source_Point;
 	
@@ -667,8 +658,7 @@ void Deal_Para_Table2(unsigned char * Source_Point ){
        // _SDI_SINGLE_OR_COMPLEX_USER_KIND
 	if( Para_Updata_Flag&0x80 ){
           Write_Storage_Data(_SDI_SINGLE_OR_COMPLEX_USER_KIND, &SingleKing_OrComplexKing,1);
- 
-	}*/
+	}
 }
 //unsigned char Triff_Switch_Time[5];      " 两套分时费率切换时间  
 void Deal_Para_Table4(unsigned char * Source_Point ){

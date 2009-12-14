@@ -404,7 +404,6 @@ INT8U  WhenCardInsertedInitPrePayData(void) { //上电从e方读取数据到全局变量
      //如果是写离散因子
      //SDI填充 _SDI_DISCRETE_INFO, 数据长度为8 
      C_Read_Storage_Data( _SDI_DISCRETE_INFO, &cpucard_number[0], &cpucard_number[0], sizeof( cpucard_number));    
-   
      //密钥类型,密钥下装卡， 还是密钥恢复卡
      //_SDI_PREPAID_PSW_KIND, 数据长度为1     
      C_Read_Storage_Data( _SDI_PREPAID_PSW_KIND, &Pre_Payment_Para.PassWord_Kind,  &Pre_Payment_Para.PassWord_Kind,1);  
@@ -413,9 +412,8 @@ INT8U  WhenCardInsertedInitPrePayData(void) { //上电从e方读取数据到全局变量
     //现场参数设置卡版本号  
      C_Read_Storage_Data(_SDI_PREPAID_PARA_CARD_VER,&Pre_Payment_Para.Para_Card_Version, &Pre_Payment_Para.Para_Card_Version, 4) ;
      
-     Pre_Payment_Para.Remain_Money_Hoard_Limit=Get_Money_Hoard_Limit();
-     Pre_Payment_Para.Remain_Money=Get_Left_Money();//从黄工那里获得剩余金额
-     Pre_Payment_Para.Buy_Count=Get_Buy_Eng_Counts();//从黄工那里获得购电次数，
+     //Pre_Payment_Para.Remain_Money_Hoard_Limit=Get_Money_Hoard_Limit();
+     //Pre_Payment_Para.Buy_Count=Get_Buy_Eng_Counts();//从黄工那里获得购电次数，
      Card_Error_State.CardErrorState_INT32U=0x00000000;
      //mem_cpy(Pre_Payment_Para.BcdMeterID,&a,6,Pre_Payment_Para.BcdMeterID,6);
      CardType=0x00;//卡类型 购电卡， 参数预置卡。。。

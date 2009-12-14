@@ -18,7 +18,8 @@
 INT8U Esam_Remote_Auth(INT8U *pSrc, INT8U SrcLen, INT8U *pDst, INT8U *pLen, INT8U *pDst_Start, INT16U DstLen){
         //定义局部变量
         INT8U  ret;
-        INT8U  Far_Auth_Day_Follow;
+        INT32U  Far_Auth_Day_Follow;
+        INT8U DataTemp[4];
         INT32U Temp;
         //INT8U DataTemp[5];
         
@@ -26,7 +27,7 @@ INT8U Esam_Remote_Auth(INT8U *pSrc, INT8U SrcLen, INT8U *pDst, INT8U *pLen, INT8
         OS_Mutex_Pend(PUB_BUF0_SEM_ID); //使用信号量，以便使用缓冲
         //错误状态字清0， 因为每个功能的开始都是从身份认证开始的 ，其实这里不清0也可以
 	Far_Security_Auth_Err_Info.intd=0;
-        Card_Error_State.CardErrorState_INT32U=0x00000000;	
+        Card_Error_State.CardErrorState_INT32U=0;	
         
         // 判断身份认证有效时间是否过了，如果过了，ID_Ins_Counter就赋值为0
         Far_Identity_Auth_Ok_Flag=!Chk_Pay_Time_Arrive();
@@ -36,16 +37,21 @@ INT8U Esam_Remote_Auth(INT8U *pSrc, INT8U SrcLen, INT8U *pDst, INT8U *pLen, INT8
            Reset_Pay_Timer(0);
         }
         
-        //远程数据初始化：
+        //初始化：FarPrePayment.ID_Ins_Counter
         Read_Storage_Data(_SDI_INVALID_COUNTS_AllOW ,&FarPrePayment.ID_Ins_Counter,&FarPrePayment.ID_Ins_Counter, 1) ;
         if(FarPrePayment.ID_Ins_Counter != 0 )//判断是否需要更新ID_Ins_Counter ，
         {//Cur_Time0.Date
-          Read_Storage_Data(_SDI_FAR_AUTH_DAY_FOLLOW ,&Far_Auth_Day_Follow, &Far_Auth_Day_Follow, 1) ;
+          DataTemp[0 ]=Cur_Time1.Year;
+          DataTemp[ 1]=Cur_Time1.Month;
+          DataTemp[ 2]=Cur_Time1.Date;
+          DataTemp[ 3]=Cur_Time1.Hour;
+          Read_Storage_Data(_SDI_FAR_AUTH_DAY_FOLLOW ,(INT8U *)&Far_Auth_Day_Follow, (INT8U *)&Far_Auth_Day_Follow, 4) ;
           //Get_Array_Time(T_BCD, DataTemp,DataTemp, 5);//从黄工那里得到5个字节的当前时间bcd编码，DataTemp[0]开始分别为：分，时，日，月年，没必要反相了
-          if(Cur_Time1.Date != Far_Auth_Day_Follow )//判断日期有没有变更
+          if( memcmp( DataTemp,(INT8U *)&Far_Auth_Day_Follow,4 ) != 0 )//判断日期有没有变更
           {
-            Far_Auth_Day_Follow=Cur_Time1.Date;
-            Write_Storage_Data(_SDI_FAR_AUTH_DAY_FOLLOW ,&Far_Auth_Day_Follow, 1);
+            //Far_Auth_Day_Follow=Cur_Time1.Date;
+            mem_cpy((INT8U *)&Far_Auth_Day_Follow,DataTemp,4,(INT8U *)&Far_Auth_Day_Follow,4);
+            Write_Storage_Data(_SDI_FAR_AUTH_DAY_FOLLOW ,&Far_Auth_Day_Follow, 4);
             FarPrePayment.ID_Ins_Counter  =0;
 	    Write_Storage_Data(_SDI_INVALID_COUNTS_AllOW, &FarPrePayment.ID_Ins_Counter, 1);
           }
@@ -585,7 +591,7 @@ unsigned char Far_Deal_070101FF(unsigned char * Data_Point )
            return ERR;
         }
 	//判断本次购电的囤积门限、、//
-	if( Judge_Remain_Money_Over( Far_Deal_070101FF_format.Remain_Money ) != OK )
+	if( Check_Buy_Money_Exceed_Limit(Far_Deal_070101FF_format.Remain_Money) )
 	{
                 ASSERT_FAILED();
 		BUY_MONEY_OVER_ERR_DEFINE=1;
@@ -691,7 +697,7 @@ unsigned char Far_Deal_070102FF(unsigned char * Data_Point )
 	}
 
 	//判断本次购电的囤积门限 //
-	if( Judge_Remain_Money_Over(Far_Deal_070102FF_format.Remain_Money) != OK )
+	if( Check_Buy_Money_Exceed_Limit(Far_Deal_070102FF_format.Remain_Money) )
         {
                 ASSERT_FAILED();
 		BUY_MONEY_OVER_ERR_DEFINE=1;

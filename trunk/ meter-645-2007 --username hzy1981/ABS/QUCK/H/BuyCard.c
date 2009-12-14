@@ -20,6 +20,7 @@
 //" 开户卡,购电卡，比较合法性//  Buy_Count 为cpu卡的购电次数
 unsigned char Judge_User_Card_OK(unsigned char BuyCard_Kind,unsigned long Buy_Count){
 	unsigned long Money_Count_T;// 用来比较 
+        INT32U CurrMeter_MoneyCount;
        // INT8U MeterIDTemp[6];
 	struct Buy_Para_Inf_File file;// 参数信息文件结构体
 	//struct Moneybag_Data Moneybag_Data;//钱包文件结构体  4+4个字节
@@ -27,7 +28,7 @@ unsigned char Judge_User_Card_OK(unsigned char BuyCard_Kind,unsigned long Buy_Co
 	//Read_Esam_Moneybag_File((unsigned char *)&Moneybag_Data);
 	//Pre_Payment_Para.Buy_Count为黄工管理的当前电表购电次数
         
-	Money_Count_T = Pre_Payment_Para.Buy_Count+1;//用来比较次数是否大1
+	Money_Count_T = Get_Buy_Eng_Counts()+1;//用来比较次数是否大1
         // 开始执行函数：Judge_User_Card_OK(unsigned char BuyCard_Kind,unsigned long Buy_Count) " );
         String2ParaFile(  &file,&Card_WR_Buff[4], sizeof(struct Buy_Para_Inf_File) );
         
@@ -37,7 +38,7 @@ unsigned char Judge_User_Card_OK(unsigned char BuyCard_Kind,unsigned long Buy_Co
 		Card_Error_State.CardErrorState.BUY_CARD_KIND_ERR=1;
 	 	return ERR;
 		}
-
+        
 	if( My_Memcmp(&(file.Meter_ID[0]),(unsigned char *)&Pre_Payment_Para.BcdMeterID[0],6) ){
                 ASSERT_FAILED();
 		Card_Error_State.CardErrorState.MeterIdErr=1;
@@ -54,8 +55,8 @@ unsigned char Judge_User_Card_OK(unsigned char BuyCard_Kind,unsigned long Buy_Co
 			  return ERR;
 			}
                  //"//如果购电次数相等则直接回写// " );
-  
-		if( My_Memcmp((unsigned char *)&Buy_Count, (unsigned char *)&Pre_Payment_Para.Buy_Count,4) ==0 ) 
+                CurrMeter_MoneyCount=Get_Buy_Eng_Counts();
+		if( My_Memcmp((unsigned char *)&Buy_Count, (unsigned char *)&(CurrMeter_MoneyCount),4) ==0 ) 
                 {
 			Dir_Return_Flag = 0xFF;////标示购电次数相等时直接 返写cpu卡   " );
 			return OK;
@@ -108,38 +109,11 @@ unsigned char Judge_User_Card_OK(unsigned char BuyCard_Kind,unsigned long Buy_Co
 			   Card_Error_State.CardErrorState.Cpu_Card_Li_San_Yin_Zi_Err=1 ;//卡错误。离散因子错了,有补卡更新了离散因子
 		 	   return ERR;
 		 }
-	}
-       //结束执行函数：Judge_User_Card_OK(unsigned char BuyCard_Kind,unsigned long Buy_Count) " );
-	return OK;
+	}  
+        return OK;
 }
 //----------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------
-//"判断本次购电的囤积门限//
-
-unsigned char Judge_Remain_Money_Over(INT32U Curr_Buy_Money) {
-	INT32U  Money_Count_T,Money_Count_T1;
-        
-        //判断是否购电费用超额
-	Money_Count_T = Pre_Payment_Para.Remain_Money;
-	Money_Count_T+=Curr_Buy_Money;
-        //
-	Money_Count_T1 = Pre_Payment_Para.Remain_Money_Hoard_Limit;
-        //Money_Count_T1 = (signed long)DataTemp;
-	if( Money_Count_T1 != 0 ){
-		if( Money_Count_T > Money_Count_T1 )
-                {
-                  ASSERT_FAILED();
-                  return ERR;
-                }	
-	}
-	//" 剩余电费大于2千万也不允许进表 //
-	if( Money_Count_T > 0x77359400 )  //不知道要不要
-        {
-          ASSERT_FAILED();
-           return ERR;
-        }
-	return OK;
-	}
 //----------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------
 //"开户卡,购电卡//
@@ -264,15 +238,13 @@ unsigned char Buy_Card(void){
 	}  
        Debug_Print(" //如果是非新卡，且 购电次数相等，Dir_Return_Flag被赋值0xff  " );
 	if( Dir_Return_Flag==0 ){//如果是非新卡，且 购电次数相等，Dir_Return_Flag被赋值0xff
-		 Debug_Print("  // 判断本次购电的囤积门限  //  " );
-                 // 判断本次购电的囤积门限  //
-		if( Judge_Remain_Money_Over( Moneybag_Data.Remain_Money ) != OK ){//Moneybag_Data.Remain_Money来自cpu卡
+		// 判断本次购电的囤积门限  //
+		if( Check_Buy_Money_Exceed_Limit( Moneybag_Data.Remain_Money) ){//Moneybag_Data.Remain_Money来自cpu卡
                            ASSERT_FAILED();
 			   Card_Error_State.CardErrorState.MoneyLimitErr=1;
 			   return ERR;
 		}
 		//  ESAM钱包文件充值  //不更新购电次数？？？？//2,0,0
-                
 		if(Remain_Money_Moneybag_Add(USER_CARD_MONEYBAG_FILE,REMAIN_MONEY_CPU_ESAM,0)!=OK)
                 {
                 
@@ -348,7 +320,7 @@ unsigned char Buy_Card(void){
 	return OK;
 }
 
-////////////费率文件更新:SrcLen值为：总文件长减去4(68到16结尾)  WhichTable:1表示第一套费率， 2表示第二套费率
+//费率文件更新:SrcLen值为：总文件长减去4(68到16结尾)  WhichTable:1表示第一套费率， 2表示第二套费率
 void Deal_Triff_Data(unsigned char * Source_Point,unsigned char SrcLen,INT8U WhichTable){
         //  这个地方调黄工给我的函数  ,更新黄工的费率数据
         INT8U j;
@@ -360,7 +332,6 @@ void Deal_Triff_Data(unsigned char * Source_Point,unsigned char SrcLen,INT8U Whi
         }
         mem_cpy(&Triff_Data,Source_Point,sizeof( struct Triff_Data),&Triff_Data,sizeof(struct Triff_Data) );
         //判断是那一套费率
-       //判断是那一套费率 " );
         if(1 EQ WhichTable){
               Temp=SDI_RATE_SCHEME0_0;
         }else if(2 EQ WhichTable){
@@ -403,10 +374,8 @@ void Deal_Buy_Para_Inf_File(unsigned char * Source_Point ){
 	//Deal_Para_Table1((unsigned char *)&(Buy_Para_Inf_File->Meter_ID),Mode);
         if(  (Para_Updata_Flag & 0x80 ) || (Para_Updata_Flag & 0x01)||(Para_Updata_Flag & 0x02)  )
         {
-        
           Card_Set_Para_Notice() ;
         }
-        
         return ;
 }
 

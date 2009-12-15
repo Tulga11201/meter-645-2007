@@ -689,9 +689,7 @@ void Deal_Run_Inf_Data(unsigned char * Source_Point,unsigned char Mode)
         INT8U  DataTemp[5];
 	//Run_Inf_Data = (struct Run_Inf_Data *)Source_Point;
         mem_cpy(&Run_Inf_Data,Source_Point, sizeof(struct Run_Inf_Data),&Run_Inf_Data, sizeof(struct Run_Inf_Data));
-          
 //" 用户编号，表号，用户类型"
-        
         My_memcpyRev(&Run_Inf_Data.Client_ID[0],Pre_Payment_Para.UserID,6);
         My_memcpyRev(&Run_Inf_Data.Meter_ID[0],Pre_Payment_Para.BcdMeterID,6);
         Run_Inf_Data.User_Kind=CardType;

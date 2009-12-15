@@ -96,13 +96,12 @@ INT8U ICcardProcess(){
             return ERR;
         }
 	if(0x68!=receive_send_buffer[0]){
-                ASSERT_FAILED();test();
+                ASSERT_FAILED();
 		Card_Error_State.CardErrorState.CPU_CARD_DATA_HEAD_ERR=1;
 		return ERR;
 	}
         
 	CardType=receive_send_buffer[1];
-        Debug_Print("卡类型:%x ",CardType );
 	if (CardType EQ 0x00){
                 ASSERT_FAILED();
 		Card_Error_State.CardErrorState.CPU_CARD_DATA_CHECK_ERR=1;
@@ -206,9 +205,7 @@ void CardProgrammeEvent(void){
 }
 ////////////
 unsigned int ProgrammeEvent(unsigned long progman,unsigned long progdata){
-	//unsigned char unc=0;\//
-  //void Prepaid_Prog_Record(PROTO_DI PDI, INT8U Op_ID[]) 
-	 Prepaid_Prog_Record(progdata,(INT8U*)&progman);
+	
 	 return 1;
 }
 
@@ -846,7 +843,7 @@ unsigned char Modify_MeterID_Card(void){// 表号设置卡
 	Msb = 0;
         //表号+1
 	for( i=0;i<6;i++ )
-		{
+	{
 		Ctrl = MeterID_Return_Inf_File.Next_Meter_ID[5-i];
 		if( i==0 )
 			Ctrl++;
@@ -855,7 +852,7 @@ unsigned char Modify_MeterID_Card(void){// 表号设置卡
 			{
 			Ctrl += 0x10;
 			Ctrl &=0xF0;
-			}
+			} 
 		if( (Ctrl&0xF0)>0x90 )
 			{
 			Ctrl &=0x0F;
@@ -864,7 +861,7 @@ unsigned char Modify_MeterID_Card(void){// 表号设置卡
 		else
 			Msb = 0;
 		 MeterID_Return_Inf_File.Next_Meter_ID[5-i] = Ctrl;
-		}
+	}
 	MeterID_Return_Inf_File.Add_CS++;//效验和+1
 	CPU_ESAM_CARD_Control(CPU);
         //更新cpu卡返写信息文件， 用来设置的表号变量 保存在该文件中，该变量已被减1 

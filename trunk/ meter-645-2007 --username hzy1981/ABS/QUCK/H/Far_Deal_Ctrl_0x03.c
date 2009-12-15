@@ -5,7 +5,7 @@
 
 
 #undef Debug_Print
- #define Debug_Print(...)
+#define Debug_Print(...)
 //#define Debug_Print _Debug_Print
 
 //远程认证命令接口(控制码为03)

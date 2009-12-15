@@ -952,7 +952,7 @@ void Switch_Ctrl(INT8U Switch_Flag, INT8U Cause)
       Set_Event_Instant(ID_EVENT_RELAY_ON); //合闸事件发生      
     }
     else //还没有手动合闸则保持拉闸状态
-    {/*
+    {
       if(Relay_Status.Switch_Status != SWITCH_OFF && Relay_Status.Off_Delay EQ 0)
       {
         if(Cause EQ S_OFF_PREPAID)
@@ -962,13 +962,13 @@ void Switch_Ctrl(INT8U Switch_Flag, INT8U Cause)
         
         Counts.Var = 0;
 
-        if(Relay_Status.Off_Delay EQ 0) //如果设定延时为0，马上拉闸*/
+        if(Relay_Status.Off_Delay EQ 0) //如果设定延时为0，马上拉闸
         {       
           Set_Relay_Status(SWITCH_OFF, Cause);
           Clr_Event_Instant(ID_EVENT_RELAY_ON); //合闸事件结束      
           Set_Event_Instant(ID_EVENT_RELAY_OFF);//拉闸事件发生  
         } 
-      //}      
+      }      
     }
   }
   

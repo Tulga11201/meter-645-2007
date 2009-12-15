@@ -132,12 +132,12 @@ typedef struct{
   INT16U  NegCurr_Acpow_Down;       //潮流反向事件有功功率触发下限
   INT8U   NegCurr_Time;      //潮流反向事件判定延时时间 
   
-  INT16U OverLoad_AcPow_Down;       //过载事件有功功率触发下限
+  INT32U OverLoad_AcPow_Down;       //过载事件有功功率触发下限
   INT8U  OverLoad_Time;      //过载事件判定延时时间 
   
   
-  INT16U  OverDe_Acpow_Down;       //有功需量超限事件需量触发下限
-  INT16U  OverDe_Reacpow_Down;        //无功需量超限事件需量触发下限 
+  INT32U  OverDe_Acpow_Down;       //有功需量超限事件需量触发下限
+  INT32U  OverDe_Reacpow_Down;        //无功需量超限事件需量触发下限 
   INT8U   OverDe_Time;       //需量超限事件判定延时时间 
 
   INT16U  DownPf_I_Down;       //总功率因数超下限阀值  

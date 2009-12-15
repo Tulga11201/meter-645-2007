@@ -3,8 +3,8 @@
 #include "MyIncludesAll.h"
 
 #undef Debug_Print
-//#define Debug_Print(...)
-#define Debug_Print _Debug_Print
+#define Debug_Print(...)
+//#define Debug_Print _Debug_Print
 extern INT8U Esam_Remote_Auth(INT8U *pSrc, INT8U SrcLen, INT8U *pDst, INT8U *pLen, INT8U *pDst_Start, INT16U DstLen);
 //C_Pre_Payment_Para Pre_Payment_Para;
 //ic¿¨ Èë¿Úº¯Êý

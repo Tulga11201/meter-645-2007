@@ -277,9 +277,7 @@ INT32U Get_Sys_Status()
   {
     return Sys_Status.Status;
   }
-  else//在校验和或者系统状态不正确的情况下，需要直接查询掉电io口电平
-
-  if(Check_Power_Status() EQ POWER_ON_STATUS)
+  else if(Check_Power_Status() EQ POWER_ON_STATUS)//在校验和或者系统状态不正确的情况下，需要直接查询掉电io口电平
   {
     Sys_Status.Status = SYS_NORMAL;
     SET_SYS_STATUS_SUM();

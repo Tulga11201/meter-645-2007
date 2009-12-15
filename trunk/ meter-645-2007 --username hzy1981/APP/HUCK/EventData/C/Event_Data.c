@@ -368,6 +368,15 @@ void Check_Event_Data_Avail()
   
 }
 
+void Card_Clr_All_Data()
+{
+  INT32U Op_ID;
+  
+  Op_ID = 0xFFFFFFFF;
+  Record_Op_ID(&Op_ID);
+  Set_Clear_Data_Flag(CLEAR_ALL_FLAG);
+}
+
 //等待某事件处理结束
 //该函数只用于等待某些特殊事件---只有发生或者只有结束的事件
 //例如瞬时快速事件，例如编程、清电量、清需量、清过程等等

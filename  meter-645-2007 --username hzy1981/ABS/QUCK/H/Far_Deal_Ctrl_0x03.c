@@ -5,8 +5,8 @@
 
 
 #undef Debug_Print
-//#define Debug_Print(...)
-#define Debug_Print _Debug_Print
+#define Debug_Print(...)
+//#define Debug_Print _Debug_Print
 
 //远程认证命令接口(控制码为03)
 //pSrc表示远程帧的数据域， 长度为645帧中L段的值

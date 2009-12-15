@@ -1,7 +1,7 @@
 #include "MyIncludesAll.h"
 #undef Debug_Print
-//#define Debug_Print(...)
-#define Debug_Print _Debug_Print
+#define Debug_Print(...)
+//#define Debug_Print _Debug_Print
 
 //----------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------

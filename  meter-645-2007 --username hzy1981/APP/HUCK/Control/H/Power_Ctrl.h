@@ -7,19 +7,10 @@
 #else
 #define EXT extern
 #endif
-/*
-#define OUTPUT_TIME_CHANGE_FLAG 0x01//输出时段切换信号标志
-#define OUTPUT_DEMAND_FLAG 0x02//输出需量周期或者滑差信号
 
-#define OUTPUT_SEC_PULSE 0//输出秒脉冲 
-#define OUTPUT_TIME_CHANGE_PULSE 1//时段切换脉冲
-#define OUTPUT_DEMAND_PERIOD_PULSE 2//需量周期脉冲
-#define OUTPUT_DEMAND_SLIDE_PULSE 3//需量滑差脉冲
-#define OUTPUT_POWER_WARN 4//负荷控制报警
-#define OUTPUT_METER_GRID_WARN 5//电网以及电表状态报警
-#define OUTPUT_OWN_MONEY_WARN 6//欠费报警
-#define OUPPUT_OWN_MONEY_TRIP 7//欠费条闸
-*/
+#define CARD_TESTING 0x4D
+#define CARD_TESTED  0x5B
+#define CARD_TESTING_DELAY 5
 
 #define SWITCH_OFF_DELAY ((Relay_Status.Off_Delay > 0)?1:0)
 
@@ -57,7 +48,7 @@
 #define PREPAID_POWER_CTRL_UNIT_NUM 15
 
 #define EXT_SWITCH_MODE (Meter_Property_Word.Word[0].Bit.Bit0) //外部开关控制方式，0为电平，1为脉冲 
-
+#define INTER_SWITCH_MODE 1 //内部开关控制方式, 0为电平，1为脉冲
 //定义电表运行特征字
 typedef struct
 {
@@ -182,6 +173,14 @@ typedef struct
   INT8U Tail;
 }S_Ctrl_Status_Flag;
 
+typedef struct
+{
+  INT8U Head;
+  INT8U Flag;
+  INT8U Delay;
+  INT8U Tail;
+}S_Card_Test_Relay_Status;
+
 EXT volatile S_Meter_Property_Word Meter_Property_Word; //电表运行特征字
 EXT volatile S_Power_Ctrl_Para Power_Ctrl_Para; //负荷控制参数
 EXT volatile S_Relay_Delay_Para Relay_Delay_Para; //继电器跳合闸延时参数
@@ -193,10 +192,12 @@ EXT volatile S_Prepaid_Ctrl_Switch Prepaid_Ctrl_Switch; //预付费控制拉合闸
 EXT volatile S_Relay_Status Relay_Status; //继电器状态
 EXT volatile S_Ctrl_Status_Flag Ctrl_Status_Flag;  //控制状态
 EXT volatile S_Prepaid_Power_Ctrl_Pulse Prepaid_Power_Ctrl_Pulse;
+EXT volatile S_Card_Test_Relay_Status Card_Test_Relay_Status;
 
 #ifdef POWER_CTRL_C
 volatile S_Relay_Status Relay_Status = {CHK_BYTE, 0, 0, SWITCH_ON, 0, CHK_BYTE};
 volatile S_Prepaid_Power_Ctrl_Pulse Prepaid_Power_Ctrl_Pulse = {CHK_BYTE, {0}, 0, CHK_BYTE};
+volatile S_Card_Test_Relay_Status Card_Test_Relay_Status = {CHK_BYTE, 0, 0, CHK_BYTE};
 #endif
 
 EXT void Init_Ctrl_Ram();
@@ -216,6 +217,7 @@ EXT INT16U Get_Prepaid_Relay_Status();
 EXT INT8U Get_Switch_Status();
 EXT INT8U Get_Relay_Status();
 EXT INT8U Check_Switch_Status(INT8U *pCause);
+EXT void Card_Test_Relay();
 EXT void Switch_Ctrl_Proc();
 EXT INT8U Set_Port_Output_Ctrl(INT8U Ctrl);
 EXT void Prepaid_Ctrl_Proc(INT8U Type);

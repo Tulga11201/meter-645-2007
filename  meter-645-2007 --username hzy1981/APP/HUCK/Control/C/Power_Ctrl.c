@@ -889,21 +889,63 @@ void Set_Relay_Status(INT8U Status, INT8U Cause)
   EN_PD_INT;
 }
 
+void Card_Test_Relay() //插卡测试继电器状态，工Heguoquan调用
+{
+  Card_Test_Relay_Status.Flag = CARD_TESTING;
+  Card_Test_Relay_Status.Delay = CARD_TESTING_DELAY; 
+}
+
 //#pragma optimize=none
 //跳闸直接控制
 void Switch_Ctrl(INT8U Switch_Flag, INT8U Cause)
 {
   //static S_Int8U Flag = {CHK_BYTE, 0xFF, CHK_BYTE};
   static S_Int32U Sec_Bak = {CHK_BYTE, 0xFFFFFFFF, CHK_BYTE};
+  static S_Int32U Sec_Bak0 = {CHK_BYTE, 0xFFFFFFFF, CHK_BYTE};  
   static S_Int8U Counts = {CHK_BYTE, 0, CHK_BYTE};
   INT8U Re;
   
   Re = 1;
   Re &= CHECK_STRUCT_VAR(Sec_Bak);
+  Re &= CHECK_STRUCT_VAR(Sec_Bak0);  
   Re &= CHECK_STRUCT_VAR(Counts);
   Re &= CHECK_STRUCT_VAR(Relay_Status);
+  Re &= CHECK_STRUCT_VAR(Card_Test_Relay_Status);
   if(Re EQ 0)
     ASSERT_FAILED();
+  
+  if(Card_Test_Relay_Status.Flag EQ CARD_TESTING) //当前在继电器测试状态
+  {
+    if(Sec_Bak.Var != Sec_Timer_Pub)
+    {
+      Sec_Bak.Var = Sec_Timer_Pub;
+      if(Card_Test_Relay_Status.Delay EQ CARD_TESTING_DELAY)
+      {
+        Relay_Status.Off_Delay = 0;
+        if(Relay_Status.Switch_Status EQ SWITCH_ON)
+        {
+          Relay_Status.Switch_Status = SWITCH_OFF;
+          Excute_Toogle(0);
+        }
+        else
+        {
+          Relay_Status.Switch_Status = SWITCH_ON;
+          Excute_Toogle(1);          
+        }
+        return;
+      }
+      else if(Card_Test_Relay_Status.Delay > 0)
+      {
+        Card_Test_Relay_Status.Delay --;
+        return;
+      }
+      else
+      {
+        Card_Test_Relay_Status.Flag = CARD_TESTED;
+        return;        
+      }
+    }
+  }
 /*  
   if(Flag.Var EQ 0xFF) //第一次进入
   {
@@ -999,8 +1041,8 @@ void Switch_Ctrl(INT8U Switch_Flag, INT8U Cause)
     
   }
   
-  if(EXT_SWITCH_MODE EQ 0) //电平方式控制
-  {
+  //if(EXT_SWITCH_MODE EQ 0) //电平方式控制
+  //{
     if(SWITCH_ON EQ Relay_Status.Switch_Status) //合闸 
       Excute_Toogle(1);//EXT_SWITCH_MODE
     else //拉闸
@@ -1010,11 +1052,12 @@ void Switch_Ctrl(INT8U Switch_Flag, INT8U Cause)
       
       Excute_Toogle(0);
     }
-  }
+  //}
+    /*
   else //脉冲方式
   {
     Pulse_Switch_Ctrl(Relay_Status.Switch_Status);
-  }
+  }*/
 
 }
 

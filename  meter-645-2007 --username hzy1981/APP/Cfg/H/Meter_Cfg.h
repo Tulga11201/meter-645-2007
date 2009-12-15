@@ -57,7 +57,7 @@
 #define PREPAID_EN            1//((PREPAID_METER > 0)?Mode_Word.Mode[1].Bit.Bit5:0) //预付费使能
 #define PREPAID_MODE          PREPAID_MONEY//Mode_Word.Mode[1].Bit.Bit4////预付费模式，PREPAID_MONEY表示电费型，PREPAID_ENG表示电量型, ENERGY_TYPE
 #define PREPAID_MONEY_MODE    PREPAID_RATE//Prepaid_Para.Mode[1].Bit.Bit4//PREPAID_RATE表示分时计费，PREPAID_STEP表示阶梯计费
-#define PREPAID_LOCAL_REMOTE  PREPAID_LOCAL//Prepaid_Para.Mode[1].Bit.Bit3//PREPAID_LOCAL表示本地，PREPAID_REMOTE表示远程
+#define PREPAID_LOCAL_REMOTE  PREPAID_REMOTE//Prepaid_Para.Mode[1].Bit.Bit3//PREPAID_LOCAL表示本地，PREPAID_REMOTE表示远程
 
 #define SWITCH_MODE   SWITCH_LOCAL //本地开关方式
 

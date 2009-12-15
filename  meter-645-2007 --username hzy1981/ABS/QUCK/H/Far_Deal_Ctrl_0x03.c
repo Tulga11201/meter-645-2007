@@ -1,12 +1,12 @@
 #define  FAR_DEAL_CTRL_0X33_C_
-//#define FAR_DEF_C_
+ 
 #include "MyIncludesAll.h"
 
 
 
 #undef Debug_Print
-#define Debug_Print(...)
-//#define Debug_Print _Debug_Print
+//#define Debug_Print(...)
+#define Debug_Print _Debug_Print
 
 //远程认证命令接口(控制码为03)
 //pSrc表示远程帧的数据域， 长度为645帧中L段的值
@@ -821,7 +821,7 @@ INT8U Esam_Decrypt(INT8U *pSrc, INT16U SrcLen)
   {
       ASSERT_FAILED();
       Card_Error_State.CardErrorState.CPU_CARD_ESAM_ATR_ERR=1;
-      return ERR;
+      return 0;
   }
   //查看 身份认证有效时间有没有到
   Far_Identity_Auth_Ok_Flag=!Chk_Pay_Time_Arrive();

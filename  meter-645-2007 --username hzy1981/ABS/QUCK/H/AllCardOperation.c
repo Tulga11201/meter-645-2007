@@ -3,8 +3,8 @@
 #include "MyIncludesAll.h"
 
 #undef Debug_Print
-#define Debug_Print(...)
-//#define Debug_Print _Debug_Print
+//#define Debug_Print(...)
+#define Debug_Print _Debug_Print
 extern INT8U Esam_Remote_Auth(INT8U *pSrc, INT8U SrcLen, INT8U *pDst, INT8U *pLen, INT8U *pDst_Start, INT16U DstLen);
 //C_Pre_Payment_Para Pre_Payment_Para;
 //ic卡 入口函数
@@ -29,7 +29,7 @@ INT8U ICcardMain(void) {
 		return 0;
 	}
 
-        Clr_Card_Op_Info(); //进入卡处理函数前的预处理
+        Clr_Card_Op_Info(); //  这个函数 黄工给的 具体什么工能不知道
         
         OS_Mutex_Pend(PUB_BUF_SEM_ID);//使用缓冲：Pub_Buf0
         OS_Mutex_Pend(PUB_BUF0_SEM_ID); //使用信号量，以便使用缓冲	
@@ -371,10 +371,11 @@ unsigned char Field_Para_Set_Card(void){//现场参数设置卡
 								USER_KIND_SET_CARD,
 								USER_KIND_ESAM,
 								2,
-								Card_WR_Buff+USER_KIND_SET_CARD) != OK ){
-                                                                  Debug_Print( " Esam_File_Updata 1 "  );
-                                                                return ERR;
-                                                                }
+								Card_WR_Buff+USER_KIND_SET_CARD) != OK )
+                                        {
+                                                      ASSERT_FAILED();
+                                                      return ERR;
+                                         }
 			
                 
 		}
@@ -385,10 +386,11 @@ unsigned char Field_Para_Set_Card(void){//现场参数设置卡
 								TRIFF_SWITCH_TIME_SET_CARD,
 								TRIFF_SWITCH_TIME_ESAM,
 								5,
-								Card_WR_Buff+TRIFF_SWITCH_TIME_SET_CARD) != OK ){
-                                                                Debug_Print( "Esam_File_Updata 2  "  );
-                                                                return ERR;
-                                                                }
+								Card_WR_Buff+TRIFF_SWITCH_TIME_SET_CARD) != OK )
+                            {
+                                                          ASSERT_FAILED();
+                                                          return ERR;
+                            }
 			
 		}
         Debug_Print( " 把从 cpu卡得到 的 用户类型，费率切换时间， 保存到电能表中去 "  );
@@ -473,24 +475,30 @@ unsigned char Field_Para_Set_Card(void){//现场参数设置卡
           Debug_Print( " //假如写e方失败  "  );
             Card_Error_State.CardErrorState.ReadWriteE2romErr=1;
         }
+        
         Debug_Print( "函数执行成功  "  );  
 	return OK;  
 }
 // //把从 cpu卡得到 的 用户类型，费率切换时间， 保存到电能表中去
 void Deal_Set_Para_Inf_File(unsigned char * Source_Point,unsigned char Mode )
 {
-	/*unsigned char i;
-	struct Set_Para_Inf_File *Set_Para_Inf_File;
+	unsigned char i;
+	struct Set_Para_Inf_File  Set_Para_Inf_File;
   
-	Set_Para_Inf_File = (struct Set_Para_Inf_File *)Source_Point;
-
-	//Deal_Para_Table2((unsigned char *)&(Set_Para_Inf_File->User_Kind),Mode);
-	//Deal_Para_Table4((unsigned char *)&(Set_Para_Inf_File->Triff_Switch_Time),Mode);
-  */
+	//Set_Para_Inf_File = (struct Set_Para_Inf_File *)Source_Point;
+        mem_cpy( &Set_Para_Inf_File,Source_Point,sizeof(Set_Para_Inf_File),&Set_Para_Inf_File,sizeof(Set_Para_Inf_File) );
+	Deal_Para_Table2((unsigned char *)&(Set_Para_Inf_File.User_Kind)  );
+        Deal_Para_Table4((unsigned char *)&(Set_Para_Inf_File.Triff_Switch_Time) );
+        if(  (Para_Updata_Flag & 0x80 )||(Para_Updata_Flag & 0x02)  )
+        {
+          Card_Set_Para_Notice() ;
+        }
+        return ;
 }
 //参数预置卡
 unsigned char Set_In_Card(void){///出厂预制卡"
           INT8U Order_Head[11];
+          INT32U Temp;
 	//unsigned char tempTriffDate[5];
 	struct Moneybag_Data Moneybag_Data;
 	
@@ -622,10 +630,16 @@ unsigned char Set_In_Card(void){///出厂预制卡"
         //清除远程非法攻击次数
         FarPrePayment.ID_Ins_Counter  =0;
 	Write_Storage_Data(_SDI_INVALID_COUNTS_AllOW, &FarPrePayment.ID_Ins_Counter, 1);
+        //本地非法卡插入次数清0
+        Temp=0;
+        Write_Storage_Data(_SDI_INVALID_CARD_COUNTS ,&Temp,4);
+        //事件记录清0， 只是改全局变量， 真正的清0 ，在后面的任务中进行
+        //Card_Clr_All_Data(); 
+        //
         //
 	return OK;
 }
-///
+///参数预置卡， 更改了esam中的参数后，改表中的
 void Deal_Init_Para_Inf_File(unsigned char * Source_Point,unsigned char Mode)
 {
   
@@ -641,23 +655,23 @@ void Deal_Init_Para_Inf_File(unsigned char * Source_Point,unsigned char Mode)
      Debug_Print("//更新报警金额1和2， 以及电压，电流互感变化 ");  
     //更新报警金额1和2， 以及电压，电流互感变化
     Deal_Para_Table3((unsigned char *)&(Init_Para_Inf_File.Remain_Money_Alarm1_Limit));
+    if(  (Para_Updata_Flag & 0x80 )||(Para_Updata_Flag & 0x02)  )
+    {
+          Card_Set_Para_Notice() ;
+    }
+    return ;    
 }
-///	unsigned char User_Kind;                  用户类型 : 单费率，还是复费率
-//	unsigned char Para_UpData_Flag;          参数更新标志位  d
+///	 用户类型 : 单费率，还是复费率
 void Deal_Para_Table2(unsigned char * Source_Point ){
          
-  //struct Para_Table2 *Para_Table2;
+
         INT8U SingleKing_OrComplexKing;
         SingleKing_OrComplexKing=*Source_Point;
-	
-   //这个地方可能出问题，Source_Point只有1个字节，可是struct Para_Table2有两个字节
-	//Para_Table2 = (struct Para_Table2 *)Source_Point;
-       // _SDI_SINGLE_OR_COMPLEX_USER_KIND
 	if( Para_Updata_Flag&0x80 ){
           Write_Storage_Data(_SDI_SINGLE_OR_COMPLEX_USER_KIND, &SingleKing_OrComplexKing,1);
 	}
 }
-//unsigned char Triff_Switch_Time[5];      " 两套分时费率切换时间  
+//" 两套分时费率切换时间  
 void Deal_Para_Table4(unsigned char * Source_Point ){
         INT8U Temp[5];
         mem_cpy(Temp,Source_Point,5,Temp,5);
@@ -669,11 +683,10 @@ void Deal_Para_Table4(unsigned char * Source_Point ){
           Write_Storage_Data(SDI_RATE_SCHE_CHG_TIME, Temp, 5 );
 	} 
 }
-//	unsigned long Remain_Money_Alarm1_Limit; /*" 报警金额1 "*/
-//	unsigned long Remain_Money_Alarm2_Limit; /*" 报警金额2 "*/
-//	unsigned char Current_CT[3];             /*" 电流互感器变比 "*/
-//	unsigned char Voltage_PT[3];             /*" 电压互感器变比 "*/
- 
+//	unsigned long Remain_Money_Alarm1_Limit;  报警金额1 "
+//	unsigned long Remain_Money_Alarm2_Limit; 报警金额2 "
+//	unsigned char Current_CT[3];             电流互感器变比 "
+//	unsigned char Voltage_PT[3];             电压互感器变比 
 void Deal_Para_Table3(unsigned char * Source_Point )
 {
 	struct Para_Table3 ParaTable3;

@@ -39,7 +39,8 @@ unsigned char Judge_User_Card_OK(unsigned char BuyCard_Kind,unsigned long Buy_Co
 	 	return ERR;
 		}
         
-	if( My_Memcmp(&(file.Meter_ID[0]),(unsigned char *)&Pre_Payment_Para.BcdMeterID[0],6) ){
+	if( My_Memcmp(&(file.Meter_ID[0]),(unsigned char *)&Pre_Payment_Para.BcdMeterID[0],6) )
+        {
                 ASSERT_FAILED();
 		Card_Error_State.CardErrorState.MeterIdErr=1;
 		return ERR;
@@ -151,7 +152,6 @@ unsigned char Buy_Card(void){
 										2,
 										Card_WR_Buff+BUY_PARA_INF_FILE_BUY_CARD) != OK )//+4
                                 {
-                                
                                   ASSERT_FAILED();
                                   return ERR;
                                 }
@@ -320,7 +320,7 @@ unsigned char Buy_Card(void){
 	return OK;
 }
 
-//费率文件更新:SrcLen值为：总文件长减去4(68到16结尾)  WhichTable:1表示第一套费率， 2表示第二套费率
+//费率文件更新:SrcLen值为：总文件长减去4(68到16结尾) 减去4，是因为传过来的地址为第一个费率 WhichTable:1表示第一套费率， 2表示第二套费率
 void Deal_Triff_Data(unsigned char * Source_Point,unsigned char SrcLen,INT8U WhichTable){
         //  这个地方调黄工给我的函数  ,更新黄工的费率数据
         INT8U j;
@@ -372,7 +372,7 @@ void Deal_Buy_Para_Inf_File(unsigned char * Source_Point ){
 	Deal_Para_Table4( (INT8U *)&(Buy_Para_Inf_File.Triff_Switch_Time)  );
 	Deal_Para_Table3( (INT8U *)&(Buy_Para_Inf_File.Remain_Money_Alarm1_Limit)  );
 	//Deal_Para_Table1((unsigned char *)&(Buy_Para_Inf_File->Meter_ID),Mode);
-        if(  (Para_Updata_Flag & 0x80 ) || (Para_Updata_Flag & 0x01)||(Para_Updata_Flag & 0x02)  )
+        if(  (Para_Updata_Flag & 0x80 )||(Para_Updata_Flag & 0x02)  )
         {
           Card_Set_Para_Notice() ;
         }

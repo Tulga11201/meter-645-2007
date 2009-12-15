@@ -61,7 +61,7 @@ INT8U Set_Esam_Para(  INT8U *pSrc, INT8U SrcLen)
         {
             ASSERT_FAILED();
             Card_Error_State.CardErrorState.CPU_CARD_ESAM_ATR_ERR=1;
-            return ERR;
+            return 0;
         }
         //查看 身份认证有效时间有没有到
         Far_Identity_Auth_Ok_Flag=!Chk_Pay_Time_Arrive();
@@ -76,7 +76,7 @@ INT8U Set_Esam_Para(  INT8U *pSrc, INT8U SrcLen)
 	if(FarPrePayment.ID_Ins_Counter >=15 )
         {    
              ASSERT_FAILED();
-             return ERR;
+             return 0;
         }
         mem_cpy(&Far_645_Frame_T1,pSrc+4,sizeof(Far_645_Frame_T1),&Far_645_Frame_T1,sizeof(Far_645_Frame_T1)); 
 
@@ -199,7 +199,7 @@ INT8U  Esam_Auth_Check(  INT8U *pSrc, INT16U SrcLen, INT8U * DstLen)
         {
             ASSERT_FAILED();
             Card_Error_State.CardErrorState.CPU_CARD_ESAM_ATR_ERR=1;
-            return ERR;
+            return 0;
         }
         //查看 身份认证有效时间有没有到
         Far_Identity_Auth_Ok_Flag=!Chk_Pay_Time_Arrive();

@@ -2,7 +2,7 @@
 #include "Includes.h"
 
 
-#define SOFTWARE_VERSION "09121022 V1.0" //软件版本号
+#define SOFTWARE_VERSION "09121516 V1.0" //软件版本号
 //#define INIT(X, Y) .X=Y 
 CONST INT32U All_Loss_Vol_Curr = 1000;
 //#define Esam_Auth_Check(...) 1
@@ -6724,7 +6724,7 @@ void Prog_Timer_Proc()
 {
   INT8U Status;
   
-  if(Check_Meter_Prog_Status() || Check_Meter_Factory_Status())
+  if(Check_Meter_Prog_Status() || Check_Meter_Factory_Status() || Check_Remote_Prog_Status())
     Status = 1;
   else
     Status = 0;

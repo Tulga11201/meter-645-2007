@@ -1517,7 +1517,7 @@ void Write_Def_Para()
     Set_Def_Adj_Para(); 
   }
   */
-  
+  Turn_Light_On(); //打开背光
   Set_Def_Para_Except_Adj();  
   /*
   for(i = 0; i < S_NUM(Def_Para); i++)
@@ -1537,7 +1537,7 @@ void Write_Def_Para()
   }
   */
   Set_All_Def_Data();
-  
+  Turn_Light_Off(); //关闭背光
   Debug_Print("--------------Set Def Para End!------------");
 }
 

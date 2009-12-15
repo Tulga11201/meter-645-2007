@@ -29,8 +29,8 @@
 #define PREPAID_RATE    0x00 //分时预付费
 #define PREPAID_STEP    0x01 //阶梯预付费
 
-#define SWITCH_LOCAL    0x00 //本地开关方式
-#define SWITCH_REMOTE   0x01 //远程开关方式
+#define SWITCH_INTER    0x00 //内置开关方式
+#define SWITCH_EXT      0x01 //外部开关方式
 
 #define CS_BYTES    1//内存中重要数据结构体的CS字节数  
 #define ROM_CS_BYTES  2//ROM中存储数据的校验和字节数
@@ -59,7 +59,7 @@
 #define PREPAID_MONEY_MODE    PREPAID_RATE//Prepaid_Para.Mode[1].Bit.Bit4//PREPAID_RATE表示分时计费，PREPAID_STEP表示阶梯计费
 #define PREPAID_LOCAL_REMOTE  PREPAID_LOCAL//Prepaid_Para.Mode[1].Bit.Bit3//PREPAID_LOCAL表示本地，PREPAID_REMOTE表示远程
 
-#define SWITCH_MODE   SWITCH_LOCAL //本地开关方式
+#define SWITCH_EXT_INTER   SWITCH_INTER //SWITCH_INTER表示内置开关方式,SWITCH_EXT表示外置开关方式
 
 #define PREPAID_WARN_EN 1//Prepaid_Para.Mode[2].Bit.Bit7 //预付费声报警是否打开?
 #define PREPAID_LIMIT1_WARN_EN    1//Prepaid_Para.Mode[2].Bit.Bit6 //低于门限1报警使能     

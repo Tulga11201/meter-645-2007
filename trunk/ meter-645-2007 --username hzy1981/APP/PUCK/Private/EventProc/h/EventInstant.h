@@ -129,7 +129,7 @@ typedef struct{
   INT32U  CutCurr_I_Up;       //断流事件电流触发上限 
   INT8U  CutCurr_Time;       //断流事件判定延时时间 
   
-  INT16U  NegCurr_Acpow_Down;       //潮流反向事件有功功率触发下限
+  INT32U  NegCurr_Acpow_Down;       //潮流反向事件有功功率触发下限
   INT8U   NegCurr_Time;      //潮流反向事件判定延时时间 
   
   INT32U OverLoad_AcPow_Down;       //过载事件有功功率触发下限

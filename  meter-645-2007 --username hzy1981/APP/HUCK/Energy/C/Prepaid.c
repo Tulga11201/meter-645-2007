@@ -153,10 +153,10 @@ INT8U Check_Buy_Money_Exceed_Limit(INT32U Money)
   if(Cur_Energy.Prepaid_Info.Left_Money  + Money * 10 > Prepaid_Para.Hoard_Money_Limit * 10 + Cur_Energy.Prepaid_Info.Overdraft_Money) //超过囤积金额上限
   {
     //Main_Dis_Info("FULL");
-    return 0; 
+    return 1; 
   }  
   else
-    return 1;
+    return 0;
 }
 
 //电费型预付费处理

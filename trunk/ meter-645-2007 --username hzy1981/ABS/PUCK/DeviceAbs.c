@@ -126,7 +126,7 @@ void Init_All_IO_Resume(INT8U Status)
         
     P5=0;
     PU5=0;
-    PM5_bit.no0=0;   //IC_IN
+    PM5_bit.no0=1;   //7022_PWR
     PM5_bit.no1=0;   //IC_OUT
     PM5_bit.no2=0;   //IC_RST
     PM5_bit.no3=0;   //IC_SW--------------
@@ -140,7 +140,7 @@ void Init_All_IO_Resume(INT8U Status)
     PM6_bit.no0=1;   //内卡硬件I2C SCLK-------MEM_SCL，先设为输入，在I2C中会重新初始化
     PM6_bit.no1=1;   //内卡硬件I2C SDA--------MEM_SDA，先设为输入，在I2C中会重新初始化
     PM6_bit.no2=1;   //内卡硬件I2C写保护------MEM_WP，先设为输入，在I2C中会重新初始化
-    PM6_bit.no3=1;   //7022_PWR
+    PM6_bit.no3=1;   //
     PM6_bit.no4=0;   //无功方向---------------A_DIR
     PM6_bit.no5=0;   //无功方向---------------R_DIR
     PM6_bit.no6=0;   //有功输出---------------A_EOUT
@@ -282,7 +282,7 @@ void Init_All_IO_Sleep(void)
         
     P5=0;
     PU5=0;
-    PM5_bit.no0=0;   //IC_IN
+    PM5_bit.no0=0;   //7022_PWR
     PM5_bit.no1=0;   //IC_OUT
     PM5_bit.no2=0;   //IC_RST
     PM5_bit.no3=0;   //IC_SW--------------
@@ -296,7 +296,7 @@ void Init_All_IO_Sleep(void)
     PM6_bit.no0=0;   //内卡硬件I2C SCLK-------MEM_SCL
     PM6_bit.no1=0;   //内卡硬件I2C SDA--------MEM_SDA
     PM6_bit.no2=0;   //内卡硬件I2C写保护------MEM_WP
-    PM6_bit.no3=1;   //7022_PWR
+    PM6_bit.no3=1;   //
     PM6_bit.no4=0;   //无功方向---------------A_DIR
     PM6_bit.no5=0;   //无功方向---------------R_DIR
     PM6_bit.no6=0;   //有功输出---------------A_EOUT

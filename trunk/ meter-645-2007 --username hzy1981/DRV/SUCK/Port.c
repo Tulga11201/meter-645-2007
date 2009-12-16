@@ -42,7 +42,8 @@ void PORT_Init(INT32U Mode )
         PM3_bit.no0=0;             //P3_0  IC_FAIL £≠£≠£≠09£≠04£≠16
         
         PM4_bit.no2=0; PM4_bit.no3=0;  PM4_bit.no5=0;
-        PM5_bit.no0=0; PM5_bit.no1=0;PM5_bit.no2=0;
+        PM5_bit.no0=0;  //7022_PWR
+        PM5_bit.no1=0;PM5_bit.no2=0;
         PM5_bit.no3=1; //P5_3-----CPUø®≤Â»ÎºÏ≤‚
         PM5_bit.no4=0;  //WDI
         

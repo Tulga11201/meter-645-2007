@@ -74,7 +74,7 @@ TriggerName=main
 LimitSize=0
 ByteLimit=50
 [DebugChecksum]
-Checksum=1889832354
+Checksum=445174392
 [InstructionProfiling]
 Enabled=_ 0
 [DriverProfiling]
@@ -90,19 +90,18 @@ UseAuto=0
 TypeViolation=1
 UnspecRange=1
 ActionState=1
+[TermIOLog]
+LoggingEnabled=_ 0
+LogFile=_ ""
+[Breakpoints]
+Bp0=_ "STD_CODE" "{F:\work\Prog\Meter_New645_GD_IBE\APP\Main\C\Main_Proc.c}.75.3@1" 1 0 0 0 "" 0 ""
+Bp1=_ "STD_CODE" "{F:\work\Prog\Meter_New645_GD_IBE\TEST\PUCK\DRV_TEST\DRV_TEST.c}.1099.3@1" 1 0 0 0 "" 0 ""
+Bp2=_ "STD_CODE" "{F:\work\Prog\Meter_New645_GD_IBE\APP\HUCK\Control\C\Power_Ctrl.c}.1163.3@1" 1 0 0 0 "" 0 ""
+Count=3
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
 Category=_ 0
-[TermIOLog]
-LoggingEnabled=_ 0
-LogFile=_ ""
 [TraceHelper]
 Enabled=0
 ShowSource=1
-[Breakpoints]
-Bp0=_ "STD_CODE" "{F:\work\Prog\Meter_New645_GD_IBE\APP\Main\C\Main_Proc.c}.75.3@1" 1 0 0 0 "" 0 ""
-Bp1=_ "STD_CODE" "{F:\work\Prog\Meter_New645_GD_IBE\TEST\PUCK\DRV_TEST\DRV_TEST.c}.1097.3@1" 1 0 0 0 "" 0 ""
-Bp2=_ "STD_CODE" "{F:\work\Prog\Meter_New645_GD_IBE\ABS\PUCK\DeviceAbs.c}.686.5@1" 1 0 0 0 "" 0 ""
-Bp3=_ "STD_CODE" "{F:\work\Prog\Meter_New645_GD_IBE\APP\HUCK\Control\C\Power_Ctrl.c}.1163.3@1" 1 0 0 0 "" 0 ""
-Count=4

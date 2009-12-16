@@ -640,6 +640,8 @@ EXT void Prog_Timer_Proc();
 EXT void Clr_Prog_Record_Ram();
 EXT void Read_Data_Trans_Para_From_Rom();
 EXT void Init_Data_Trans_Ram_Para();
+EXT void Record_Op_ID(INT8U *pSrc);
+EXT void Set_Clear_Data_Flag(INT32U Flag);
 EXT INT16U _Get_DLT645_Data(PROTO_DI PDI, void* pPara, INT8U ParaLen, INT8U* pDst, INT8U* pDst_Start, INT16U DstLen, INT8U Data_Flag, INT8U* pType);
 EXT INT16U Get_DLT645_Data_For_Disp(PROTO_DI PDI, INT8U* pDst, INT8U* pDst_Start, INT16U DstLen, INT8U *pType);
 EXT INT16U Get_DLT645_Data(PROTO_DI PDI, INT8U* pDst, INT8U* pDst_Start, INT16U DstLen);

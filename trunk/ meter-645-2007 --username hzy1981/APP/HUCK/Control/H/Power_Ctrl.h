@@ -226,4 +226,5 @@ EXT INT8U Prepaid_Insert_Card(INT8U Card_Type);
 EXT INT8U Get_Card_Switch_On_Flag();
 EXT INT8U Get_Hand_Switch_On_Flag();
 EXT void Set_Hand_Switch_On_Flag(INT8U Flag);
+EXT void Card_Switch_On();
 #endif

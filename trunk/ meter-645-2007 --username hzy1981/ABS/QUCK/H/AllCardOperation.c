@@ -340,8 +340,8 @@ unsigned char Field_Para_Set_Card(void){//现场参数设置卡
 	if(!Check_Meter_Prog_Status())
 		{
                   Debug_Print( "编程按钮没被按下  "  );
-		 Card_Error_State.CardErrorState.Meter_Not_Prog_Status_Err=1;  
-		 return ERR;
+		  Card_Error_State.CardErrorState.Meter_Not_Prog_Status_Err=1;  
+		  return ERR;
 		}
         Debug_Print( "  //从cpu卡中得到 版本号 "  );
         //从cpu卡中得到 版本号
@@ -851,7 +851,7 @@ unsigned char Modify_MeterID_Card(void){// 表号设置卡
         //  更新表计表号  //如果发卡软件中写的是010203040506，那么下面Pre_Payment_Para.BcdMeterID【0】就为01
          My_Memcpy( Pre_Payment_Para.BcdMeterID,&(MeterID_Return_Inf_File.Next_Meter_ID[0]),6);
          Write_Storage_Data( SDI_METER_ID, Pre_Payment_Para.BcdMeterID , 6);
- 
+         Card_Set_Para_Notice() ;
 /*" 更新卡回写文件 "*/
 	Msb = 0;
         //表号+1
@@ -882,6 +882,7 @@ unsigned char Modify_MeterID_Card(void){// 表号设置卡
 		{
 		return ERR;
 		}
+        
 	return OK;
    
 }

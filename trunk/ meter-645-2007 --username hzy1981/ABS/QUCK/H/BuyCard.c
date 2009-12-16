@@ -294,11 +294,11 @@ unsigned char Buy_Card(void){
          // 更新esam参数信息文件 3  " );
        
 	if( Buy_Card_Kind != GWFAR_USER_CARD_BUY )//开户卡， 和补卡更新 离散因子
-			{
+	{
                         //开户卡， 和补卡更新 离散因子   " );
-			My_Memcpy(Pre_Payment_Para.Cpucard_Number_old_BackUpInEerom, cpucard_number, 8);
-			 Write_Storage_Data(_SDI_DISCRETE_INFO ,&Pre_Payment_Para.Cpucard_Number_old_BackUpInEerom,  8);
-                        }
+	  My_Memcpy(Pre_Payment_Para.Cpucard_Number_old_BackUpInEerom, cpucard_number, 8);
+	  Write_Storage_Data(_SDI_DISCRETE_INFO ,&Pre_Payment_Para.Cpucard_Number_old_BackUpInEerom,  8);
+        }
         
         // 回写文件处理 //
         //cpu卡的运行信息文件和esam的运行信息文件结构和顺序都是一致的，但是这个两个文件的短标示是不一样的卡中的为5，esam中的7
@@ -311,7 +311,7 @@ unsigned char Buy_Card(void){
         }
 		
         //这里也可以说是读esam 的运行信息文件到cpu卡中运行信息文件中 5,7
-	if( Cpu_File_Updata(USER_CARD_RUN_INF_FILE,ESAM_RUN_INF_FILE,0,0,LENGTH_RUN_INF_DATA+6) != OK )
+	if( Cpu_File_Updata(USER_CARD_RUN_INF_FILE,ESAM_RUN_INF_FILE,0,0,LENGTH_RUN_INF_DATA-1+6) != OK )
         {
         
           ASSERT_FAILED();

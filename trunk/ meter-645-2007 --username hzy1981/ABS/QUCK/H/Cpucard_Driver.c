@@ -9,7 +9,7 @@
 
    
 /*"**************************************************************************"*/
-unsigned char Cpucard_Esamcard_Internal_Auth(void)   /*"内部认证"*/
+unsigned char Cpucard_Esamcard_Internal_Auth(void)  //内部认证//
     {
     
     if(Check_CPU_Occur())			
@@ -19,39 +19,41 @@ unsigned char Cpucard_Esamcard_Internal_Auth(void)   /*"内部认证"*/
         return ERR;
     } 
     CPU_ESAM_CARD_Control(CPU);
+    
     //
-    Debug_Print(" 从cpu卡得到8字节随机数" );
+    
+    // 从cpu卡得到8字节随机数" );
     if( Read(0,Get_Challenge,0,0,8) != OK )
 		return ERR;
 
     My_Memcpy(receive_send_buffer+50,receive_send_buffer,8);
 
-    Debug_Print("对8字节随机数加密 得到k1 " );
+    //对8字节随机数加密 得到k1 " );
     if( Internal_Auth(0,0x88,0,1,8,receive_send_buffer+50) != OK )
 	return ERR;
     
     My_Memcpy( receive_send_buffer+60,receive_send_buffer,8 );
-    Debug_Print("利用离散生产密钥" );
+    //利用离散生产密钥" );
     CPU_ESAM_CARD_Control(ESAM);
     if(Internal_Auth(0x80,0xfa,0,1,8,cpucard_number)){
         return ERR;
     }
     if( Judge_Return_Flag() )
 	    return ERR;
-    Debug_Print("加密8字节随机数 ，得到k2" );
+    //加密8字节随机数 ，得到k2" );
     Internal_Auth(0x80,0xfa,0,0,8,receive_send_buffer+50);
     if( Judge_Return_Flag() )
 	    return ERR;
 
     CPU_ESAM_CARD_Control(CPU);
-    Debug_Print("比较k1和k2" );
+    //"比较k1和k2" );
     if(My_Memcmp(receive_send_buffer+60,receive_send_buffer,8))  
         {
         Card_Error_State.CardErrorState.CpuCardInternlAuthenticationErr=1;
         ASSERT_FAILED();
         return ERR;      
         }  
-    return OK;  /*"内部认证结束"*/  
+    return OK; //内部认证结束//
     }
 
 /*"**************************************************************************"*/
@@ -642,7 +644,7 @@ unsigned char Updata_Esam_Return_File(unsigned char Order_Kind)
 	Card_WR_Buff[0] = 0x68;
 	Card_WR_Buff[1] = Order_Kind;//卡类型
 	Card_WR_Buff[2] = 0;
-	Card_WR_Buff[3] = LENGTH_RUN_INF_DATA;//这个地方减去1 是因为 字节对齐问题，在该结构体前插入了一个无用的字节
+	Card_WR_Buff[3] = LENGTH_RUN_INF_DATA-1;//这个地方减去1 是因为 字节对齐问题，在该结构体前插入了一个无用的字节
         //从esam 以及电能表中读取数据  
 	Deal_Run_Inf_Data(Card_WR_Buff+4,0x80);//加4 是因为 传给的地址 为 除去 0x68头段 ，卡类型段，长度段  的地址
 	//LENGTH_RUN_INF_DATA+4-1 是因为 该地址为 效验和段， Cal_Add_CS为计算效验和函数，第一个地址为卡类型段地址，，第二个为除去头尾及效验和段长度 再减去 插入的无用字节
@@ -650,8 +652,8 @@ unsigned char Updata_Esam_Return_File(unsigned char Order_Kind)
 	Card_WR_Buff[LENGTH_RUN_INF_DATA+5-1] = 0x16;//结束标志// 减去， 是因为多了一个无用字节
 	
 	CPU_ESAM_CARD_Control(ESAM);
-        //写esam  
-	if( Write(0,Update_Binary,0x80+ESAM_RUN_INF_FILE,0,LENGTH_RUN_INF_DATA+6,Card_WR_Buff) != OK )
+        //写esam          
+	if( Write(0,Update_Binary,0x80+ESAM_RUN_INF_FILE,0,LENGTH_RUN_INF_DATA-1+6,Card_WR_Buff) != OK )
 		return ERR;
 	return OK;
 }
@@ -687,11 +689,11 @@ void Deal_Run_Inf_Data(unsigned char * Source_Point,unsigned char Mode)
         
         INT32U Temp ;
         INT8U  DataTemp[5];
-	//Run_Inf_Data = (struct Run_Inf_Data *)Source_Point;
-        mem_cpy(&Run_Inf_Data,Source_Point, sizeof(struct Run_Inf_Data),&Run_Inf_Data, sizeof(struct Run_Inf_Data));
+
+       // mem_cpy(&Run_Inf_Data,Source_Point, sizeof(struct Run_Inf_Data),&Run_Inf_Data, sizeof(struct Run_Inf_Data));
 //" 用户编号，表号，用户类型"
-        My_memcpyRev(&Run_Inf_Data.Client_ID[0],Pre_Payment_Para.UserID,6);
-        My_memcpyRev(&Run_Inf_Data.Meter_ID[0],Pre_Payment_Para.BcdMeterID,6);
+        mem_cpy(&Run_Inf_Data.Client_ID[0],Pre_Payment_Para.UserID,6,&Run_Inf_Data.Client_ID[0],6);
+        mem_cpy(&Run_Inf_Data.Meter_ID[0],Pre_Payment_Para.BcdMeterID,6,&Run_Inf_Data.Meter_ID[0],6);
         Run_Inf_Data.User_Kind=CardType;
  ///剩余电费  //这个地方要改
         CurrMeter_MoneyCount=Get_Left_Money();
@@ -709,7 +711,7 @@ void Deal_Run_Inf_Data(unsigned char * Source_Point,unsigned char Mode)
     //  PT  //电压互感变化
         Read_Storage_Data(SDI_VOLT_TRANS_RATIO, DataTemp, DataTemp, 4);//  从黄工那里电压互感变化
 	My_memcpyRev((unsigned char *)&(Run_Inf_Data.Voltage_PT),(unsigned char *)DataTemp,3);
-         //" 从esam中得到密钥信息 // 
+         //" 从esam中得到本地密钥信息 // 
 	Get_File_Data(ESAM,ESAM_PASSWORD_INF_FILE,0,4,Run_Inf_Data.Password_Info);
         // 非法卡插入次数 "//
         Read_Storage_Data (  _SDI_INVALID_CARD_COUNTS, &Temp, &Temp, 4  );//     

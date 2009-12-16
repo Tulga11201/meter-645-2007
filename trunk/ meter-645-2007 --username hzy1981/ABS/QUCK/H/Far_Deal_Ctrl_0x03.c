@@ -574,10 +574,10 @@ unsigned char Far_Deal_070101FF(unsigned char * Data_Point )
         C_Read_Storage_Data( _SDI_PREPAID_RUN_STATUS, &Pre_Payment_Para.Meter_Run_State ,  &Pre_Payment_Para.Meter_Run_State,sizeof(Pre_Payment_Para.Meter_Run_State)  );    
      	if( Pre_Payment_Para.Meter_Run_State!=MeterRunState_Test_0 )
 		return ERR;
- 
+        //读钱包文件并反相
 	if( Read_Esam_Moneybag_File((unsigned char *)&Moneybag_Data) != OK )
 		return ERR;
-       // 判断购电次数
+        // 判断购电次数
 	if( Far_Deal_070101FF_format.Buy_Count != (Moneybag_Data.Buy_Count+1))
 	{
 		BUY_COUNT_ERR_DEFINE=1 ;

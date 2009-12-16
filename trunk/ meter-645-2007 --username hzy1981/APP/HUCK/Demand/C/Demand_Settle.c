@@ -251,8 +251,8 @@ void Write_Last_Settle_Demand_DI(STORA_DI SDI)
 //设置历史需量数据为全FF，无效数据，在非第一个结算日结算时需要这样做
 void Set_Demand_His_Invalid_Data(STORA_DI His_DI)
 {
-  INT8U i, Re;
-  INT16U Len; 
+  INT8U i;
+  //INT16U Len; 
 
   TRACE();
 
@@ -645,7 +645,7 @@ void Settle_Demand_Data(S_HEX_Time* pTime)
 void Settle_Demand_Data(S_HEX_Time* pTime)
 {
   STORA_DI Last_SDI; 
-  INT8U i; 
+  //INT8U i; 
   S_HEX_Time TempTime; 
   //S_HEX_Time Last_Data_Time, Cur_Data_Time; 
 

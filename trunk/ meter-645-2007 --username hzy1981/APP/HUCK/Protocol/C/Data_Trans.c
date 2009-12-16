@@ -2,13 +2,10 @@
 #include "Includes.h"
 
 
-#define SOFTWARE_VERSION "09121516 V1.0" //软件版本号
-//#define INIT(X, Y) .X=Y 
+#define SOFTWARE_VERSION "09121516 V1.0 " //软件版本号
+
+
 CONST INT32U All_Loss_Vol_Curr = 1000;
-//#define Esam_Auth_Check(...) 1
-//#define Esam_Remote_Auth(...) 1
-//#define Esam_Decrypt(...) 1
-//#define Set_Esam_Para(...) 1
 
 extern INT8U Esam_Remote_Auth(INT8U *pSrc, INT8U SrcLen, INT8U *pDst, INT8U *pLen, INT8U *pDst_Start, INT16U DstLen);
 
@@ -7808,16 +7805,45 @@ INT16U Get_DLT645_Data_For_Disp(PROTO_DI PDI, INT8U* pDst, INT8U* pDst_Start, IN
 INT16U Get_Factory_Info_Proto_Data(PROTO_DI PDI, INT8U* pDst, INT8U* pDst_Start, INT16U DstLen)
 {
   INT8U i;
+  INT8U Temp[10];
   
    if(PDI EQ 0x04800001) //软件版本号
    {
-     for(i = 0; i < 32; i ++)
+     if(PREPAID_METER > 0) //费控表
      {
-       if(i <  sizeof(SOFTWARE_VERSION))
-         pDst[31-i] = SOFTWARE_VERSION[i];
-       else 
-         pDst[31-i] = ' ';
+       Temp[0] = 'P'; //费控表
+       
+       if(PREPAID_MODE EQ PREPAID_MONEY)
+         Temp[1] = 'M'; //电费型
+       else
+         Temp[1] = 'E'; //电量型
+       
+       if(PREPAID_MONEY_MODE EQ PREPAID_RATE)
+         Temp[2] = 'T'; //复费率型
+       else
+         Temp[2] = 'S'; //阶梯型
+       
+       i = 3;
      }
+     else
+     {
+       Temp[0] = 'M'; //多功能表      
+       i = 1;
+     }
+     
+     if(NET_METER EQ CARRIER_METER) //载波表
+       Temp[i] = 'C';
+     else if(NET_METER EQ GPRS_METER) //无线表
+       Temp[i] = 'W';
+     else
+       Temp[i] = ' ';
+     i ++;
+     Temp[i] = '\0';
+     
+     mem_set(pDst, ' ', 32, pDst_Start, DstLen);
+     mem_cpy(pDst, (INT8U *)SOFTWARE_VERSION, sizeof(SOFTWARE_VERSION) - 1, pDst_Start, DstLen);
+     mem_cpy(pDst + sizeof(SOFTWARE_VERSION) - 1, Temp, strlen((char *)Temp), pDst_Start, DstLen);
+     Reverse_data(pDst, 32);
      return 32;
    }
    else if(PDI EQ 0x04800003)//工厂信息

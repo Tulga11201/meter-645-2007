@@ -199,8 +199,8 @@ STORA_DI Read_Last_Settle_VolStat_DI()
 void Settle_VolStat_Data(S_HEX_Time* pTime)
 {
   STORA_DI Last_SDI; 
-  INT16U Len;
-  S_HEX_Time TempTime; 
+  //INT16U Len;
+  //S_HEX_Time TempTime; 
   //S_HEX_Time Last_Data_Time, Cur_Data_Time; 
 
 

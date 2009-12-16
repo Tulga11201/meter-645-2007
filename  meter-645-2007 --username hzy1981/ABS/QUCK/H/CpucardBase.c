@@ -1,7 +1,7 @@
 #include "MyIncludesAll.h"
 #undef Debug_Print
-#define Debug_Print(...)
-//#define Debug_Print _Debug_Print
+//#define Debug_Print(...)
+#define Debug_Print _Debug_Print
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //// 延时_64us个64us //      
@@ -199,25 +199,22 @@ unsigned char Cpucard_Atr(void){
         
 
 	CPU_ESAM_CARD_Control(CPU);
-	if(Check_CPU_Occur())			
+	if(Check_CPU_Occur() )			
 	{      
-                ASSERT_FAILED();test();
+                ASSERT_FAILED(); 
 		Card_Error_State.CardErrorState.CPU_CARD_LOSE=1;
 		return ERR;
 	}
-         Debug_Print("1" );
+     
         //冷复位，
         if(CPU_ESAM_DRV_OK != Cpu_Esam_All_Operate(CommunicationPortMode,CPU_ESAM_DRV_RST_COOL,receive_send_buffer,receive_send_buffer, Length_receive_send_buffer    )   ) 
-        { Debug_Print("2 " );
+        {  
                 
             	ASSERT_FAILED();
-                test();
                 Card_Error_State.CardErrorState.CPU_CARD_CARD_ATR_ERR=1;
 		return ERR;
         }
-       
-         Debug_Print("Cpucard_Atr() in " );
-         Debug_Print("3 " );
+
         Length  = receive_send_buffer[1];
 	Length &=0x0F;
 	Length +=4;
@@ -265,8 +262,8 @@ unsigned char Esamcard_Atr(void){
 	}
 ///////////////////////////////////////////////////////////////// 
 // 文件名：CPU_Card_Driver //
-// Order_Head：命令头域 //
-// 包括：CLA  INS  P1  P2  //
+// Order_Head：命令头域 //// 包括：CLA  INS  P1  P2  //
+
 // Length_LC：写数据长度   //
 // W_Data：写数据 //
 // Length_LE: 读数据长度 //
@@ -278,7 +275,7 @@ unsigned char Esamcard_Atr(void){
 //对于lc+data 类型的命令，如果Spec_Length_LE不为0，该函数结束后，receive_send_buffer存放的是receive_send_buffer+sw0和sw1
 //对于le  类型的命令， 如果Spec_Length_LE为0   该函数结束后， receive_send_buffer 存放的是 le+sw0和sw1 
 //对于le  类型的命令， 如果Spec_Length_LE不为0   该函数结束后， receive_send_buffer 存放的是 Spec_Length_LE +sw0和sw1
-//注意：W_Data 和receive_send_buffer  不能为同一个缓冲
+//注意：W_Data 和receive_send_buffer  不能为同一个地址  两个地址之间至少相差350间隔
 unsigned char CPU_Card_Driver(const unsigned char *Order_Head,
 						     unsigned char Length_LC,
 			                             unsigned char *W_Data,
@@ -357,7 +354,7 @@ unsigned char CPU_Card_Driver(const unsigned char *Order_Head,
 	if(receive_send_buffer[0+Length_LE]==0x61)
 	{
 		if( *(Order_Head+1)!= Get_Response )
-			{
+		{
 	        	if( Spec_Length_LE!=0 )
 				i = Spec_Length_LE;
 			else
@@ -366,7 +363,7 @@ unsigned char CPU_Card_Driver(const unsigned char *Order_Head,
 	       	    	        return OK;
 		        else
 				return ERR;
-			}
+		}
 		else
 			return OK;
 	}

@@ -634,8 +634,8 @@ unsigned char Set_In_Card(void){///出厂预制卡"
         Temp=0;
         Write_Storage_Data(_SDI_INVALID_CARD_COUNTS ,&Temp,4);
         //事件记录清0， 只是改全局变量， 真正的清0 ，在后面的任务中进行
+        Card_Clr_All_Data(); 
         //Card_Clr_All_Data(); 
-        //
         //
 	return OK;
 }
@@ -888,8 +888,7 @@ unsigned char Modify_MeterID_Card(void){// 表号设置卡
 }
 unsigned char Relay_TEST_Card()
 {
-  	Relay_Deal(1);
-        
+  	Card_Test_Relay();  
 	return OK;
         
  

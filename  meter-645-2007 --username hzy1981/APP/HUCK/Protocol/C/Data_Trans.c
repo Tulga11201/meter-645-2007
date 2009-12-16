@@ -6721,10 +6721,16 @@ void Prog_Timer_Proc()
 {
   INT8U Status;
   
-  if(Check_Meter_Prog_Status() || Check_Meter_Factory_Status() || Check_Remote_Prog_Status())
+  if(Check_Meter_Prog_Status() || Check_Meter_Factory_Status()) //处于编程状态
     Status = 1;
   else
     Status = 0;
+  
+  if(PREPAID_EN > 0)
+  {
+    if(Check_Remote_Prog_Status())
+      Status = 1;
+  }
   
   if(Status != Prog_Record.Prog_Status) //编程状态发生了变化
   {

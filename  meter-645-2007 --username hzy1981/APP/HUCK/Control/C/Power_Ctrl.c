@@ -867,13 +867,23 @@ INT8U Get_Alarm_Relay_Status()
 INT8U Get_Relay_Status()
 {
   INT8U Cause;
+  INT8U Re;
   
   if(Relay_Status.Switch_Status EQ SWITCH_OFF)//拉闸状态
   {
-    if(Check_Switch_Status(&Cause) EQ SWITCH_ON)
+    Re = Check_Switch_Status(&Cause);
+    if(Re EQ SWITCH_ON)
       return ALLOW_SWITCH_ON;
     else
+    {
+      if(Cause EQ S_OFF_PREPAID) //如果是预付费跳闸
+      {
+        Re = Get_Prepaid_Status();
+        if(Re EQ PREPAID_MONEY_LEFT2 || Re EQ PREPAID_MONEY_ZERO) //在没有超透支门限的情况下，在报警门限2可以手动合闸
+          return ALLOW_SWITCH_ON;
+      }
       return SWITCH_OFF;
+    }
   }
   else
     return SWITCH_ON;
@@ -881,11 +891,21 @@ INT8U Get_Relay_Status()
 
 void Set_Relay_Status(INT8U Status, INT8U Cause)
 {
-  DIS_PD_INT;
+  if(Relay_Status.Switch_Status != Status)
+  {
+    DIS_PD_INT;
+    Relay_Status.Switch_Status = Status;
+    Relay_Status.Switch_Cause = Cause;
+    EN_PD_INT;
+    
+    if(Status EQ SWITCH_ON)
+      Event_Data_Proc(ID_EVENT_RELAY_ON, EVENT_OCCUR);
+    else
+      Event_Data_Proc(ID_EVENT_RELAY_OFF, EVENT_OCCUR);
+  }
   
-  Relay_Status.Switch_Status = Status;
-  Relay_Status.Switch_Cause = Cause;  
-
+  DIS_PD_INT;
+  Relay_Status.Switch_Cause = Cause; 
   EN_PD_INT;
 }
 
@@ -924,12 +944,18 @@ void Switch_Ctrl(INT8U Switch_Flag, INT8U Cause)
         Relay_Status.Off_Delay = 0;
         if(Relay_Status.Switch_Status EQ SWITCH_ON)
         {
-          Relay_Status.Switch_Status = SWITCH_OFF;
+          Set_Relay_Status(SWITCH_OFF, S_OFF_PREPAID);
+          //Relay_Status.Switch_Status = SWITCH_OFF;
+          //Clr_Event_Instant(ID_EVENT_RELAY_ON); //合闸事件结束      
+          //Set_Event_Instant(ID_EVENT_RELAY_OFF);//拉闸事件发生          
           Excute_Toogle(0);
         }
         else
         {
-          Relay_Status.Switch_Status = SWITCH_ON;
+          Set_Relay_Status(SWITCH_ON, S_OFF_PREPAID);
+          //Relay_Status.Switch_Status = SWITCH_ON;
+          //Clr_Event_Instant(ID_EVENT_RELAY_OFF);//拉闸事件结束
+          //Set_Event_Instant(ID_EVENT_RELAY_ON); //合闸事件发生          
           Excute_Toogle(1);          
         }
         return;
@@ -977,8 +1003,8 @@ void Switch_Ctrl(INT8U Switch_Flag, INT8U Cause)
         //Relay_Status.Switch_Status = SWITCH_OFF;
         //Relay_Status.Switch_Cause = Cause;
         Set_Relay_Status(SWITCH_OFF, Cause);
-        Clr_Event_Instant(ID_EVENT_RELAY_ON); //合闸事件结束      
-        Set_Event_Instant(ID_EVENT_RELAY_OFF);//拉闸事件发生  
+        //Clr_Event_Instant(ID_EVENT_RELAY_ON); //合闸事件结束      
+        //Set_Event_Instant(ID_EVENT_RELAY_OFF);//拉闸事件发生  
       } 
     }
   }
@@ -990,8 +1016,8 @@ void Switch_Ctrl(INT8U Switch_Flag, INT8U Cause)
       //Relay_Status.Switch_Status = SWITCH_ON;
       //Relay_Status.Switch_Cause = Cause;
       Set_Relay_Status(SWITCH_ON, Cause);
-      Clr_Event_Instant(ID_EVENT_RELAY_OFF);//拉闸事件结束
-      Set_Event_Instant(ID_EVENT_RELAY_ON); //合闸事件发生      
+      //Clr_Event_Instant(ID_EVENT_RELAY_OFF);//拉闸事件结束
+      //Set_Event_Instant(ID_EVENT_RELAY_ON); //合闸事件发生      
     }
     else //还没有手动合闸则保持拉闸状态
     {
@@ -1007,8 +1033,8 @@ void Switch_Ctrl(INT8U Switch_Flag, INT8U Cause)
         if(Relay_Status.Off_Delay EQ 0) //如果设定延时为0，马上拉闸
         {       
           Set_Relay_Status(SWITCH_OFF, Cause);
-          Clr_Event_Instant(ID_EVENT_RELAY_ON); //合闸事件结束      
-          Set_Event_Instant(ID_EVENT_RELAY_OFF);//拉闸事件发生  
+          //Clr_Event_Instant(ID_EVENT_RELAY_ON); //合闸事件结束      
+          //Set_Event_Instant(ID_EVENT_RELAY_OFF);//拉闸事件发生  
         } 
       }      
     }
@@ -1032,8 +1058,8 @@ void Switch_Ctrl(INT8U Switch_Flag, INT8U Cause)
         //Relay_Status.Switch_Status = SWITCH_OFF;
         //Relay_Status.Switch_Cause = Cause;
         Set_Relay_Status(SWITCH_OFF, Cause);
-        Clr_Event_Instant(ID_EVENT_RELAY_ON); //合闸事件结束      
-        Set_Event_Instant(ID_EVENT_RELAY_OFF);//拉闸事件发生
+        //Clr_Event_Instant(ID_EVENT_RELAY_ON); //合闸事件结束      
+        //Set_Event_Instant(ID_EVENT_RELAY_OFF);//拉闸事件发生
         
         Set_Hand_Switch_On_Flag(NEED_HAND_SWITCH_ON_FLAG); //需要手动合闸        
       }

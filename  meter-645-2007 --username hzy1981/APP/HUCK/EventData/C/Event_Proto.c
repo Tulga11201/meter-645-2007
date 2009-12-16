@@ -945,12 +945,12 @@ INT16U Get_Event_Cumu_Proto_Data(PROTO_DI PDI, INT8U* pDst, INT8U* pDst_Start, I
   } 
   else if(PDI EQ 0x1D000001) //跳闸次数
   {
-    Get_Event_Cumu_BCD_Counts_Mins(ID_EVENT_RELAY_ON, pDst, pDst, DstLen);
+    Get_Event_Cumu_BCD_Counts_Mins(ID_EVENT_RELAY_OFF, pDst, pDst, DstLen);
     return 3;    
   }
   else if(PDI EQ 0x1E000001) //合闸次数
   {
-    Get_Event_Cumu_BCD_Counts_Mins(ID_EVENT_RELAY_OFF, pDst, pDst, DstLen);
+    Get_Event_Cumu_BCD_Counts_Mins(ID_EVENT_RELAY_ON, pDst, pDst, DstLen);
     return 3;    
   }
   else if(PDI EQ 0x1F000001) //总功率因素超下限次数
@@ -1127,11 +1127,11 @@ INT16U Get_Event_Cumu_Proto_Data(PROTO_DI PDI, INT8U* pDst, INT8U* pDst_Start, I
       Get_Event_Cumu_BCD_Counts_Mins(ID_EVENT_DOWN_COVER_OPEN, pDst, pDst_Start, DstLen);
       return 3; 
    }
-   else if(PDI EQ 0x03310000)//拉闸
+   /*else if(PDI EQ 0x03310000)//拉闸
    {
       Get_Event_Cumu_BCD_Counts_Mins(ID_EVENT_RELAY_OFF, pDst, pDst_Start, DstLen);
       return 6;      
-   }
+   }*/
    else if((PDI & 0xFFFF0000) EQ 0x0EA00000) //失压、失流、断相、反向的累加数据
    {
       Len = Get_Ext_Event_Cumu_Proto_Data(PDI, pDst, pDst_Start, DstLen);

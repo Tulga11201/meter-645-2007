@@ -1165,7 +1165,7 @@ INT8U Get_Hand_Switch_On_Flag()
 //Card_Type为1表示用户卡，在负荷跳闸次数超限的情况下不能合闸
 INT8U Prepaid_Insert_Card(INT8U Card_Type)
 {
-  INT8U Cause;
+  //INT8U Cause;
   
   if(Card_Type EQ 0)// || Card_Type EQ 1)
   {

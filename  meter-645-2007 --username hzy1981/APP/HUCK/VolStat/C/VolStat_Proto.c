@@ -6,7 +6,7 @@ INT16U _Get_VolStat_Proto_Data(PROTO_DI PDI, INT8U* pDst, INT8U* pDst_Start, INT
 {
   INT8U i, Bef_Mon;
   S_VolStat* p;
-  S_HEX_Time TempTime;
+  //S_HEX_Time TempTime;
   INT16U Len;
 
   i = (INT8U) ((PDI & 0x0000FF00) >> 8);//悳、A、B、C--0、1、2、3

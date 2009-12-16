@@ -2268,7 +2268,7 @@ INT8U Check_Eng_Settle_Time(S_BCD_Time *pTime)
 
 void Settle_Data()
 {
-  INT8U Re, i;
+  INT8U Re;
   static S_Int8U Min_Bak = {CHK_BYTE, 0xFF, CHK_BYTE};
   S_HEX_Time TempTime;
 

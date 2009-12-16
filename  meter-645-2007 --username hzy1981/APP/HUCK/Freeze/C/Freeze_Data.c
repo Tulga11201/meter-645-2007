@@ -255,7 +255,7 @@ void Date_Freeze_Proc()
 
 void Period_Freeze_Proc()
 {
-  INT8U Re, i, j;
+  INT8U i, j;
   INT8U Temp[5];
   
   //¶¨Ê±¶³½á
@@ -292,8 +292,8 @@ void Freeze_Proc()
   static S_Int8U Min_Bak = {CHK_BYTE, 0xFF, CHK_BYTE};
   //static S_Int8U Hour_Bak = {CHEK_BYTE, 0xFF, CHK_BYTE};
   //static S_Int8U Date_Bak = {CHK_BYTE, 0xFF, CHK_BYTE};
-  INT8U Re, i, j;
-  INT8U Temp[5];
+  INT8U Re;
+  //INT8U Temp[5];
 
   Re = 1;
   Re &= CHECK_STRUCT_VAR(Min_Bak);

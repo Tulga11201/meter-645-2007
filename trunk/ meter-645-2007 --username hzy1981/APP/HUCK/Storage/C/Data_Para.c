@@ -60,7 +60,7 @@ CONST S_Data_Para_Storage_Info Data_Para_Storage[] =
   
   {_SDI_LOAD_DATA_INDEX, IMP_IMP_DATA, sizeof(S_LoadData_Index), 1}, //负荷记录当前记录位置
   {_SDI_TIME_BAK, IMP_IMP_DATA, sizeof(S_BCD_Time), 1}, //当前时间的备份
-  {_SDI_CUR_SCHEME, IMP_IMP_DATA, sizeof(S_Cur_Scheme), 1},//当前年时区，日时段、费率方案
+  {_SDI_CUR_SCHEME, IMP_IMP_PARA, sizeof(S_Cur_Scheme), 1},//当前年时区，日时段、费率方案
   
   {_SDI_CUR_ENERGY, IMP_IMP_DATA, ENERGY_SAVE_SIZE, 1}, //当前电量  
   {_SDI_CUR_DEMAND, IMP_IMP_DATA, DEMAND_SAVE_SIZE, 1}, //当前需量  
@@ -1023,7 +1023,7 @@ CONST S_Data_Para_Storage_Info Data_Para_Storage[] =
   {_SDI_CHK_IMPB, IMP_LOAD_REC, 1, 1}, 
   {_SDI_CHK_IMPC, IMP_PD_DATA, 1, 1},
   
-  {_SDI_CHG_CS, IMP_LOAD_REC, 9, 1}  //用于改变整个存储数据的CS,改变其长度可改变这个CS，从而自动设参数
+  {_SDI_CHG_CS, IMP_LOAD_REC, 5, 1}  //用于改变整个存储数据的CS,改变其长度可改变这个CS，从而自动设参数
 }; 
 
 //extern void Clear_CPU_Dog(void); 

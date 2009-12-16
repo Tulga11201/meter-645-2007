@@ -915,6 +915,22 @@ void Card_Test_Relay() //插卡测试继电器状态，工Heguoquan调用
   Card_Test_Relay_Status.Delay = CARD_TESTING_DELAY; 
 }
 
+//继电器反向
+void Relay_Reverse()
+{
+  if(Relay_Status.Switch_Status EQ SWITCH_ON)
+  {
+    Set_Relay_Status(SWITCH_OFF, S_OFF_PREPAID);
+    Excute_Toogle(0);
+  }
+  else
+  {
+    Set_Relay_Status(SWITCH_ON, S_OFF_PREPAID);
+    Excute_Toogle(1);          
+  }  
+  
+}
+
 //#pragma optimize=none
 //跳闸直接控制
 void Switch_Ctrl(INT8U Switch_Flag, INT8U Cause)
@@ -936,40 +952,26 @@ void Switch_Ctrl(INT8U Switch_Flag, INT8U Cause)
   
   if(Card_Test_Relay_Status.Flag EQ CARD_TESTING) //当前在继电器测试状态
   {
-    if(Sec_Bak.Var != Sec_Timer_Pub)
+    if(Sec_Bak.Var EQ Sec_Timer_Pub)
+      return;
+
+    Sec_Bak.Var = Sec_Timer_Pub;
+    if(Card_Test_Relay_Status.Delay EQ CARD_TESTING_DELAY)
     {
-      Sec_Bak.Var = Sec_Timer_Pub;
-      if(Card_Test_Relay_Status.Delay EQ CARD_TESTING_DELAY)
-      {
-        Relay_Status.Off_Delay = 0;
-        if(Relay_Status.Switch_Status EQ SWITCH_ON)
-        {
-          Set_Relay_Status(SWITCH_OFF, S_OFF_PREPAID);
-          //Relay_Status.Switch_Status = SWITCH_OFF;
-          //Clr_Event_Instant(ID_EVENT_RELAY_ON); //合闸事件结束      
-          //Set_Event_Instant(ID_EVENT_RELAY_OFF);//拉闸事件发生          
-          Excute_Toogle(0);
-        }
-        else
-        {
-          Set_Relay_Status(SWITCH_ON, S_OFF_PREPAID);
-          //Relay_Status.Switch_Status = SWITCH_ON;
-          //Clr_Event_Instant(ID_EVENT_RELAY_OFF);//拉闸事件结束
-          //Set_Event_Instant(ID_EVENT_RELAY_ON); //合闸事件发生          
-          Excute_Toogle(1);          
-        }
-        return;
-      }
-      else if(Card_Test_Relay_Status.Delay > 0)
-      {
-        Card_Test_Relay_Status.Delay --;
-        return;
-      }
-      else
-      {
-        Card_Test_Relay_Status.Flag = CARD_TESTED;
-        return;        
-      }
+      Card_Test_Relay_Status.Delay --;
+      Relay_Reverse();
+      return;
+    }
+    else if(Card_Test_Relay_Status.Delay > 0)
+    {
+      Card_Test_Relay_Status.Delay --;
+      return;
+    }
+    else
+    {
+      Card_Test_Relay_Status.Flag = CARD_TESTED;
+      Relay_Reverse();
+      return;        
     }
   }
 /*  

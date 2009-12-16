@@ -705,11 +705,13 @@ CONST S_Disp_Item Def_04040201_20[] =
 {0x00,0x02060000},//瞬时总功率因数                       
 {0x00,0x02060100},//瞬时A相功率因数                      
 {0x00,0x02060200},//瞬时B相功率因数                      
-{0x00,0x02060300},//瞬时C相功率因数                      
+{0x00,0x02060300},//瞬时C相功率因数     
+#if PREPAID_MONEY_MODE EQ PREPAID_RATE
 {0x00,PDI_CUR_RATE1_FEE},//当前尖费率电价                       
 {0x00,PDI_CUR_RATE2_FEE},//当前峰费率电价                       
 {0x00,PDI_CUR_RATE3_FEE},//当前平费率电价                       
-{0x00,PDI_CUR_RATE4_FEE},//当前谷费率电价                       
+{0x00,PDI_CUR_RATE4_FEE},//当前谷费率电价
+#else
 {0x00,PDI_CUR_STEP1_ENG},//阶梯1电量                            
 {0x00,PDI_CUR_STEP2_ENG},//阶梯2电量                            
 {0x00,PDI_CUR_STEP3_ENG},//阶梯3电量                            
@@ -718,11 +720,12 @@ CONST S_Disp_Item Def_04040201_20[] =
 {0x00,PDI_CUR_STEP2_FEE},//阶梯2电价                            
 {0x00,PDI_CUR_STEP3_FEE},//阶梯3电价                            
 {0x00,PDI_CUR_STEP4_FEE},//阶梯4电价                            
-{0x00,PDI_CUR_STEP5_FEE},//阶梯5电价                            
+{0x00,PDI_CUR_STEP5_FEE},//阶梯5电价
+#endif
 {0x00,0x04001001},//报警金额1                            
 {0x00,0x04001002},//报警金额2                            
-//{0x00,0x00900201},//透支金额                             
-//{0x00,0x04000b01},//结算日         
+{0x00,0x00900201},//透支金额                             
+{0x00,0x04000b01},//结算日         
 };
 #else //多功能表-非费控
 //自动循环显示数据项

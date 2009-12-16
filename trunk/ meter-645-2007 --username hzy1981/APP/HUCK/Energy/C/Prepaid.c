@@ -173,7 +173,7 @@ INT8U Prepaid_Buy_Money_Proc(INT32U Money)
   Re = CHECK_STRUCT_SUM(Cur_Prepaid);
   ASSERT(1 EQ Re);
   
-  if(Check_Buy_Money_Exceed_Limit(Money) EQ 0)
+  if(Check_Buy_Money_Exceed_Limit(Money))
     return 0;
   
   Money = Money * 10;

@@ -3414,7 +3414,7 @@ CONST S_P_Data_Info P_Data_Info[] =
   INIT(pSrc, (void *) 0),
   //INIT(Src_Off, 0),
   INIT(Src_Len, 6),
-  INIT(Src_Format, S_BCD),
+  INIT(Src_Format, S_BIN),
   INIT(Dst_Start, 0),
   INIT(Dst_Len, 6),
   INIT(Num, 0x00000000),

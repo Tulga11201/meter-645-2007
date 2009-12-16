@@ -10,7 +10,7 @@
 
 #define CARD_TESTING 0x4D
 #define CARD_TESTED  0x5B
-#define CARD_TESTING_DELAY 5
+#define CARD_TESTING_DELAY 10
 
 #define SWITCH_OFF_DELAY ((Relay_Status.Off_Delay > 0)?1:0)
 

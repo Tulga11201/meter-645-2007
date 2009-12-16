@@ -23,7 +23,7 @@ INT8U ICcardMain(void) {
            return  0;
         }        
         WhenCardInsertedInitPrePayData();//更新我管理的全局变量
-	Card_Switch_On();//黄工的函数，不知道干啥的 
+	Card_Switch_On();//黄工的函数，好像是 处理，插卡时，允许合闸的
 	if(Check_CPU_Occur()){
 		Card_Error_State.CardErrorState.CPU_CARD_LOSE=1;
 		return 0;

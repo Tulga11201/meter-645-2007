@@ -58,13 +58,11 @@ void Realse_Local_Pay_Source(void)
     Curr_Media_Status.Uart_Type=PAY_NONE;
     SET_STRUCT_SUM(Curr_Media_Status);
 }
-#endif
-
-
 /**********************************************************************************
 函数功能：转换显示代码
 
 **********************************************************************************/ 
+
 INT8U Convert_Dis_Code(void)
 {
     
@@ -142,7 +140,7 @@ INT8U Convert_Dis_Code(void)
   
   return OK;
 }
-
+#endif
 /**********************************************************************************
 函数功能：CPU卡切换处理
 入口：
@@ -266,7 +264,6 @@ void CPU_Card_Main_Proc(void)
 #endif
 }
 
-#if PREPAID_METER>0
 /**********************************************************************************
 函数功能：
 入口：
@@ -274,7 +271,8 @@ void CPU_Card_Main_Proc(void)
 **********************************************************************************/ 
 INT8U Wait_For_Pay_Uart_Data(INT16U RdDstLen,INT8U *pDst,INT8U *pDstStart,INT16U MaxDstLen)
 {
-
+#if PREPAID_METER>0
+  
   INT16U i;
   
   if(pDst>pDstStart+MaxDstLen)
@@ -313,9 +311,10 @@ INT8U Wait_For_Pay_Uart_Data(INT16U RdDstLen,INT8U *pDst,INT8U *pDstStart,INT16U
     return CPU_ESAM_DRV_OK;
   }
   else
-    return CPU_ESAM_DRV_RECLEN_ERR;    
-  
-  //return CPU_ESAM_DRV_OK;  
+    return CPU_ESAM_DRV_RECLEN_ERR;  
+#else
+  return CPU_ESAM_DRV_OK;
+#endif 
 }
 /**********************************************************************************
 函数功能：对 CPU卡,ESAM的底层操作,包括OPERATE_RST_COOL等.
@@ -331,6 +330,8 @@ INT8U Wait_For_Pay_Uart_Data(INT16U RdDstLen,INT8U *pDst,INT8U *pDstStart,INT16U
 **********************************************************************************/ 
 INT8U Cpu_Esam_All_Operate(INT8U Type,INT8U Operate,INT8U *pDst,INT8U *pDstStart,INT16U MaxDstLen)
 {
+#if PREPAID_METER>0
+  
   INT8U Flag;
    
   if(pDst>pDstStart+MaxDstLen)
@@ -370,21 +371,9 @@ INT8U Cpu_Esam_All_Operate(INT8U Type,INT8U Operate,INT8U *pDst,INT8U *pDstStart
 
     }    
   }
+#endif
   
-  /*
-  if(CPU_ESAM_DRV_POWER_OFF EQ Operate)
-  {
-    Curr_Media_Status.Uart_Type=PAY_NONE;
-    SET_STRUCT_SUM(Curr_Media_Status);  
-    
-    PM1_bit.no3=0;P1_bit.no3=0;
-    PM1_bit.no4=0;P1_bit.no4=0;
-    PM5_bit.no1=0;P5_bit.no1=0;
-    Switch_Uart_To_Pay(PAY_CPU_CARD);
-  }
-  */
-  
-  return CPU_ESAM_DRV_OK;
+  return CPU_ESAM_DRV_OK;  
 }
 
 /**********************************************************************************
@@ -402,7 +391,7 @@ INT8U Cpu_Esam_All_Operate(INT8U Type,INT8U Operate,INT8U *pDst,INT8U *pDstStart
 **********************************************************************************/ 
 INT8U Cpu_Esam_Comm_Proc(INT8U Type,INT8U *Srcbuf,INT16U SrcLen,INT8U RdOrWr,INT8U RdDstLen,INT8U *pDst,INT8U *pDstStart,INT16U MaxDstLen)
 {
-  
+#if PREPAID_METER>0
   if(pDst>pDstStart+MaxDstLen || RdDstLen>MaxDstLen || Type>MAX_CPU_ESAM_TYPE)
   {
     ASSERT_FAILED();
@@ -421,7 +410,7 @@ INT8U Cpu_Esam_Comm_Proc(INT8U Type,INT8U *Srcbuf,INT16U SrcLen,INT8U RdOrWr,INT
   Pay_Uart_Send(Srcbuf,SrcLen); 
   Clr_Ext_Inter_Dog(); 
   return Wait_For_Pay_Uart_Data(RdDstLen,pDst,pDstStart,MaxDstLen);
-
+#endif
 }
 
-#endif
+

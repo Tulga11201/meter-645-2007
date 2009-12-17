@@ -2682,10 +2682,13 @@ void Check_Cal_Status(void)
 void Init_Measu_PUCK(void)
 {
   
+  GetSysModeProc();   //低功耗下需要获取电流规格
+  Get_Curr_Rate();    //获取低功耗下需要的电流增益参数
+  
   if(Get_Sys_Status()!=SYS_NORMAL) //只有在正常模式下，才初始化计量任务
     return ;        
    
-  Init_Para();           //计量相关参数初始化
+  Get_Pulse_Para();           //计量相关参数初始化
   Check_Cal_Status();
   Init_Measure_IC(); 
   Deal_PerSec_Main();

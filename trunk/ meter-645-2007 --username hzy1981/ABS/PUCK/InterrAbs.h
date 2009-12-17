@@ -75,7 +75,7 @@ INTER_ABS_PUCK_EXT KeyProperty  Key_Value_Pub;
 #define CLR_PAY_REMOT_AUTH Key_Value_Pub.Key.Bit.PrgKey=0
 
 
-#define ALL_LOSS_NUM 10   //记录全失压最大次数
+
 
 #pragma pack(1)
 typedef struct
@@ -98,12 +98,7 @@ typedef struct
   INT8U cS;
 }RECORD_TIME;
 
-typedef struct
-{
-  ALL_LOSS_STATUS   Status;
-  RECORD_TIME       RecordTime[ALL_LOSS_NUM];  //单次全失压发生和结束记录
-}ALL_LOSS_STRUC;
-NO_INIT INTER_ABS_PUCK_EXT ALL_LOSS_STRUC All_Loss_Var;
+
 
 
 

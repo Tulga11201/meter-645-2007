@@ -106,8 +106,9 @@
 #undef  NEAR_IRDA_EN                      //宏打开，使能吸附红外
 #undef  RIGHT_KEY_EN                      //宏打开，使能右按钮
 #define DIS_PARA_JUMP_EN                  //宏打开，使能参数修改跳屏  
-#define MEASU_IC_TYPE      MEASU_7022B          
-#define LCD_PROPERTY       LCD_GW_ZXW
+#define MEASU_IC_TYPE       MEASU_7022B          
+#define LCD_PROPERTY        LCD_GW_ZXW
+#define ALL_LOSS_CURR_EN                  //宏打开，使能全失压下计电流  
 
 #define FM_ROM_FM16_EN                    //打开 FM16功能
 #define DRV_HARD_DS3231    0              //1:3231硬件I2C开起;0:硬件I2C关闭 

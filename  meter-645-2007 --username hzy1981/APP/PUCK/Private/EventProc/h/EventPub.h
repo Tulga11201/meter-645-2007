@@ -270,13 +270,10 @@ void Init_Event_Sram(INT8U);
 //void Emerg_Event_Proc(void);
 void Event_Proc_Sec(void);
 INT8U Check_Event_End(INT8U Id);
-void Save_All_Loss_Data(void);
-void Init_All_Loss_Sram(void);
-void Count_All_Loss_Proc(void);
+
+
 INT8U RTC_Read_Fxt(volatile INT8U Time[]);
-void Clr_All_Loss_Data(void);
 void PwrOff_Proc_PUCK(void);
-void Check_Loss_All_Curr(void);
 void Sound_LED_LCD_Port_Alarm(void);
 INT8U Check_Man_ClrDemd_En(void);
 void Get_Meter_Run_Status(void);

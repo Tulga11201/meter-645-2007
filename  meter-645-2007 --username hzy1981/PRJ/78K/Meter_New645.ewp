@@ -2410,6 +2410,12 @@
         <group>
           <name>MEASURE</name>
           <file>
+            <name>$PROJ_DIR$\..\..\APP\PUCK\Private\MeasuProc\c\AllLossVolt.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\..\APP\PUCK\Private\MeasuProc\h\AllLossVolt.h</name>
+          </file>
+          <file>
             <name>$PROJ_DIR$\..\..\APP\PUCK\Private\MeasuProc\c\MeasuBase.c</name>
           </file>
           <file>

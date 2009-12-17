@@ -126,7 +126,8 @@ void Init_All_IO_Resume(INT8U Status)
         
     P5=0;
     PU5=0;
-    PM5_bit.no0=1;   //7022_PWR
+    
+    PM5_bit.no0=0;   //7022_PWR
     PM5_bit.no1=0;   //IC_OUT
     PM5_bit.no2=0;   //IC_RST
     PM5_bit.no3=0;   //IC_SW--------------
@@ -417,7 +418,7 @@ void Goto_Sleep_PUCK(void)
          break;       
      } 
    }
-     //醒来了，根据唤醒源马上切换高速晶振-----------PUCK 
+   //醒来了，根据唤醒源马上切换高速晶振-----------PUCK 
    Switch_Main_Osc(RUN_MODE);
    Clear_CPU_Dog(); 
 }  

@@ -49,7 +49,8 @@
 #define SUCESS 0;
 
 
-
+#define  PORT_OUT_DIR 0
+#define  PORT_IN_DIR  1
 
 
 //-----------------------------------------------------------//        

@@ -26,6 +26,7 @@
 #include   "MeasuCal.h"
 #include   "Cal_Dis.h"
 #include   "MeasuPort.h" 
+#include   "AllLossVolt.h" 
 #include   "Channel.h"
 #include   "EventPub.h"
 #include   "EventInstant.h"

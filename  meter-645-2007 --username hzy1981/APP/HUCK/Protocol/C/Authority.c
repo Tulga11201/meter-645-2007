@@ -564,4 +564,17 @@ INT8U Check_Data_Type(PROTO_DI PDI)
   else
     return 3;
 }
+
+//检查是否是时区表或者是时段表数据
+INT8U Check_Year_Date_Table_Data(PROTO_DI PDI)
+{
+  PROTO_DI TempPDI;
+  
+  TempPDI = (PDI & 0xFFFFFF00);
+  if(TempPDI EQ 0x04010000 || TempPDI EQ 0x04020000)
+    return 1;
+  else
+    return 0;
+}
+
 #undef AUTHORITY_C

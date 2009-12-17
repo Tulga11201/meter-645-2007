@@ -128,4 +128,5 @@ EXT INT8U Check_User_Authurity(INT8U User_PSW, INT8U Data_PSW);
 EXT void Set_Authority_Flag();
 EXT void Clear_Authority_Flag();
 EXT INT8U Check_Data_Type(PROTO_DI PDI);
+EXT INT8U Check_Year_Date_Table_Data(PROTO_DI PDI);
 #endif

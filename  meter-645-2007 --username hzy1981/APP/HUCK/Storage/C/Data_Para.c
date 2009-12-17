@@ -1023,7 +1023,7 @@ CONST S_Data_Para_Storage_Info Data_Para_Storage[] =
   {_SDI_CHK_IMPB, IMP_LOAD_REC, 1, 1}, 
   {_SDI_CHK_IMPC, IMP_PD_DATA, 1, 1},
   
-  {_SDI_CHG_CS, IMP_LOAD_REC, 5, 1}  //用于改变整个存储数据的CS,改变其长度可改变这个CS，从而自动设参数
+  {_SDI_CHG_CS, IMP_LOAD_REC, 10, 1}  //用于改变整个存储数据的CS,改变其长度可改变这个CS，从而自动设参数
 }; 
 
 //extern void Clear_CPU_Dog(void); 

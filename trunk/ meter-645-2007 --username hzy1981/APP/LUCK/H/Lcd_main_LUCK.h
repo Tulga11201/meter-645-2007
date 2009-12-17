@@ -107,7 +107,7 @@ LCD_MAIN_EXT INT32U  LCDLightSecTimer;
 
 LCD_MAIN_EXT  INT16S dispoffset;
 
-#define DIS_BUF_LEN  268
+#define DIS_BUF_LEN  224
 DECLARE_BUF_TYPE(INT8U,DIS_BUF_LEN,S_Buf_Dis);
 #ifdef LCD_MAIN_C
   LCD_MAIN_EXT S_Buf_Dis  _Dis_GetData_Buf={CHK_BYTE,{0},CHK_BYTE};

@@ -28,7 +28,7 @@ typedef struct
   ALL_LOSS_STATUS   Status;
   RECORD_TIME       RecordTime[ALL_LOSS_NUM];  //单次全失压发生和结束记录
 #ifdef  ALL_LOSS_CURR_EN
-  INT32U Curr[3];          //电流有效值: UNIT:0.0001A;0-----A相电流;1---------B相电流；2----------C相电流
+  INT32U Curr[ALL_LOSS_NUM][3];          //电流有效值: UNIT:0.0001A;0-----A相电流;1---------B相电流；2----------C相电流
 #endif  
 }ALL_LOSS_STRUC;
 NO_INIT AllLossMeasu_EXT ALL_LOSS_STRUC All_Loss_Var;

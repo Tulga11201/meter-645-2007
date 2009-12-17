@@ -144,7 +144,7 @@ void All_Loss_Vol_Data_Proc(INT8U Start_Time[],INT8U End_Time[])
 #undef Debug_Print
 #define Debug_Print(...)
 
-void Store_Op_ID(INT8U *pDst, INT8U *pDst_Start, INT8U DstLen)
+void Store_Op_ID(INT8U Op_ID[],INT8U *pDst, INT8U *pDst_Start, INT8U DstLen)
 {
   DIS_PD_INT;
   mem_cpy(pDst, (void *)Operator_ID.Op_ID, sizeof(Operator_ID.Op_ID), pDst_Start, DstLen);
@@ -171,7 +171,7 @@ void Event_Data_Proc(INT8U Event_ID,INT8U Occur_Or_End)
 {
   INT8U Total_Event_ID;
   INT8U Clr_Demand_Man_Flag;
-  INT8U Op_ID[4];
+  INT8U Op_ID[4],Op_ID1[4];
   
   _Debug_Print("\r\n++++++++++Event Data Proc,ID:%d,%s++++++++++",Event_ID,(Occur_Or_End EQ EVENT_OCCUR)?"Occur":"End");
   
@@ -181,14 +181,20 @@ void Event_Data_Proc(INT8U Event_ID,INT8U Occur_Or_End)
     Clr_Demand_Man_Flag = 1;
     Event_ID = ID_EVENT_CLR_DEMAND_COM;
     //当前操作者id先备份
-    Store_Op_ID(Op_ID, Op_ID, sizeof(Op_ID));
+    mem_set(Op_ID1, 0xFF, sizeof(Op_ID1), Op_ID1, sizeof(Op_ID1));
+    Store_Op_ID(Op_ID1, Op_ID, Op_ID, sizeof(Op_ID));
   }
   else if(Event_ID EQ ID_EVENT_RELAY_ON || Event_ID EQ ID_EVENT_RELAY_OFF) //拉合闸，本地拉合闸记录操作者代码为FF
   {
-    if(Relay_Status.Switch_Cause EQ S_OFF_PREPAID) //前一次是本地拉闸
+    if(Relay_Status.Switch_Cause EQ S_OFF_PREPAID) //本地拉闸需要置操作者代码为全FF
     {
-      Store_Op_ID(Op_ID, Op_ID, sizeof(Op_ID));      
+      mem_set(Op_ID1, 0xFF, sizeof(Op_ID1), Op_ID1, sizeof(Op_ID1));
+      Store_Op_ID(Op_ID1, Op_ID, Op_ID, sizeof(Op_ID));      
     }
+    else //远程拉闸需要采用其操作者代码
+    {
+      Store_Op_ID((INT8U *)Event_Data.Relay_Status.Op_ID, Op_ID, Op_ID, sizeof(Op_ID)); 
+    }   
   }
   
   Event_Cumu_Proc(Event_ID,Occur_Or_End,EVENT_REAL);
@@ -208,10 +214,7 @@ void Event_Data_Proc(INT8U Event_ID,INT8U Occur_Or_End)
   }
   else if(Event_ID EQ ID_EVENT_RELAY_ON || Event_ID EQ ID_EVENT_RELAY_OFF)
   {
-    if(Relay_Status.Switch_Cause EQ S_OFF_PREPAID) //前一次是本地拉闸    
-    {
-      Restore_Op_ID(Op_ID);      
-    }    
+    Restore_Op_ID(Op_ID);      
   }
   
   Debug_Print("++++++++++Event Data Proc:End++++++++++\r\n");
@@ -295,11 +298,12 @@ void Save_Event_PD_Data()
     mem_cpy((void *)&Event_Data.Prg_Key_Status, (void *)&Prg_Key_Status, sizeof(Prg_Key_Status),\
             (void *)&Event_Data.Prg_Key_Status, sizeof(Event_Data.Prg_Key_Status));
     
-    if(Get_Meter_Hard_Mode()==MODE_TEST) //自检模式掉电合闸
-      Event_Data.Relay_Status = SWITCH_ON;
-    else  
-      Event_Data.Relay_Status = Relay_Status.Switch_Status;
-    
+   // if(Get_Meter_Hard_Mode()==MODE_TEST) //自检模式掉电合闸
+     // Event_Data.Relay_Status = SWITCH_ON;
+    //else 
+    //保存继电器状态和拉合闸原因
+    Event_Data.Relay_Status.Switch_Status = Relay_Status.Switch_Status;
+    Event_Data.Relay_Status.Switch_Cause = Relay_Status.Switch_Cause;
     Event_Data.PD_Flag = 1;
     SET_STRUCT_SUM(Event_Data);
     
@@ -445,7 +449,8 @@ void PowerOn_Event_Proc()
     mem_cpy((void *)&Prg_Key_Status, (void *)&Event_Data.Prg_Key_Status, sizeof(Event_Data.Prg_Key_Status),\
             (void *)&Prg_Key_Status, sizeof(Prg_Key_Status));
     
-    Relay_Status.Switch_Status = Event_Data.Relay_Status;
+    Relay_Status.Switch_Status = Event_Data.Relay_Status.Switch_Status;
+    Relay_Status.Switch_Cause = Event_Data.Relay_Status.Switch_Cause;
     //设置掉电前时间为当前时间，用于处理掉电前事件
     Set_BCD_Array_Time((S_BCD_Time  *)&Event_Data.Time, (S_Event_Time *)&Cur_Time2, (S_Event_Time *)&Cur_Time2, sizeof(Cur_Time2));
 

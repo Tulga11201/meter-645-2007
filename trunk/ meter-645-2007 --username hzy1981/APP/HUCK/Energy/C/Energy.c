@@ -1953,6 +1953,13 @@ void Set_Def_Energy_Data()
     Cur_Energy.Prepaid_Info.Left_Money = 100000; //置100元剩余金额
     Cur_Energy.Prepaid_Info.Left_Energy = 100000; //置100度剩余电量
     SET_STRUCT_SUM(Cur_Energy);
+   
+    #if USE_ENERGY_RAM_BAK EQ 1
+    mem_cpy((void *) &Cur_Energy_Bak, (void *) &Cur_Energy, sizeof(Cur_Energy), (void *) &Cur_Energy_Bak, sizeof(Cur_Energy_Bak));
+    SET_STRUCT_SUM(Cur_Energy_Bak);
+    #endif
+  
+    Save_Cur_Energy_PD_Data();
   }
 //------------------------------------------------------------------  
 }

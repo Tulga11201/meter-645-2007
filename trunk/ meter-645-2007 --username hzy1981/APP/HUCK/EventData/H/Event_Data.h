@@ -87,6 +87,13 @@ typedef struct
 
 typedef struct
 {
+  INT8U Switch_Status;
+  INT8U Switch_Cause;
+  INT8U Op_ID[4];  
+}S_Event_Relay_Status;
+
+typedef struct
+{
     INT32U Min_Timer;
     INT8U Temp0;
     
@@ -129,8 +136,7 @@ typedef struct
     
     S_BCD_Time Time;
     
-    INT8U Relay_Status;
-    //INT8U Temp13;
+    S_Event_Relay_Status Relay_Status; //继电器状态以及操作者代码
  
     INT8U CS[CS_BYTES];
 }S_Event_Data;

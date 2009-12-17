@@ -8572,7 +8572,7 @@ INT8U Set_Data_Proc(INT8U Ch, INT8U* pSrc, INT8U SrcLen, INT8U *pAck_Flag)
   
   //保存操作者ID
   //备份前一次操作员ID
-  Save_Op_ID(pSrc + 8);
+  Record_Op_ID(pSrc + 8);
   
   if(!(SrcLen >= 12))//包括标识和密码起码有8字节
   {
@@ -9011,7 +9011,15 @@ INT16U Rcv_DLT645_Data_Proc(INT8U Ch, INT8U* pFrame, INT8U FrameLen, INT8U* pDst
         
         Len1 = 0;
         if(pSrc[4] != 0x98 || Esam_Auth_Check(pSrc, SrcLen, &Len1) EQ 0)//mac验证通过，同时解密
+        {
           Esam_Auth_Ok = 0;
+          //年时区表和日时段表也可以用02级密码设置--送检要求!!
+          if(Check_Year_Date_Table_Data(PDI))
+          {
+            if(pSrc[4] EQ 0x02)
+              Esam_Auth_Flag = 0;  
+          }
+        }
         else
         {
           Esam_Auth_Ok = 1;
@@ -9237,11 +9245,17 @@ INT16U Rcv_DLT645_Data_Proc(INT8U Ch, INT8U* pFrame, INT8U FrameLen, INT8U* pDst
       break; 
       
   case C_CTRL: //控制
-    Save_Op_ID(pSrc + 4); //保存操作者代码
-    
     Re = Remote_Protocol_Ctrl(pSrc + 8);
-    //记录操作者代码
-    Record_Op_ID(pSrc + 4);    
+    if(Re EQ 1)
+    {
+      //保存操作者代码
+      DIS_PD_INT;
+      mem_cpy((INT8U *)Event_Data.Relay_Status.Op_ID, pSrc + 4, 4, (INT8U *)Event_Data.Relay_Status.Op_ID,sizeof(Event_Data.Relay_Status.Op_ID));
+      SET_STRUCT_SUM(Event_Data);
+      EN_PD_INT;
+      //记录操作者代码
+      Record_Op_ID(pSrc + 4);
+    }    
     Len = 0;
     break;
   case C_PORT: //多功能端子

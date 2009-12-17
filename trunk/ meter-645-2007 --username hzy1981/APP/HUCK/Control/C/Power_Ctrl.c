@@ -688,7 +688,6 @@ INT8U Remote_Protocol_Ctrl(INT8U *pData)
   Temp[5] = Cur_Time1.Year;
   
   Switch_Flag = *pData;
-  
   //当前时间在命令截至时间之后
   if(Cmp_Array_Time(pData + 2, Temp, sizeof(Temp)) EQ TIME_AFT)
   {
@@ -876,11 +875,14 @@ INT8U Get_Relay_Status()
       return ALLOW_SWITCH_ON;
     else
     {
-      if(Cause EQ S_OFF_PREPAID) //如果是预付费跳闸
+      if(PREPAID_EN > 0)
       {
-        Re = Get_Prepaid_Status();
-        if(Re EQ PREPAID_MONEY_LEFT2 || Re EQ PREPAID_MONEY_ZERO) //在没有超透支门限的情况下，在报警门限2可以手动合闸
-          return ALLOW_SWITCH_ON;
+        if(Cause EQ S_OFF_PREPAID) //如果是预付费跳闸
+        {
+          Re = Get_Prepaid_Status();
+          if(Re EQ PREPAID_MONEY_LEFT2 || Re EQ PREPAID_MONEY_ZERO) //在没有超透支门限的情况下，在报警门限2可以手动合闸
+            return ALLOW_SWITCH_ON;
+        }
       }
       return SWITCH_OFF;
     }
@@ -1107,9 +1109,9 @@ INT8U Check_Switch_Status(INT8U *pCause)
   }
   
   //本地预付费且预付费跳闸表示为跳闸
-  if(PREPAID_LOCAL_REMOTE EQ PREPAID_LOCAL &&  Prepaid_Ctrl_Switch.Switch_Flag EQ SWITCH_OFF)
+  if(PREPAID_EN > 0 && PREPAID_LOCAL_REMOTE EQ PREPAID_LOCAL &&  Prepaid_Ctrl_Switch.Switch_Flag EQ SWITCH_OFF)
   {
-    if(PREPAID_EN > 0)
+    //if(PREPAID_EN > 0)
     {
       *pCause = S_OFF_PREPAID; //拉闸原因
       return SWITCH_OFF;
@@ -1120,9 +1122,9 @@ INT8U Check_Switch_Status(INT8U *pCause)
     *pCause = S_OFF_REMOTE_CMD;    
     return SWITCH_OFF;
   }
-  else if(Power_Ctrl_Switch.Switch_Flag EQ SWITCH_OFF) //负荷控制
+  else if(POWER_CTRL_EN > 0 && Power_Ctrl_Switch.Switch_Flag EQ SWITCH_OFF) //负荷控制
   {
-    if(POWER_CTRL_EN>0)
+    //if(POWER_CTRL_EN>0)
     {
       *pCause = S_OFF_PWR_CTRL;      
       return SWITCH_OFF;
@@ -1131,7 +1133,7 @@ INT8U Check_Switch_Status(INT8U *pCause)
 
   //else //合闸
   //{      
-    //*pCause = S_ON_OTHER;
+    *pCause = Relay_Status.Switch_Cause;//S_ON_OTHER;
     return SWITCH_ON;   
   //} 
     

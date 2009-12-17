@@ -37,7 +37,7 @@
 #define MAX_RATES     4///最大费率数
 
 #define NET_METER     CARRIER_METER//是否用于网络表的基表，可以是NOT_NET_METER或CARRIER_METER或者GPRS_METER
-#define PREPAID_METER 0 //是否是预付费表? 0表示不是，1表示是
+#define PREPAID_METER 1 //是否是预付费表? 0表示不是，1表示是
 
 #define SHELL_EN      0//shell使能
 
@@ -54,10 +54,10 @@
 #define RATE_SCH_SWITCH_EN   1 //Mode_Word.Mode[2].Bit.Bit7 //是否允许两套费率切换?
 #define STEP_SCH_SWITCH_EN   1 //是否允许切换两套阶梯方案
 
-#define PREPAID_EN            1//((PREPAID_METER > 0)?Mode_Word.Mode[1].Bit.Bit5:0) //预付费使能
+#define PREPAID_EN            ((PREPAID_METER > 0)?1:0)//((PREPAID_METER > 0)?Mode_Word.Mode[1].Bit.Bit5:0) //预付费使能
 #define PREPAID_MODE          PREPAID_MONEY//Mode_Word.Mode[1].Bit.Bit4////预付费模式，PREPAID_MONEY表示电费型，PREPAID_ENG表示电量型, ENERGY_TYPE
 #define PREPAID_MONEY_MODE    PREPAID_RATE//Prepaid_Para.Mode[1].Bit.Bit4//PREPAID_RATE表示分时计费，PREPAID_STEP表示阶梯计费
-#define PREPAID_LOCAL_REMOTE  PREPAID_LOCAL//Prepaid_Para.Mode[1].Bit.Bit3//PREPAID_LOCAL表示本地，PREPAID_REMOTE表示远程
+#define PREPAID_LOCAL_REMOTE  PREPAID_REMOTE//Prepaid_Para.Mode[1].Bit.Bit3//PREPAID_LOCAL表示本地，PREPAID_REMOTE表示远程
 
 #define SWITCH_EXT_INTER   SWITCH_INTER //SWITCH_INTER表示内置开关方式,SWITCH_EXT表示外置开关方式
 

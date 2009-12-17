@@ -113,7 +113,12 @@ void Count_All_Loss_Proc(void)
   
   if(All_Loss_Var.Status.Exist && All_Loss_Var.Status.start==0)  //全失压发生
   {
-    Get_AllLoss_Curr();
+#ifdef  ALL_LOSS_CURR_EN
+    //醒来了，根据唤醒源马上切换高速晶振-----------PUCK
+   Switch_Main_Osc(RUN_MODE);
+   Clear_CPU_Dog();
+#endif  
+   
     All_Loss_Var.Status.start=1;
     if(All_Loss_Var.Status.First)
     {
@@ -133,6 +138,8 @@ void Count_All_Loss_Proc(void)
     All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].StartTime[2]=DAY;      //CPU_RTC_Time.RTC.Date;
     All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].StartTime[3]=MONTH;      //CPU_RTC_Time.RTC.Month;
     All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].StartTime[4]=YEAR;      //CPU_RTC_Time.RTC.Year;
+    
+    Get_AllLoss_Curr();
     
     memset((INT8U*)All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].EndTime,0x00,\
           sizeof(All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].EndTime));     //死写，不用mem_set
@@ -199,12 +206,8 @@ void Get_AllLoss_Curr(void)
 #ifdef  ALL_LOSS_CURR_EN
   INT8U i,Flag;
   INT32U RdData;
-  FP32S  ResultData;
+  FP32S  ResultData;  
   
-  
-  //醒来了，根据唤醒源马上切换高速晶振-----------PUCK
-   Switch_Main_Osc(RUN_MODE);
-   Clear_CPU_Dog();
    BAT_ON_7022;
    
    PM13_bit.no0=0;   //7022_CS
@@ -221,12 +224,12 @@ void Get_AllLoss_Curr(void)
       WAITFOR_DRV_MS_TIMEOUT(10)
    Clear_CPU_Dog();
    
-   //初始化的时候，就需要获取电流规格，电流增益参数   
-   Measu_WrAndCompData_3Times(REG_W_IGAIN_A,0);
-   Measu_WrAndCompData_3Times(REG_W_IGAIN_B,0);
-   Measu_WrAndCompData_3Times(REG_W_IGAIN_C,0);  
-   
-   Clear_CPU_Dog();
+   //初始化的时候，就需要获取电流规格，电流增益参数
+   for(i=0;i<3;i++)
+   {
+      Measu_WrAndCompData_3Times(REG_W_IGAIN_A+i,Curr_Rate.Rate[i]);   
+      Clear_CPU_Dog();
+   }
         
    for(i=0;i<3;i++)
    {
@@ -237,7 +240,7 @@ void Get_AllLoss_Curr(void)
       } 
       ResultData=(FP32S)RdData*(FP32S)UNIT_A/pow(2,13);
       ResultData/=I_RATE_CONST[Get_SysCurr_Mode()];      
-      All_Loss_Var.Curr[i]=(INT32U)ResultData;
+      All_Loss_Var.Curr[All_Loss_Var.Status.Index][i]=(INT32U)ResultData;
    }
       
    P13_bit.no0=0;   //7022_CS

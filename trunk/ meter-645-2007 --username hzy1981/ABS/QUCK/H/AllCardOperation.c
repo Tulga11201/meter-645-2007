@@ -119,24 +119,24 @@ INT8U ICcardProcess(){
                return ERR;
         }
         //读取的cpu卡指令信息文件内容无错误 
-
 	My_Memcpy(Card_WR_Buff,receive_send_buffer,length);
        
 	if( Cpucard_Esamcard_Internal_Auth() != OK ){
-                 Card_Error_State.CardErrorState.CpuCardInternlAuthenticationErr=1;
+                Card_Error_State.CardErrorState.CpuCardInternlAuthenticationErr=1;
 		return ERR;
 	}
         //黄工的数据，更新esam 内部钱包文件
         if( Esam_Remain_Money_Dec() != OK )
-       {
+        {
 		Card_Error_State.CardErrorState.EsamUpdataErr=1;
                 ASSERT_FAILED();
 		return ERR;
-       }
-       Debug_Print("-----------根据卡的类型，进入相应的程序-------------" );
-       Debug_Print("-------------------卡类型:%x------------------------ ",CardType );
+        }
+        Debug_Print("-----------根据卡的类型，进入相应的程序-------------" );
+        Debug_Print("-------------------卡类型:%x------------------------ ",CardType );
 	CPU_ESAM_CARD_Control(CPU);
-	switch (CardType){
+	switch (CardType)
+        {
 		case GWFAR_USER_CARD:		//" 用户卡 "
 			ret=Buy_Card();
 			break;
@@ -163,16 +163,15 @@ INT8U ICcardProcess(){
 			ret = Relay_TEST_Card();
 			break;
 		default: 			//"卡类型或状态不对"
-                        ASSERT_FAILED();test();
+                        ASSERT_FAILED(); 
 			Card_Error_State.CardErrorState.CardKindErr=1; ////"卡类型或状态不对",购电卡，参数预置卡
 			ret=1;
 			break;
-	}
-
+       }
        if(Check_Meter_Prog_Status())
-	{
+       {
             CardProgrammeEvent();//编程按钮按下时 ，调用  z编程记录
-	}
+       }
        
        return ret;     
 }
@@ -184,9 +183,6 @@ INT8U ICcardProcess(){
 void CardProgrammeEvent(void){
          union Long_To_Char  progman,progdata;
 	INT32U Temp;
-         
-	 
-        
 	if( Para_Updata_Flag ==0 )
 		return  ;
         
@@ -329,7 +325,7 @@ unsigned char Check_Card(void){
 					     ESAM_RUN_INF_FILE,
 					     0,
 					     0,
-					     LENGTH_RUN_INF_DATA+6) != OK )
+					     LENGTH_RUN_INF_DATA-1+6) != OK )
 		return ERR;
  
 	return OK;
@@ -462,10 +458,11 @@ unsigned char Field_Para_Set_Card(void){//现场参数设置卡
 							PARA_CARD_VERSION_SET_CARD,
 							PARA_CARD_VERSION_ESAM,
 							4,
-							0) != OK ){
-                                                          Debug_Print( " Esam_File_Updata  55 "  );
-                                                        return ERR;
-                                                        }
+							0) != OK )
+                  {
+                                      Debug_Print( " Esam_File_Updata  55 "  );
+                                      return ERR;
+                  }
         Debug_Print( "   //我管理的 ESAM版本号更新 "  );
 		
         //我管理的 ESAM版本号更新  
@@ -499,7 +496,7 @@ void Deal_Set_Para_Inf_File(unsigned char * Source_Point,unsigned char Mode )
 unsigned char Set_In_Card(void){///出厂预制卡"
           INT8U Order_Head[11];
           INT32U Temp;
-	//unsigned char tempTriffDate[5];
+
 	struct Moneybag_Data Moneybag_Data;
 	
 	if(!Check_Meter_Prog_Status()){
@@ -537,7 +534,6 @@ unsigned char Set_In_Card(void){///出厂预制卡"
 		// Esam_File_Updata 2  "  );
 
 	}
-       
 	if( Para_Updata_Flag & 0x02 ){
                // ----------- 参数更新标志位与0x2为真，开始更新2------------  "  );
 		if( Esam_File_Updata(INIT_CARD_PARA_INF_FILE,
@@ -564,8 +560,7 @@ unsigned char Set_In_Card(void){///出厂预制卡"
 								240,
 								Card_WR_Buff) !=OK )
                 {
-               
-                   ASSERT_FAILED(); 
+                  ASSERT_FAILED(); 
                   return ERR;
                 }
 		// Esam_File_Updata  4  "  );	
@@ -621,9 +616,6 @@ unsigned char Set_In_Card(void){///出厂预制卡"
         // " 开始更新电表中的数据"  );
         //更新购电次数,更新剩余金额
         Prepaid_Set_Buy_Money_Counts(Moneybag_Data.Remain_Money, Moneybag_Data.Buy_Count);
-        //参数设置卡，版本号
-	Pre_Payment_Para.Para_Card_Version=0;
-        Write_Storage_Data( _SDI_PREPAID_PARA_CARD_VER,&Pre_Payment_Para.Para_Card_Version  , 4 );
         //表的运行状态
 	Pre_Payment_Para.Meter_Run_State=0;
         Write_Storage_Data(_SDI_PREPAID_RUN_STATUS ,&Pre_Payment_Para.Meter_Run_State  , 1 );
@@ -635,20 +627,23 @@ unsigned char Set_In_Card(void){///出厂预制卡"
         Write_Storage_Data(_SDI_INVALID_CARD_COUNTS ,&Temp,4);
         //事件记录清0， 只是改全局变量， 真正的清0 ，在后面的任务中进行
         Card_Clr_All_Data(); 
-        //Card_Clr_All_Data(); 
-        //
+               
 	return OK;
 }
 ///参数预置卡， 更改了esam中的参数后，改表中的
 void Deal_Init_Para_Inf_File(unsigned char * Source_Point,unsigned char Mode)
 {
-  
     struct Init_Para_Inf_File   Init_Para_Inf_File;
     mem_cpy(&Init_Para_Inf_File,Source_Point,sizeof(struct Init_Para_Inf_File),&Init_Para_Inf_File,sizeof(struct Init_Para_Inf_File));
     //更新电表的德购电类型， 是单费率还是复费率
     Debug_Print("更新电表的德购电类型:%d",(Init_Para_Inf_File.User_Kind) ); 
-    Deal_Para_Table2((unsigned char *)&(Init_Para_Inf_File.User_Kind) );
+    Deal_Para_Table2( (unsigned char *)&(Init_Para_Inf_File.User_Kind) );
     
+    //现场参数设置卡版本号
+    if( Para_Updata_Flag&0x80 ){
+       My_memcpyRev((INT8U *)&Pre_Payment_Para.Para_Card_Version,(INT8U *)&Init_Para_Inf_File.Para_Card_Version,4  );
+       Write_Storage_Data( _SDI_PREPAID_PARA_CARD_VER,&Pre_Payment_Para.Para_Card_Version  , 4 );
+    }
     Debug_Print("// 更新电表的费率切换时间: ");  
     // 更新电表的费率切换时间
     Deal_Para_Table4((unsigned char *)&(Init_Para_Inf_File.Triff_Switch_Time));
@@ -664,8 +659,7 @@ void Deal_Init_Para_Inf_File(unsigned char * Source_Point,unsigned char Mode)
 ///	 用户类型 : 单费率，还是复费率
 void Deal_Para_Table2(unsigned char * Source_Point ){
          
-
-        INT8U SingleKing_OrComplexKing;
+        INT8U SingleKing_OrComplexKing;//这个数据标示目前没用到，扩展用
         SingleKing_OrComplexKing=*Source_Point;
 	if( Para_Updata_Flag&0x80 ){
           Write_Storage_Data(_SDI_SINGLE_OR_COMPLEX_USER_KIND, &SingleKing_OrComplexKing,1);
@@ -679,7 +673,7 @@ void Deal_Para_Table4(unsigned char * Source_Point ){
         //以我们的要反， 他们的不要
         Debug_Print( "从cpu卡读出来的时间bcd码为： Temp[4]:%x Temp[3]:%x Temp[2]:%x Temp[1]:%x Temp[0]:%x  ",Temp[4],Temp[3],Temp[2],Temp[1],Temp[0]);
 	if( Para_Updata_Flag&0x02 ){ 
-          Reverse_data(Temp,5);
+          Reverse_data(Temp,5);//根据45协议，pDst【0】应该是软件上 最高位
           Write_Storage_Data(SDI_RATE_SCHE_CHG_TIME, Temp, 5 );
 	} 
 }
@@ -692,7 +686,7 @@ void Deal_Para_Table3(unsigned char * Source_Point )
 	struct Para_Table3 ParaTable3;
 	mem_cpy(&ParaTable3,Source_Point,sizeof(struct Para_Table3),&ParaTable3,sizeof(struct Para_Table3) );
 	if( Para_Updata_Flag&0x80 )
-        {
+  {
 		Reverse_data((unsigned char *)&(ParaTable3.Remain_Money_Alarm1_Limit),4);
                 //从cpu卡读出来的报警金额1反相后为：Temp[3]:%x Temp[2]:%x Temp[1]:%x Temp[0]:%x  ",Temp[3],Temp[2],Temp[1],Temp[0]);
                 Write_Storage_Data(SDI_PREPAID_WARN_MONEY1 , (unsigned char *)&(ParaTable3.Remain_Money_Alarm1_Limit) , 4)   ;
@@ -707,14 +701,11 @@ void Deal_Para_Table3(unsigned char * Source_Point )
                 Reverse_data((unsigned char *)&(ParaTable3.Voltage_PT[0]),3);
                 //从cpu卡读出来的报警金额1反相后为:Temp[2]:%x Temp[1]:%x Temp[0]:%x ",Temp[2],Temp[1],Temp[0]);
                 Write_Storage_Data(SDI_VOLT_TRANS_RATIO , (unsigned char *)&(ParaTable3.Voltage_PT[0]) , 3);  
-
 	}
 }
 ////
 unsigned char Password_Card(void)//密钥下装卡/恢复卡
 {
-  
-       
 	struct Password_Inf_File  File_Point;//指令信息文件，没有去除头尾
 	
 	unsigned char Esam_Password_Info[4];
@@ -745,8 +736,8 @@ unsigned char Password_Card(void)//密钥下装卡/恢复卡
 	PassWord_Kind = File_Point.Order_Byte; //密钥类型,密钥下装卡， 还是密钥恢复卡
        //判断cpu卡的值是否正确
 	if( PassWord_Kind == GWFAR_MOD_PASSWORD_CARD )//如果为密钥下装卡
-	{
-		if( File_Point.Password_Info[3] == 0 )//密钥下装卡中  密钥版本为0
+	{       //这样写没什么意义，因为下装后，再下装时，身份验证通不过
+		if( File_Point.Password_Info[3] <= Esam_Password_Info[3] )//密钥下装卡中  密钥版本 
 			{
                           ASSERT_FAILED();
 			  Card_Error_State.CardErrorState.Password_State_Err=1;
@@ -755,7 +746,7 @@ unsigned char Password_Card(void)//密钥下装卡/恢复卡
 	}
 	else if(  PassWord_Kind== GWFAR_RES_PASSWORD_CARD )
         {
-		if( 0)//File_Point.Password_Info[3] != 0 )/// 如果 密钥修复卡中 密钥版本 不为0
+		if(  File_Point.Password_Info[3] != 0 )/// 如果 密钥修复卡中 密钥版本 不为0
 		{
                           ASSERT_FAILED();
 			  Card_Error_State.CardErrorState.Password_State_Err=1;
@@ -805,18 +796,26 @@ unsigned char Add_Money_Card(void){//增加电费卡
 	if(Write(0,Update_Binary,0x81,0,LENGTH_ADD_MONEY_PARA_INF_FILE,&File.Start_Byte)!=OK){//末尾标志 不变
 		return ERR;
 	}
+        
+	Reverse_data( (unsigned char *)&(File.Buy_Money),4 ); 
+	Reverse_data( (unsigned char *)&(File.Buy_Money_Count),4 );//前面已经反相了这里为什么要反相， 这里可能 有问题
+        // 判断本次购电的囤积门限  //
+	if( Check_Buy_Money_Exceed_Limit( File.Buy_Money) ){//Moneybag_Data.Remain_Money来自cpu卡
+                           ASSERT_FAILED();
+			   Card_Error_State.CardErrorState.MoneyLimitErr=1;
+			   return ERR;
+	}
         // 1 , 4,0   把cpu卡的指令信息文件中，要充值的钱 加到esam中去
 	if( Remain_Money_Moneybag_Add(ADD_MONEY_CARD_ORDER_INF_FILE,BUY_MONEY_CARD,0) != OK )
 	{
 		   Card_Error_State.CardErrorState.ESAM_DO_ERR=1;
 		   return ERR;
 	}
-	Reverse_data( (unsigned char *)&(File.Buy_Money),4 );test();
-	Reverse_data( (unsigned char *)&(File.Buy_Money_Count),4 );//前面已经反相了这里为什么要反相， 这里可能 有问题
-	//告诉黄工， 充值了， 冲了多少钱
+//告诉黄工， 充值了， 冲了多少钱
 	Meter_Money_And_Count_Updata(File.Buy_Money,File.Buy_Money_Count );
 	return OK;
 }
+//根据 和黄工的约定，存放在e方中表号pDst[0]应该为 开发套件软件上看到得表地址最右边的一个字节
 unsigned char Modify_MeterID_Card(void){// 表号设置卡
   	unsigned char i,Msb,Ctrl;
 	struct MeterID_Return_Inf_File MeterID_Return_Inf_File;//表号设置卡的返写信息文件,记录了当前要设置的表号
@@ -849,7 +848,7 @@ unsigned char Modify_MeterID_Card(void){// 表号设置卡
 							0) != OK )
 		return ERR;
         //  更新表计表号  //如果发卡软件中写的是010203040506，那么下面Pre_Payment_Para.BcdMeterID【0】就为01
-         My_Memcpy( Pre_Payment_Para.BcdMeterID,&(MeterID_Return_Inf_File.Next_Meter_ID[0]),6);
+         My_memcpyRev( Pre_Payment_Para.BcdMeterID,&(MeterID_Return_Inf_File.Next_Meter_ID[0]),6);
          Write_Storage_Data( SDI_METER_ID, Pre_Payment_Para.BcdMeterID , 6);
          Card_Set_Para_Notice() ;
 /*" 更新卡回写文件 "*/

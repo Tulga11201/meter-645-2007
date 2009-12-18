@@ -155,10 +155,10 @@ unsigned char Far_Deal_Order_0x03(unsigned char * Data_Point ,unsigned char Sour
 unsigned char Far_Deal_070000FF(unsigned char * Data_Point )
 {     
      
-        INT16U ValidTimeTemp;
+      INT16U ValidTimeTemp;
         ///esam复位
-	if( (Esamcard_Atr() )!=OK )
-        { 
+       if( (Esamcard_Atr() )!=OK )
+       { 
                 ASSERT_FAILED();
 		Card_Error_State.CardErrorState.CPU_CARD_ESAM_ATR_ERR=1;
 		return ERR;
@@ -612,8 +612,8 @@ unsigned char Far_Deal_070101FF(unsigned char * Data_Point )
         //mem_cpy((INT8U*)&Moneybag_Data.Remain_Money,(INT8U *)&(Far_Deal_070101FF_format.Remain_Money),4,(INT8U)&Moneybag_Data.Remain_Money,4);
         Meter_Money_And_Count_Updata(Far_Deal_070101FF_format.Remain_Money,Far_Deal_070101FF_format.Buy_Count );
 	
-        //这个全局变量必须更新 后面会用到,这里客户编号使用被反相了两次， 所这里使用正常顺序到e方
-	My_memcpyRev(Pre_Payment_Para.UserID,Far_Deal_070101FF_format.Client_ID,6);
+        //更新客户编号
+	My_Memcpy(Pre_Payment_Para.UserID,Far_Deal_070101FF_format.Client_ID,6);
 	Write_Storage_Data(SDI_CUTOMER_ID , Pre_Payment_Para.UserID , 6);
 	Pre_Payment_Para.Meter_Run_State=0x03;
 	Write_Storage_Data(_SDI_PREPAID_RUN_STATUS  ,&Pre_Payment_Para.Meter_Run_State , 1);
@@ -662,7 +662,8 @@ unsigned char Far_Deal_070102FF(unsigned char * Data_Point )
 	Reverse_data((unsigned char *)&(Far_Deal_070102FF_format.Client_ID[0]),6);
 	Reverse_data((unsigned char *)&(Far_Deal_070102FF_format.Client_ID_Mac[0]),4);
         // 比较客户编号， 在e方中 
-        C_Read_Storage_Data( SDI_CUTOMER_ID, Pre_Payment_Para.UserID,  Pre_Payment_Para.UserID,sizeof(Pre_Payment_Para.UserID)  ); 
+        C_Read_Storage_Data( SDI_CUTOMER_ID, Pre_Payment_Para.UserID,  Pre_Payment_Para.UserID,6 ); 
+        Reverse_data(Pre_Payment_Para.UserID,6);
 	if( My_Memcmp(Pre_Payment_Para.UserID,&Far_Deal_070102FF_format.Client_ID[0],6) != 0 )
         {
                 ASSERT_FAILED();

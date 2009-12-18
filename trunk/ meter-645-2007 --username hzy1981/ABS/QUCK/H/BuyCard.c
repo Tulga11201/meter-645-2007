@@ -21,6 +21,7 @@
 unsigned char Judge_User_Card_OK(unsigned char BuyCard_Kind,unsigned long Buy_Count){
 	unsigned long Money_Count_T;// 用来比较 
         INT32U CurrMeter_MoneyCount;
+        
        // INT8U MeterIDTemp[6];
 	struct Buy_Para_Inf_File file;// 参数信息文件结构体
 	//struct Moneybag_Data Moneybag_Data;//钱包文件结构体  4+4个字节
@@ -57,7 +58,8 @@ unsigned char Judge_User_Card_OK(unsigned char BuyCard_Kind,unsigned long Buy_Co
 			}
                  //"//如果购电次数相等则直接回写// " );
                 CurrMeter_MoneyCount=Get_Buy_Eng_Counts();
-		if( My_Memcmp((unsigned char *)&Buy_Count, (unsigned char *)&(CurrMeter_MoneyCount),4) ==0 ) 
+		
+                if( My_Memcmp((unsigned char *)&Buy_Count, (unsigned char *)&(CurrMeter_MoneyCount),4) ==0 ) 
                 {
 			Dir_Return_Flag = 0xFF;////标示购电次数相等时直接 返写cpu卡   " );
 			return OK;
@@ -139,11 +141,13 @@ unsigned char Buy_Card(void){
        My_Memcpy(UserID,file.Client_ID,6);
        //如果为开户卡，或者编程按钮被按下 
        //Meter_Ins_Flag = 0xFF;
-       if( Buy_Card_Kind == GWFAR_USER_CARD_NEW) {// || Check_Meter_Prog_Status() ){  
+       if( Buy_Card_Kind == GWFAR_USER_CARD_NEW) // || Check_Meter_Prog_Status() ){  
+       {
                        //如果为开户 f1卡，或者编程按钮被按下 开始进入相应流程 " );
 			Para_Updata_Flag = file.Para_UpData_Flag;
                        //  参数信息文件处理 // " );
-			if( Para_Updata_Flag & 0x80 ){
+			if( Para_Updata_Flag & 0x80 )
+                        {
                                 //读取cpu卡参数信息文件前面两个字节
 				if( Esam_File_Updata( USER_CARD_PARA_INF_FILE,//01
 										ESAM_PARA_INF_FILE,//2
@@ -237,7 +241,8 @@ unsigned char Buy_Card(void){
           
 	}  
        Debug_Print(" //如果是非新卡，且 购电次数相等，Dir_Return_Flag被赋值0xff  " );
-	if( Dir_Return_Flag==0 ){//如果是非新卡，且 购电次数相等，Dir_Return_Flag被赋值0xff
+	if( Dir_Return_Flag==0 )//如果是非新卡，且 购电次数相等，Dir_Return_Flag被赋值0xff
+        {
 		// 判断本次购电的囤积门限  //
 		if( Check_Buy_Money_Exceed_Limit( Moneybag_Data.Remain_Money) ){//Moneybag_Data.Remain_Money来自cpu卡
                            ASSERT_FAILED();
@@ -247,7 +252,6 @@ unsigned char Buy_Card(void){
 		//  ESAM钱包文件充值  //不更新购电次数？？？？//2,0,0
 		if(Remain_Money_Moneybag_Add(USER_CARD_MONEYBAG_FILE,REMAIN_MONEY_CPU_ESAM,0)!=OK)
                 {
-                
                   ASSERT_FAILED();
                   return ERR;
                 }
@@ -258,14 +262,16 @@ unsigned char Buy_Card(void){
 		if( Buy_Card_Kind== GWFAR_USER_CARD_NEW )
                 {
                         // / 新卡保存用户号和变更表计运行状态 // " );
-			My_Memcpy(Pre_Payment_Para.UserID,UserID,6);
-		    	Write_Storage_Data(SDI_CUTOMER_ID,&Pre_Payment_Para.UserID, 6);
+			 
+                        Reverse_data(UserID,6);
+		    	Write_Storage_Data(SDI_CUTOMER_ID, UserID, 6);
+                        
 			Pre_Payment_Para.Meter_Run_State=MeterRunState_Run_3 ;
                         Write_Storage_Data(_SDI_PREPAID_RUN_STATUS,&Pre_Payment_Para.Meter_Run_State, 1);
 		}
 	} 
        // Meter_Ins_Flag = 0x00;
-        //更新esam参数信息文件  1 " ); 
+        //这里不是更新
 	if( Esam_File_Updata(USER_CARD_PARA_INF_FILE,//1
 								ESAM_PARA_INF_FILE,//2
 								CLIENT_ID_BUY_CARD,
@@ -278,7 +284,7 @@ unsigned char Buy_Card(void){
            return ERR;
         }
 			
-        //  更新esam参数信息文件2 " );
+        //这里不是更新
 	if( Esam_File_Updata(USER_CARD_PARA_INF_FILE,
 								ESAM_PARA_INF_FILE,
 								USER_KIND_BUY_CARD,
@@ -286,16 +292,12 @@ unsigned char Buy_Card(void){
 								2,
 								Card_WR_Buff+USER_KIND_BUY_CARD) != OK )
         {
-        
           ASSERT_FAILED();
           return ERR;
         }
-			
-         // 更新esam参数信息文件 3  " );
-       
 	if( Buy_Card_Kind != GWFAR_USER_CARD_BUY )//开户卡， 和补卡更新 离散因子
 	{
-                        //开户卡， 和补卡更新 离散因子   " );
+          //开户卡， 和补卡更新 离散因子   " );
 	  My_Memcpy(Pre_Payment_Para.Cpucard_Number_old_BackUpInEerom, cpucard_number, 8);
 	  Write_Storage_Data(_SDI_DISCRETE_INFO ,&Pre_Payment_Para.Cpucard_Number_old_BackUpInEerom,  8);
         }
@@ -305,7 +307,6 @@ unsigned char Buy_Card(void){
         //读esam 的返写信息文件到cpu卡中  ，应为实际上是读esam的运行信息文件之前， 先更新esam运行信息文件
 	if( Updata_Esam_Return_File(0x11)!=OK )  
         {
-        
           ASSERT_FAILED();
           return ERR;
         }
@@ -381,4 +382,4 @@ void Deal_Buy_Para_Inf_File(unsigned char * Source_Point ){
 
         //SDI_RATE_SCHE_CHG_TIME
 ///////////
-INT8U test(void){return 1;}
+ 

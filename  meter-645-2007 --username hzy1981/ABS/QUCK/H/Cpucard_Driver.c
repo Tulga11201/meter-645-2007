@@ -10,42 +10,37 @@
    
 /*"**************************************************************************"*/
 unsigned char Cpucard_Esamcard_Internal_Auth(void)  //内部认证//
-    {
-    
+{
     if(Check_CPU_Occur())			
     {
         ASSERT_FAILED();   
         Card_Error_State.CardErrorState.CPU_CARD_LOSE=1;
         return ERR;
     } 
-    CPU_ESAM_CARD_Control(CPU);
-    
-    //
-    
+    CPU_ESAM_CARD_Control(ESAM );   
     // 从cpu卡得到8字节随机数" );
     if( Read(0,Get_Challenge,0,0,8) != OK )
 		return ERR;
-
     My_Memcpy(receive_send_buffer+50,receive_send_buffer,8);
-
-    //对8字节随机数加密 得到k1 " );
-    if( Internal_Auth(0,0x88,0,1,8,receive_send_buffer+50) != OK )
-	return ERR;
-    
-    My_Memcpy( receive_send_buffer+60,receive_send_buffer,8 );
-    //利用离散生产密钥" );
-    CPU_ESAM_CARD_Control(ESAM);
+     //利用离散生产密钥" );
     if(Internal_Auth(0x80,0xfa,0,1,8,cpucard_number)){
         return ERR;
     }
     if( Judge_Return_Flag() )
 	    return ERR;
+    
     //加密8字节随机数 ，得到k2" );
     Internal_Auth(0x80,0xfa,0,0,8,receive_send_buffer+50);
     if( Judge_Return_Flag() )
-	    return ERR;
-
+	    return ERR;   
+    My_Memcpy( receive_send_buffer+60,receive_send_buffer,8 );
+    
+        
     CPU_ESAM_CARD_Control(CPU);
+    //对8字节随机数加密 得到k1 " );
+    if( Internal_Auth(0,0x88,0,1,8,receive_send_buffer+50) != OK )
+	return ERR;
+
     //"比较k1和k2" );
     if(My_Memcmp(receive_send_buffer+60,receive_send_buffer,8))  
         {
@@ -53,8 +48,10 @@ unsigned char Cpucard_Esamcard_Internal_Auth(void)  //内部认证//
         ASSERT_FAILED();
         return ERR;      
         }  
+      
+  
     return OK; //内部认证结束//
-    }
+}
 
 /*"**************************************************************************"*/
 unsigned char Cpucard_External_Auth(void)
@@ -92,7 +89,7 @@ unsigned char Cpucard_External_Auth(void)
 
     if( External_Auth(2,8,receive_send_buffer+100) != OK )
     	{
-        ASSERT_FAILED();  test();
+        ASSERT_FAILED();  
 	Card_Error_State.CardErrorState.CpuCardExternlAuthenticationErr=1;
 	return ERR;
     	}
@@ -668,6 +665,7 @@ unsigned char Updata_Esam_Return_File(unsigned char Order_Kind)
 // 回写数据,给用户卡，ESAM用 //
 //struct Run_Inf_Data
 //	{	
+//      INT8U    temp;
 //	unsigned char User_Kind;					/*" 用户类型 "*/
 //	unsigned char Current_CT[3];				/*" 电流互感器变比 "*/
 //	unsigned char Voltage_PT[3];				/*" 电压互感器变比 "*/	
@@ -690,32 +688,30 @@ void Deal_Run_Inf_Data(unsigned char * Source_Point,unsigned char Mode)
         INT32U Temp ;
         INT8U  DataTemp[5];
 
-       // mem_cpy(&Run_Inf_Data,Source_Point, sizeof(struct Run_Inf_Data),&Run_Inf_Data, sizeof(struct Run_Inf_Data));
-//" 用户编号，表号，用户类型"
+        //" 用户编号，表号，用户类型"
         mem_cpy(&Run_Inf_Data.Client_ID[0],Pre_Payment_Para.UserID,6,&Run_Inf_Data.Client_ID[0],6);
         mem_cpy(&Run_Inf_Data.Meter_ID[0],Pre_Payment_Para.BcdMeterID,6,&Run_Inf_Data.Meter_ID[0],6);
         Run_Inf_Data.User_Kind=CardType;
- ///剩余电费  //这个地方要改
+        ///剩余电费  
         CurrMeter_MoneyCount=Get_Left_Money();
  	My_memcpyRev( (unsigned char *)&(Run_Inf_Data.Remain_Money),(INT8U *)&(CurrMeter_MoneyCount),4);
-// 购电次数 //这个地方要改
+        // 购电次数 
         CurrMeter_MoneyCount=Get_Buy_Eng_Counts();
 	My_memcpyRev( (unsigned char *)&(Run_Inf_Data.Buy_Count),(unsigned char *)&(CurrMeter_MoneyCount),4);
-//  过零电费//这个地方可能会出问题
+        //  过零电费//这个地方可能会出问题
         Temp=Get_Overdraft_Money();
         Hex2Bcd(Temp, DataTemp,4,DataTemp,4);//从黄工哪里得到INT32U的hex型的 透支金额，并转换为4个字节的BCD码
  	My_memcpyRev( (unsigned char *)&(Run_Inf_Data.Low_Zero_Money),DataTemp,4);
-//  CT  //
+        //  CT  //
         Read_Storage_Data(SDI_CURR_TRANS_RATIO, DataTemp, DataTemp, 4);//   从黄工那里电流互感器变比  
 	My_memcpyRev( ( unsigned char *)&(Run_Inf_Data.Current_CT),(unsigned char *)DataTemp,3);//只要3个字节因为esam中为3个字节
-    //  PT  //电压互感变化
+        //  PT  //电压互感变化
         Read_Storage_Data(SDI_VOLT_TRANS_RATIO, DataTemp, DataTemp, 4);//  从黄工那里电压互感变化
 	My_memcpyRev((unsigned char *)&(Run_Inf_Data.Voltage_PT),(unsigned char *)DataTemp,3);
-         //" 从esam中得到本地密钥信息 // 
+        //" 从esam中得到本地密钥信息 // 
 	Get_File_Data(ESAM,ESAM_PASSWORD_INF_FILE,0,4,Run_Inf_Data.Password_Info);
         // 非法卡插入次数 "//
         Read_Storage_Data (  _SDI_INVALID_CARD_COUNTS, &Temp, &Temp, 4  );//     
-        
         Hex2Bcd(Temp, DataTemp,3,DataTemp,3);//
         My_memcpyRev( (unsigned char *)&(Run_Inf_Data.Unlawful_Card_Count[0]),(unsigned char *)DataTemp,3);
         //" 返写日期时间 "//
@@ -745,15 +741,7 @@ unsigned char Esam_Remain_Money_Dec(void)
 			Moneybag_Data.Remain_Money = 0;
 			
 	}
-        
-        if(Moneybag_Data.Remain_Money EQ 0)
-        {
-           return OK;
-        }
-        //mem_cpy(Order_Head,(INT8U *)&Moneybag_Data.Remain_Money,4,Order_Head,4);
-        //Debug_Print(" 对esam进行扣款操作，扣款值为： %x  %x  %x  %x", Order_Head[ 3], Order_Head[ 2], Order_Head[1 ], Order_Head[0 ]  );
-        //Debug_Print(" // 对esam进行扣款操作  操作前 对 差额反相 " );
-   
+
 	if(Moneybag_Data.Remain_Money>0)
         {
 		Reverse_data((unsigned char *)&Moneybag_Data.Remain_Money,4);

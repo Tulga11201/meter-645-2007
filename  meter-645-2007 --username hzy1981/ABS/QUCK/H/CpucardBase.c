@@ -1,7 +1,7 @@
 #include "MyIncludesAll.h"
 #undef Debug_Print
-#define Debug_Print(...)
-//#define Debug_Print _Debug_Print
+//#define Debug_Print(...)
+#define Debug_Print _Debug_Print
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //// 延时_64us个64us //      
@@ -70,13 +70,15 @@ unsigned char Judge_Return_Flag(void)
         {
         return ERR;
         }
-    /*
-    if(Check_CPU_Occur())			
+    if(CommunicationPortMode !=  ESAM ){
+         if(Check_CPU_Occur())			
         {
         ASSERT_FAILED();
         Card_Error_State.CardErrorState.CPU_CARD_LOSE=1;
         return ERR;
-        }*/
+        }
+    }
+
     return OK;
     }
 //
@@ -138,7 +140,7 @@ unsigned char Select_File(unsigned char t_p1,unsigned char date1,unsigned char d
 		W_Data[1] = date2;
 		if( CPU_Card_Driver((const unsigned char *)Order_Head,2,W_Data,0,CommunicationPortMode,0)== OK )
 			return OK;
-    ASSERT_FAILED();   test();          
+    ASSERT_FAILED();            
     Card_Error_State.CardErrorState.CPU_CARD_COMM_DELAY_ERR=1;
     return ERR;
     }
@@ -156,7 +158,7 @@ unsigned char Read(unsigned char cla,unsigned char ins,unsigned char t_p1,
 	Order_Head[3] = t_p2;
 	if( CPU_Card_Driver( ( const unsigned char * )Order_Head,0,0,len,CommunicationPortMode,0)== OK )
 		return OK;
-         ASSERT_FAILED();test();
+         ASSERT_FAILED(); 
          Card_Error_State.CardErrorState.CPU_CARD_COMM_DELAY_ERR=1;
           return ERR; 	
     }
@@ -385,7 +387,10 @@ INT16U C_Read_Storage_Data(STORA_DI SDI, void* pDst, void* pDst_Start, INT16U Ds
   }
        
 }
-//
+//在远程通讯中 ，进程开户操作的时， 余金额，购电次数是正常顺序，   在数据查询给的也是正常顺序
+//在卡操作的返写过程中，从电能表得到剩余金额和购电次数后，反相后，更新esam 再更新cpu卡
+//结论，ic卡操作中给esam和卡数据要反的顺序， 从他们中得到数据也要反相后才可以得到正常顺序
+//除去客户编号和表号外，这些数据有 剩余金额，购电次数，现场参数设置卡版本号，
 INT8U  WhenCardInsertedInitPrePayData(void) { //上电从e方读取数据到全局变量
      //用户编号, 数据长度为6//在卡户卡流程中，是直接读取卡中的值，和直接读出e方中的值，两者相比较，  然后写的时候也是一样的 直接读出来，直接写发哦e方
      //在远程通讯中 ，进程开户操作的时，剩余金额，购电次数，是正常顺序，客户编号，和软件上的相反， 
@@ -395,17 +400,17 @@ INT8U  WhenCardInsertedInitPrePayData(void) { //上电从e方读取数据到全局变量
       //由此可以看出,主站来的数据是正常顺序，把数据给esam要反相顺序，  然而给 e方用正常顺序
     //除去　客户编号外，　客户编号从主站来时反是的顺序，写到ｅ方中要反相  发给主站要用反得顺序
      C_Read_Storage_Data( SDI_CUTOMER_ID, Pre_Payment_Para.UserID,  Pre_Payment_Para.UserID,sizeof(Pre_Payment_Para.UserID)  ); 
+     Reverse_data(   Pre_Payment_Para.UserID,6);
      //如果是读写运行状态
-     //SDI参数填充_SDI_PREPAID_RUN_STATUS， 数据长度为1
      C_Read_Storage_Data( _SDI_PREPAID_RUN_STATUS, &Pre_Payment_Para.Meter_Run_State ,  &Pre_Payment_Para.Meter_Run_State,sizeof(Pre_Payment_Para.Meter_Run_State)  );    
      //如果是写离散因子
-     //SDI填充 _SDI_DISCRETE_INFO, 数据长度为8 
      C_Read_Storage_Data( _SDI_DISCRETE_INFO, &cpucard_number[0], &cpucard_number[0], sizeof( cpucard_number));    
-     //密钥类型,密钥下装卡， 还是密钥恢复卡
-     //_SDI_PREPAID_PSW_KIND, 数据长度为1     
+     //密钥类型,密钥下装卡， 还是密钥恢复卡 
      C_Read_Storage_Data( _SDI_PREPAID_PSW_KIND, &Pre_Payment_Para.PassWord_Kind,  &Pre_Payment_Para.PassWord_Kind,1);  
      //取表号  
      C_Read_Storage_Data( SDI_METER_ID, &Pre_Payment_Para.BcdMeterID,  &Pre_Payment_Para.BcdMeterID,6); 
+     //使用的时候要反相表号 ，注意，只是使用在 现场参数卡， 返写操作， 密钥更新，购电卡判断
+     Reverse_data(Pre_Payment_Para.BcdMeterID,6);
     //现场参数设置卡版本号  
      C_Read_Storage_Data(_SDI_PREPAID_PARA_CARD_VER,&Pre_Payment_Para.Para_Card_Version, &Pre_Payment_Para.Para_Card_Version, 4) ;
      

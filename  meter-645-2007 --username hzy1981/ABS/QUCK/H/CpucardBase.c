@@ -404,7 +404,7 @@ INT8U  WhenCardInsertedInitPrePayData(void) { //上电从e方读取数据到全局变量
      //如果是读写运行状态
      C_Read_Storage_Data( _SDI_PREPAID_RUN_STATUS, &Pre_Payment_Para.Meter_Run_State ,  &Pre_Payment_Para.Meter_Run_State,sizeof(Pre_Payment_Para.Meter_Run_State)  );    
      //如果是写离散因子
-     C_Read_Storage_Data( _SDI_DISCRETE_INFO, &cpucard_number[0], &cpucard_number[0], sizeof( cpucard_number));    
+     C_Read_Storage_Data( _SDI_DISCRETE_INFO, Pre_Payment_Para.Cpucard_Number_old_BackUpInEerom, Pre_Payment_Para.Cpucard_Number_old_BackUpInEerom, 8);    
      //密钥类型,密钥下装卡， 还是密钥恢复卡 
      C_Read_Storage_Data( _SDI_PREPAID_PSW_KIND, &Pre_Payment_Para.PassWord_Kind,  &Pre_Payment_Para.PassWord_Kind,1);  
      //取表号  

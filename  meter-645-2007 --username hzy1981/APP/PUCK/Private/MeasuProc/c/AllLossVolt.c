@@ -209,7 +209,8 @@ void Get_AllLoss_Curr(void)
   INT32U RdData;
   FP32S  ResultData;  
   
-   BAT_ON_7022;
+  
+   BAT_ON_7022;     //打开后备电池
    
    PM13_bit.no0=0;   //7022_CS
    PM2_bit.no0=0;    //计量RST---------7022_RST   
@@ -255,6 +256,6 @@ void Get_AllLoss_Curr(void)
    P2_bit.no3=0;    //计量SDI ---------7022_SDI
    
    
-   BAT_OFF_7022;
+   BAT_OFF_7022;   //关闭后备电池
 #endif
 }

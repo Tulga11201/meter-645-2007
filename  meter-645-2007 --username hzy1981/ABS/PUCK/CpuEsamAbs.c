@@ -410,6 +410,9 @@ INT8U Cpu_Esam_Comm_Proc(INT8U Type,INT8U *Srcbuf,INT16U SrcLen,INT8U RdOrWr,INT
   Pay_Uart_Send(Srcbuf,SrcLen); 
   Clr_Ext_Inter_Dog(); 
   return Wait_For_Pay_Uart_Data(RdDstLen,pDst,pDstStart,MaxDstLen);
+  
+#else
+  return CPU_ESAM_DRV_OK; 
 #endif
 }
 

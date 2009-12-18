@@ -936,10 +936,17 @@ void lcd_events (void)
   if(PREPAID_EN EQ 0)  //无预付费功能，跳闸、跳闸 LED 指示、跳闸 LCD指示 均不点亮。
     return ;
   
-  //拉闸
-  if(stat.RelayOff)
-    SetOnDevice_PUCK(S_LAZHA);
+  //拉闸延时
+  if(stat.RelayOff EQ 1)
+  {    
+    if(flag.RelayOff EQ 1)  //拉闸延时: 闪烁
+      SetOnDevice_PUCK(S_LAZHA);
+  }
   
+  //拉闸: 常亮
+  if(stat.RelayOff EQ 2)
+    SetOnDevice_PUCK(S_LAZHA);
+    
   
   if(PREPAID_MONEY_MODE EQ PREPAID_STEP)    //0表示分时计费，1表示阶梯计费
   {

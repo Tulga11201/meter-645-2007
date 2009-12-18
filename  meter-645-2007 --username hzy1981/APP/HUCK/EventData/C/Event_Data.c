@@ -120,15 +120,16 @@ void All_Loss_Vol_Counts_Time_Proc(INT32U Counts,INT32U Mins)
 //Start_Time表示起始时间,Start_Time[0]->Start_Time[4]表示分、时、日、月、年,BCD码
 //End_Time表示终止时间,End_Time[0]->End_Time[4]表示分、时、日、月、年，BCD码
 //上电后，对上电前的前N(N<=10)次全失压，调用该函数N次
-void All_Loss_Vol_Data_Proc(INT8U Start_Time[],INT8U End_Time[])
+void All_Loss_Vol_Data_Proc(INT8U Start_Time[],INT8U End_Time[], INT32U Curr)
 {
     TRACE();
 
-    Debug_Print("All_Loss_Vol Start_Time:%x-%x-%x %x:%x, End_Time:%x-%x-%x %x:%x",\
+    Debug_Print("All_Loss_Vol Start_Time:%x-%x-%x %x:%x, End_Time:%x-%x-%x %x:%x, Curr:%ld",\
             Start_Time[4],Start_Time[3],Start_Time[2],Start_Time[1],Start_Time[0],\
-            End_Time[4],End_Time[3],End_Time[2],End_Time[1],End_Time[0]);
+            End_Time[4],End_Time[3],End_Time[2],End_Time[1],End_Time[0], Curr);
     
-    All_Loss_Vol_Time.Start_Time[0] = 0;
+    All_Loss_Vol_Time.Curr = Curr; //电流
+    All_Loss_Vol_Time.Start_Time[0] = 0; //全失压发生的s
     All_Loss_Vol_Time.End_Time[0] = 0;
     mem_cpy((INT8U *)All_Loss_Vol_Time.Start_Time + 1, Start_Time, 5, (void *)All_Loss_Vol_Time.Start_Time,sizeof(All_Loss_Vol_Time.Start_Time));
     mem_cpy((INT8U *)All_Loss_Vol_Time.End_Time + 1, End_Time, 5, (void *)All_Loss_Vol_Time.End_Time,sizeof(All_Loss_Vol_Time.End_Time));
@@ -148,7 +149,7 @@ void Store_Op_ID(INT8U Op_ID[],INT8U *pDst, INT8U *pDst_Start, INT8U DstLen)
 {
   DIS_PD_INT;
   mem_cpy(pDst, (void *)Operator_ID.Op_ID, sizeof(Operator_ID.Op_ID), pDst_Start, DstLen);
-  mem_set((void *)Operator_ID.Op_ID, 0xFF, sizeof(Operator_ID.Op_ID), (void *)Operator_ID.Op_ID, sizeof(Operator_ID.Op_ID));
+  mem_cpy((void *)Operator_ID.Op_ID, Op_ID, sizeof(Op_ID), (void *)Operator_ID.Op_ID, sizeof(Operator_ID.Op_ID));
   SET_STRUCT_SUM(Event_Data._Operator_ID);
   SET_STRUCT_SUM(Event_Data);
   EN_PD_INT;  

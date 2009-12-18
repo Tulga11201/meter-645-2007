@@ -77,6 +77,7 @@ typedef struct
 	INT32U Mins;
 	INT8U Start_Time[6];//秒、分、时、日、月、年
 	INT8U End_Time[6];//同上
+        INT32U Curr; //平均电流
 	INT8U CS[CS_BYTES];  
 }S_All_Loss_Vol_Time;
 

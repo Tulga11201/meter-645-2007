@@ -158,7 +158,7 @@ EXT INT8U Check_Event_Occuring(INT8U Event_ID);
 EXT void Event_Data_Proc(INT8U Event_ID,INT8U Occur_Or_End);
 EXT void All_Loss_Vol_Counts_Time_Proc(INT32U Counts,INT32U Mins);
 EXT INT8U Get_Event_Total_Occuring_Singles(INT8U Event_ID);
-EXT void All_Loss_Vol_Data_Proc(INT8U Start_Time[],INT8U End_Time[]);
+EXT void All_Loss_Vol_Data_Proc(INT8U Start_Time[],INT8U End_Time[], INT32U Curr);
 EXT void Set_Event_PD_Time(S_HEX_Time *pTime);
 EXT void Clear_Event_Data(PROTO_DI Clr_PDI);
 EXT void Clear_Data_End();

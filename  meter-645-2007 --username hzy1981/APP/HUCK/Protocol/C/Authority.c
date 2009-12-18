@@ -168,7 +168,7 @@ INT8U Get_User_Authority(INT8U Ch, INT8U Ctrl_Code, INT8U* pSrc, INT8U SrcLen)
   INT8U Level;//当前密码级别
   PROTO_DI PDI;
   
-#if NET_METER > 0 //用于网络表的权限控制
+#if NET_METER != NONET_METER //用于网络表的权限控制
   INT8U Spec_Flag, PSW_Flag;
 #endif  
 
@@ -177,7 +177,7 @@ INT8U Get_User_Authority(INT8U Ch, INT8U Ctrl_Code, INT8U* pSrc, INT8U SrcLen)
     return PSW_FACTORY;
   
 ////////////////////////////////////
-#if NET_METER > 0 //用于网络表的权限控制
+#if NET_METER != NONET_METER //用于网络表的权限控制
   if(Ch EQ CHANEL_MOUDEL) 
   {
     PSW_Flag = Get_Net_Meter_User_Authority(Ctrl_Code, pSrc, SrcLen, &Spec_Flag);

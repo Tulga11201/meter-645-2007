@@ -83,7 +83,8 @@ void Save_All_Loss_Data(void)
          temp=i;   
        else                   //翻转：按老-->新依次写  
         temp=((All_Loss_Var.Status.Index+1)%ALL_LOSS_NUM+i)%ALL_LOSS_NUM;       
-      All_Loss_Vol_Data_Proc((INT8U *)All_Loss_Var.RecordTime[temp].StartTime,(INT8U *)All_Loss_Var.RecordTime[temp].EndTime);
+      All_Loss_Vol_Data_Proc((INT8U *)All_Loss_Var.RecordTime[temp].StartTime,(INT8U *)All_Loss_Var.RecordTime[temp].EndTime,\
+        (All_Loss_Var.Curr[temp][0] + All_Loss_Var.Curr[temp][1] + All_Loss_Var.Curr[temp][2])/3);
      }
   }
   

@@ -6067,7 +6067,7 @@ CONST S_P_Data_Info P_Data_Info[] =
   INIT(DI_Set_Flag, 0),
   INIT(PSW_Flag, PSW_RD_ONLY),
   INIT(Storage, S_RAM),
-  INIT(pSrc, (void*) (INT8U *)&All_Loss_Vol_Curr),
+  INIT(pSrc, (void*) (INT8U *)&All_Loss_Vol_Time.Curr),
   //INIT(Src_Off, 0),
   INIT(Src_Len, 4),
   INIT(Src_Format, S_INTU),
@@ -8678,7 +8678,7 @@ INT8U Set_Spec_Data_Proc(PROTO_DI PDI, INT8U Spec_Flag, INT8U* pSrc, INT8U SrcLe
   }
   else if(Spec_Flag EQ SPEC_MODULE)//Ä£¿éÍ¨ÐÅ×´Ì¬
   {
-#if NET_METER > 0   
+#if NET_METER != NONET_METER   
     return Set_Module_Proto_Data(PDI, pSrc, SrcLen);
 #else
     return 0;

@@ -118,8 +118,8 @@ typedef union
         u32  BuyFee       : 1; //请购电        
         u32  CalMeter     : 1; //校表事件       
         u32  TouZhi       : 1; //透支
-        u32  RelayOff     : 1; //拉闸
-        u32  reserved     : 10; //预留        
+        u32  RelayOff     : 2; //拉闸------1：拉闸延时；2---------拉闸
+        u32  reserved     : 9; //预留        
     };
     struct 
     {

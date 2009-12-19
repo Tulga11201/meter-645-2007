@@ -932,10 +932,7 @@ void lcd_events (void)
       SetOnDevice_PUCK(S_S2);  
   }
   
-//--------------预付费功能未打开，以下不显示：显示保护-------------------------------------------- 
-  if(PREPAID_EN EQ 0)  //无预付费功能，跳闸、跳闸 LED 指示、跳闸 LCD指示 均不点亮。
-    return ;
-  
+ 
   //拉闸延时
   if(stat.RelayOff EQ 1)
   {    

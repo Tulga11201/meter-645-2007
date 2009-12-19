@@ -592,19 +592,20 @@ void Init_Event_DIS_PUCK(stat_t *stat)
   stat->SetpRate   =PREPAID_STEP_NO;                    //电价：1～4 
   
   
+    
+  temp[0]=Get_Prepaid_Status();  //本地费控，才显示与电费相关信息;远程费控：此函数不会返回与电费相关信息
+  if(temp[0] != PREPAID_MONEY_ENOUGH)
+  {
+    stat->BuyFee =1;
+    if(Light_Mode!= LIGHT_ON_MONEY)
+    {
+      START_LIGHT_ON;
+      Light_Mode=LIGHT_ON_MONEY;
+    }
+  }
+    
   if(PREPAID_EN)  //无预付费功能，跳闸、跳闸 LED 指示、跳闸 LCD指示 均不点亮。
   {  
-    temp[0]=Get_Prepaid_Status();  //本地费控，才显示与电费相关信息;远程费控：此函数不会返回与电费相关信息
-    if(temp[0] != PREPAID_MONEY_ENOUGH)
-    {
-      stat->BuyFee =1;
-      if(Light_Mode!= LIGHT_ON_MONEY)
-      {
-        START_LIGHT_ON;
-        Light_Mode=LIGHT_ON_MONEY;
-      }
-    }
-    
     if(temp[0] EQ PREPAID_MONEY_OVERDRAFT  || PREPAID_MONEY_ZERO EQ temp[0])
     {
       stat->TouZhi =1;
@@ -625,6 +626,7 @@ void Init_Event_DIS_PUCK(stat_t *stat)
        Light_Mode=LIGHT_ON_MONEY;
      } 
    }
+  }
   
   //远程报警状态:“请购电”字符闪烁，报警指示灯亮(ID_PAY_ALARM 会设置)。
   if(CHK_REMOTE_ALARM_ON)
@@ -643,7 +645,7 @@ void Init_Event_DIS_PUCK(stat_t *stat)
    if(temp[0] EQ ALLOW_SWITCH_ON)
       stat->RelayOff=0;
    
-  }
+  
   
   SET_STRUCT_SUM(Meter_Run_Status);  
 }
@@ -678,24 +680,45 @@ stat_t getstat (void)
     stat.jumper_short  = ((B_TEST_FAC_STATUS EQ 0) || (B_TEST_HARD_STATUS EQ 0));   //低功耗下，提示跳线块
     stat.num_tariff    =3;  //显示主副时段1：主时段；2：副时段，其他：不显示
  
-  temp[0]=Get_Prepaid_Status();  //本地费控，才显示与电费相关信息;远程费控：此函数不会返回与电费相关信息  
-  
-  
- //透支   
-  if(temp[0] EQ PREPAID_MONEY_OVERDRAFT  || PREPAID_MONEY_ZERO EQ temp[0])
+  temp[0]=Get_Prepaid_Status();  //本地费控，才显示与电费相关信息;远程费控：此函数不会返回与电费相关信息
+  if(temp[0] != PREPAID_MONEY_ENOUGH)
   {
-    stat.TouZhi =1;
+    stat.BuyFee =1;
     if(Light_Mode!= LIGHT_ON_MONEY)
     {
       START_LIGHT_ON;
       Light_Mode=LIGHT_ON_MONEY;
-    } 
+    }
+  }
+    
+  if(PREPAID_EN)  //无预付费功能，跳闸、跳闸 LED 指示、跳闸 LCD指示 均不点亮。
+  {  
+    if(temp[0] EQ PREPAID_MONEY_OVERDRAFT  || PREPAID_MONEY_ZERO EQ temp[0])
+    {
+      stat.TouZhi =1;
+      if(Light_Mode!= LIGHT_ON_MONEY)
+      {
+        START_LIGHT_ON;
+        Light_Mode=LIGHT_ON_MONEY;
+      } 
+    }    
+  
+   //透支   
+   if(temp[0] EQ PREPAID_MONEY_OVERDRAFT  || PREPAID_MONEY_ZERO EQ temp[0])
+   {
+     stat.TouZhi =1;
+     if(Light_Mode!= LIGHT_ON_MONEY)
+     {
+       START_LIGHT_ON;
+       Light_Mode=LIGHT_ON_MONEY;
+     } 
+   }
   }
   
   //远程报警状态:“请购电”字符闪烁，报警指示灯亮(ID_PAY_ALARM 会设置)。
   if(CHK_REMOTE_ALARM_ON)
     stat.BuyFee =1;
-  
+    
   temp[0]=Get_Relay_Status();
    //拉闸延时:“拉闸”字符闪烁
    if(temp[0] EQ SWITCH_DELAY)   
@@ -805,22 +828,35 @@ stat_t getstat (void)
       Light_Mode=LIGHT_ON_MONEY;
     }
   }
-  
- //透支   
-  if(temp[0] EQ PREPAID_MONEY_OVERDRAFT  || PREPAID_MONEY_ZERO EQ temp[0])
-  {
-    stat.TouZhi =1;
-    if(Light_Mode!= LIGHT_ON_MONEY)
+    
+  if(PREPAID_EN)  //无预付费功能，跳闸、跳闸 LED 指示、跳闸 LCD指示 均不点亮。
+  {  
+    if(temp[0] EQ PREPAID_MONEY_OVERDRAFT  || PREPAID_MONEY_ZERO EQ temp[0])
     {
-      START_LIGHT_ON;
-      Light_Mode=LIGHT_ON_MONEY;
-    } 
+      stat.TouZhi =1;
+      if(Light_Mode!= LIGHT_ON_MONEY)
+      {
+        START_LIGHT_ON;
+        Light_Mode=LIGHT_ON_MONEY;
+      } 
+    }    
+  
+   //透支   
+   if(temp[0] EQ PREPAID_MONEY_OVERDRAFT  || PREPAID_MONEY_ZERO EQ temp[0])
+   {
+     stat.TouZhi =1;
+     if(Light_Mode!= LIGHT_ON_MONEY)
+     {
+       START_LIGHT_ON;
+       Light_Mode=LIGHT_ON_MONEY;
+     } 
+   }
   }
   
-    //远程报警状态:“请购电”字符闪烁，报警指示灯亮(ID_PAY_ALARM 会设置)。
+  //远程报警状态:“请购电”字符闪烁，报警指示灯亮(ID_PAY_ALARM 会设置)。
   if(CHK_REMOTE_ALARM_ON)
     stat.BuyFee =1;
-  
+    
   temp[0]=Get_Relay_Status();
    //拉闸延时:“拉闸”字符闪烁
    if(temp[0] EQ SWITCH_DELAY)   

@@ -258,7 +258,7 @@ void Get_AllLoss_Curr(void)
       }
       Temp=((FP32S)RdData*(FP32S)UNIT_A/8192)/(FP32S)I_RATE_CONST[Get_SysCurr_Mode()];
       ResultData+=Temp;
-      *(&(Measu_Sign_InstantData_PUCK.Curr.A)+i)=(INT32U)Temp;  //更新公有电流数据，用于显示
+      *(&(Measu_Sign_InstantData_PUCK.Curr.A)+i)=(INT32S)Temp;  //更新公有电流数据，用于显示
       //ResultData+=((FP32S)RdData*(FP32S)UNIT_A/pow(2,13))/(FP32S)I_RATE_CONST[Get_SysCurr_Mode()];
    }
    if(i>=3)

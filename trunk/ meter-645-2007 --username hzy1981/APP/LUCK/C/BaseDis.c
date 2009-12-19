@@ -645,8 +645,6 @@ void Init_Event_DIS_PUCK(stat_t *stat)
    if(temp[0] EQ ALLOW_SWITCH_ON)
       stat->RelayOff=0;
    
-  
-  
   SET_STRUCT_SUM(Meter_Run_Status);  
 }
 

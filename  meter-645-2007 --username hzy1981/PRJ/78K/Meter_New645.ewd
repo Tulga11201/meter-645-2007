@@ -49,7 +49,7 @@
         </option>
         <option>
           <name>DynDriver</name>
-          <state>MIC78K</state>
+          <state>SIM78K</state>
         </option>
         <option>
           <name>DDFOverride</name>

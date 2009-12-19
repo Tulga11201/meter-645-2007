@@ -219,29 +219,34 @@ void Get_AllLoss_Curr(void)
    PM2_bit.no1=1;    //计量SIG---------7022_SIG   
    PM2_bit.no3=3;    //计量SDI ---------7022_SDI  
 
-   Clear_CPU_Dog();
+   Clear_CPU_Dog();   
    
-   //延时300ms
+   
+  WAITFOR_DRV_MS_TIMEOUT(10)
+  MEASU_RST_0;
+  WAITFOR_DRV_MS_TIMEOUT(10)
+  MEASU_RST_1;
+  
+     //延时300ms
    for(i=0;i<30;i++)
       WAITFOR_DRV_MS_TIMEOUT(10)
    Clear_CPU_Dog();
    
-   EnMeasuCal();
-  
+   /*
+   EnMeasuCal();  
    //初始化的时候，就需要获取电流规格，电流增益参数
    for(i=0;i<3;i++)
    {
       Flag=Measu_WrAndCompData(REG_W_IGAIN_A+i,Curr_Rate.Rate[i]);
       if(!Flag)
         Clear_CPU_Dog();
-   }
-   
+   }   
    DisMeasuCal();
     //延时500ms
    for(i=0;i<50;i++)
       WAITFOR_DRV_MS_TIMEOUT(10)
    Clear_CPU_Dog();
-   
+   */
    
    ResultData=0;
    for(i=0;i<3;i++)
@@ -254,7 +259,7 @@ void Get_AllLoss_Curr(void)
       ResultData+=((FP32S)RdData*(FP32S)UNIT_A/8192)/(FP32S)I_RATE_CONST[Get_SysCurr_Mode()];
       //ResultData+=((FP32S)RdData*(FP32S)UNIT_A/pow(2,13))/(FP32S)I_RATE_CONST[Get_SysCurr_Mode()];
    }
-   All_Loss_Var.Curr[All_Loss_Var.Status.Index]=(INT32U)(ResultData/3);   
+   All_Loss_Var.Curr[All_Loss_Var.Status.Index]=(INT32U)(ResultData/(i+1));   
    
    P13_bit.no0=0;   //7022_CS
    P2_bit.no0=0;    //计量RST---------7022_RST   

@@ -165,6 +165,11 @@ void Count_All_Loss_Proc(void)
     All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].EndTime[2]=DAY;      //CPU_RTC_Time.RTC.Date;
     All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].EndTime[3]=MONTH;    //  CPU_RTC_Time.RTC.Month;
     All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].EndTime[4]=YEAR;     // CPU_RTC_Time.RTC.Year;
+    
+    Measu_Sign_InstantData_PUCK.Curr.A=0;
+    Measu_Sign_InstantData_PUCK.Curr.B=0;
+    Measu_Sign_InstantData_PUCK.Curr.C=0;
+    
     SET_VAR_CS_PUCK(All_Loss_Var.Status); 
     SET_VAR_CS_PUCK(All_Loss_Var.RecordTime[All_Loss_Var.Status.Index]); 
     return ;    
@@ -264,7 +269,7 @@ void Get_AllLoss_Curr(void)
    if(i>=3)
       All_Loss_Var.Curr[All_Loss_Var.Status.Index]=(INT32U)(ResultData/3);   
    else       
-      All_Loss_Var.Curr[All_Loss_Var.Status.Index]=(INT32U)(ResultData/(i+1));   
+      All_Loss_Var.Curr[All_Loss_Var.Status.Index]=(INT32U)(ResultData/(i+1));
    
    P13_bit.no0=0;   //7022_CS
    P2_bit.no0=0;    //¼ÆÁ¿RST---------7022_RST   

@@ -143,18 +143,27 @@ INT8U Get_Sec_Out_En(void)
   return SEC_OUT_PUT_EN;
 #else
   INT8U Len;
-  INT8U Temp;
-  
-  Len=Read_Storage_Data(SDI_OUTPUT_MODE,&Temp,&Temp,1);      //三合一输出状态:0-秒脉冲；1-需量周期；2-时段切换。输出报警信号重新上电后恢复到秒脉冲输出。
-  if(1 EQ Len)
-  {
-    if((Temp&0x03) EQ 0x00)
-     return 1;  
-  }
+  INT8U Temp;  
+
+  if((PORT_OUTPUT_MODE&0x03) EQ 0x00)
+   return 1;  
+
   return 0;
 #endif
 }
-
+/********************************************************************************
+INT8U  Change_Sec_Out(void)
+函数功能：根据模式字，在运行过程中，使能秒脉冲
+入口：  
+返回：
+    无
+********************************************************************************/
+void Get_Port_Out_Mode(void)
+{  
+   if(Read_Storage_Data_PUCK(SDI_OUTPUT_MODE,(INT8U *)(&Multi_Port_Mode.ReadMode),1) EQ 0)
+     ASSERT_FAILED();
+   INIT_STRUCT_VAR(Multi_Port_Mode);  //把头尾填齐;
+}
 /********************************************************************************
 INT8U  Change_Sec_Out(void)
 函数功能：根据模式字，在运行过程中，使能秒脉冲
@@ -167,7 +176,7 @@ void Init_Sec_Pulse(void)
   
 #if SEC_OUT_POWER_ON>0 //上电就输出秒脉冲
    Read_Storage_Data_PUCK(SDI_OUTPUT_MODE,(INT8U *)(&Multi_Port_Mode.Mode),1);
-   SET_STRUCT_SUM(Multi_Port_Mode);
+   Multi_Port_Mode.ReadMode=Multi_Port_Mode.Mode;
 #endif 
   
   
@@ -209,27 +218,18 @@ INT8U Get_Parse_Out_En(void)
   INT8U Len;
   INT8U Temp;
   
-  Len=Read_Storage_Data(SDI_OUTPUT_MODE,&Temp,&Temp,1);      //三合一输出状态:0-秒脉冲；1-需量周期；2-时段切换。输出报警信号重新上电后恢复到秒脉冲输出。
-  if(1 EQ Len)
-  {
-    if((Temp&0x03) EQ 0x02)
-     return 1;  
-  }  
+  if((PORT_OUTPUT_MODE&0x03) EQ 0x02)
+   return 1;  
+  
   return 0;
   
 #elif (MULTI_3_PORT EQ 2)&&(SEC_OUT_POWER_ON>0)  //复合端子，且与秒脉冲共用    
     #if SEC_OUT_POWER_ON>0 //上电就输出秒脉冲
-      return DEMAND_OUT_PUT_EN;
+      return PARSE_OUT_PUT_EN;
     #else 
-     INT8U Len;
-     INT8U Temp;
-      
-     Len=Read_Storage_Data(SDI_OUTPUT_MODE,&Temp,&Temp,1);      //三合一输出状态:0-秒脉冲；1-需量周期；2-时段切换。输出报警信号重新上电后恢复到秒脉冲输出。
-     if(1 EQ Len)
-     {
-        if((Temp&0x03) EQ 0x02)
-         return 1;  
-     }  
+    if((PORT_OUTPUT_MODE&0x03) EQ 0x02)
+     return 1;  
+
      return 0;
      #endif
 #endif   
@@ -251,16 +251,14 @@ INT8U Get_Demand_Out_En(void)
   
   if(DEMAND_OUT_MODE EQ 0)   //按滑差输出
       return 0;
-  Len=Read_Storage_Data(SDI_OUTPUT_MODE,&Temp,&Temp,1);      //三合一输出状态:0-秒脉冲；1-需量周期；2-时段切换。输出报警信号重新上电后恢复到秒脉冲输出。
-  if(1 EQ Len)
-  {
-    if((Temp&0x03) EQ 0x01)
+
+  if((PORT_OUTPUT_MODE&0x03) EQ 0x01)
      return 1;  
-  }  
+
   return 0;
   
 #elif (MULTI_3_PORT EQ 2)&&(SEC_OUT_POWER_ON>0)  //复合端子，且与秒脉冲共用
-    if(DEMAND_OUT_MODE EQ 0)   //按滑差
+    if(DEMAND_OUT_MODE EQ 0)   //按需量
       return 0;
     
     #if SEC_OUT_POWER_ON>0 //上电就输出秒脉冲
@@ -269,14 +267,12 @@ INT8U Get_Demand_Out_En(void)
      INT8U Len;
       INT8U Temp;
       
-      if(DEMAND_OUT_MODE EQ 0)   //按滑差输出
+      if(DEMAND_OUT_MODE EQ 0)   //按需量输出
           return 0;
-      Len=Read_Storage_Data(SDI_OUTPUT_MODE,&Temp,&Temp,1);      //三合一输出状态:0-秒脉冲；1-需量周期；2-时段切换。输出报警信号重新上电后恢复到秒脉冲输出。
-      if(1 EQ Len)
-      {
-        if((Temp&0x03) EQ 0x01)
+
+      if((PORT_OUTPUT_MODE&0x03) EQ 0x01)
          return 1;  
-      }  
+ 
       return 0; 
       
     #endif
@@ -299,16 +295,14 @@ INT8U Get_Slipe_Out_En(void)
   
   if(DEMAND_OUT_MODE EQ 1)   //按需量周期
       return 0;
-  Len=Read_Storage_Data(SDI_OUTPUT_MODE,&Temp,&Temp,1);      //三合一输出状态:0-秒脉冲；1-需量周期；2-时段切换。输出报警信号重新上电后恢复到秒脉冲输出。
-  if(1 EQ Len)
-  {
-    if((Temp&0x03) EQ 0x01)
+
+  if((PORT_OUTPUT_MODE&0x03) EQ 0x01)
      return 1;  
-  }  
+
   return 0;
   
 #elif (MULTI_3_PORT EQ 2)&&(SEC_OUT_POWER_ON>0)  //复合端子，且与秒脉冲共用
-    if(DEMAND_OUT_MODE EQ 1)   //按需量周期
+    if(DEMAND_OUT_MODE EQ 1)   //按
       return 0;
     
     #if SEC_OUT_POWER_ON>0 //上电就输出秒脉冲
@@ -319,12 +313,10 @@ INT8U Get_Slipe_Out_En(void)
       
       if(DEMAND_OUT_MODE EQ 1)   //按需量周期
           return 0;
-      Len=Read_Storage_Data(SDI_OUTPUT_MODE,&Temp,&Temp,1);      //三合一输出状态:0-秒脉冲；1-需量周期；2-时段切换。输出报警信号重新上电后恢复到秒脉冲输出。
-      if(1 EQ Len)
-      {
-        if((Temp&0x03) EQ 0x01)
-         return 1;  
-      }  
+
+      if((PORT_OUTPUT_MODE&0x03) EQ 0x01)
+       return 1;  
+
       return 0; 
       
     #endif 
@@ -340,15 +332,10 @@ INT8U  Get_FeeAlarm_Out_En(void)
 INT8U Get_FeeAlarm_Out_En(void)
 {
 /*
-  INT8U Len;
-  INT8U Temp;
-  
-  Len=Read_Storage_Data(SDI_OUTPUT_MODE,&Temp,&Temp,1);  // //三合一输出状态:0-秒脉冲；1-需量周期；2-时段切换。输出报警信号重新上电后恢复到秒脉冲输出。
-  if(1 EQ Len)
-  {
-    if(Temp&0x03 EQ 0x03 && PREPAID_EN EQ 1)   //模式字2 bit5＝1，预付费功能
+
+    if(PORT_OUTPUT_MODE&0x03 EQ 0x03 && PREPAID_EN EQ 1)   //模式字2 bit5＝1，预付费功能
      return 1;  
-  }  
+
  */
   return 0;
 }
@@ -361,15 +348,10 @@ INT8U  Get_GridAlarm_Out_En(void)
 ********************************************************************************/
 INT8U Get_GridAlarm_Out_En(void)
 {
-  INT8U Len;
-  INT8U Temp;
   
-  Len=Read_Storage_Data(SDI_OUTPUT_MODE,&Temp,&Temp,1);  // //三合一输出状态:0-秒脉冲；1-需量周期；2-时段切换.输出报警信号重新上电后恢复到秒脉冲输出。
-  if(1 EQ Len)
-  {
-    if((Temp&0x03) EQ 0x03 && POWER_CTRL_EN EQ 1)  //模式字2 bit4＝1，负控功能功能
+  if((PORT_OUTPUT_MODE&0x03) EQ 0x03 && POWER_CTRL_EN EQ 1)  //模式字2 bit4＝1，负控功能功能
      return 1;  
-  }  
+
   return 0;
 }
 

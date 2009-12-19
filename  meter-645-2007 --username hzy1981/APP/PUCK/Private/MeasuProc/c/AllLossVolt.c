@@ -83,8 +83,7 @@ void Save_All_Loss_Data(void)
          temp=i;   
        else                   //翻转：按老-->新依次写  
         temp=((All_Loss_Var.Status.Index+1)%ALL_LOSS_NUM+i)%ALL_LOSS_NUM;       
-      All_Loss_Vol_Data_Proc((INT8U *)All_Loss_Var.RecordTime[temp].StartTime,(INT8U *)All_Loss_Var.RecordTime[temp].EndTime,\
-        (All_Loss_Var.Curr[temp][0] + All_Loss_Var.Curr[temp][1] + All_Loss_Var.Curr[temp][2])/3);
+      All_Loss_Vol_Data_Proc((INT8U *)All_Loss_Var.RecordTime[temp].StartTime,(INT8U *)All_Loss_Var.RecordTime[temp].EndTime,All_Loss_Var.Curr[temp]);
      }
   }
   
@@ -233,18 +232,18 @@ void Get_AllLoss_Curr(void)
       Clear_CPU_Dog();
    }
         
+   ResultData=0;
    for(i=0;i<3;i++)
    {
       Flag=Measu_RdAndCompData(REG_R_A_I,(INT8U *)(&RdData));      
       if(!Flag || RdData>=0x00800000)
       {
         return ;
-      } 
-      ResultData=(FP32S)RdData*(FP32S)UNIT_A/pow(2,13);
-      ResultData/=I_RATE_CONST[Get_SysCurr_Mode()];      
-      All_Loss_Var.Curr[All_Loss_Var.Status.Index][i]=(INT32U)ResultData;
+      }
+      ResultData+=((FP32S)RdData*(FP32S)UNIT_A/pow(2,13))/(FP32S)I_RATE_CONST[Get_SysCurr_Mode()];      
    }
-      
+   All_Loss_Var.Curr[All_Loss_Var.Status.Index]=(INT32U)(ResultData/3);   
+   
    P13_bit.no0=0;   //7022_CS
    P2_bit.no0=0;    //计量RST---------7022_RST   
    P2_bit.no2=0;    //计量SDO---------7022_SDO     

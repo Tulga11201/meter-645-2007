@@ -188,7 +188,7 @@ void Get_Curr_Rate(void)
   for(i=0;i<3;i++)
   {
     INIT_STRUCT_VAR(Curr_Rate);
-    Rdflag=Read_Storage_Data_PUCK(DI_I_GAIN_A,temp,3);
+    Rdflag=Read_Storage_Data_PUCK(DI_I_GAIN_A+i,temp,3);
     if(Rdflag)
     {
       Curr_Rate.Rate[i]=(INT32U)(temp[2]*65536L+temp[1]*256L+temp[0]);      
@@ -221,17 +221,27 @@ void Get_AllLoss_Curr(void)
 
    Clear_CPU_Dog();
    
+   //延时300ms
    for(i=0;i<30;i++)
       WAITFOR_DRV_MS_TIMEOUT(10)
    Clear_CPU_Dog();
    
+   EnMeasuCal();
+  
    //初始化的时候，就需要获取电流规格，电流增益参数
    for(i=0;i<3;i++)
    {
       Measu_WrAndCompData_3Times(REG_W_IGAIN_A+i,Curr_Rate.Rate[i]);   
       Clear_CPU_Dog();
    }
-        
+   
+   DisMeasuCal();
+    //延时500ms
+   for(i=0;i<50;i++)
+      WAITFOR_DRV_MS_TIMEOUT(10)
+   Clear_CPU_Dog();
+   
+   
    ResultData=0;
    for(i=0;i<3;i++)
    {

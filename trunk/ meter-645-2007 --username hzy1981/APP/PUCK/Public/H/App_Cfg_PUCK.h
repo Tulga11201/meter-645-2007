@@ -105,7 +105,7 @@
 #undef  LEFT_KEY_EN                       //宏打开，使能左按钮
 #undef  NEAR_IRDA_EN                      //宏打开，使能吸附红外
 #undef  RIGHT_KEY_EN                      //宏打开，使能右按钮
-#define DIS_PARA_JUMP_EN                  //宏打开，使能参数修改跳屏  
+#undef  DIS_PARA_JUMP_EN                  //宏打开，使能参数修改跳屏  
 #define MEASU_IC_TYPE       MEASU_7022B          
 #define LCD_PROPERTY        LCD_GW_ZXW
 #define ALL_LOSS_CURR_EN                  //宏打开，使能全失压下计电流  

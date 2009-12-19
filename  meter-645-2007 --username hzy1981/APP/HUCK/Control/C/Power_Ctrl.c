@@ -861,14 +861,19 @@ INT8U Get_Alarm_Relay_Status()
 
 //检查继电器状态
 //ALLOW_SWITCH_ON //拉闸状态下允许合闸
+//SWITCH_DELAY //拉闸延时阶段
 //SWITCH_OFF 拉闸且不允许合闸
 //SWITCH_ON 合闸状态
 INT8U Get_Relay_Status()
 {
   INT8U Cause;
   INT8U Re;
-  
-  if(Relay_Status.Switch_Status EQ SWITCH_OFF)//拉闸状态
+
+  if(Relay_Status.Off_Delay > 0) //跳闸延时阶段
+  {
+    return SWITCH_DELAY; 
+  }  
+  else if(Relay_Status.Switch_Status EQ SWITCH_OFF)//拉闸状态
   {
     Re = Check_Switch_Status(&Cause);
     if(Re EQ SWITCH_ON)

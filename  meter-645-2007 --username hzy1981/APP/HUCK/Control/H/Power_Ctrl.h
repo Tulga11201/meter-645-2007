@@ -13,7 +13,7 @@
 #define CARD_TESTING_DELAY 10
 
 #define SWITCH_OFF_DELAY ((Relay_Status.Off_Delay > 0)?1:0)
-
+#define CHK_REMOTE_ALARM_ON ((Remote_Ctrl_Switch.Alarm_Flag EQ ALARM_ON)?1:0) //远程报警是否打开?
 //#define RELAY_ON  0x1A //合闸
 //#define RELAY_OFF 0x1B //跳闸
 #define SWITCH_ON     0x1B
@@ -26,6 +26,7 @@
 #define MAINTAIN_OFF 0x3B   //保电解除
 
 #define ALLOW_SWITCH_ON 0x4B //拉闸状态下允许合闸
+#define SWITCH_DELAY 0x4C //拉闸延时状态
 
 #define NEED_HAND_SWITCH_ON_FLAG 0x0C //不超过0x0F
 

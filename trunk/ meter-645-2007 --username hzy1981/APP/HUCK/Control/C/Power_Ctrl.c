@@ -725,7 +725,7 @@ INT8U Remote_Protocol_Ctrl(INT8U *pData)
     }
     else if(Switch_Flag EQ MAINTAIN_ON) //保电
     {
-      Set_Hand_Switch_On_Flag(0); //设置手动合闸标志
+      //Set_Hand_Switch_On_Flag(0); //设置手动合闸标志
       Remote_Ctrl_Switch.Maintain_Flag = MAINTAIN_ON; 
       Remote_Ctrl_Switch.Switch_Flag = SWITCH_ON;    //允许合闸
       SET_STRUCT_SUM(Remote_Ctrl_Switch);

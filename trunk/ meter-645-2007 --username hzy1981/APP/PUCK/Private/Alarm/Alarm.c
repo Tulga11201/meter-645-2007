@@ -37,7 +37,7 @@ void Sound_LED_LCD_Port_Alarm(void)
      }
    }
    
-   if(SWITCH_OFF_DELAY) //拉闸延时，蜂鸣器叫
+   if(Get_Relay_Status() EQ SWITCH_OFF_DELAY) //拉闸延时，蜂鸣器叫
       Port_Out_Pub(INTER_ID_ALARM_BEEP,300);
 
    if(Get_Prepaid_Status() EQ PREPAID_MONEY_OVERDRAFT) //透支，蜂鸣器叫

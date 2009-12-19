@@ -15,7 +15,6 @@ void Init_ExtRTC_Pulse(INT8U Flag)
      Port_Out_Pub(EXT_ID_SEC_EN,PORT_START);
   
   Multi_Port_Mode.Mode=0;  //三合一输出状态:0-秒脉冲；1-时段切换；2-需量周期。
-  SET_STRUCT_SUM(Multi_Port_Mode);
 
 #else 
   #if SEC_MULTI_PORT>0  //秒脉冲是复合端子 

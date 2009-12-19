@@ -115,10 +115,10 @@ typedef union
         
         u32 meter_locked  : 1; ///< 电表上锁(常亮)
         u32 status_online : 1; ///< 通讯模块在线指示(常亮)        
-        u32  BuyFee       : 1; //请购电        
+        u32  BuyFee       : 1; //请购电 
         u32  CalMeter     : 1; //校表事件       
         u32  TouZhi       : 1; //透支
-        u32  RelayOff     : 2; //拉闸------1：拉闸延时；2---------拉闸
+        u32  RelayOff     : 2; //拉闸------1（闪烁）：2---------常亮
         u32  reserved     : 9; //预留        
     };
     struct 

@@ -2688,6 +2688,7 @@ void Init_Measu_PUCK(void)
   if(Get_Sys_Status()!=SYS_NORMAL) //只有在正常模式下，才初始化计量任务
     return ;        
    
+  Get_Port_Out_Mode();
   Get_Pulse_Para();           //计量相关参数初始化
   Check_Cal_Status();
   Init_Measure_IC(); 

@@ -98,11 +98,13 @@ PORT_ABS_PUCK_EXT PORT_HANDER Ext_Port_Hander[MAX_PORT_NUM];
 
 
 typedef struct{
+  INT8U Head;
   INT8U Mode;            //三合一端子排模式字：上电后回复秒脉冲输出
-  INT8U CS[CS_BYTES];
+  INT8U ReadMode;        //三合一端子排模式字
+  INT8U Tail;
 }MULIT_PORT_MODE;
 
-PORT_ABS_PUCK_EXT MULIT_PORT_MODE  Multi_Port_Mode;
+PORT_ABS_PUCK_EXT MULIT_PORT_MODE  Multi_Port_Mode;//={CHK_BYTE, 0, 0, CHK_BYTE};
 
  //三合一输出状态:0-秒脉冲；1-需量周期；2-时段切换。
 #define SEC_OUT_PUT_EN        (Multi_Port_Mode.Mode==0)
@@ -110,6 +112,9 @@ PORT_ABS_PUCK_EXT MULIT_PORT_MODE  Multi_Port_Mode;
 #define SLIPE_OUT_PUT_EN      (Multi_Port_Mode.Mode==1)
 #define PARSE_OUT_PUT_EN      (Multi_Port_Mode.Mode==2)
 
+
+
+#define PORT_OUTPUT_MODE      Multi_Port_Mode.ReadMode
 
 #define MODE_ERR     0     //未知模式
 #define MODE_RUN     1     //现场运行模式，不输出调试信息，无权限
@@ -137,4 +142,5 @@ INT8U Get_Toogle_Out(void);
 void Wait_For_Power_On(void);
 INT8U Port_Pulse_Out(INT8U Id,INT16U PulseWidth);
 INT8U Port_Level_Out(INT8U Id,INT8U Level);
+void Get_Port_Out_Mode(void);
 #endif

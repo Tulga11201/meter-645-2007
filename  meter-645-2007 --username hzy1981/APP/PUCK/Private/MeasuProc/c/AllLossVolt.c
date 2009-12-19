@@ -231,8 +231,9 @@ void Get_AllLoss_Curr(void)
    //初始化的时候，就需要获取电流规格，电流增益参数
    for(i=0;i<3;i++)
    {
-      Measu_WrAndCompData_3Times(REG_W_IGAIN_A+i,Curr_Rate.Rate[i]);   
-      Clear_CPU_Dog();
+      Flag=Measu_WrAndCompData(REG_W_IGAIN_A+i,Curr_Rate.Rate[i]);
+      if(!Flag)
+        Clear_CPU_Dog();
    }
    
    DisMeasuCal();
@@ -245,12 +246,13 @@ void Get_AllLoss_Curr(void)
    ResultData=0;
    for(i=0;i<3;i++)
    {
-      Flag=Measu_RdAndCompData(REG_R_A_I,(INT8U *)(&RdData));      
+      Flag=Measu_RdAndCompData(REG_R_A_I+i,(INT8U *)(&RdData));      
       if(!Flag || RdData>=0x00800000)
       {
-        return ;
+        break ;
       }
-      ResultData+=((FP32S)RdData*(FP32S)UNIT_A/pow(2,13))/(FP32S)I_RATE_CONST[Get_SysCurr_Mode()];      
+      ResultData+=((FP32S)RdData*(FP32S)UNIT_A/8192)/(FP32S)I_RATE_CONST[Get_SysCurr_Mode()];
+      //ResultData+=((FP32S)RdData*(FP32S)UNIT_A/pow(2,13))/(FP32S)I_RATE_CONST[Get_SysCurr_Mode()];
    }
    All_Loss_Var.Curr[All_Loss_Var.Status.Index]=(INT32U)(ResultData/3);   
    

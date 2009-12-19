@@ -12,8 +12,9 @@
 // LED，LCD肯定报警，辅助端子排模糊。报警门限1，蜂鸣器不叫 Get_Prepaid_Status() PREPAID_MONEY_LEFT1
 void Sound_LED_LCD_Port_Alarm(void)
 {
-  INT8U i;
+  INT8U i,temp;
   static S_Int8U LastSatus={CHK_BYTE,0x00,CHK_BYTE};
+  static INT8U Blink=0;
   
    for(i=0;i<ALARM_EVENT_NUM;i++)
    {
@@ -37,11 +38,29 @@ void Sound_LED_LCD_Port_Alarm(void)
      }
    }
    
-   if(Get_Relay_Status() EQ SWITCH_DELAY) //拉闸延时，蜂鸣器叫
+   temp=Get_Relay_Status();
+   if(temp EQ SWITCH_DELAY) //拉闸延时，蜂鸣器叫
       Port_Out_Pub(INTER_ID_ALARM_BEEP,300);
 
+   if(temp EQ SWITCH_ON)
+      Port_Out_Pub(INTER_ID_TOGGLE_DIS,PORT_END);  //合闸指示
+   
+   if(temp EQ SWITCH_OFF)
+      Port_Out_Pub(INTER_ID_TOGGLE_DIS,PORT_START);   //跳闸指示
+    
+    
+   if(temp EQ ALLOW_SWITCH_ON)  //远程允许合闸,跳闸指示灯闪烁（亮1s，灭1s）
+   {
+     if(Blink)
+      Port_Out_Pub(INTER_ID_TOGGLE_DIS,PORT_START);  //拉闸指示
+     else
+      Port_Out_Pub(INTER_ID_TOGGLE_DIS,PORT_END);  //合闸指示
+     
+     Blink=(Blink EQ 0)?1:0;
+   }
+      
    if(Get_Prepaid_Status() EQ PREPAID_MONEY_OVERDRAFT) //透支，蜂鸣器叫
-   { 
+   {
      if(Beep_Disable EQ 0)
        Port_Out_Pub(INTER_ID_ALARM_BEEP,300);    
    }

@@ -1149,9 +1149,6 @@ void Excute_Toogle(INT8U SwitchFlag)
   if(SwitchFlag)
   {
       Port_Out_Pub(EXT_ID_TOGGLE,PORT_END);      //合闸
-      Port_Out_Pub(INTER_ID_TOGGLE_DIS,PORT_END);  //合闸指示
-      //Remote_Ctrl_Status.Switch_Status = SWITCH_ON;
-      //if(Get_Toogle_Out() EQ PULSE_MODE)
       
       //大继电器，脉冲方式
       Port_Out_Pub(INTER_ID_RELAY_ON,LARGE_RELAY_PULSE_WD);
@@ -1168,10 +1165,8 @@ void Excute_Toogle(INT8U SwitchFlag)
       Port_Out_Pub(EXT_ID_TOGGLE,APP_TOOGLE_PORT_PULSE_WD);           //脉冲跳闸
     }
     else      
-      Port_Out_Pub(EXT_ID_TOGGLE,PORT_START);           //电平跳闸
+      Port_Out_Pub(EXT_ID_TOGGLE,PORT_START);           //电平跳闸    
     
-    Port_Out_Pub(INTER_ID_TOGGLE_DIS,PORT_START);   //跳闸指示
-    //Remote_Ctrl_Status.Switch_Status = SWITCH_OFF;
   }
 }
 /********************************************************************************

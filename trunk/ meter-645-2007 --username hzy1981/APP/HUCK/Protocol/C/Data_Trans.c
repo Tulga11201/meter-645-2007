@@ -6071,7 +6071,7 @@ CONST S_P_Data_Info P_Data_Info[] =
   //INIT(Src_Off, 0),
   INIT(Src_Len, 4),
   INIT(Src_Format, S_INTU),
-  INIT(Dst_Start, 0),
+  INIT(Dst_Start, 1),
   INIT(Dst_Len, 3),
   INIT(Num, 0x00),
   INIT(Spec_Flag, SPEC_NO)}, 

@@ -613,24 +613,23 @@ void Init_Event_DIS_PUCK(stat_t *stat)
         START_LIGHT_ON;
         Light_Mode=LIGHT_ON_MONEY;
       } 
-    }
-    
-
+    }    
+  
+   //透支   
+   if(temp[0] EQ PREPAID_MONEY_OVERDRAFT  || PREPAID_MONEY_ZERO EQ temp[0])
+   {
+     stat->TouZhi =1;
+     if(Light_Mode!= LIGHT_ON_MONEY)
+     {
+       START_LIGHT_ON;
+       Light_Mode=LIGHT_ON_MONEY;
+     } 
+   }
+  
   //远程报警状态:“请购电”字符闪烁，报警指示灯亮(ID_PAY_ALARM 会设置)。
   if(CHK_REMOTE_ALARM_ON)
     stat->BuyFee =1;
-  
- //透支   
-  if(temp[0] EQ PREPAID_MONEY_OVERDRAFT  || PREPAID_MONEY_ZERO EQ temp[0])
-  {
-    stat->TouZhi =1;
-    if(Light_Mode!= LIGHT_ON_MONEY)
-    {
-      START_LIGHT_ON;
-      Light_Mode=LIGHT_ON_MONEY;
-    } 
-  }
-  
+    
   temp[0]=Get_Relay_Status();
    //拉闸延时:“拉闸”字符闪烁
    if(temp[0] EQ SWITCH_DELAY)   
@@ -678,10 +677,27 @@ stat_t getstat (void)
     stat.fac_status    = ((B_TEST_FAC_STATUS EQ 0) && B_TEST_HARD_STATUS);         //工厂模式
     stat.jumper_short  = ((B_TEST_FAC_STATUS EQ 0) || (B_TEST_HARD_STATUS EQ 0));   //低功耗下，提示跳线块
     stat.num_tariff    =3;  //显示主副时段1：主时段；2：副时段，其他：不显示
-    
-    temp[0]=Get_Relay_Status();
-    
-    //拉闸延时:“拉闸”字符闪烁
+ 
+  temp[0]=Get_Prepaid_Status();  //本地费控，才显示与电费相关信息;远程费控：此函数不会返回与电费相关信息  
+  
+  
+ //透支   
+  if(temp[0] EQ PREPAID_MONEY_OVERDRAFT  || PREPAID_MONEY_ZERO EQ temp[0])
+  {
+    stat.TouZhi =1;
+    if(Light_Mode!= LIGHT_ON_MONEY)
+    {
+      START_LIGHT_ON;
+      Light_Mode=LIGHT_ON_MONEY;
+    } 
+  }
+  
+  //远程报警状态:“请购电”字符闪烁，报警指示灯亮(ID_PAY_ALARM 会设置)。
+  if(CHK_REMOTE_ALARM_ON)
+    stat.BuyFee =1;
+  
+  temp[0]=Get_Relay_Status();
+   //拉闸延时:“拉闸”字符闪烁
    if(temp[0] EQ SWITCH_DELAY)   
       stat.RelayOff=1;
     
@@ -790,10 +806,6 @@ stat_t getstat (void)
     }
   }
   
-  //远程报警状态:“请购电”字符闪烁，报警指示灯亮(ID_PAY_ALARM 会设置)。
-  if(CHK_REMOTE_ALARM_ON)
-    stat.BuyFee =1;
-  
  //透支   
   if(temp[0] EQ PREPAID_MONEY_OVERDRAFT  || PREPAID_MONEY_ZERO EQ temp[0])
   {
@@ -804,6 +816,10 @@ stat_t getstat (void)
       Light_Mode=LIGHT_ON_MONEY;
     } 
   }
+  
+    //远程报警状态:“请购电”字符闪烁，报警指示灯亮(ID_PAY_ALARM 会设置)。
+  if(CHK_REMOTE_ALARM_ON)
+    stat.BuyFee =1;
   
   temp[0]=Get_Relay_Status();
    //拉闸延时:“拉闸”字符闪烁

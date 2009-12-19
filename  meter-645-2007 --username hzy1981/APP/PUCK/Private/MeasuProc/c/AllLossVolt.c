@@ -232,7 +232,7 @@ void Get_AllLoss_Curr(void)
       WAITFOR_DRV_MS_TIMEOUT(10)
    Clear_CPU_Dog();
    
-   /*
+
    EnMeasuCal();  
    //初始化的时候，就需要获取电流规格，电流增益参数
    for(i=0;i<3;i++)
@@ -246,7 +246,7 @@ void Get_AllLoss_Curr(void)
    for(i=0;i<50;i++)
       WAITFOR_DRV_MS_TIMEOUT(10)
    Clear_CPU_Dog();
-   */
+
    
    ResultData=0;
    for(i=0;i<3;i++)

@@ -264,6 +264,7 @@ unsigned char Buy_Card(void){
                         // / 新卡保存用户号和变更表计运行状态 // " );
                         My_memcpyRev(Pre_Payment_Para.UserID,UserID,6);
 		    	Write_Storage_Data(SDI_CUTOMER_ID, Pre_Payment_Para.UserID, 6);
+                        Reverse_data(   Pre_Payment_Para.UserID,6);
                         
 			Pre_Payment_Para.Meter_Run_State=MeterRunState_Run_3 ;
                         Write_Storage_Data(_SDI_PREPAID_RUN_STATUS,&Pre_Payment_Para.Meter_Run_State, 1);

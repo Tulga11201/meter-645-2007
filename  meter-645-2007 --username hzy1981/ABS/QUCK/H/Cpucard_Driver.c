@@ -55,7 +55,7 @@ unsigned char Cpucard_Esamcard_Internal_Auth(void)  //内部认证//
 
 /*"**************************************************************************"*/
 unsigned char Cpucard_External_Auth(void)
-    {
+{
 
     if(Check_CPU_Occur())			
         {
@@ -101,7 +101,7 @@ unsigned char Cpucard_External_Auth(void)
 	    
 
     return OK;  /*"CPU卡外部认证结束"*/                                  
-  }
+}
     
 /*"**************************************************************************"*/
 unsigned char Esamcard_External_Auth(void)

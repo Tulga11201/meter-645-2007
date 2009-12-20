@@ -262,9 +262,8 @@ unsigned char Buy_Card(void){
 		if( Buy_Card_Kind== GWFAR_USER_CARD_NEW )
                 {
                         // / 新卡保存用户号和变更表计运行状态 // " );
-			 
-                        Reverse_data(UserID,6);
-		    	Write_Storage_Data(SDI_CUTOMER_ID, UserID, 6);
+                        My_memcpyRev(Pre_Payment_Para.UserID,UserID,6);
+		    	Write_Storage_Data(SDI_CUTOMER_ID, Pre_Payment_Para.UserID, 6);
                         
 			Pre_Payment_Para.Meter_Run_State=MeterRunState_Run_3 ;
                         Write_Storage_Data(_SDI_PREPAID_RUN_STATUS,&Pre_Payment_Para.Meter_Run_State, 1);

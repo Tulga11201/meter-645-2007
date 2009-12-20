@@ -535,11 +535,17 @@ void Init_Inter_Abs(INT32U Mode)
         STOP_IR_DECODE;
         STOP_FAST_TIMER;  //关闭快速时钟，避免进入halt时，还在继续执行！
         
-        START_RTC_COUNTER; 
+        START_RTC_COUNTER;
         START_MIN_ALARM;        
-        START_UP_KEY;        
-        START_IRDA_WAKE; 
+        START_UP_KEY;
+        START_IRDA_WAKE;
+        
+#ifdef ALL_LOSS_HARD_EN        
         START_ALL_LOSS;       //打开全失压
+#else
+        STOP_ALL_LOSS;       
+#endif
+        
         break;
   }  
 }               
@@ -657,6 +663,10 @@ void PwrCtrl_ExtDevice_HigSpeed(void)
      LARGE_TOOGLE_OFF_SET;   //将常闭的关闭 
      LARGE_TOOGLE_ON_CLR;
   }
+
+#ifndef ALL_LOSS_HARD_EN
+  BAT_ON_7022;
+#endif
   
   CLOSE_MEASU_PWR;           //计量芯片电源关闭
   Init_Pulse_Port(0);       

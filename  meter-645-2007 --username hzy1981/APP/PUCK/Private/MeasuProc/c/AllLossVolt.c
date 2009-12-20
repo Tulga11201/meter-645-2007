@@ -296,24 +296,9 @@ void Get_Curr_Rate(void)
     void Get_AllLoss_Curr(void)
     {
     
-      INT8U i,Flag;
+      INT8U i,Flag,Loss_Volt_Flag=0;
       INT32U RdData;
       FP32S  ResultData,Temp;    
-    
-      All_Loss_Var.Status.Index=0;
-      All_Loss_Var.Status.start=1;   //有发生没有结束
-      All_Loss_Var.Status.Nums=1;
-      All_Loss_Var.Status.Mins=1;
-      All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].StartTime[0]=MIN;      //CPU_RTC_Time.RTC.Min;
-      All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].StartTime[1]=HOUR;      //CPU_RTC_Time.RTC.Hour;
-      All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].StartTime[2]=DAY;      //CPU_RTC_Time.RTC.Date;
-      All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].StartTime[3]=MONTH;      //CPU_RTC_Time.RTC.Month;
-      All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].StartTime[4]=YEAR;      //CPU_RTC_Time.RTC.Year;    
-      
-      memset((INT8U*)All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].EndTime,0x00,\
-            sizeof(All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].EndTime));     //死写，不用mem_set    
-      SET_VAR_CS_PUCK(All_Loss_Var.Status); 
-      SET_VAR_CS_PUCK(All_Loss_Var.RecordTime[All_Loss_Var.Status.Index]);  
     
        
        ResultData=0;
@@ -326,13 +311,36 @@ void Get_Curr_Rate(void)
           }
           Temp=((FP32S)RdData*(FP32S)UNIT_A/8192)/(FP32S)I_RATE_CONST[Get_SysCurr_Mode()];
           ResultData+=Temp;
-          *(&(Measu_Sign_InstantData_PUCK.Curr.A)+i)=(INT32S)Temp;  //更新公有电流数据，用于显示
-          //ResultData+=((FP32S)RdData*(FP32S)UNIT_A/pow(2,13))/(FP32S)I_RATE_CONST[Get_SysCurr_Mode()];
+          if(Temp/UNIT_A>=Get_In())
+          {
+            *(&(Measu_Sign_InstantData_PUCK.Curr.A)+i)=(INT32S)Temp;  //更新公有电流数据，用于显示
+            Loss_Volt_Flag=1;
+          }
        }
        if(i>=3)
           All_Loss_Var.Curr[All_Loss_Var.Status.Index]=(INT32U)(ResultData/3);   
        else       
           All_Loss_Var.Curr[All_Loss_Var.Status.Index]=(INT32U)(ResultData/(i+1));
+       
+       //全失压发生
+       if(Loss_Volt_Flag)
+       {         
+          All_Loss_Var.Status.Index=0;
+          All_Loss_Var.Status.start=1;   //有发生没有结束
+          All_Loss_Var.Status.Nums=1;
+          All_Loss_Var.Status.Mins=1;
+          All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].StartTime[0]=MIN;      //CPU_RTC_Time.RTC.Min;
+          All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].StartTime[1]=HOUR;      //CPU_RTC_Time.RTC.Hour;
+          All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].StartTime[2]=DAY;      //CPU_RTC_Time.RTC.Date;
+          All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].StartTime[3]=MONTH;      //CPU_RTC_Time.RTC.Month;
+          All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].StartTime[4]=YEAR;      //CPU_RTC_Time.RTC.Year;    
+          
+          memset((INT8U*)All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].EndTime,0x00,\
+                sizeof(All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].EndTime));     //死写，不用mem_set    
+          SET_VAR_CS_PUCK(All_Loss_Var.Status); 
+          SET_VAR_CS_PUCK(All_Loss_Var.RecordTime[All_Loss_Var.Status.Index]);  
+       }
+       
        
        P13_bit.no0=0;   //7022_CS
        P2_bit.no0=0;    //计量RST---------7022_RST   

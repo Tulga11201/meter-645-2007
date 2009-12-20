@@ -108,13 +108,11 @@
 #undef  DIS_PARA_JUMP_EN                  //宏打开，使能参数修改跳屏  
 #define MEASU_IC_TYPE       MEASU_7022B          
 #define LCD_PROPERTY        LCD_GW_ZXW
-#define ALL_LOSS_CURR_EN                  //宏打开，使能全失压下计电流  
 
 #define FM_ROM_FM16_EN                    //打开 FM16功能
 #define DRV_HARD_DS3231    0              //1:3231硬件I2C开起;0:硬件I2C关闭 
 #define EXT_RTC_TYPE       DRV_SIMU_DS3231
-
-#define ALL_LOSS_HARD_EN                  //宏打开，打开 硬件的全失压方法。关闭，通过软件全失压
+#undef ALL_LOSS_HARD_EN                  //宏打开，打开 硬件的全失压方法。关闭，通过软件全失压
 
 
 //多合一端子排配置：秒脉冲、时段、需量、滑差

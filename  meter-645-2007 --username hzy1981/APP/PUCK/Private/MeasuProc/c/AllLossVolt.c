@@ -206,82 +206,145 @@ void Get_Curr_Rate(void)
 入口：无
 出口：无
 ***********************************************************************/
-void Get_AllLoss_Curr(void)
-{
 #ifdef  ALL_LOSS_CURR_EN
-  INT8U i,Flag;
-  INT32U RdData;
-  FP32S  ResultData,Temp;  
-  
-  
-   BAT_ON_7022;     //打开后备电池
-   
-   PM13_bit.no0=0;   //7022_CS
-   PM2_bit.no0=0;    //计量RST---------7022_RST   
-   PM2_bit.no2=0;    //计量SDO---------7022_SDO     
-   PM2_bit.no4=0;    //计量SCK---------7022_SCK
-   
-   PM2_bit.no1=1;    //计量SIG---------7022_SIG   
-   PM2_bit.no3=3;    //计量SDI ---------7022_SDI  
-
-   Clear_CPU_Dog();   
-   
-   
-  WAITFOR_DRV_MS_TIMEOUT(10)
-  MEASU_RST_0;
-  WAITFOR_DRV_MS_TIMEOUT(10)
-  MEASU_RST_1;
-  
-     //延时300ms
-   for(i=0;i<30;i++)
-      WAITFOR_DRV_MS_TIMEOUT(10)
-   Clear_CPU_Dog();
-   
-
-   EnMeasuCal();  
-   //初始化的时候，就需要获取电流规格，电流增益参数
-   for(i=0;i<3;i++)
-   {
-      Flag=Measu_WrAndCompData(REG_W_IGAIN_A+i,Curr_Rate.Rate[i]);
-      if(!Flag)
-        Clear_CPU_Dog();
-   }   
-   DisMeasuCal();
-    //延时500ms
-   for(i=0;i<50;i++)
-      WAITFOR_DRV_MS_TIMEOUT(10)
-   Clear_CPU_Dog();
-
-   
-   ResultData=0;
-   for(i=0;i<3;i++)
-   {
-      Flag=Measu_RdAndCompData(REG_R_A_I+i,(INT8U *)(&RdData));      
-      if(!Flag || RdData>=0x00800000)
-      {
-        break ;
-      }
-      Temp=((FP32S)RdData*(FP32S)UNIT_A/8192)/(FP32S)I_RATE_CONST[Get_SysCurr_Mode()];
-      ResultData+=Temp;
-      *(&(Measu_Sign_InstantData_PUCK.Curr.A)+i)=(INT32S)Temp;  //更新公有电流数据，用于显示
-      //ResultData+=((FP32S)RdData*(FP32S)UNIT_A/pow(2,13))/(FP32S)I_RATE_CONST[Get_SysCurr_Mode()];
-   }
-   if(i>=3)
-      All_Loss_Var.Curr[All_Loss_Var.Status.Index]=(INT32U)(ResultData/3);   
-   else       
-      All_Loss_Var.Curr[All_Loss_Var.Status.Index]=(INT32U)(ResultData/(i+1));
-   
-   P13_bit.no0=0;   //7022_CS
-   P2_bit.no0=0;    //计量RST---------7022_RST   
-   P2_bit.no2=0;    //计量SDO---------7022_SDO     
-   P2_bit.no4=0;    //计量SCK---------7022_SCK
-   
-   PM2_bit.no1=0;    //计量SIG---------7022_SIG   
-   PM2_bit.no3=0;    //计量SDI ---------7022_SDI
-   P2_bit.no1=0;    //计量SIG---------7022_SIG   
-   P2_bit.no3=0;    //计量SDI ---------7022_SDI
-   
-   
-   BAT_OFF_7022;   //关闭后备电池
+    #ifdef ALL_LOSS_HARD_EN
+          void Get_AllLoss_Curr(void)
+          {
+          
+            INT8U i,Flag;
+            INT32U RdData;
+            FP32S  ResultData,Temp;
+            
+             BAT_ON_7022;     //打开后备电池
+             
+             PM13_bit.no0=0;   //7022_CS
+             PM2_bit.no0=0;    //计量RST---------7022_RST   
+             PM2_bit.no2=0;    //计量SDO---------7022_SDO     
+             PM2_bit.no4=0;    //计量SCK---------7022_SCK
+             
+             PM2_bit.no1=1;    //计量SIG---------7022_SIG   
+             PM2_bit.no3=3;    //计量SDI ---------7022_SDI  
+          
+             Clear_CPU_Dog();   
+             
+             
+            WAITFOR_DRV_MS_TIMEOUT(10)
+            MEASU_RST_0;
+            WAITFOR_DRV_MS_TIMEOUT(10)
+            MEASU_RST_1;
+            
+               //延时300ms
+             for(i=0;i<30;i++)
+                WAITFOR_DRV_MS_TIMEOUT(10)
+             Clear_CPU_Dog();
+             
+          
+             EnMeasuCal();  
+             //初始化的时候，就需要获取电流规格，电流增益参数
+             for(i=0;i<3;i++)
+             {
+                Flag=Measu_WrAndCompData(REG_W_IGAIN_A+i,Curr_Rate.Rate[i]);
+                if(!Flag)
+                  Clear_CPU_Dog();
+             }   
+             DisMeasuCal();
+              //延时500ms
+             for(i=0;i<50;i++)
+                WAITFOR_DRV_MS_TIMEOUT(10)
+             Clear_CPU_Dog();
+             
+             ResultData=0;
+             for(i=0;i<3;i++)
+             {
+                Flag=Measu_RdAndCompData(REG_R_A_I+i,(INT8U *)(&RdData));      
+                if(!Flag || RdData>=0x00800000)
+                {
+                  break ;
+                }
+                Temp=((FP32S)RdData*(FP32S)UNIT_A/8192)/(FP32S)I_RATE_CONST[Get_SysCurr_Mode()];
+                ResultData+=Temp;
+                *(&(Measu_Sign_InstantData_PUCK.Curr.A)+i)=(INT32S)Temp;  //更新公有电流数据，用于显示
+                //ResultData+=((FP32S)RdData*(FP32S)UNIT_A/pow(2,13))/(FP32S)I_RATE_CONST[Get_SysCurr_Mode()];
+             }
+             if(i>=3)
+                All_Loss_Var.Curr[All_Loss_Var.Status.Index]=(INT32U)(ResultData/3);   
+             else       
+                All_Loss_Var.Curr[All_Loss_Var.Status.Index]=(INT32U)(ResultData/(i+1));
+             
+             P13_bit.no0=0;   //7022_CS
+             P2_bit.no0=0;    //计量RST---------7022_RST   
+             P2_bit.no2=0;    //计量SDO---------7022_SDO     
+             P2_bit.no4=0;    //计量SCK---------7022_SCK
+             
+             PM2_bit.no1=0;    //计量SIG---------7022_SIG   
+             PM2_bit.no3=0;    //计量SDI ---------7022_SDI
+             P2_bit.no1=0;    //计量SIG---------7022_SIG   
+             P2_bit.no3=0;    //计量SDI ---------7022_SDI   
+             
+             BAT_OFF_7022;   //关闭后备电池
+          }
+    #endif
 #endif
-}
+
+/***********************************************************************
+函数功能：计算全失压下的电流值
+入口：无
+出口：无
+***********************************************************************/
+#ifdef  ALL_LOSS_CURR_EN
+    #ifndef ALL_LOSS_HARD_EN
+    void Get_AllLoss_Curr(void)
+    {
+    
+      INT8U i,Flag;
+      INT32U RdData;
+      FP32S  ResultData,Temp;    
+    
+      All_Loss_Var.Status.Index=0;
+      All_Loss_Var.Status.start=1;   //有发生没有结束
+      All_Loss_Var.Status.Nums=1;
+      All_Loss_Var.Status.Mins=1;
+      All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].StartTime[0]=MIN;      //CPU_RTC_Time.RTC.Min;
+      All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].StartTime[1]=HOUR;      //CPU_RTC_Time.RTC.Hour;
+      All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].StartTime[2]=DAY;      //CPU_RTC_Time.RTC.Date;
+      All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].StartTime[3]=MONTH;      //CPU_RTC_Time.RTC.Month;
+      All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].StartTime[4]=YEAR;      //CPU_RTC_Time.RTC.Year;    
+      
+      memset((INT8U*)All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].EndTime,0x00,\
+            sizeof(All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].EndTime));     //死写，不用mem_set    
+      SET_VAR_CS_PUCK(All_Loss_Var.Status); 
+      SET_VAR_CS_PUCK(All_Loss_Var.RecordTime[All_Loss_Var.Status.Index]);  
+    
+       
+       ResultData=0;
+       for(i=0;i<3;i++)
+       {
+          Flag=Measu_RdAndCompData(REG_R_A_I+i,(INT8U *)(&RdData));      
+          if(!Flag || RdData>=0x00800000)
+          {
+            break ;
+          }
+          Temp=((FP32S)RdData*(FP32S)UNIT_A/8192)/(FP32S)I_RATE_CONST[Get_SysCurr_Mode()];
+          ResultData+=Temp;
+          *(&(Measu_Sign_InstantData_PUCK.Curr.A)+i)=(INT32S)Temp;  //更新公有电流数据，用于显示
+          //ResultData+=((FP32S)RdData*(FP32S)UNIT_A/pow(2,13))/(FP32S)I_RATE_CONST[Get_SysCurr_Mode()];
+       }
+       if(i>=3)
+          All_Loss_Var.Curr[All_Loss_Var.Status.Index]=(INT32U)(ResultData/3);   
+       else       
+          All_Loss_Var.Curr[All_Loss_Var.Status.Index]=(INT32U)(ResultData/(i+1));
+       
+       P13_bit.no0=0;   //7022_CS
+       P2_bit.no0=0;    //计量RST---------7022_RST   
+       P2_bit.no2=0;    //计量SDO---------7022_SDO     
+       P2_bit.no4=0;    //计量SCK---------7022_SCK
+       
+       PM2_bit.no1=0;    //计量SIG---------7022_SIG   
+       PM2_bit.no3=0;    //计量SDI ---------7022_SDI
+       P2_bit.no1=0;    //计量SIG---------7022_SIG   
+       P2_bit.no3=0;    //计量SDI ---------7022_SDI   
+       
+       BAT_OFF_7022;   //关闭后备电池
+    }
+    #endif
+#endif

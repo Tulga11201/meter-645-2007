@@ -177,12 +177,14 @@ void laser_up(void)
 //全失压,中断等级--------INTER_GRADE_LOWERST默认(等级：INTTM05_vect)
 void Inter_ALL_LOSS(void) //正常模式下，此中断关闭，只有在sleep下中断打开
 {
+#ifdef ALL_LOSS_HARD_EN
   EI();
   Clear_CPU_Dog();
   //Resume_Src.Src_Flag|=ALL_LOSS_VOL_RESUME;
   All_Loss_Var.Status.Occur=1; //全失压置位，RTC闹铃中清零
   SET_VAR_CS_PUCK(All_Loss_Var.Status); 
   Clear_CPU_Dog();
+#endif 
 }
 
 
@@ -360,12 +362,14 @@ void INT_1HZ(void)
 //内部RTC闹铃,中断等级--------INTER_GRADE_LOWERST (默认：INTRTC_vect)
 void CPU_RTC_Interrupt(void)
 {
+#ifdef ALL_LOSS_HARD_EN
   EI();
   Clear_CPU_Dog();
   //Resume_Src.Src_Flag|=RTC_RESUME;
   //Refresh_CPU_RTC();
   Count_All_Loss_Proc();
   Clear_CPU_Dog();
+#endif
 }
 
 //系统1ms的Tick,中断等级--------INTER_GRADE_LOWERST(默认：INTTM07_vect)

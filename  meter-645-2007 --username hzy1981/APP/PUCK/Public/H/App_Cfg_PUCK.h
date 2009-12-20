@@ -114,6 +114,8 @@
 #define DRV_HARD_DS3231    0              //1:3231硬件I2C开起;0:硬件I2C关闭 
 #define EXT_RTC_TYPE       DRV_SIMU_DS3231
 
+#define ALL_LOSS_HARD_EN                  //宏打开，打开 硬件的全失压方法。关闭，通过软件全失压
+
 
 //多合一端子排配置：秒脉冲、时段、需量、滑差
 //1:配置以下宏，与Const_Port_Status[]中的MultiFlag为0还是1含义不一样；

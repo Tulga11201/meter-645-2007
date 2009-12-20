@@ -331,7 +331,8 @@ struct Far_Read_078001FF_Format
 	unsigned int	Name;
 	};
 
-unsigned char Far_Deal_078001FF(unsigned char *Data_Point ){
+unsigned char Far_Deal_078001FF(unsigned char *Data_Point )
+{
 	struct Far_Read_078001FF_Format	 Far_Read_078001FF_Format;
 	unsigned char Offset;
         mem_cpy(&Far_Read_078001FF_Format,Data_Point,sizeof(struct Far_Read_078001FF_Format),&Far_Read_078001FF_Format,sizeof(Far_Read_078001FF_Format));
@@ -377,7 +378,7 @@ LC是所要读取的明文数据＋MAC+分散因子的总长度，它是1字节的十六进制数。"*/
 //	My_memcpyRev( far_data_p+14+((unsigned char)(Far_Read_078001FF_Format->Data_Length)),receive_send_buffer+((unsigned char)(Far_Read_078001FF_Format->Data_Length)), 4);
 //	Co.c.len = ((unsigned char)(Far_Read_078001FF_Format->Data_Length))+4;
 	return OK;
-	}
+}
 
 /*"**************************************************************************"*/
 /*" 查询状态"*/

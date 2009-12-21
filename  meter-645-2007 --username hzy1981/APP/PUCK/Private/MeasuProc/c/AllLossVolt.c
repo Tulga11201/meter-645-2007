@@ -357,7 +357,7 @@ void Get_AllLoss_Curr(void)
    
    ResultData=0;
    OccurFlag=0;
-   JudgeIn=(FP32S)I_RATE_CONST[Get_SysCurr_Mode()/20.0;
+   JudgeIn=(FP32S)I_RATE_CONST[Get_SysCurr_Mode()]/20.0;   //5%In
    for(i=0;i<3;i++)
    {
       Flag=Measu_RdAndCompData(REG_R_A_I+i,(INT8U *)(&RdData));
@@ -383,6 +383,9 @@ void Get_AllLoss_Curr(void)
    {
       All_Loss_Var.Status.Nums=0;    
       All_Loss_Var.Status.Mins=0;
+      Clr_Event_Instant(ID_EVENT_POWER_OFF);  //掉电事件发生
+      Power_Status.Power=POWER_ON;          //掉电事件标志
+      SET_STRUCT_SUM(Power_Status);  
    }
    
    Clear_CPU_Dog();

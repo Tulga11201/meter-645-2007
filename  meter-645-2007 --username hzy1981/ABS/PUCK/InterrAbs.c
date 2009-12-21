@@ -182,8 +182,13 @@ void Inter_ALL_LOSS(void) //正常模式下，此中断关闭，只有在sleep下中断打开
   STOP_ALL_LOSS;   //关闭全失压
   Clear_CPU_Dog();
   All_Loss_Var.Status.Occur=1;
-  Count_All_Loss_Proc(); 
+  
+  //醒来了，根据唤醒源马上切换高速晶振-----------PUCK
+  Switch_Main_Osc(RUN_MODE);
+  Count_All_Loss_Proc();   
   Clear_CPU_Dog();
+  Switch_Main_Osc(HALT_MODE);
+  
   STOP_ALL_LOSS;   //关闭全失压
 #endif 
   
@@ -378,8 +383,11 @@ void CPU_RTC_Interrupt(void)
 #if ALL_LOSS_TYPE EQ ALL_LOSS_HARD_MULTI 
   EI();
   Clear_CPU_Dog();
-  Count_All_Loss_Proc();
-  Clear_CPU_Dog();
+  //醒来了，根据唤醒源马上切换高速晶振-----------PUCK
+  Switch_Main_Osc(RUN_MODE);
+  Count_All_Loss_Proc();  
+  Switch_Main_Osc(HALT_MODE);
+  Clear_CPU_Dog();  
 #endif 
 }
 

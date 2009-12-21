@@ -308,9 +308,10 @@ void Get_Curr_Rate(void)
 void Get_AllLoss_Curr(void)
 {
 
-  INT8U i,Flag;
+  INT16U i;
   INT32U RdData;
   FP32S  ResultData,Temp;
+  INT8U Flag;
   
    BAT_ON_7022;     //打开后备电池
    
@@ -325,15 +326,21 @@ void Get_AllLoss_Curr(void)
    Clear_CPU_Dog();   
    
    
-  WAITFOR_DRV_MS_TIMEOUT(10)
+  for(i=0;i<10;i++)
+    WAITFOR_DRV_CYCLE_TIMEOUT(CYCLE_NUM_IN_1MS);  
+ 
   MEASU_RST_0;
-  WAITFOR_DRV_MS_TIMEOUT(10)
+  for(i=0;i<10;i++)
+    WAITFOR_DRV_CYCLE_TIMEOUT(CYCLE_NUM_IN_1MS);
+  
   MEASU_RST_1;
   
-     //延时300ms
-   for(i=0;i<30;i++)
-      WAITFOR_DRV_MS_TIMEOUT(10)
-   Clear_CPU_Dog();
+   //延时300ms
+   for(i=0;i<200;i++)
+   {
+     WAITFOR_DRV_CYCLE_TIMEOUT(CYCLE_NUM_IN_1MS);   
+     Clear_CPU_Dog();
+   }
    
 
    EnMeasuCal();  
@@ -347,9 +354,11 @@ void Get_AllLoss_Curr(void)
    }   
    DisMeasuCal();
     //延时500ms
-   for(i=0;i<50;i++)
-      WAITFOR_DRV_MS_TIMEOUT(10)
-   Clear_CPU_Dog();
+   for(i=0;i<200;i++)
+   {
+     WAITFOR_DRV_CYCLE_TIMEOUT(CYCLE_NUM_IN_1MS);
+      Clear_CPU_Dog();
+   }
    
    ResultData=0;
    for(i=0;i<3;i++)

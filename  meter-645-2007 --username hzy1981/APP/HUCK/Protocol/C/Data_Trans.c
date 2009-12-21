@@ -3310,7 +3310,7 @@ CONST S_P_Data_Info P_Data_Info[] =
   INIT(Num, 0x00000002),
   INIT(Spec_Flag, SPEC_NO)}, 
 
-  //通信地址和表号
+  //通信地址
   {INIT(PDI, 0x04000401),
   INIT(DI_Set_Flag, 0),
   INIT(PSW_Flag, PSW_SET_PARA),
@@ -3321,8 +3321,21 @@ CONST S_P_Data_Info P_Data_Info[] =
   INIT(Src_Format, S_BIN),
   INIT(Dst_Start, 0),
   INIT(Dst_Len, 6),
-  INIT(Num, 0x00000002),
+  INIT(Num, 0x00000001),
   INIT(Spec_Flag, SPEC_NO)}, 
+ //表号
+  {INIT(PDI, 0x04000402),
+  INIT(DI_Set_Flag, 0),
+  INIT(PSW_Flag, PSW_SET_PARA),
+  INIT(Storage, S_ROM),
+  INIT(pSrc, (void *) Zero),
+  //INIT(Src_Off, 0),
+  INIT(Src_Len, 6),
+  INIT(Src_Format, S_BIN),
+  INIT(Dst_Start, 0),
+  INIT(Dst_Len, 6),
+  INIT(Num, 0x00000001),
+  INIT(Spec_Flag, SPEC_METER_ID)},
   //资产管理编码
   {INIT(PDI, 0x04000403),
   INIT(DI_Set_Flag, 0),
@@ -6508,7 +6521,7 @@ CONST S_P_Data_Info P_Data_Info[] =
   INIT(Dst_Start, 0),
   INIT(Dst_Len, 1),
   INIT(Num, 0x00),
-  INIT(Spec_Flag, SPEC_ADJ)},  
+  INIT(Spec_Flag, SPEC_ADJ_CLR)},  
   
   //---读取内卡数据
   {INIT(PDI, _PDI_RD_ROM),
@@ -7226,7 +7239,7 @@ INT16U Get_DLT645_Single_Data(INT16U Index, PROTO_DI PDI, void* pPara, INT8U Par
     return 0;
   }
   
-  if(SPEC_NO != Spec_Flag)//是特殊项
+  if((Spec_Flag & 0x40) != 0)//是特殊项且是读特殊项
   {
     //注意：Get_DLT645_Spec_Single_Data函数内部会再调用_Get_DLT645_Data函数
     //因此此函数内部可能会申请信号量SEM_PUB_BUF0
@@ -8006,6 +8019,7 @@ INT16U Get_DLT645_Spec_Single_Data(PROTO_DI PDI, INT8U Spec_Flag, void* pPara, I
   {
     return Get_Prepaid_Event_Proto_Data(PDI, pDst, pDst_Start, DstLen, Data_Flag); 
   }
+
   return 0;
 }
 
@@ -8607,13 +8621,13 @@ INT8U Set_Data_Proc(INT8U Ch, INT8U* pSrc, INT8U SrcLen, INT8U *pAck_Flag)
 
   Set_Prog_Record_Pre_Porc(Ch, PDI, pAck_Flag);
   //DI到数据之间有6字节的密码哦  
-  if(SPEC_NO EQ Spec_Flag)
+  if((Spec_Flag & 0x80) != 0)
   {
-    Re = Set_DI_Data_Proc(i, PDI, pSrc + 12, (INT8U) (SrcLen - 12));
+    Re = Set_Spec_Data_Proc(PDI, Spec_Flag, pSrc + 12, (INT8U) (SrcLen - 12));    
   }//正常项的设置
   else
   {
-    Re = Set_Spec_Data_Proc(PDI, Spec_Flag, pSrc + 12, (INT8U) (SrcLen - 12));
+    Re = Set_DI_Data_Proc(i, PDI, pSrc + 12, (INT8U) (SrcLen - 12));
   }
 
   if(1 EQ Re)
@@ -8670,6 +8684,9 @@ INT8U Set_Module_Proto_Data(PROTO_DI PDI, INT8U *pSrc, INT8U SrcLen)
 //判断是否应该特殊处理的数据项
 INT8U Set_Spec_Data_Proc(PROTO_DI PDI, INT8U Spec_Flag, INT8U* pSrc, INT8U SrcLen)
 {
+  INT8U Temp[4];
+  //INT8U Re;
+  
   TRACE();
   
   if(Spec_Flag EQ SPEC_TIME)//当前时间
@@ -8684,7 +8701,7 @@ INT8U Set_Spec_Data_Proc(PROTO_DI PDI, INT8U Spec_Flag, INT8U* pSrc, INT8U SrcLe
     return 0;
 #endif    
   }
-  else if(Spec_Flag EQ SPEC_ADJ) //校表清零
+  else if(Spec_Flag EQ SPEC_ADJ_CLR) //校表清零
   {
     if(PDI EQ _PDI_ADJ_METER_CLR)
     {
@@ -8707,7 +8724,17 @@ INT8U Set_Spec_Data_Proc(PROTO_DI PDI, INT8U Spec_Flag, INT8U* pSrc, INT8U SrcLe
   {
     return Set_Energy_Start(PDI, pSrc, SrcLen); 
   }
-  
+  else if(Spec_Flag EQ SPEC_METER_ID)
+  {
+    if(PREPAID_EN > 0 && PREPAID_LOCAL_REMOTE EQ PREPAID_LOCAL) //本地费控不能写表号
+      return 0;
+    
+    Read_Storage_Data(_SDI_PREPAID_PSW_KIND, Temp, Temp, sizeof(Temp));
+    if(Temp[0] EQ 0) //公开密钥状态
+    {
+      return Write_Storage_Data(SDI_METER_ID, pSrc, SrcLen); 
+    }
+  }
   return 0;
 }
 
@@ -9014,7 +9041,7 @@ INT16U Rcv_DLT645_Data_Proc(INT8U Ch, INT8U* pFrame, INT8U FrameLen, INT8U* pDst
         {
           Esam_Auth_Ok = 0;
           //年时区表和日时段表也可以用02级密码设置--送检要求!!
-          if(Check_Year_Date_Table_Data(PDI))
+          //if(Check_Year_Date_Table_Data(PDI))
           {
             if(pSrc[4] EQ 0x02)
               Esam_Auth_Flag = 0;  

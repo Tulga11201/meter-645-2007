@@ -1565,13 +1565,15 @@ INT8U Check_Def_Para(STORA_DI SDI)
 //因此修改默认参数的内容不会导致CS变化，增加或者减少默认参数则会导致CS变化
 INT32U Get_Def_Para_Info_CS()
 {
-  INT16U i;
+  INT16U i, Len;
   INT32U CS;
    
   CS = 0;
   for(i = 0; i < S_NUM(Def_Para); i ++)
   {
-    CS += Def_Para[i].SDI + Def_Para[i].Num; 
+    CS += Def_Para[i].SDI + Def_Para[i].Num;
+    Len = Get_Storage_Data_Len(Def_Para[i].SDI); 
+    CS += Sum_4Bytes((INT8U *)Def_Para[i].pPara, Len * Def_Para[i].Num);
   }
   //OS_Set_Sum((INT8U *)Def_Para, sizeof(Def_Para), &CS, sizeof(CS), &CS, sizeof(CS)); 
   return CS;

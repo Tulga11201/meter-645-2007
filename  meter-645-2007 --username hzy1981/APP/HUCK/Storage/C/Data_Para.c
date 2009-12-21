@@ -20,7 +20,7 @@
 */
 
 //#define IMP_LOG_MEM 5//每类重要数据存储的逻辑存储器个数,最大值 
-
+//#define _SDI_METER_TYPE  (0xFFFF00 | EXT_PARA_DATA) | PREPAID_METER | 
 //定义各种数据的存储分布
 CONST S_Data_Mem_Map Data_Mem_Map[] =
 {

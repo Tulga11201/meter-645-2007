@@ -60,20 +60,19 @@ void Save_All_Loss_Data(void)
   
   temp=CHK_VAR_CS_PUCK(All_Loss_Var.Status);
   if(0==temp)
-    ASSERT_FAILED();
+    return;
    
 
-#if ALL_LOSS_TYPE EQ ALL_LOSS_HARD_SINGLE 
+#if ALL_LOSS_TYPE EQ ALL_LOSS_HARD_SINGLE    
     
-    temp32=60;
-    Get_Time_Diff(PD_Time,&temp32);
+    if(Get_Time_Diff(PD_Time,&temp32) EQ 0)
+      temp32=60;
+    
     All_Loss_Var.Status.Nums=1;
     All_Loss_Var.Status.Mins=temp32/60; 
 #endif
 
-  
-   
-  
+
   if((All_Loss_Var.Status.Nums==0)||(All_Loss_Var.Status.Mins==0))   //没有事件发生
   {
     Clr_All_Loss_Data();   //存完后清0
@@ -116,6 +115,14 @@ void Save_All_Loss_Data(void)
 #if ALL_LOSS_TYPE != ALL_LOSS_SOFT 
 void Count_All_Loss_Proc(void)
 { 
+#if ALL_LOSS_TYPE EQ ALL_LOSS_HARD_SINGLE
+  All_Loss_Var.Status.Exist=1;
+  All_Loss_Var.Status.start=0;
+  All_Loss_Var.Status.First=1;
+  
+#endif
+
+#if ALL_LOSS_TYPE EQ ALL_LOSS_HARD_SINGLE
   if(All_Loss_Var.Status.Occur)
   {
     All_Loss_Var.Status.Occur=0;
@@ -129,10 +136,9 @@ void Count_All_Loss_Proc(void)
     SET_VAR_CS_PUCK(All_Loss_Var.Status); 
     return  ;
   }
-  
+#endif
   if(All_Loss_Var.Status.Exist && All_Loss_Var.Status.start==0)  //全失压发生
   {
-
     //醒来了，根据唤醒源马上切换高速晶振-----------PUCK
    Switch_Main_Osc(RUN_MODE);
    Clear_CPU_Dog();

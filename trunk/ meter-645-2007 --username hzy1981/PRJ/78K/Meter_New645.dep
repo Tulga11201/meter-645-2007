@@ -1601,10 +1601,6 @@
       <name>$PROJ_DIR$\..\..\APP\PUCK\Private\MeasuProc\c\AllLossVolt.c</name>
       <outputs>
         <tool>
-          <name>ICC78000</name>
-          <file> 320</file>
-        </tool>
-        <tool>
           <name>BICOMP</name>
           <file> 269</file>
         </tool>

@@ -370,11 +370,11 @@ void INT_1HZ(void)
 //内部RTC闹铃,中断等级--------INTER_GRADE_LOWERST (默认：INTRTC_vect)
 void CPU_RTC_Interrupt(void)
 {
-#ifdef ALL_LOSS_TYPE EQ ALL_LOSS_HARD_SINGLE 
+#if ALL_LOSS_TYPE EQ ALL_LOSS_HARD_SINGLE 
   EI();
 #endif
   
-#ifdef ALL_LOSS_TYPE EQ ALL_LOSS_HARD_MULTI 
+#if ALL_LOSS_TYPE EQ ALL_LOSS_HARD_MULTI 
   EI();
   Clear_CPU_Dog();
   Count_All_Loss_Proc();

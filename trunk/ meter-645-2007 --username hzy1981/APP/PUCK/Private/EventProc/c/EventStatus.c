@@ -69,7 +69,7 @@ void Init_All_Event_Sram(void)
 出口：1-------------获取成功，0----------------失败
 ***********************************************************************/
 INT8U Get_Time_Diff(S_Event_Time Temp_PD_Time,INT32U *Diff)
-{  
+{
   INT32U LastTime,CurTime;  
   
   //将BCD码转换成 HEX格式
@@ -933,7 +933,8 @@ void Get_Meter_Run_Status(void)
 *********************************************************************************/
 INT8U Check_Prog_Status(void)
 {
-  return (Read_Event_Status(ID_EVENT_PRGKEY_ON));  
+  
+  //return (Read_Event_Status(ID_EVENT_PRGKEY_ON));  
   
 }
 /********************************************************************************

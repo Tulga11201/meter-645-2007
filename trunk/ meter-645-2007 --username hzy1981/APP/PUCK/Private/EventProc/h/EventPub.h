@@ -116,9 +116,9 @@
 #define ID_CLR_DEMAND_KEY           (ID_ALARM_OUT+1)             //手动清需量按钮--------77
 #define ID_EVENT_EXT_PROG           (ID_CLR_DEMAND_KEY+1)         //编程事件：设置参数--------78(同 ID_EVENT_PROG,应HUCKGD需求增加)
 
-#define ID_EVENT_OSC_ERR            (ID_EVENT_EXT_PROG+1)        //单片机时钟系统故障--------79
+//#define ID_EVENT_OSC_ERR            (ID_EVENT_EXT_PROG+1)        //单片机时钟系统故障--------79
 
-#define ID_EVENT_A_OVER_CURR        (ID_EVENT_OSC_ERR+1)        //A相过流：--------80
+#define ID_EVENT_A_OVER_CURR        (ID_EVENT_EXT_PROG+1)        //A相过流：--------80
 #define ID_EVENT_B_OVER_CURR        (ID_EVENT_A_OVER_CURR+1)        //B相过流：--------81
 #define ID_EVENT_C_OVER_CURR        (ID_EVENT_B_OVER_CURR+1)        //C相过流：--------82
 

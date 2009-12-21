@@ -516,7 +516,12 @@ void Init_Inter_Abs(INT32U Mode)
         
         START_RTC_COUNTER; 
         START_MIN_ALARM;
-        START_ALL_LOSS;         //全失压
+        
+#if    ALL_LOSS_TYPE!=ALL_LOSS_SOFT 
+        START_ALL_LOSS;       //打开全失压
+#else
+        STOP_ALL_LOSS;       
+#endif
        
     break;
     

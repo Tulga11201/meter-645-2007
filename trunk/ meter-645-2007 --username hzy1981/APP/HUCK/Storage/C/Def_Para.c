@@ -1612,7 +1612,7 @@ void Check_Boot_On_Flag()
   {
     if(Check_Sys_Status() EQ SYS_NORMAL)//系统电源正常的情况下才进行数据冻结和需量处理
     {
-      Check_Sys_Storage();//存储器自检
+      //Check_Sys_Storage();//存储器自检
       
       if(Set_Def_Para_Flag EQ 1)
       {

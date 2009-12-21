@@ -220,7 +220,7 @@ INT8U Get_User_Authority(INT8U Ch, INT8U Ctrl_Code, INT8U* pSrc, INT8U SrcLen)
   }
   else if(Ctrl_Code EQ C_SET_ADDR)//设置表地址不需要密码权限，只需要按下某个按键
   {
-    if(Check_Set_ADDR_Key() EQ 0)//按键没有按下，返回权限错
+    if(Check_Meter_Prog_Status() EQ 0)//按键没有按下，返回权限错
       return PSW_NULL;
     else 
       return PSW_0;//不需要密码的情况下，认为具备了0级密码

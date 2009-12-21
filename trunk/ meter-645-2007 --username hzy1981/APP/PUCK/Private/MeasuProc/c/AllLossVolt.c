@@ -300,14 +300,13 @@ void Get_Curr_Rate(void)
 入口：无
 出口：无
 ***********************************************************************/
-#if ALL_LOSS_TYPE !=ALL_LOSS_SOFT 
 void Get_AllLoss_Curr(void)
 {
 
   INT16U i;
   INT32U RdData;
-  FP32S  ResultData,Temp;
-  INT8U Flag;
+  FP32S  ResultData,Temp,JudgeIn;
+  INT8U Flag,OccurFlag;
   
    BAT_ON_7022;     //打开后备电池
    
@@ -357,6 +356,8 @@ void Get_AllLoss_Curr(void)
    }
    
    ResultData=0;
+   OccurFlag=0;
+   JudgeIn=(FP32S)I_RATE_CONST[Get_SysCurr_Mode()/20.0;
    for(i=0;i<3;i++)
    {
       Flag=Measu_RdAndCompData(REG_R_A_I+i,(INT8U *)(&RdData));
@@ -368,12 +369,21 @@ void Get_AllLoss_Curr(void)
       Temp=((FP32S)RdData*(FP32S)UNIT_A/8192)/(FP32S)I_RATE_CONST[Get_SysCurr_Mode()];
       ResultData+=Temp;
       *(&(Measu_Sign_InstantData_PUCK.Curr.A)+i)=(INT32S)Temp;  //更新公有电流数据，用于显示
-      //ResultData+=((FP32S)RdData*(FP32S)UNIT_A/pow(2,13))/(FP32S)I_RATE_CONST[Get_SysCurr_Mode()];
+      if(Temp/UNIT_A >=JudgeIn)
+        OccurFlag=1;
    }
-   if(i>=3)
-      All_Loss_Var.Curr[All_Loss_Var.Status.Index]=(INT32U)(ResultData/3);   
-   else       
-      All_Loss_Var.Curr[All_Loss_Var.Status.Index]=(INT32U)(ResultData/(i+1));
+   if(OccurFlag)
+   {
+     if(i>=3)
+        All_Loss_Var.Curr[All_Loss_Var.Status.Index]=(INT32U)(ResultData/3);   
+     else       
+        All_Loss_Var.Curr[All_Loss_Var.Status.Index]=(INT32U)(ResultData/(i+1));
+   }
+   else  //不是全失压
+   {
+      All_Loss_Var.Status.Nums=0;    
+      All_Loss_Var.Status.Mins=0;
+   }
    
    Clear_CPU_Dog();
    
@@ -389,5 +399,5 @@ void Get_AllLoss_Curr(void)
    
    BAT_OFF_7022;   //关闭后备电池
 }
-#endif
+
 

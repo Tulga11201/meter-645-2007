@@ -9,8 +9,8 @@
 #define DRV_CFG_EXT  volatile
 #endif
 
-//#define RESUME_REMOTER_EN     RESUME_REMOTER_EN          //1：红外唤醒后遥控器功能打开；0：红外唤醒后遥控器功能关闭。
-#define RSUME_CLOCK_DIV         CG_CPUCLK_MAIN1        //CG_CPUCLK_MAIN0       //唤醒模式下，外部晶振的分频系数,目前只能是 CG_CPUCLK_MAIN0、CG_CPUCLK_MAIN1
+//#define RESUME_REMOTER_EN     RESUME_REMOTER_EN       //1：红外唤醒后遥控器功能打开；0：红外唤醒后遥控器功能关闭。
+#define RSUME_CLOCK_DIV         CG_CPUCLK_MAIN0        //CG_CPUCLK_MAIN0       //唤醒模式下，外部晶振的分频系数,目前只能是 CG_CPUCLK_MAIN0、CG_CPUCLK_MAIN1
 
 #define LVI_DETECT_EN        //宏开启，打开LVI功能
 

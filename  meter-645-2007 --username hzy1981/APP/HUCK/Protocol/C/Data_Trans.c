@@ -8833,7 +8833,7 @@ INT8U Set_MeterAddr_Proc(INT8U Ch, INT8U* pSrc, INT8U SrcLen)
 
   TRACE();
 
-  if(Check_Set_ADDR_Key() EQ 0)
+  if(Check_Meter_Prog_Status() EQ 0)
   {
     return 0;
   }

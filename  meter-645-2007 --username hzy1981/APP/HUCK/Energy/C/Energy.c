@@ -1945,21 +1945,25 @@ void Set_Def_Energy_Data()
 
   Write_Storage_Data(_SDI_LAST_SETTLE_ENERGY_DI, &SDI, sizeof(SDI));
 //--------------------------------------送检专用，正式版需去掉-------------------
-  if(Check_Meter_Factory_Status())
+  if(PREPAID_EN > 0 && PREPAID_LOCAL_REMOTE EQ PREPAID_LOCAL) //本地费控表才预置电量电费
   {
-    Cur_Energy.Pos_Active[0] = 200000; //预置200kwh的电量
-    Cur_Energy.Pos_Active[1] = 200000;  
+    if(Check_Meter_Factory_Status())
+    {
+      Cur_Energy.Pos_Active[0] = 200000; //预置200kwh的电量
+      Cur_Energy.Pos_Active[1] = 200000;  
+      
+      Cur_Energy.Prepaid_Info.Left_Money = 100000; //置100元剩余金额
+      Cur_Energy.Prepaid_Info.Left_Energy = 100000; //置100度剩余电量
+      SET_STRUCT_SUM(Cur_Energy);
+     
+      #if USE_ENERGY_RAM_BAK EQ 1
+      mem_cpy((void *) &Cur_Energy_Bak, (void *) &Cur_Energy, sizeof(Cur_Energy), (void *) &Cur_Energy_Bak, sizeof(Cur_Energy_Bak));
+      SET_STRUCT_SUM(Cur_Energy_Bak);
+      #endif
     
-    Cur_Energy.Prepaid_Info.Left_Money = 100000; //置100元剩余金额
-    Cur_Energy.Prepaid_Info.Left_Energy = 100000; //置100度剩余电量
-    SET_STRUCT_SUM(Cur_Energy);
-   
-    #if USE_ENERGY_RAM_BAK EQ 1
-    mem_cpy((void *) &Cur_Energy_Bak, (void *) &Cur_Energy, sizeof(Cur_Energy), (void *) &Cur_Energy_Bak, sizeof(Cur_Energy_Bak));
-    SET_STRUCT_SUM(Cur_Energy_Bak);
-    #endif
-  
-    Save_Cur_Energy_PD_Data();
+      Save_Cur_Energy_PD_Data();
+      Save_Cur_Energy_Data();
+    }
   }
 //------------------------------------------------------------------  
 }

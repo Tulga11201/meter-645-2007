@@ -222,7 +222,7 @@ void Count_All_Loss_Proc(void)
    
    ResultData=0;
    OccurFlag=0;
-   JudgeIn=(FP32S)I_RATE_CONST[Get_SysCurr_Mode()]/20.0;   //5%In
+   JudgeIn=(FP32S)Get_In()/20.0;   //5%In
    for(i=0;i<3;i++)
    {
       Flag=Measu_RdAndCompData(REG_R_A_I+i,(INT8U *)(&RdData));
@@ -369,7 +369,7 @@ void Get_AllLoss_Curr(void)
    
    ResultData=0;
    OccurFlag=0;
-   JudgeIn=(FP32S)I_RATE_CONST[Get_SysCurr_Mode()]/20.0;   //5%In
+   JudgeIn=(FP32S)Get_In()/20.0;   //5%In
    for(i=0;i<3;i++)
    {
       Flag=Measu_RdAndCompData(REG_R_A_I+i,(INT8U *)(&RdData));

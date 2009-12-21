@@ -179,6 +179,7 @@ void Inter_ALL_LOSS(void) //正常模式下，此中断关闭，只有在sleep下中断打开
 {
 #if ALL_LOSS_TYPE EQ ALL_LOSS_HARD_SINGLE 
   EI();
+  STOP_ALL_LOSS;   //关闭全失压
   Clear_CPU_Dog();
   All_Loss_Var.Status.Occur=1;
   Count_All_Loss_Proc(); 

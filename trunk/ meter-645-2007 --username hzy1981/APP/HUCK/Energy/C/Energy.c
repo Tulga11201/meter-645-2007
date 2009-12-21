@@ -1949,11 +1949,10 @@ void Set_Def_Energy_Data()
   {
     if(Check_Meter_Factory_Status())
     {
-      Cur_Energy.Pos_Active[0] = 200000; //预置200kwh的电量
-      Cur_Energy.Pos_Active[1] = 200000;  
-      
-      Cur_Energy.Prepaid_Info.Left_Money = 100000; //置100元剩余金额
-      Cur_Energy.Prepaid_Info.Left_Energy = 100000; //置100度剩余电量
+      if(PREPAID_MODE EQ PREPAID_MONEY)
+        Cur_Energy.Prepaid_Info.Left_Money = 200000; //置200元剩余金额
+      else
+        Cur_Energy.Prepaid_Info.Left_Energy = 200000; //置200度剩余电量
       SET_STRUCT_SUM(Cur_Energy);
      
       #if USE_ENERGY_RAM_BAK EQ 1

@@ -239,7 +239,7 @@ EXT volatile INT32U Ms_Timer_Pub;
 EXT INT8U Check_BCD_Data(void* pBCD, INT16U Len);
 
 EXT INT8U GetBufSum_Pub(INT8U Src[], INT16U Src_Len);
-
+EXT INT32U Sum_4Bytes(INT8U Src[], INT16U SrcLen);
 EXT void Hex2Bcd(INT32U Data, INT8U* pDst, INT16U Len, INT8U* pDst_Start, INT16U DstLen);
 EXT void S_Hex2Bcd(INT32S Data, INT8U* pDst, INT16U Len, INT8U* pDst_Start, INT16U DstLen);
 EXT INT32U Bcd2Hex(INT8U Src[], INT8U SrcLen);

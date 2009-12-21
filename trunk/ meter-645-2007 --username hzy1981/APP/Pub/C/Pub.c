@@ -397,6 +397,18 @@ INT8U GetBufSum_Pub(INT8U Src[], INT16U Src_Len)
   return ResultSum;
 }
 
+INT32U Sum_4Bytes(INT8U Src[], INT16U SrcLen)
+{
+  INT32U CS = 0;
+  INT16U i;
+
+  for(i = 0; i < SrcLen; i ++)
+  {
+    CS += Src[i]; 
+  }
+  return CS;
+}
+
 OS_INT8U _Check_STRUCT_Sum(void *pSrc,OS_INT8U *pCS)
 {
   

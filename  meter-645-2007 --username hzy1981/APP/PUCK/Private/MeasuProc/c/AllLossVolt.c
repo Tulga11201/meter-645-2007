@@ -65,11 +65,12 @@ void Save_All_Loss_Data(void)
 
 #if ALL_LOSS_TYPE EQ ALL_LOSS_HARD_SINGLE    
     
-    if(Get_Time_Diff(PD_Time,&temp32) EQ 0)
-      temp32=60;
-    
+    Get_Time_Diff(PD_Time,&temp32);    
     All_Loss_Var.Status.Nums=1;
     All_Loss_Var.Status.Mins=temp32/60; 
+    if(All_Loss_Var.Status.Mins EQ 0)
+      All_Loss_Var.Status.Mins=1;
+      
 #endif
 
 

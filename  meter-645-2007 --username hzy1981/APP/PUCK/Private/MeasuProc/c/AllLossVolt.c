@@ -123,7 +123,7 @@ void Count_All_Loss_Proc(void)
   
 #endif
 
-#if ALL_LOSS_TYPE EQ ALL_LOSS_HARD_SINGLE
+#if ALL_LOSS_TYPE EQ ALL_LOSS_HARD_MULTI
   if(All_Loss_Var.Status.Occur)
   {
     All_Loss_Var.Status.Occur=0;

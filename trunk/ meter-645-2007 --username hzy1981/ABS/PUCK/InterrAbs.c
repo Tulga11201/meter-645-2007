@@ -413,11 +413,14 @@ void count_1ms(void)
     Sec_Timr_Temp.Var=0;
     Sec_Timer_Pub++;
   }
-  
-  Num.Var++;
-  if(Num.Var>=MS_HOOK_NUM)
+
+  if(JUDGE_POWER_OFF !=0)  
   {
-    ExtPort_xMs_Hook();
-    Num.Var=0;
-  }     
+    Num.Var++;
+    if(Num.Var>=MS_HOOK_NUM)
+    {
+      ExtPort_xMs_Hook();
+      Num.Var=0;
+    } 
+  }
 }

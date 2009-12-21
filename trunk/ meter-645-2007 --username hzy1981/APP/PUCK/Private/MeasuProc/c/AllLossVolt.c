@@ -137,11 +137,7 @@ void Count_All_Loss_Proc(void)
   }
 #endif
   if(All_Loss_Var.Status.Exist && All_Loss_Var.Status.start==0)  //全失压发生
-  {
-    //醒来了，根据唤醒源马上切换高速晶振-----------PUCK
-   Switch_Main_Osc(RUN_MODE);
-   Clear_CPU_Dog();
-   
+  {   
    
 #if ALL_LOSS_TYPE EQ ALL_LOSS_HARD_SINGLE
   All_Loss_Var.Status.Nums=0;  

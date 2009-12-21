@@ -215,34 +215,46 @@ void Count_All_Loss_Proc(void)
 void Count_All_Loss_Proc(void)
 {
 
-  INT8U i,Flag,Loss_Volt_Flag=0;
+  INT8U i,Flag,OccurFlag=0;
   INT32U RdData;
   FP32S  ResultData,Temp;    
 
    
    ResultData=0;
+   OccurFlag=0;
+   JudgeIn=(FP32S)I_RATE_CONST[Get_SysCurr_Mode()]/20.0;   //5%In
    for(i=0;i<3;i++)
    {
-      Flag=Measu_RdAndCompData(REG_R_A_I+i,(INT8U *)(&RdData));      
+      Flag=Measu_RdAndCompData(REG_R_A_I+i,(INT8U *)(&RdData));
+      Clear_CPU_Dog();
       if(!Flag || RdData>=0x00800000)
       {
         break ;
       }
       Temp=((FP32S)RdData*(FP32S)UNIT_A/8192)/(FP32S)I_RATE_CONST[Get_SysCurr_Mode()];
       ResultData+=Temp;
-      if(Temp/UNIT_A>=Get_In())
-      {
-        *(&(Measu_Sign_InstantData_PUCK.Curr.A)+i)=(INT32S)Temp;  //更新公有电流数据，用于显示
-        Loss_Volt_Flag=1;
-      }
+      *(&(Measu_Sign_InstantData_PUCK.Curr.A)+i)=(INT32S)Temp;  //更新公有电流数据，用于显示
+      if(Temp/UNIT_A >=JudgeIn)
+        OccurFlag=1;
    }
-   if(i>=3)
-      All_Loss_Var.Curr[All_Loss_Var.Status.Index]=(INT32U)(ResultData/3);   
-   else       
-      All_Loss_Var.Curr[All_Loss_Var.Status.Index]=(INT32U)(ResultData/(i+1));
+   if(OccurFlag)
+   {
+     if(i>=3)
+        All_Loss_Var.Curr[All_Loss_Var.Status.Index]=(INT32U)(ResultData/3);   
+     else       
+        All_Loss_Var.Curr[All_Loss_Var.Status.Index]=(INT32U)(ResultData/(i+1));
+   }
+   else  //不是全失压
+   {
+      All_Loss_Var.Status.Nums=0;    
+      All_Loss_Var.Status.Mins=0;
+      Clr_Event_Instant(ID_EVENT_POWER_OFF);  //掉电事件发生
+      Power_Status.Power=POWER_ON;          //掉电事件标志
+      SET_STRUCT_SUM(Power_Status);  
+   }
    
    //全失压发生
-   if(Loss_Volt_Flag)
+   if(OccurFlag)
    {         
       All_Loss_Var.Status.Index=0;
       All_Loss_Var.Status.start=1;   //有发生没有结束

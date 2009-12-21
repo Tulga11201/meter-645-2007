@@ -517,7 +517,8 @@ void Init_Inter_Abs(INT32U Mode)
         START_RTC_COUNTER; 
         START_MIN_ALARM;
         
-#if    ALL_LOSS_TYPE!=ALL_LOSS_SOFT 
+#if    ALL_LOSS_TYPE!=ALL_LOSS_SOFT
+        if((All_Loss_Var.Status.Nums==0)||(All_Loss_Var.Status.Mins==0))   //没有事件发生
         START_ALL_LOSS;       //打开全失压
 #else
         STOP_ALL_LOSS;       

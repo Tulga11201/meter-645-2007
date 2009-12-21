@@ -8729,7 +8729,7 @@ INT8U Set_Spec_Data_Proc(PROTO_DI PDI, INT8U Spec_Flag, INT8U* pSrc, INT8U SrcLe
     if(PREPAID_EN > 0 && PREPAID_LOCAL_REMOTE EQ PREPAID_LOCAL) //本地费控不能写表号
       return 0;
     
-    Read_Storage_Data(_SDI_PREPAID_PSW_KIND, Temp, Temp, sizeof(Temp));
+    Read_Storage_Data(_SDI_FAR_PASSWORD_STATE, Temp, Temp, sizeof(Temp));
     if(Temp[0] EQ 0) //公开密钥状态
     {
       return Write_Storage_Data(SDI_METER_ID, pSrc, SrcLen); 

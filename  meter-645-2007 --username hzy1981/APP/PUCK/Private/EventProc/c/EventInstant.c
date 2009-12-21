@@ -1111,6 +1111,7 @@ void Check_AB_Func_Key(void)
 功能：检测系统时钟故障
 
 *********************************************************************************/
+#ifdef ID_EVENT_OSC_ERR
 void Monitor_Meter_System_Osc(void)
 {
   if(SYS_NORMAL==Sys_Status.Status)
@@ -1135,7 +1136,7 @@ void Monitor_Meter_System_Osc(void)
   }
   Clr_Event_Instant(ID_EVENT_OSC_ERR);
 }
-
+#endif
 /********************************************************************************
 函数原型：
 功能：跳闸合闸事件执行,并LED指示当前的状态

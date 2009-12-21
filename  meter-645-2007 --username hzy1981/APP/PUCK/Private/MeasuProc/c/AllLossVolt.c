@@ -60,18 +60,8 @@ void Save_All_Loss_Data(void)
   
   temp=CHK_VAR_CS_PUCK(All_Loss_Var.Status);
   if(0==temp)
-    return;
-   
+    return;   
 
-#if ALL_LOSS_TYPE EQ ALL_LOSS_HARD_SINGLE    
-    
-    Get_Time_Diff(PD_Time,&temp32);    
-    All_Loss_Var.Status.Nums=1;
-    All_Loss_Var.Status.Mins=temp32/60; 
-    if(All_Loss_Var.Status.Mins EQ 0)
-      All_Loss_Var.Status.Mins=1;
-      
-#endif
 
 
   if((All_Loss_Var.Status.Nums==0)||(All_Loss_Var.Status.Mins==0))   //没有事件发生
@@ -80,6 +70,14 @@ void Save_All_Loss_Data(void)
     return ;
   }
    
+#if ALL_LOSS_TYPE EQ ALL_LOSS_HARD_SINGLE    
+    Get_Time_Diff(PD_Time,&temp32);    
+    All_Loss_Var.Status.Nums=1;
+    All_Loss_Var.Status.Mins=temp32/60; 
+    if(All_Loss_Var.Status.Mins EQ 0)
+      All_Loss_Var.Status.Mins=1;      
+#endif
+    
   if(All_Loss_Var.Status.start && All_Loss_Var.Status.Index<ALL_LOSS_NUM)  //有发生没有结束,且不越界
   {
     if((CHeck_Same_Byte((INT8U*)All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].EndTime,0x00,sizeof(All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].EndTime))))
@@ -143,6 +141,12 @@ void Count_All_Loss_Proc(void)
     //醒来了，根据唤醒源马上切换高速晶振-----------PUCK
    Switch_Main_Osc(RUN_MODE);
    Clear_CPU_Dog();
+   
+   
+#if ALL_LOSS_TYPE EQ ALL_LOSS_HARD_SINGLE
+  All_Loss_Var.Status.Nums=1;  
+  All_Loss_Var.Status.Mins=1;
+#endif 
 
    
     All_Loss_Var.Status.start=1;

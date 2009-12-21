@@ -336,7 +336,7 @@ void Get_AllLoss_Curr(void)
   MEASU_RST_1;
   
    //延时300ms
-   for(i=0;i<200;i++)
+   for(i=0;i<100;i++)
    {
      WAITFOR_DRV_CYCLE_TIMEOUT(CYCLE_NUM_IN_1MS);   
      Clear_CPU_Dog();
@@ -354,7 +354,7 @@ void Get_AllLoss_Curr(void)
    }   
    DisMeasuCal();
     //延时500ms
-   for(i=0;i<200;i++)
+   for(i=0;i<100;i++)
    {
      WAITFOR_DRV_CYCLE_TIMEOUT(CYCLE_NUM_IN_1MS);
       Clear_CPU_Dog();
@@ -363,7 +363,8 @@ void Get_AllLoss_Curr(void)
    ResultData=0;
    for(i=0;i<3;i++)
    {
-      Flag=Measu_RdAndCompData(REG_R_A_I+i,(INT8U *)(&RdData));      
+      Flag=Measu_RdAndCompData(REG_R_A_I+i,(INT8U *)(&RdData));
+      Clear_CPU_Dog();
       if(!Flag || RdData>=0x00800000)
       {
         break ;
@@ -377,6 +378,8 @@ void Get_AllLoss_Curr(void)
       All_Loss_Var.Curr[All_Loss_Var.Status.Index]=(INT32U)(ResultData/3);   
    else       
       All_Loss_Var.Curr[All_Loss_Var.Status.Index]=(INT32U)(ResultData/(i+1));
+   
+   Clear_CPU_Dog();
    
    P13_bit.no0=0;   //7022_CS
    P2_bit.no0=0;    //计量RST---------7022_RST   

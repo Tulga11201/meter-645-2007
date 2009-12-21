@@ -52,9 +52,27 @@ void Save_All_Loss_Data(void)
 {
   INT8U i,temp,num;
   
+#if ALL_LOSS_TYPE EQ ALL_LOSS_HARD_SINGLE
+  INT32U temp32;
+#endif
+
+  
+  
   temp=CHK_VAR_CS_PUCK(All_Loss_Var.Status);
   if(0==temp)
-    ASSERT_FAILED();  
+    ASSERT_FAILED();
+   
+
+#if ALL_LOSS_TYPE EQ ALL_LOSS_HARD_SINGLE 
+    
+    temp32=60;
+    Get_Time_Diff(PD_Time,&temp32);
+    All_Loss_Var.Status.Nums=1;
+    All_Loss_Var.Status.Mins=temp32/60; 
+#endif
+
+  
+   
   
   if((All_Loss_Var.Status.Nums==0)||(All_Loss_Var.Status.Mins==0))   //没有事件发生
   {
@@ -95,7 +113,7 @@ void Save_All_Loss_Data(void)
 入口：无
 出口：无
 ***********************************************************************/
-#ifdef ALL_LOSS_HARD_EN
+#if ALL_LOSS_TYPE != ALL_LOSS_SOFT 
 void Count_All_Loss_Proc(void)
 { 
   if(All_Loss_Var.Status.Occur)
@@ -186,7 +204,7 @@ void Count_All_Loss_Proc(void)
 入口：无
 出口：无
 ***********************************************************************/
-#ifndef ALL_LOSS_HARD_EN
+#if ALL_LOSS_TYPE EQ ALL_LOSS_SOFT 
 void Count_All_Loss_Proc(void)
 {
 
@@ -223,11 +241,11 @@ void Count_All_Loss_Proc(void)
       All_Loss_Var.Status.start=1;   //有发生没有结束
       All_Loss_Var.Status.Nums=1;
       All_Loss_Var.Status.Mins=1;
-      All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].StartTime[0]=MIN;      //CPU_RTC_Time.RTC.Min;
-      All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].StartTime[1]=HOUR;      //CPU_RTC_Time.RTC.Hour;
-      All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].StartTime[2]=DAY;      //CPU_RTC_Time.RTC.Date;
-      All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].StartTime[3]=MONTH;      //CPU_RTC_Time.RTC.Month;
-      All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].StartTime[4]=YEAR;      //CPU_RTC_Time.RTC.Year;    
+      All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].StartTime[0]=Cur_Time1.Min;      //CPU_RTC_Time.RTC.Min;
+      All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].StartTime[1]=Cur_Time1.Hour;      //CPU_RTC_Time.RTC.Hour;
+      All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].StartTime[2]=Cur_Time1.Date;      //CPU_RTC_Time.RTC.Date;
+      All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].StartTime[3]=Cur_Time1.Month;      //CPU_RTC_Time.RTC.Month;
+      All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].StartTime[4]=Cur_Time1.Year;      //CPU_RTC_Time.RTC.Year;    
       
       memset((INT8U*)All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].EndTime,0x00,\
             sizeof(All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].EndTime));     //死写，不用mem_set    
@@ -256,7 +274,7 @@ void Count_All_Loss_Proc(void)
 ***********************************************************************/
 void Get_Curr_Rate(void)
 {
-#ifdef  ALL_LOSS_HARD_EN
+#if ALL_LOSS_TYPE !=ALL_LOSS_SOFT 
   INT8U i,Rdflag,temp[3];
   
   for(i=0;i<3;i++)
@@ -275,7 +293,7 @@ void Get_Curr_Rate(void)
 入口：无
 出口：无
 ***********************************************************************/
-#ifdef  ALL_LOSS_HARD_EN
+#if ALL_LOSS_TYPE !=ALL_LOSS_SOFT 
 void Get_AllLoss_Curr(void)
 {
 

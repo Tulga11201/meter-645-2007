@@ -43,7 +43,7 @@ typedef struct
   INT32U Rate[3];
   INT8U Tail;
 }CURR_RATE;
-AllLossMeasu_EXT CURR_RATE Curr_Rate;
+NO_INIT AllLossMeasu_EXT CURR_RATE Curr_Rate;
 
 void Clr_All_Loss_Data(void);
 void Save_All_Loss_Data(void);

@@ -74,7 +74,7 @@ TriggerName=main
 LimitSize=0
 ByteLimit=50
 [DebugChecksum]
-Checksum=-1499150147
+Checksum=1304062973
 [InstructionProfiling]
 Enabled=_ 0
 [DriverProfiling]
@@ -91,9 +91,11 @@ TypeViolation=1
 UnspecRange=1
 ActionState=1
 [Breakpoints]
-Bp0=_ "STD_CODE" "{F:\A\ABS\PUCK\DeviceAbs.c}.650.9@1" 1 0 0 0 "" 0 ""
-Bp1=_ "STD_CODE" "{F:\A\ABS\PUCK\DeviceAbs.c}.652.9@1" 1 0 0 0 "" 0 ""
-Count=2
+Bp0=_ "STD_CODE" "{F:\A\ABS\PUCK\DeviceAbs.c}.648.9@1" 1 0 0 0 "" 0 ""
+Bp1=_ "STD_CODE" "{F:\A\ABS\PUCK\DeviceAbs.c}.650.9@1" 1 0 0 0 "" 0 ""
+Bp2=_ "STD_CODE" "{F:\A\ABS\PUCK\InterrAbs.c}.188.3@1" 1 0 0 0 "" 0 ""
+Bp3=_ "STD_CODE" "{F:\A\APP\Main\C\Main_Proc.c}.73.3@1" 1 0 0 0 "" 0 ""
+Count=4
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""

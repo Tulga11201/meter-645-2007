@@ -47,7 +47,7 @@
 #define NEG_ADD_POS_ACT_EN  0 //Mode_Word.Mode[0].Bit.Bit0 //反向有功是否计入正向
 
 #define POWER_CTRL_EN        0//Mode_Word.Mode[1].Bit.Bit3 //是否有负控功能
-#define RESUME_REMOTER_EN    Mode_Word.Mode[3].Bit.Bit4 //红外唤醒后遥控器功能是否打开,1打开，0关闭
+#define RESUME_REMOTER_EN    0//Mode_Word.Mode[3].Bit.Bit4 //红外唤醒后遥控器功能是否打开,1打开，0关闭
 
 #define YEAR_TABLE_SWITCH_EN 1//Mode_Word.Mode[2].Bit.Bit5 //是否允许两套年时区表切换?
 #define DATE_TABLE_SWITCH_EN 1//Mode_Word.Mode[2].Bit.Bit6 //是否允许两套日时段表切换?

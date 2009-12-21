@@ -249,7 +249,7 @@ void Count_All_Loss_Proc(void)
       All_Loss_Var.Status.Nums=0;    
       All_Loss_Var.Status.Mins=0;
       Clr_Event_Instant(ID_EVENT_POWER_OFF);  //掉电事件发生
-      Power_Status.Power=POWER_ON;          //掉电事件标志
+      //Power_Status.Power=POWER_ON;          //掉电事件标志
       SET_STRUCT_SUM(Power_Status);  
    }
    
@@ -304,7 +304,7 @@ void Get_Curr_Rate(void)
     {
       Curr_Rate.Rate[i]=(INT32U)(temp[2]*65536L+temp[1]*256L+temp[0]);      
     }    
-  }  
+  }
 #endif
 }
 /***********************************************************************
@@ -396,7 +396,7 @@ void Get_AllLoss_Curr(void)
       All_Loss_Var.Status.Nums=0;    
       All_Loss_Var.Status.Mins=0;
       Clr_Event_Instant(ID_EVENT_POWER_OFF);  //掉电事件发生
-      Power_Status.Power=POWER_ON;          //掉电事件标志
+      //Power_Status.Power=POWER_ON;          //掉电事件标志
       SET_STRUCT_SUM(Power_Status);  
    }
    

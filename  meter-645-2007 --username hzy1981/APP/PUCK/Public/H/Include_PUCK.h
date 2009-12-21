@@ -99,7 +99,7 @@ typedef struct
   INT8U T_FH;                      //由内卡读出
   INT8U CS[CS_BYTES];              //重要参数，SRAM加校验和
 }MEASU_SYSMODE;                   //MeasuIC系统模式字
-PUB_PUCK_EXT MEASU_SYSMODE MeasuSysMode;
+NO_INIT PUB_PUCK_EXT MEASU_SYSMODE MeasuSysMode;
 
 typedef struct
 {  

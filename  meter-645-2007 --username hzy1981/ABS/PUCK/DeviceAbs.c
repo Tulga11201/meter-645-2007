@@ -540,7 +540,7 @@ void Init_Inter_Abs(INT32U Mode)
         START_UP_KEY;
         START_IRDA_WAKE;
         
-#ifdef ALL_LOSS_HARD_EN        
+#if    ALL_LOSS_TYPE!=ALL_LOSS_SOFT 
         START_ALL_LOSS;       //´ò¿ªÈ«Ê§Ñ¹
 #else
         STOP_ALL_LOSS;       
@@ -664,7 +664,7 @@ void PwrCtrl_ExtDevice_HigSpeed(void)
      LARGE_TOOGLE_ON_CLR;
   }
 
-#ifndef ALL_LOSS_HARD_EN
+#if ALL_LOSS_TYPE EQ ALL_LOSS_SOFT 
   BAT_ON_7022;
 #endif
   

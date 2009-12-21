@@ -100,6 +100,10 @@
 
 
 
+#define ALL_LOSS_SOFT              0
+#define ALL_LOSS_HARD_SINGLE        1
+#define ALL_LOSS_HARD_MULTI        2
+
 
 //按钮配置
 #undef  LEFT_KEY_EN                       //宏打开，使能左按钮
@@ -112,7 +116,7 @@
 #define FM_ROM_FM16_EN                    //打开 FM16功能
 #define DRV_HARD_DS3231    0              //1:3231硬件I2C开起;0:硬件I2C关闭 
 #define EXT_RTC_TYPE       DRV_SIMU_DS3231
-#undef ALL_LOSS_HARD_EN                  //宏打开，打开 硬件的全失压方法。关闭，通过软件全失压
+#define ALL_LOSS_TYPE      ALL_LOSS_HARD_SINGLE       //宏打开，打开 硬件的全失压方法。关闭，通过软件全失压
 
 
 //多合一端子排配置：秒脉冲、时段、需量、滑差

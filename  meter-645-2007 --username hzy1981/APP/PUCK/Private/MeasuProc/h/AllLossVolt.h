@@ -21,11 +21,12 @@
 #define MEASU_SIG_DIR       PM2_bit.no1
 #define MEASU_DIN_DIR       PM2_bit.no3
 
-#ifdef ALL_LOSS_HARD_EN
+
+#if ALL_LOSS_TYPE EQ ALL_LOSS_HARD_MULTI 
   #define ALL_LOSS_NUM 10   //记录全失压最大次数
-#else  
+#else
   #define ALL_LOSS_NUM 1   //记录全失压最大次数
-#endif  
+#endif
 
 typedef struct
 {

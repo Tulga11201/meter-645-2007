@@ -430,7 +430,15 @@
 #define TAU_TDR02_VALUE	0x91
 //0x20e/2
 /* 16-bit timer data register 05 (TDR05) */
-#define TAU_TDR05_VALUE	   0x545  //0x0865
+#if ALL_LOSS_TYPE EQ ALL_LOSS_HARD_SINGLE 
+#define TAU_TDR05_VALUE	   0x0D7 //0x545  //0x0865
+#endif
+
+
+#if ALL_LOSS_TYPE EQ ALL_LOSS_HARD_MULTI 
+#define TAU_TDR05_VALUE	   0x545 //0x545  //0x0865
+#endif
+
 
 /* 16-bit timer data register 06 (TDR06) */
 #define TAU_TDR06_VALUE	0x7

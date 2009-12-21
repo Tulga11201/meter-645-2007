@@ -738,11 +738,11 @@ unsigned char Password_Card(void)//密钥下装卡/恢复卡
 	if( PassWord_Kind == GWFAR_MOD_PASSWORD_CARD )//如果为密钥下装卡
 	{       //这样写没什么意义，因为下装后，再下装时，身份验证通不过
 		if( File_Point.Password_Info[3] <= Esam_Password_Info[3] )//密钥下装卡中  密钥版本 
-			{
+		{
                           ASSERT_FAILED();
 			  Card_Error_State.CardErrorState.Password_State_Err=1;
 			  return ERR;
-			}
+		}
 	}
 	else if(  PassWord_Kind== GWFAR_RES_PASSWORD_CARD )
         {
@@ -761,18 +761,18 @@ unsigned char Password_Card(void)//密钥下装卡/恢复卡
           //"//esam密钥状态更新// " );
          //esam密钥状态更新//
 	if(Write(0,Update_Binary,0x80+ESAM_PASSWORD_INF_FILE,0,4,(unsigned char *) &Cpu_Password_Info[0])!=OK)
-		{
+	{
 		return ERR;
-		}
+	}
          // " 计数器减1//");
         //"计数器减1//
 	Temp--;
 	My_memcpyRev(Card_WR_Buff,(unsigned char *)&Temp,  4);
 	CPU_ESAM_CARD_Control(CPU);
 	if(Write(0,Update_Record,0x01,0x14,0x04,Card_WR_Buff)!=OK)
-		{
+	{
 		return ERR;
-		}
+	}
         //// 保存用的是 密钥恢复卡，还是密钥下装卡 ");
         // 保存用的是 密钥恢复卡，还是密钥下装卡//该变量只有在这里修改，是用来做编程记录的
 	Pre_Payment_Para.PassWord_Kind=PassWord_Kind;////密钥类型,密钥下装卡， 还是密钥恢复卡

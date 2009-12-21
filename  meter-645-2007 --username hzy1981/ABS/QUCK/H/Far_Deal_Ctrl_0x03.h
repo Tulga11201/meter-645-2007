@@ -36,6 +36,7 @@ unsigned char Far_PassWord_Updata(unsigned char * Data_Point,unsigned char PassW
 unsigned char Far_Deal_070202FF(unsigned char * Data_Point );
 unsigned char Far_Deal_070203FF(unsigned char * Data_Point );
 unsigned char Far_Deal_070201FF(unsigned char * Data_Point );//D
+unsigned char Far_Deal_070204FF(unsigned char * Data_Point );//D
 
 unsigned char Far_Read_Esam(unsigned char cla,unsigned char ins,unsigned char t_p1,
               unsigned char t_p2,unsigned char lc,unsigned char *address);

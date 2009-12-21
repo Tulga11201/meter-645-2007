@@ -114,6 +114,7 @@ INT8U Esam_Remote_Auth(INT8U *pSrc, INT8U SrcLen, INT8U *pDst, INT8U *pLen, INT8
 	0xFF,0x01,0x02,0x07,48,Far_Deal_070201FF,//参数密钥更新
 	0xFF,0x02,0x02,0x07,48,Far_Deal_070202FF,//控制命令密钥更新 
 	0xFF,0x03,0x02,0x07,48,Far_Deal_070203FF,//远程身份认证密钥更新
+        0xFF,0x04,0x02,0x07,48,Far_Deal_070204FF,//远程身份认证密钥更新
 	};
 /////////0x33类型函数中转站,  
 unsigned char Far_Deal_Order_0x03(unsigned char * Data_Point ,unsigned char Source_Length)
@@ -743,14 +744,12 @@ unsigned char Far_PassWord_Updata(unsigned char * Data_Point,unsigned char PassW
 {
 	struct Far_Deal_070201FF_format   Far_Deal_070201FF_format;
 	unsigned char PassWord_Inf[4];//本地的esam的远程密钥信息文件
-
+        
 	mem_cpy(&Far_Deal_070201FF_format,Data_Point,sizeof(Far_Deal_070201FF_format),&Far_Deal_070201FF_format,sizeof(Far_Deal_070201FF_format)); 
 	if(OK != Get_File_Data(ESAM,ESAM_FAR_PASSWORD_INF_FILE,0,4,&PassWord_Inf[0])){
             ASSERT_FAILED();
             return ERR;
         }
-         
-   
 	Reverse_data(Far_Deal_070201FF_format.PassWord_Inf,8);
         //假如要更新的密钥不为 控制密钥，  主站传过来的数据密钥信息前4个字节不为0 
 	if( PassWord_ID!=2 ||  ( Far_Deal_070201FF_format.PassWord_Inf[0] !=0 || Far_Deal_070201FF_format.PassWord_Inf[1] !=0 ||
@@ -770,11 +769,24 @@ unsigned char Far_PassWord_Updata(unsigned char * Data_Point,unsigned char PassW
 	
 	CPU_ESAM_CARD_Control(ESAM);
 	Reverse_data((unsigned char *)&(Far_Deal_070201FF_format.PassWord[0]),32);
-	if( Write(0x84,Write_Key,0x01,0xFF,0x20,(Far_Deal_070201FF_format.PassWord))!=OK)
-		{
+        if(PassWord_ID EQ 4)
+        {
+	  if( Write(0x84,Write_Key,0x01,0x00,0x20,(Far_Deal_070201FF_format.PassWord))!=OK)
+	  {
                 ASSERT_FAILED();  
 		return ERR;
-		}
+	  }           
+        }
+        else
+        {
+	  if( Write(0x84,Write_Key,0x01,0xFF,0x20,(Far_Deal_070201FF_format.PassWord))!=OK)
+	  {
+                ASSERT_FAILED();  
+		return ERR;
+	  }        
+        
+        }
+
 	if( Far_Write_Esam(0x04,Update_Binary,0x80+ESAM_FAR_PASSWORD_INF_FILE,0x00,0x04,(Far_Deal_070201FF_format.PassWord_Inf),0xFF)!=OK)  
         {      
                 ASSERT_FAILED();
@@ -813,7 +825,19 @@ unsigned char Far_Deal_070203FF(unsigned char * Data_Point )
 	{
 	return Far_PassWord_Updata(Data_Point,3);
 	}
+/*
+   远程主控密钥更新；
+   支持070204ff
+   Data_Point：入： mac +   4字节密钥  +32字节密文
+               出：无
+   Far_Deal_070204FF
 
+*/
+unsigned char Far_Deal_070204FF(unsigned char * Data_Point )
+{
+   return Far_PassWord_Updata(Data_Point,4);
+
+}
 //控制命令解密， 645帧的L字段 固定长度为 28 ， 解密后的实际 数据长度为8， 这部分全部由黄工管，我只管解密
 INT8U Esam_Decrypt(INT8U *pSrc, INT16U SrcLen)
 {

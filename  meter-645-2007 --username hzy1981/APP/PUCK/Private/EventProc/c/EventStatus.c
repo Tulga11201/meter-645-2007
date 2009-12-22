@@ -85,7 +85,7 @@ INT8U Get_Time_Diff(S_Event_Time Temp_PD_Time,INT32U *Diff)
   
   if(CurTime>=LastTime)
   {
-    *Diff=(CurTime-LastTime)/60;  //得到秒数
+    *Diff=(CurTime-LastTime)/60;  //得到分钟
     return 1;
   }
   

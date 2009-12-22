@@ -54,11 +54,11 @@ SeqData24=0,0,0,0,0,0
 TraceSettings=64,0,0,0,0,0,8192
 TimerSettings=0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 CoverSettings=1048192,1048207,0
-Version=1,xxx.txt
+Version=1,78k0rtrace.txt
 LastDevFile=DF1166A0.78K
 EmulType=320
 EventLimits=0, 1, 1, 2
-LastSetupFailed=1
+LastSetupFailed=0
 AutoEventEntries=0
 BreakToggle=0
 [Profiling]
@@ -74,7 +74,7 @@ TriggerName=main
 LimitSize=0
 ByteLimit=50
 [DebugChecksum]
-Checksum=-219584984
+Checksum=1145108815
 [InstructionProfiling]
 Enabled=_ 0
 [DriverProfiling]
@@ -90,19 +90,21 @@ UseAuto=0
 TypeViolation=1
 UnspecRange=1
 ActionState=1
-[TermIOLog]
-LoggingEnabled=_ 0
-LogFile=_ ""
 [Breakpoints]
 Bp0=_ "STD_CODE" "{F:\A\APP\Main\C\Main_Proc.c}.73.3@1" 1 0 0 0 "" 0 ""
 Bp1=_ "STD_CODE" "{F:\A\APP\HUCK\Protocol\C\Data_Trans.c}.8719.7@1" 1 0 0 0 "" 0 ""
 Bp2=_ "STD_CODE" "{F:\A\APP\HUCK\Protocol\C\Data_Trans.c}.8692.3@1" 1 0 0 0 "" 0 ""
-Bp3=_ "STD_CODE" "{F:\A\APP\TASK\C\TaskProc.c}.116.3@1" 1 0 0 0 "" 0 ""
-Count=4
+Bp3=_ "STD_CODE" "{F:\A\APP\PUCK\Private\MeasuProc\c\MeasuProc.c}.2693.3@1" 1 0 0 0 "" 0 ""
+Bp4=_ "STD_CODE" "{F:\A\APP\TASK\C\TaskProc.c}.119.3@1" 1 0 0 0 "" 0 ""
+Bp5=_ "STD_CODE" "{F:\A\APP\TASK\C\TaskProc.c}.120.3@1" 1 0 0 0 "" 0 ""
+Count=6
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
 Category=_ 0
+[TermIOLog]
+LoggingEnabled=_ 0
+LogFile=_ ""
 [TraceHelper]
 Enabled=0
 ShowSource=1

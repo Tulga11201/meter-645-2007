@@ -185,7 +185,7 @@ void Inter_ALL_LOSS(void) //正常模式下，此中断关闭，只有在sleep下中断打开
   
   //醒来了，根据唤醒源马上切换高速晶振-----------PUCK
   Switch_Main_Osc(RUN_MODE);
-  Count_All_Loss_Proc();   
+  Count_All_Loss_Proc();
   Clear_CPU_Dog();
   Switch_Main_Osc(HALT_MODE);
   
@@ -423,7 +423,7 @@ void count_1ms(void)
     Sec_Timer_Pub++;
   }
 
-  if(JUDGE_POWER_OFF !=0)  
+  if(JUDGE_POWER_OFF EQ 0)  
   {
     Num.Var++;
     if(Num.Var>=MS_HOOK_NUM)

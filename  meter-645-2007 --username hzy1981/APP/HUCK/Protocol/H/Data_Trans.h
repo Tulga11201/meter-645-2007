@@ -207,7 +207,7 @@ EXT volatile S_Para_Modify Para_Modify;
 #define SPEC_LOAD     0x48 //负荷曲线
 #define SPEC_RATE_INFO 0x49 //费率信息
 #define SPEC_PSW       0x4A //密码信息
-#define SPEC_ADJ      0x4B //校表
+#define SPEC_RD_ROM    0x4B //读内卡参数
 //#define SPEC_MODULE     0x0E //模块通信
 //#define SPEC_SET_ENG  0x0F //设置初始电量
 #define SPEC_PREPAID_ENERGY 0x4C //预付费相关电量 
@@ -217,9 +217,9 @@ EXT volatile S_Para_Modify Para_Modify;
 //写特殊数据
 #define SPEC_METER_ID   0x81 //设置表号
 #define SPEC_SET_ENG  0x82 //设置初始电量
-#define SPEC_ADJ_CLR  0x83 //校表清0
-#define SPEC_MODULE   0x84 //模块通信
-
+//#define SPEC_ADJ_CLR  0x83 //校表清0
+#define SPEC_MODULE   0x83 //模块通信
+#define SPEC_ADJ      0x84 //校表
 //读和写都特殊
 #define SPEC_TIME     0xC1 //时间和日期
 

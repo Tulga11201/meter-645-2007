@@ -6521,7 +6521,7 @@ CONST S_P_Data_Info P_Data_Info[] =
   INIT(Dst_Start, 0),
   INIT(Dst_Len, 1),
   INIT(Num, 0x00),
-  INIT(Spec_Flag, SPEC_ADJ_CLR)},  
+  INIT(Spec_Flag, SPEC_ADJ)},  
   
   //---读取内卡数据
   {INIT(PDI, _PDI_RD_ROM),
@@ -6535,7 +6535,7 @@ CONST S_P_Data_Info P_Data_Info[] =
   INIT(Dst_Start, 0),
   INIT(Dst_Len, 1),
   INIT(Num, 0x00),
-  INIT(Spec_Flag, SPEC_ADJ)}, 
+  INIT(Spec_Flag, SPEC_RD_ROM)}, 
 
   //---校表瞬时数据打大包
   {INIT(PDI, _PDI_ADJ_INSTANT_DATA),
@@ -8007,7 +8007,7 @@ INT16U Get_DLT645_Spec_Single_Data(PROTO_DI PDI, INT8U Spec_Flag, void* pPara, I
   {
     return Get_Module_Proto_Data(PDI, pDst, pDst_Start, DstLen); 
   }
-  else if(Spec_Flag EQ SPEC_ADJ)
+  else if(Spec_Flag EQ SPEC_RD_ROM)
   {
     return Get_Proto_Rom_Data(PDI, pPara, ParaLen, pDst, pDst_Start, DstLen);
   }
@@ -8701,7 +8701,7 @@ INT8U Set_Spec_Data_Proc(PROTO_DI PDI, INT8U Spec_Flag, INT8U* pSrc, INT8U SrcLe
     return 0;
 #endif    
   }
-  else if(Spec_Flag EQ SPEC_ADJ_CLR) //校表清零
+  else if(Spec_Flag EQ SPEC_ADJ) //校表清零以及设置瞬时数据
   {
     if(PDI EQ _PDI_ADJ_METER_CLR)
     {
@@ -8718,7 +8718,7 @@ INT8U Set_Spec_Data_Proc(PROTO_DI PDI, INT8U Spec_Flag, INT8U* pSrc, INT8U SrcLe
     {
       return Set_Cal_Com_Data(pSrc, SrcLen);
     }
-    return 1; 
+    return 0; 
   }
   else if(Spec_Flag EQ SPEC_SET_ENG)
   {
@@ -9041,7 +9041,7 @@ INT16U Rcv_DLT645_Data_Proc(INT8U Ch, INT8U* pFrame, INT8U FrameLen, INT8U* pDst
         {
           Esam_Auth_Ok = 0;
           //年时区表和日时段表也可以用02级密码设置--送检要求!!
-          //if(Check_Year_Date_Table_Data(PDI))
+          if(Check_Year_Date_Table_Data(PDI))
           {
             if(pSrc[4] EQ 0x02)
               Esam_Auth_Flag = 0;  

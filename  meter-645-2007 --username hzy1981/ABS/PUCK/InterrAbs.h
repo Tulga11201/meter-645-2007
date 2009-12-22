@@ -93,8 +93,8 @@ typedef struct
 
 typedef struct
 {
-  INT8U  StartTime[5];    //起始时间，全0表示无起始,低--->高：分、时、日、月、年
-  INT8U  EndTime[5];      //结束时间，全0表示无结束，同上
+  INT8U  StartTime[6];    //起始时间，全0表示无起始,低--->高：秒、分、时、日、月、年
+  INT8U  EndTime[6];      //结束时间，全0表示无结束，同上
   INT8U cS;
 }RECORD_TIME;
 

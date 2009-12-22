@@ -82,11 +82,12 @@ void Save_All_Loss_Data(void)
   {
     if((CHeck_Same_Byte((INT8U*)All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].EndTime,0x00,sizeof(All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].EndTime))))
     {
-      All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].EndTime[0]=Cur_Time1.Min;
-      All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].EndTime[1]=Cur_Time1.Hour;
-      All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].EndTime[2]=Cur_Time1.Date;
-      All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].EndTime[3]=Cur_Time1.Month;
-      All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].EndTime[4]=Cur_Time1.Year;  //取系统时钟
+      All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].EndTime[0]=Cur_Time1.Sec;
+      All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].EndTime[1]=Cur_Time1.Min;
+      All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].EndTime[2]=Cur_Time1.Hour;
+      All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].EndTime[3]=Cur_Time1.Date;
+      All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].EndTime[4]=Cur_Time1.Month;
+      All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].EndTime[5]=Cur_Time1.Year;  //取系统时钟
       SET_VAR_CS_PUCK(All_Loss_Var.RecordTime[All_Loss_Var.Status.Index]);
     }
   }
@@ -159,11 +160,12 @@ void Count_All_Loss_Proc(void)
       All_Loss_Var.Status.Index=0;
     */
     All_Loss_Var.Status.Nums++;
-    All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].StartTime[0]=MIN;      //CPU_RTC_Time.RTC.Min;
-    All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].StartTime[1]=HOUR;      //CPU_RTC_Time.RTC.Hour;
-    All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].StartTime[2]=DAY;      //CPU_RTC_Time.RTC.Date;
-    All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].StartTime[3]=MONTH;      //CPU_RTC_Time.RTC.Month;
-    All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].StartTime[4]=YEAR;      //CPU_RTC_Time.RTC.Year;
+    All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].StartTime[0]=SEC;      //CPU_RTC_Time.RTC.Min;
+    All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].StartTime[1]=MIN;      //CPU_RTC_Time.RTC.Min;
+    All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].StartTime[2]=HOUR;      //CPU_RTC_Time.RTC.Hour;
+    All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].StartTime[3]=DAY;      //CPU_RTC_Time.RTC.Date;
+    All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].StartTime[4]=MONTH;      //CPU_RTC_Time.RTC.Month;
+    All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].StartTime[5]=YEAR;      //CPU_RTC_Time.RTC.Year;
     
     Get_AllLoss_Curr();
     
@@ -186,11 +188,13 @@ void Count_All_Loss_Proc(void)
   {
     All_Loss_Var.Status.Mins++;
     All_Loss_Var.Status.start=0;
-    All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].EndTime[0]=MIN;      //CPU_RTC_Time.RTC.Min;
-    All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].EndTime[1]=HOUR;     // CPU_RTC_Time.RTC.Hour;
-    All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].EndTime[2]=DAY;      //CPU_RTC_Time.RTC.Date;
-    All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].EndTime[3]=MONTH;    //  CPU_RTC_Time.RTC.Month;
-    All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].EndTime[4]=YEAR;     // CPU_RTC_Time.RTC.Year;
+    
+    All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].EndTime[0]=SEC;      //CPU_RTC_Time.RTC.Min;
+    All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].EndTime[1]=MIN;      //CPU_RTC_Time.RTC.Min;
+    All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].EndTime[2]=HOUR;     // CPU_RTC_Time.RTC.Hour;
+    All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].EndTime[3]=DAY;      //CPU_RTC_Time.RTC.Date;
+    All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].EndTime[4]=MONTH;    //  CPU_RTC_Time.RTC.Month;
+    All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].EndTime[5]=YEAR;     // CPU_RTC_Time.RTC.Year;
     
     Measu_Sign_InstantData_PUCK.Curr.A=0;
     Measu_Sign_InstantData_PUCK.Curr.B=0;
@@ -260,11 +264,13 @@ void Count_All_Loss_Proc(void)
       All_Loss_Var.Status.start=1;   //有发生没有结束
       All_Loss_Var.Status.Nums=1;
       All_Loss_Var.Status.Mins=1;
-      All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].StartTime[0]=Cur_Time1.Min;      //CPU_RTC_Time.RTC.Min;
-      All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].StartTime[1]=Cur_Time1.Hour;      //CPU_RTC_Time.RTC.Hour;
-      All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].StartTime[2]=Cur_Time1.Date;      //CPU_RTC_Time.RTC.Date;
-      All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].StartTime[3]=Cur_Time1.Month;      //CPU_RTC_Time.RTC.Month;
-      All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].StartTime[4]=Cur_Time1.Year;      //CPU_RTC_Time.RTC.Year;    
+      
+      All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].StartTime[0]=Cur_Time1.Sec;      //CPU_RTC_Time.RTC.Min;
+      All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].StartTime[1]=Cur_Time1.Min;      //CPU_RTC_Time.RTC.Min;
+      All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].StartTime[2]=Cur_Time1.Hour;      //CPU_RTC_Time.RTC.Hour;
+      All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].StartTime[3]=Cur_Time1.Date;      //CPU_RTC_Time.RTC.Date;
+      All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].StartTime[4]=Cur_Time1.Month;      //CPU_RTC_Time.RTC.Month;
+      All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].StartTime[5]=Cur_Time1.Year;      //CPU_RTC_Time.RTC.Year;    
       
       memset((INT8U*)All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].EndTime,0x00,\
             sizeof(All_Loss_Var.RecordTime[All_Loss_Var.Status.Index].EndTime));     //死写，不用mem_set    

@@ -114,7 +114,7 @@ INT8U Esam_Remote_Auth(INT8U *pSrc, INT8U SrcLen, INT8U *pDst, INT8U *pLen, INT8
 	0xFF,0x01,0x02,0x07,48,Far_Deal_070201FF,//参数密钥更新
 	0xFF,0x02,0x02,0x07,48,Far_Deal_070202FF,//控制命令密钥更新 
 	0xFF,0x03,0x02,0x07,48,Far_Deal_070203FF,//远程身份认证密钥更新
-        0xFF,0x04,0x02,0x07,48,Far_Deal_070204FF,//远程身份认证密钥更新
+        0xFF,0x04,0x02,0x07,48,Far_Deal_070204FF,//主控密钥更新
 	};
 /////////0x33类型函数中转站,  
 unsigned char Far_Deal_Order_0x03(unsigned char * Data_Point ,unsigned char Source_Length)
@@ -741,12 +741,14 @@ struct Far_Deal_070201FF_format
 	};
 #define LENGTH_FAR_DEAL_070201FF_FORMAT      sizeof(struct Far_Deal_070201FF_format)
 unsigned char Far_PassWord_Updata(unsigned char * Data_Point,unsigned char PassWord_ID )
-{
+{       
+        INT8U  Temp;
 	struct Far_Deal_070201FF_format   Far_Deal_070201FF_format;
 	unsigned char PassWord_Inf[4];//本地的esam的远程密钥信息文件
         
 	mem_cpy(&Far_Deal_070201FF_format,Data_Point,sizeof(Far_Deal_070201FF_format),&Far_Deal_070201FF_format,sizeof(Far_Deal_070201FF_format)); 
-	if(OK != Get_File_Data(ESAM,ESAM_FAR_PASSWORD_INF_FILE,0,4,&PassWord_Inf[0])){
+	if(OK != Get_File_Data(ESAM,ESAM_FAR_PASSWORD_INF_FILE,0,4,&PassWord_Inf[0]))
+        {
             ASSERT_FAILED();
             return ERR;
         }
@@ -763,7 +765,6 @@ unsigned char Far_PassWord_Updata(unsigned char * Data_Point,unsigned char PassW
                   ASSERT_FAILED();
                   return ERR;
                 }
-			
 	}
 	Reverse_data(Far_Deal_070201FF_format.PassWord_Inf,8);
 	
@@ -792,6 +793,12 @@ unsigned char Far_PassWord_Updata(unsigned char * Data_Point,unsigned char PassW
                 ASSERT_FAILED();
 		return ERR;
 	}
+        Reverse_data(Far_Deal_070201FF_format.PassWord_Inf,8);
+        Read_Storage_Data(_SDI_FAR_PASSWORD_STATE ,&Temp,&Temp, 1);
+        if( Far_Deal_070201FF_format.PassWord_Inf[0] != Temp )
+        {
+            Write_Storage_Data(_SDI_FAR_PASSWORD_STATE ,&Far_Deal_070201FF_format.PassWord_Inf[0],1);
+        }
 	FarPrePayment.Far_SendLen=0;
 	return OK;
 }

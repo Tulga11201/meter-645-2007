@@ -180,7 +180,8 @@ INT8U ICcardProcess(){
 
 /*"IC卡修改参数编程记录"*/ //会把离散因子后4位，参数更新标志位， 卡类型（购电卡，参会预置卡），密钥状态（公开，正式）
 // 返回类型没用， 不会判断
-void CardProgrammeEvent(void){
+void CardProgrammeEvent(void)
+{
          union Long_To_Char  progman,progdata;
 	INT32U Temp;
 	if( Para_Updata_Flag ==0 )
@@ -598,8 +599,6 @@ unsigned char Set_In_Card(void){///出厂预制卡"
 								18,
 								Card_WR_Buff+240) !=OK )
                 {
-                
-                   //  Esam_File_Updata 7 "  );
                    return ERR;
                 }
 			

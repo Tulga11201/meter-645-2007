@@ -423,7 +423,7 @@ void count_1ms(void)
     Sec_Timer_Pub++;
   }
 
-  if(JUDGE_POWER_OFF EQ 0)  
+  if(JUDGE_POWER_OFF EQ 0)  //无掉电情况下，才开启端口功能
   {
     Num.Var++;
     if(Num.Var>=MS_HOOK_NUM)

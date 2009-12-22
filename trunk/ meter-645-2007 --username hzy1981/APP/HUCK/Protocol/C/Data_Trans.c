@@ -8564,6 +8564,7 @@ void Save_Op_ID(INT8U *pSrc)
 }
 
 //设置数据处理
+//*pAck_Flag表示是否已经给过应答，1表示在函数内部已经给过应答，0表示没有给应答
 INT8U Set_Data_Proc(INT8U Ch, INT8U* pSrc, INT8U SrcLen, INT8U *pAck_Flag)
 {
   INT8U Re;
@@ -8961,7 +8962,7 @@ void Send_Set_Data_Ack_Frame(INT8U Ch)
   INT8U Temp[15];
   INT16U Len;
   
-  Len = DLT645_Data_Pack(Ch, (INT8U) (0x04 | 0x80), Temp, 0, Temp, Temp, sizeof(Temp)); 
+  Len = DLT645_Data_Pack(Ch, (INT8U) (0x04 | 0x90), Temp, 0, Temp, Temp, sizeof(Temp)); 
   Send_HostData_Public_Puck(Ch,(INT8U *)Temp,Len);  
 }
 
@@ -9071,7 +9072,7 @@ INT16U Rcv_DLT645_Data_Proc(INT8U Ch, INT8U* pFrame, INT8U FrameLen, INT8U* pDst
   
   if(Check_Meter_Factory_Status()) //工厂状态下不需要经过Esam验证也可以设参数
   {
-    if(Esam_Auth_Flag = 1 && pSrc[4] < 0x0A)  
+    if(Esam_Auth_Flag EQ 1 && pSrc[4] < 0x0A)  
       Esam_Auth_Flag = 0;  
   }
   

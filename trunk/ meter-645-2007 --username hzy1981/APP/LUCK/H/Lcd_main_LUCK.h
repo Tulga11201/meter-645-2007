@@ -72,7 +72,7 @@ LCD_MAIN_EXT S_Buf_BIT16_LEN4 Pub_Bit16_Len4_PUCK;
 #ifdef LCD_MAIN_C
 LCD_MAIN_EXT S_Int32U Sleep_Sec_Countr={CHK_BYTE,0x00,CHK_BYTE};   //循显下，计显示轮次；键显下，计时间
 LCD_MAIN_EXT S_Int8U LCD_Loop_Num={CHK_BYTE,0x00,CHK_BYTE};
-LCD_MAIN_EXT S_Int32U LCD_Loop_Ms10Timr={CHK_BYTE,0xFFFFFFFF,CHK_BYTE};
+LCD_MAIN_EXT S_Int32U LCD_Loop_Ms10Timr={CHK_BYTE,0xFFFF0000,CHK_BYTE};
 #endif
 LCD_MAIN_EXT S_Int32U Sleep_Sec_Countr;
 LCD_MAIN_EXT S_Int8U LCD_Loop_Num;
@@ -86,10 +86,10 @@ LCD_MAIN_EXT INT32U  LCDLightSecTimer;
 
 #define START_LIGHT_ON          {LCDLightSecTimer=Sec_Timer_Pub;}
 #define CLR_LIGHT_ON            {LCDLightSecTimer=Sec_Timer_Pub-1;}
-#define TURN_OFF_LIGHT          {LCDLightSecTimer=Sec_Timer_Pub-0xFFFF;}
+#define TURN_OFF_LIGHT          {LCDLightSecTimer=Sec_Timer_Pub-0xFF00;}
 #define LIGHT_SEC_TIMER_DIFF    (Sec_Timer_Pub-LCDLightSecTimer)
 
-#define START_LOOP_DIS       {LCDLoopSecTimer=0xFFFFFFFF;}
+#define START_LOOP_DIS       {LCDLoopSecTimer=0xFFFF0000;}
 #define RESET_LOOP_DIS       {LCDLoopSecTimer=Sec_Timer_Pub;}
 #define LOOP_SEC_TIMER_DIFF  (Sec_Timer_Pub-LCDLoopSecTimer)
 

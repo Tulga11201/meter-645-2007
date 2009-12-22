@@ -129,10 +129,10 @@ void All_Loss_Vol_Data_Proc(INT8U Start_Time[],INT8U End_Time[], INT32U Curr)
             End_Time[4],End_Time[3],End_Time[2],End_Time[1],End_Time[0], Curr);
     
     All_Loss_Vol_Time.Curr = Curr; //电流
-    All_Loss_Vol_Time.Start_Time[0] = 0; //全失压发生的s
-    All_Loss_Vol_Time.End_Time[0] = 0;
-    mem_cpy((INT8U *)All_Loss_Vol_Time.Start_Time + 1, Start_Time, 5, (void *)All_Loss_Vol_Time.Start_Time,sizeof(All_Loss_Vol_Time.Start_Time));
-    mem_cpy((INT8U *)All_Loss_Vol_Time.End_Time + 1, End_Time, 5, (void *)All_Loss_Vol_Time.End_Time,sizeof(All_Loss_Vol_Time.End_Time));
+    //All_Loss_Vol_Time.Start_Time[0] = 0; //全失压发生的s
+    //All_Loss_Vol_Time.End_Time[0] = 0;
+    mem_cpy((INT8U *)All_Loss_Vol_Time.Start_Time, Start_Time, 6, (void *)All_Loss_Vol_Time.Start_Time,sizeof(All_Loss_Vol_Time.Start_Time));
+    mem_cpy((INT8U *)All_Loss_Vol_Time.End_Time, End_Time, 6, (void *)All_Loss_Vol_Time.End_Time,sizeof(All_Loss_Vol_Time.End_Time));
 
     SET_STRUCT_SUM(All_Loss_Vol_Time);
     

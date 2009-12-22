@@ -8962,7 +8962,7 @@ void Send_Set_Data_Ack_Frame(INT8U Ch)
   INT8U Temp[15];
   INT16U Len;
   
-  Len = DLT645_Data_Pack(Ch, (INT8U) (0x04 | 0x90), Temp, 0, Temp, Temp, sizeof(Temp)); 
+  Len = DLT645_Data_Pack(Ch, (INT8U) (0x14 | 0x80), Temp, 0, Temp, Temp, sizeof(Temp)); 
   Send_HostData_Public_Puck(Ch,(INT8U *)Temp,Len);  
 }
 

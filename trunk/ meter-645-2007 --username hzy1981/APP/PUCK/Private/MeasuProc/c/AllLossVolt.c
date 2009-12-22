@@ -252,9 +252,6 @@ void Count_All_Loss_Proc(void)
    {
       All_Loss_Var.Status.Nums=0;    
       All_Loss_Var.Status.Mins=0;
-      Clr_Event_Instant(ID_EVENT_POWER_OFF);  //掉电事件发生
-      //Power_Status.Power=POWER_ON;          //掉电事件标志
-      SET_STRUCT_SUM(Power_Status);  
    }
    
    //全失压发生
@@ -400,10 +397,7 @@ void Get_AllLoss_Curr(void)
    else  //不是全失压
    {
       All_Loss_Var.Status.Nums=0;    
-      All_Loss_Var.Status.Mins=0;
-      Clr_Event_Instant(ID_EVENT_POWER_OFF);  //掉电事件发生
-      //Power_Status.Power=POWER_ON;          //掉电事件标志
-      SET_STRUCT_SUM(Power_Status);  
+      All_Loss_Var.Status.Mins=0;     
    }
    
    Clear_CPU_Dog();

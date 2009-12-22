@@ -1148,6 +1148,10 @@ void Save_Event_Data(void)
   if(ABNORMAL_RESET EQ Power_Status.Power)     //复位事件
     Set_Event_Instant(ID_EVENT_RESET); 
   
+  if(All_Loss_Var.Status.Nums && All_Loss_Var.Status.Mins)   //全失压事件发生
+  {
+     Clr_Event_Instant(ID_EVENT_POWER_OFF);  //掉电事件就不发生
+  }
     
   for(i=MIN_ID_EVENT;i<=MAX_ID_EVENT;i++)  //根据上次掉电的瞬态字，强行设置事件的发生
   {

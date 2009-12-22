@@ -238,11 +238,13 @@ INT8U  Esam_Auth_Check(  INT8U *pSrc, INT16U SrcLen, INT8U * DstLen)
 		Far_Deal_Para_Flag_T2.Data_ID[3] = *(DataPdi+3 );
 //		if( ( *(ID_Point+0 )>=1 && *(ID_Point+0 )<=8 ) && (*(ID_Point+1 )==0) && ((*(ID_Point+2 )==1) || (*(ID_Point+2 )==2)) )
 //			Far_Deal_Para_Flag_T2.TX_Length = 3;
+                //04   03  00 01~~fe
 		if( ( *(DataPdi+0 )>=1 && *(DataPdi+0 )<=0xFE ) && (*(DataPdi+1 )==0) && (*(DataPdi+2 )==3)  )
 			Far_Deal_Para_Flag_T2.TX_Length = 4;
+                //04 06 03~~00 05~~00
 		else if( ( *(DataPdi+0 )<=0x05 ) && (*(DataPdi+1 )<=3) && (*(DataPdi+2 )==6)  )
 			Far_Deal_Para_Flag_T2.TX_Length = 4;
-// 0x04010000~0x04010008                  0x04020000~0x04020008
+                 // 0x04010000~0x04010008                  0x04020000~0x04020008
 		else if(   ID_a==0x04 &&  ( ID_b>=0x01 || ID_b<=0x02 ) && ID_c==0x00 && ID_d<=0x08 ){
 			Block_Flag = 0xFF;
 			Far_Deal_Para_Flag_T2.TX_Length = 42;
@@ -257,42 +259,54 @@ INT8U  Esam_Auth_Check(  INT8U *pSrc, INT16U SrcLen, INT8U * DstLen)
 			*(((unsigned char *)(&Far_Deal_Para_Flag_T2))+j) = *(((const unsigned char *)&Far_Deal_Para_List_T2[i])+j);
 	}
 	//645协议中定义的 L字段的长度 ，应该 和 表中的定义的密文的长度 + 4 字节mac + 12字节 数据标示，密码，操作者代码 相等
-	if(  SrcLen  != (Far_Deal_Para_Flag_T2.Source_Length+16) )
-        {
-           ASSERT_FAILED();
-           return 0;		
-        }	
+	//if(  SrcLen  != (Far_Deal_Para_Flag_T2.Source_Length+16) )
+        //{
+         //  ASSERT_FAILED();
+          // return 0;		
+        //}	
+        Far_Deal_Para_Flag_T2.Source_Length = SrcLen-16;
  	i = *(DataPdi+2 );
 	i%=5;
 	j = Data_ID_Offset[i];
         //把N1N2....Nm 写到esam中去
-	if( Far_Write_Esam(0x04,Update_Binary,0x80+j,0x00,Far_Deal_Para_Flag_T2.Source_Length,pSrc+LENGTH_FAR_645_FRAME_T2+4,0)!=OK){
+	if( Far_Write_Esam(0x04,Update_Binary,0x80+j,0x00,Far_Deal_Para_Flag_T2.Source_Length,pSrc+LENGTH_FAR_645_FRAME_T2+4,0)!=OK)
+        {
 		 ASSERT_FAILED();
                  return 0;  
 	}
-        ////将解密后的数据读取  放到pDst中去d
+        //读出长度
+	if( Read(0x00, Read_Binary, 0x80+j, 0x00, 1) != OK )
+        {
+           ASSERT_FAILED();
+           return ERR;
+        }
+	Far_Deal_Para_Flag_T2.TX_Length = receive_send_buffer[0]-4;
+       
 	if( Read(0x00, Read_Binary, 0x80+j, 0x00, Far_Deal_Para_Flag_T2.TX_Length+5) != OK )
         {
-          ASSERT_FAILED();
-          return 0;
+           ASSERT_FAILED();
+           return ERR;
         }
 		
-
+        //判断是否数据标示正确
 	Reverse_data(receive_send_buffer+1,4);
 	if( My_Memcmp(receive_send_buffer+1,Far_Deal_Para_Flag_T2.Data_ID,4) != 0 )
-        {  
+        {
           ASSERT_FAILED();
-          return 0;
-        }  
-		
-	if( Block_Flag == 0 )
-		My_memcpyRev(pSrc + 12, receive_send_buffer+5, Far_Deal_Para_Flag_T2.TX_Length);
-	else{
-		for( i=0;i<14;i++ ){
-			My_memcpyRev(pSrc + 12 +i*3, receive_send_buffer+5+i*3, 3);
+          return ERR;
+        }
+        //判断是否 是否
+	if( Block_Flag EQ 0 )
+		My_memcpyRev(pSrc+LENGTH_FAR_645_FRAME_T2+4, receive_send_buffer+5, Far_Deal_Para_Flag_T2.TX_Length);
+	else
+		{
+		Block_Flag = Far_Deal_Para_Flag_T2.TX_Length/3;
+		for( i=0;i<Block_Flag;i++ )
+			{
+			My_memcpyRev(pSrc+4+LENGTH_FAR_645_FRAME_T2+i*3, receive_send_buffer+5+i*3, 3);
+			}
 		}
-	}
-        
+        ///
 	*DstLen=Far_Deal_Para_Flag_T2.TX_Length +12;//这里只要告诉黄工 解密后的数据 实际长度即可， 不要管其他的
         return 1;
 } 

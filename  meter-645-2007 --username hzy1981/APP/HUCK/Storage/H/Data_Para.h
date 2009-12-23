@@ -369,6 +369,7 @@
 #define SDI_STEP_SCHEME1_MONEY   0x04060301 //第二套阶梯参数电价
 
 #define SDI_HARDWARE_VERSION     0x04800002 //硬件版本号
+#define SDI_FAC_NO               0x04800003 //工厂版本号
 
 #define SDI_MODEWORD_1           0x0E000001 //模式字1
 #define SDI_MODEWORD_2           0x0E000002 //模式字2

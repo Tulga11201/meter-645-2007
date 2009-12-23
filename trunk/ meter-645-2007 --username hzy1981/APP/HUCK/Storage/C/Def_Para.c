@@ -420,7 +420,7 @@ CONST INT8U Def_0400040E[] =
 
 //硬件版本号
 CONST INT8U Def_04800002[] = "                             001";// Hardware_Version
-
+CONST INT8U Def_04800003[] = "                      DIRG ETATS"; //厂家信息
 //有无功组合方式特征字
 CONST INT8U Def_04000601_3[] =
 {
@@ -1316,6 +1316,7 @@ CONST S_Def_Para_Info Def_Para[] =
   //{SDI_PROTOCOL_VER,1,Def_0400040D},//   0x0400040D //电表协议版本号 
   //软件版本号
   {SDI_HARDWARE_VERSION,1,Def_04800002},//硬件版本号
+  {SDI_FAC_NO,1,Def_04800003},//硬件版本号
   
   {SDI_ACTIVE_CONST,2,Def_04000409_2},//有无功脉冲常数
   {SDI_ACTIVE_COMB_WORD,3,Def_04000601_3},//有无功组合特征字

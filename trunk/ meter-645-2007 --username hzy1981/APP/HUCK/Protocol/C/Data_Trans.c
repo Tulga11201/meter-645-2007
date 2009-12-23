@@ -4581,7 +4581,7 @@ CONST S_P_Data_Info P_Data_Info[] =
   //厂家硬件版本号(AsCII码)
   {INIT(PDI, 0x04800002),
   INIT(DI_Set_Flag, 0),
-  INIT(PSW_Flag, PSW_SET_PARA),
+  INIT(PSW_Flag, PSW_FAC_PARA),
   INIT(Storage, S_ROM),
   INIT(pSrc, (void *) Zero),
   //INIT(Src_Off, 0),
@@ -4594,7 +4594,7 @@ CONST S_P_Data_Info P_Data_Info[] =
   //厂家编号(AsCII码)  
   {INIT(PDI, 0x04800003),
   INIT(DI_Set_Flag, 0),
-  INIT(PSW_Flag, PSW_RD_ONLY),
+  INIT(PSW_Flag, PSW_FAC_PARA),
   INIT(Storage, S_ROM),
   INIT(pSrc, (void *) Zero),
   //INIT(Src_Off, 0),
@@ -4603,7 +4603,7 @@ CONST S_P_Data_Info P_Data_Info[] =
   INIT(Dst_Start, 0),
   INIT(Dst_Len, 32),
   INIT(Num, 0),
-  INIT(Spec_Flag, SPEC_FAC_INFO)},  
+  INIT(Spec_Flag, SPEC_NO)},  
   //定时冻结,定时冻结数据的处理和分次事件的处理一致
   {INIT(PDI, 0x05000001 | ((PROTO_DI)PERIOD_FREEZE_TYPE << 16)),
   INIT(DI_Set_Flag, 1),
@@ -7863,17 +7863,6 @@ INT16U Get_Factory_Info_Proto_Data(PROTO_DI PDI, INT8U* pDst, INT8U* pDst_Start,
      mem_cpy(pDst, (INT8U *)SOFTWARE_VERSION, sizeof(SOFTWARE_VERSION) - 1, pDst_Start, DstLen);
      mem_cpy(pDst + sizeof(SOFTWARE_VERSION) - 1, Temp, strlen((char *)Temp), pDst_Start, DstLen);
      Reverse_data(pDst, 32);
-     return 32;
-   }
-   else if(PDI EQ 0x04800003)//工厂信息
-   {
-     for(i = 0; i < 32; i ++)
-     {
-       if(i <  sizeof(FAC_INFO))
-         pDst[31-i] = FAC_INFO[i];
-       else 
-         pDst[31-i] = ' ';  
-     }
      return 32;
    }
    else if(PDI EQ 0x0400040D)//协议版本号

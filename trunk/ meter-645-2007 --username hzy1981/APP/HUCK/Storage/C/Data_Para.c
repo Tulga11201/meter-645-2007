@@ -303,7 +303,7 @@ CONST S_Data_Para_Storage_Info Data_Para_Storage[] =
   {0x04090F02, IMP_IMP_PARA, 1, 1}, //电流严重不平衡触发延时时间
   
   {SDI_HARDWARE_VERSION, IMP_IMP_PARA, 32, 1}, //0x04080002,厂家硬件版本号
- 
+  {SDI_FAC_NO, IMP_IMP_PARA, 32, 1}, //0x04080003,厂家编号
   //-----------------------------------------------------------------------------------------------
   {SDI_MODEWORD_1, IMP_IMP_PARA, 1, 5}, //0x0E000001 //5个模式字
   /*

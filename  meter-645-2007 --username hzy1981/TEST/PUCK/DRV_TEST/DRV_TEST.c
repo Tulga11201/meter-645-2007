@@ -539,11 +539,14 @@ void Test_Measure(void)
     {
       Flag&=Measu_RdAndCompData_3Times(REG_R_A_U+i,(INT8U *)&temp[i]);
       temp[i]/=UNIT_V;
+      
+      /*  由于没有设定参数，规格未知，判断数据逻辑错没有根据，屏蔽此代码-----09-12-23  PUCK
       if(((FP32S)temp[i]>Get_Un()*0.2 && (FP32S)temp[i]<Get_Un()*0.5) ||((FP32S)temp[i]>Get_Un()*1.35))
       {
         Flag=0;
         Measu_Err_Code|=MEASU_LOGIC_ERR;
       }
+      */
       if(!MEASU_SIG_STAT)      //异常
       {
          Flag=0;
@@ -1093,7 +1096,8 @@ void Test_HardWare_PUCK(void)
   if(Get_Meter_Hard_Mode()!=MODE_TEST)
     return ;   
   
-
+  //FillAllScreen();
+  
   Ext_Device_Stat.Status=TEST_STATUS_PUCK;  //置自检模式
   
   Init_DebugChanel_PUCK(0);
@@ -1110,8 +1114,9 @@ void Test_HardWare_PUCK(void)
   
   //Buf_Mem_Test();   //此函数是对存储器的 大数据频繁读写，一般不要打开！
    
-  Test_Lcd();  
-  Clr_Ext_Inter_Dog();
+  Test_Lcd();
+  //while(1)  
+    Clr_Ext_Inter_Dog();
   
   Test_Measure();
   Clr_Ext_Inter_Dog();

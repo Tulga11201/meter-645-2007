@@ -882,7 +882,6 @@ unsigned char Modify_MeterID_Card(void){// 表号设置卡
 		}
         
 	return OK;
-   
 }
 unsigned char Relay_TEST_Card()
 {
@@ -938,8 +937,8 @@ void UpdataEsamMoneyBag(void)
        //预付费功能打开且是本地预付费表  预付费功能打开且是本地预付费表 
 
        Esam_Remain_Money_Dec();
-    }  
-    Cpu_Esam_All_Operate(ESAM,CPU_ESAM_DRV_POWER_OFF,receive_send_buffer,receive_send_buffer,Length_receive_send_buffer );
+       Cpu_Esam_All_Operate(ESAM,CPU_ESAM_DRV_POWER_OFF,receive_send_buffer,receive_send_buffer,Length_receive_send_buffer );
+     }
   }else 
   {//假如是在 远程控制的时候 预付费功能打开且是本地预付费表 
     if(PREPAID_EN > 0 && PREPAID_LOCAL_REMOTE EQ PREPAID_LOCAL)//

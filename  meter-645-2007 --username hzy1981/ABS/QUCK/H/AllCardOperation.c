@@ -924,18 +924,19 @@ void UpdataEsamMoneyBag(void)
 
   //开始更新esam
   if(Chk_Pay_Time_Arrive())//假如远程身份认证时间 过了 ， 也就是，没有远程操作时 
-  {
-    if(Esamcard_Atr() != OK)
-    {
-      return ;
-    }
-    if( OK != Select_File(0,0x3F,00) )
-    {
-       return  ; 
-    }
-      //预付费功能打开且是本地预付费表  预付费功能打开且是本地预付费表 
+  {   
     if(PREPAID_EN > 0 && PREPAID_LOCAL_REMOTE EQ PREPAID_LOCAL)
     {
+     if(Esamcard_Atr() != OK)
+      {
+       return ;
+      }
+     if( OK != Select_File(0,0x3F,00) )
+      {
+         return  ; 
+      }
+       //预付费功能打开且是本地预付费表  预付费功能打开且是本地预付费表 
+
        Esam_Remain_Money_Dec();
     }  
     Cpu_Esam_All_Operate(ESAM,CPU_ESAM_DRV_POWER_OFF,receive_send_buffer,receive_send_buffer,Length_receive_send_buffer );

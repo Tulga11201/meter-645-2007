@@ -55,10 +55,10 @@ CONST S_Cur_Scheme Def_SDI_CUR_SCHEME =
   .Rate_Scheme = RATE_SCHEME0,
   .Step_Scheme = STEP_SCHEME0,
   
-  .Year_Scheme_Time = BEF_SWITCH_TIME,
-  .Date_Scheme_Time = BEF_SWITCH_TIME,
-  .Rate_Scheme_Time = BEF_SWITCH_TIME,
-  .Step_Scheme_Time = BEF_SWITCH_TIME,
+  .Year_Scheme_Time = AFT_SWITCH_TIME,
+  .Date_Scheme_Time = AFT_SWITCH_TIME,
+  .Rate_Scheme_Time = AFT_SWITCH_TIME,
+  .Step_Scheme_Time = AFT_SWITCH_TIME,
   
   .CS = {0},
   .Tail = CHK_BYTE

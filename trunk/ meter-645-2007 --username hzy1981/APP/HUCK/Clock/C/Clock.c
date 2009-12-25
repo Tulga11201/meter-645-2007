@@ -833,8 +833,23 @@ INT8U Adj_Time(S_BCD_Time *pTime, INT8U Flag)
       //if(Read_Event_Status(ID_EVENT_ADJUST_TIME)!=1)
         //ASSERT(A_WARNING,0);
       //Event_MultiTimes_Proc(ID_EVENT_ADJUST_TIME,EVENT_OCCUR,EVENT_REAL);
+      /*
       if(Flag EQ 1)
+      {
+        OS_Waitfor_Sec(Read_Event_Status(ID_EVENT_ADJUST_TIME) EQ 1,5);//等待5s还没有处理完则报断言错误
+        if(Read_Event_Status(ID_EVENT_ADJUST_TIME)!=1)
+          ASSERT(A_WARNING,0);      
         Set_Event_Instant(ID_EVENT_ADJUST_TIME);//校时结束
+        
+      }
+      */
+      
+      if(Flag EQ 1) //记录校时记录，不调用Event_Data_Proc,执行更快
+      {
+        Event_Cumu_Proc(ID_EVENT_ADJUST_TIME,EVENT_OCCUR,EVENT_REAL);
+        Event_Separate_Proc(ID_EVENT_ADJUST_TIME,EVENT_OCCUR,EVENT_REAL);
+      }
+      
       //Event_MultiTimes_Proc(ID_EVENT_ADJUST_TIME,EVENT_END,EVENT_REAL);
       Clr_Demand_Accu();//需量累加单元清0
       

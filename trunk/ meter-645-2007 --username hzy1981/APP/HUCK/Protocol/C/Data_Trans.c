@@ -2,7 +2,7 @@
 #include "Includes.h"
 
 
-#define SOFTWARE_VERSION "09122220 V1.3 " //软件版本号
+#define SOFTWARE_VERSION "09122310 V1.3 " //软件版本号
 
 
 CONST INT32U All_Loss_Vol_Curr = 1000;
@@ -9031,7 +9031,7 @@ INT16U Rcv_DLT645_Data_Proc(INT8U Ch, INT8U* pFrame, INT8U FrameLen, INT8U* pDst
         {
           Esam_Auth_Ok = 0;
           //年时区表和日时段表也可以用02级密码设置--送检要求!!
-          if(Check_Year_Date_Table_Data(PDI))
+          //if(Check_Year_Date_Table_Data(PDI))
           {
             if(pSrc[4] EQ 0x02)
               Esam_Auth_Flag = 0;  

@@ -1,8 +1,8 @@
 #define DEF_PARA_C
 #include "Includes.h"
 
-#define UB (INT32U)577 //额定电压
-#define IB (INT32U)150 //1.50,两位小数 
+#define UB (INT32U)2200 //额定电压
+#define IB (INT32U)1000 //1.50,两位小数 
 #define PB (UB*IB) //额定功率
 #define PMAX (UB*IB*4) //最大功率
 

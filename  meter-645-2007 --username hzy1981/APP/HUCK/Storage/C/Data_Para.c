@@ -47,7 +47,10 @@ CONST S_Data_Para_Storage_Info Data_Para_Storage[] =
   //校表相关参数,扩充的-----
   {_SDI_ADJ_METER_PUL_VOL_CUR_SPEC,IMP_FAC_PARA,3,1},//脉冲、电压、电流规格,3字节
   {_SDI_ADJ_METER_PARA_STATUS,IMP_FAC_PARA,1,1},//校表参数状态设置
-  {_SDI_ADJ_METER_A_POW,IMP_FAC_PARA,3,12},//ABC三相功率、相位、电压、电流等 
+  {_SDI_ADJ_METER_A_POW,IMP_FAC_PARA,3,12},//ABC三相功率、相位、电压、电流等  
+  //{SDI_ACTIVE_CONST, IMP_IMP_PARA, 3, 1},   //0x04000409 //电表有功常数
+  //{SDI_REACTIVE_CONST, IMP_IMP_PARA, 3, 1},   //0x0400040A //电表无功常数
+  
   //---------------------------
   {_SDI_CUR_ENERGY_PD, IMP_PD_DATA, ENERGY_SAVE_SIZE, 1},//IMP_6,ENERGY_SAVE_SIZE,1},//当前电量,掉电存储,平时也定时存储
   {_SDI_CUR_DEMAND_PD, IMP_PD_DATA, sizeof(S_Demand), 1},//掉电只保存总和当前费率需量，即S_Demand_

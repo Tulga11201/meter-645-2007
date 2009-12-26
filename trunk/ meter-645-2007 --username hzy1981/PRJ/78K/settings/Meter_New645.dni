@@ -74,7 +74,7 @@ TriggerName=main
 LimitSize=0
 ByteLimit=50
 [DebugChecksum]
-Checksum=1145108815
+Checksum=187384565
 [InstructionProfiling]
 Enabled=_ 0
 [DriverProfiling]
@@ -92,12 +92,9 @@ UnspecRange=1
 ActionState=1
 [Breakpoints]
 Bp0=_ "STD_CODE" "{F:\A\APP\Main\C\Main_Proc.c}.73.3@1" 1 0 0 0 "" 0 ""
-Bp1=_ "STD_CODE" "{F:\A\APP\HUCK\Protocol\C\Data_Trans.c}.8719.7@1" 1 0 0 0 "" 0 ""
-Bp2=_ "STD_CODE" "{F:\A\APP\HUCK\Protocol\C\Data_Trans.c}.8692.3@1" 1 0 0 0 "" 0 ""
-Bp3=_ "STD_CODE" "{F:\A\APP\PUCK\Private\MeasuProc\c\MeasuProc.c}.2693.3@1" 1 0 0 0 "" 0 ""
-Bp4=_ "STD_CODE" "{F:\A\APP\TASK\C\TaskProc.c}.119.3@1" 1 0 0 0 "" 0 ""
-Bp5=_ "STD_CODE" "{F:\A\APP\TASK\C\TaskProc.c}.120.3@1" 1 0 0 0 "" 0 ""
-Count=6
+Bp1=_ "STD_CODE" "{F:\A\APP\HUCK\Protocol\C\Data_Trans.c}.8722.5@1" 1 0 0 0 "" 0 ""
+Bp2=_ "STD_CODE" "{F:\A\APP\HUCK\Protocol\C\Data_Trans.c}.8694.8@1" 1 0 0 0 "" 0 ""
+Count=3
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""

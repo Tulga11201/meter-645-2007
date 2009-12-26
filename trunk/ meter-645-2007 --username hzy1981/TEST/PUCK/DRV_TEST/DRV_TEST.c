@@ -1080,6 +1080,7 @@ void Test_HardWare_PUCK(void)
 {  
 #ifdef DRV_TEST_EN
 
+  INT16U i;
    //PM14_bit.no2=1;   //蜂鸣器
    
   //START_MIN_ALARM;
@@ -1096,7 +1097,14 @@ void Test_HardWare_PUCK(void)
   if(Get_Meter_Hard_Mode()!=MODE_TEST)
     return ;   
   
-  //FillAllScreen();
+  FillAllScreen();
+   //延时500ms
+   for(i=0;i<200;i++)
+   {
+     OS_TimeDly_Ms(10);
+     Clr_Ext_Inter_Dog();
+   }
+   
   
   Ext_Device_Stat.Status=TEST_STATUS_PUCK;  //置自检模式
   
@@ -1115,7 +1123,7 @@ void Test_HardWare_PUCK(void)
   //Buf_Mem_Test();   //此函数是对存储器的 大数据频繁读写，一般不要打开！
    
   Test_Lcd();
-  //while(1)  
+  while(1)  
     Clr_Ext_Inter_Dog();
   
   Test_Measure();

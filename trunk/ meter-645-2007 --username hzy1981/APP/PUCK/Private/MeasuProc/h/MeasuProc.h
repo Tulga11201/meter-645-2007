@@ -225,6 +225,9 @@ MeasuProc_PUCK_EXT const FP32S I_MAX_CONST[10]=
 #define	MAX_ENG_RATE	(U_RATE*I_RATE*100)  	 //电能最大倍数：单位：0.00001 kwh,0.01wh
 
 
+#define	EXCEED_POWER_RATE	(UNIT_V*UNIT_A*100*5)  	 //超过Max功率的比例:5倍,最大的是4倍
+
+
 MeasuProc_PUCK_EXT const INT32U I_RATE_CONST[10]={64,64,32,4,256,64,4,4,16,4};
 
 

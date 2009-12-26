@@ -437,9 +437,9 @@ void Cpu_Sleep_Proc(void)
   while(1)
   {
     Goto_Sleep_PUCK();
-    if(Resume_Src.Src_Flag&KEY_RESUME)
+    if((Resume_Src.Src_Flag&(IRAD_RESUME|KEY_RESUME)))
     {
-      Counts.Var=0;   //按钮唤醒,无限制,唤醒次数清0
+      Counts.Var=0;   //按钮/红外唤醒,无限制,唤醒次数清0
       Last_Date.Var=Cur_Time1.Date;
       break;
     }

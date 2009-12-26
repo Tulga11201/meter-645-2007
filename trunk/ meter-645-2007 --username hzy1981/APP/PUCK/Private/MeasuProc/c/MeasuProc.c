@@ -2390,13 +2390,12 @@ void Check_ALL_Sram_Sum(void)
   
   Check_Pulse();   //检查脉冲常数是否配置错误,并声光报警
   
-  /*
+  
   if((FP32S)Measu_InstantData_ToPub_PUCK.AcPower.Sum/UNIT_KW_KAR>=5.5*3*Get_Un()*Get_In()/1000)  //计量已经越界
   {
     Sys_Pulse_Var.Pulse_Width=40;
     SET_STRUCT_SUM(Sys_Pulse_Var);
-  }
-  */  
+  }    
 }
 /********************************************************************************
 函数原型：void Monitor_Para_Modi_PUCK(void)

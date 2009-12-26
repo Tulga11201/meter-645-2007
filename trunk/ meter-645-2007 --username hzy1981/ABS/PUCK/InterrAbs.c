@@ -1,10 +1,14 @@
 #define INTER_ABS_PUCK
 #include "Pub_PUCK.h"
 
-//江机: 25/1
+//江机硬件: IRDA_WAKE_UP_MS=25;     IRDA_WAKE_UP_NUM=1
 #define IRDA_WAKE_UP_MS    25//80   //判定唤醒帧的超时时间：ms
 #define IRDA_WAKE_UP_NUM   1//7   //判定唤醒帧的脉冲数目：个数
 
+
+#define PULSE_OUT_FLAG          0x36  
+#define MAX_CLR_AC_NUM          30
+#define MAX_CLR_REAC_NUM        30
 
 
 //初始化中断相关变量
@@ -40,32 +44,40 @@ void Init_Interr_Sram(void)
 //有功脉冲计数,中断等级--------INTER_GRADE_LOWERST
 void Inter_CF1(void)
 {
+  static volatile S_Int32U Ac_Ms_Timer={CHK_BYTE,0x000000,CHK_BYTE};
+  
   EI();
   
   if(CHECK_STRUCT_VAR(Pulse_Num_Temp))
   {
     if(Pri_MeasuStatVar.MeasuIntOk)
     {
-      if(P14_bit.no0 EQ 0) //脉冲输入
+      if(P14_bit.no0) //脉冲输入
       {
         Pulse_Num_Temp.Ac_Pulse_Num++; 
         if(Pulse_Num_Temp.Ac_Pulse_Num>=Sys_Pulse_Var.Ac_Pulse_Freq)
         {
+          Pulse_Num_Temp.AcValid=PULSE_OUT_FLAG;
           A_OUT_0;
           MEASU_A_LED_0;
-          Pulse_Num_Temp.Ac_Pulse_Num-=Sys_Pulse_Var.Ac_Pulse_Freq;
+          Pulse_Num_Temp.Ac_Pulse_Num-=Sys_Pulse_Var.Ac_Pulse_Freq;          
+          Pulse_Num_Temp.AcNum=0;
+          Ac_Ms_Timer.Var=Ms_Timer_Pub;
         }
       }
       else
       {
-        A_OUT_1;
-        MEASU_A_LED_1;
+        if(Ms_Timer_Pub-Ac_Ms_Timer.Var>=Sys_Pulse_Var.Pulse_Width)
+        {
+          Pulse_Num_Temp.AcValid=0;
+          A_OUT_1;
+          MEASU_A_LED_1;
+        }
       }
     }
   }
   else                            //头尾不对
   {
-    //Port_Out_Pub(INTER_ID_ALARM_BEEP,BEEP_MODE_200);
     Pulse_Num_Temp.Ac_Pulse_Num=0;
     INIT_STRUCT_VAR(Pulse_Num_Temp);  //把头尾填齐
   }
@@ -74,31 +86,38 @@ void Inter_CF1(void)
 //无功脉冲计数,中断等级--------INTER_GRADE_LOWERST
 void Inter_CF2(void)
 {
+  static volatile S_Int32U Reac_Ms_Timer={CHK_BYTE,0x000000,CHK_BYTE};
   EI();
   if(CHECK_STRUCT_VAR(Pulse_Num_Temp))
   {
     if(Pri_MeasuStatVar.MeasuIntOk)
     {
-     if(P12_bit.no0 EQ 0) //无功脉冲输入
-      {
+     if(P12_bit.no0) //无功脉冲输入
+     {
         Pulse_Num_Temp.Rea_Pulse_Num++; 
         if(Pulse_Num_Temp.Rea_Pulse_Num>=Sys_Pulse_Var.Reac_Pulse_Freq)
         {
+          Pulse_Num_Temp.ReacValid=PULSE_OUT_FLAG;
           R_OUT_0;
           MEASU_R_LED_0;
-          Pulse_Num_Temp.Rea_Pulse_Num-=Sys_Pulse_Var.Reac_Pulse_Freq;
+          Pulse_Num_Temp.Rea_Pulse_Num-=Sys_Pulse_Var.Reac_Pulse_Freq;          
+          Pulse_Num_Temp.ReacNum=0;
+          Reac_Ms_Timer.Var=Ms_Timer_Pub;
         }
       }
       else
       {
-        R_OUT_1;
-        MEASU_R_LED_1;
+        if(Ms_Timer_Pub-Reac_Ms_Timer.Var>=Sys_Pulse_Var.Pulse_Width)
+        {
+          Pulse_Num_Temp.ReacValid=0;
+          R_OUT_1;
+          MEASU_R_LED_1;
+        }
       }
     }
   }
   else                            //头尾不对
   {
-    //Port_Out_Pub(INTER_ID_ALARM_BEEP,BEEP_MODE_300);
     Pulse_Num_Temp.Rea_Pulse_Num=0;
     INIT_STRUCT_VAR(Pulse_Num_Temp);  //把头尾填齐    
   }
@@ -451,6 +470,29 @@ void count_1ms(void)
     if(Num.Var>=MS_HOOK_NUM)
     {
       ExtPort_xMs_Hook();
+      
+      if(Pulse_Num_Temp.AcValid EQ PULSE_OUT_FLAG)  //脉冲清除
+      {     
+        Pulse_Num_Temp.AcNum++;
+        if(Pulse_Num_Temp.AcNum>MAX_CLR_AC_NUM)
+        {
+          A_OUT_1;
+          MEASU_A_LED_1;
+          Pulse_Num_Temp.AcNum=0;
+        }        
+      }
+      
+      if(Pulse_Num_Temp.ReacValid EQ PULSE_OUT_FLAG)
+      {        
+        Pulse_Num_Temp.ReacNum++;
+        if(Pulse_Num_Temp.ReacNum>MAX_CLR_REAC_NUM)
+        {
+          R_OUT_1;
+          MEASU_R_LED_1;
+          Pulse_Num_Temp.ReacNum=0;
+        }
+        
+      }    
       Num.Var=0;
     } 
   }

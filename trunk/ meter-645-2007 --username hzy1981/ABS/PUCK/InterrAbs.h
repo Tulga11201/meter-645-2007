@@ -23,9 +23,14 @@
 #define MIN_KEY_VALUE   UP_KEY_VALUE
 #define MAX_KEY_VALUE   B_KEY_VALUE
 
+
 typedef struct
 { 
   INT8U Head;
+  INT8U AcValid;
+  INT8U AcNum;
+  INT8U ReacValid;
+  INT8U ReacNum;
   INT16U Ac_Pulse_Num;               //有功脉冲计数
   INT16U Rea_Pulse_Num;               //无功脉冲
   INT8U Tail;

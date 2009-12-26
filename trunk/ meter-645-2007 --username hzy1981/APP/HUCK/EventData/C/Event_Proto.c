@@ -993,6 +993,11 @@ INT16U Get_Event_Cumu_Proto_Data(PROTO_DI PDI, INT8U* pDst, INT8U* pDst_Start, I
       Get_Event_Cumu_BCD_Counts_Mins(ID_EVENT_ALL_LOSS_VOLT, pDst, pDst_Start, DstLen);
       return 6; 
    }
+   else if(PDI EQ 0x03060000) //辅助电源失电累计次数和时间
+   {
+      Get_Event_Cumu_BCD_Counts_Mins(ID_EVENT_AUX_POWER, pDst, pDst_Start, DstLen);
+      return 6;      
+   }
   /*
    else if(PDI EQ 0x03070000)//电压逆相序
    {

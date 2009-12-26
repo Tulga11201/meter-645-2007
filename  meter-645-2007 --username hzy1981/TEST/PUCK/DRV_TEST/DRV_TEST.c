@@ -1080,7 +1080,6 @@ void Test_HardWare_PUCK(void)
 {  
 #ifdef DRV_TEST_EN
 
-  INT16U i;
    //PM14_bit.no2=1;   //·äÃùÆ÷
    
   //START_MIN_ALARM;

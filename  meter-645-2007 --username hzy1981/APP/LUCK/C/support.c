@@ -608,7 +608,8 @@ list_t getlist (item_t item, offs_t offs)
   
   Get_Sub_Screen_Info(list.code,subindex);  
   
-  list.user=((offs+1)/10)*16+((offs+1)%10);         //显示代码用偏移替代:BCD
+  //list.user=((offs+1)/10)*16+((offs+1)%10);         //显示代码用偏移替代:BCD
+  list.user=subindex;
   list.ChangeCode=list.code;
   list.ChangeFlag=Modi_Item(list.code,&list.code);  //修改不兼容的ID，用于显示
   return list;

@@ -144,10 +144,10 @@ P40/TOOL0	TOOL0
 #define A_DIR_0                   PORT_ChangeP64Output(0)
 #define R_DIR_1                   PORT_ChangeP65Output(1)  //无功方向输出
 #define R_DIR_0                   PORT_ChangeP65Output(0)
-#define A_OUT_1                   PORT_ChangeP66Output(1)  //有功输出
-#define A_OUT_0                   PORT_ChangeP66Output(0)
-#define R_OUT_1                   PORT_ChangeP67Output(1)  //无功输出  
-#define R_OUT_0                   PORT_ChangeP67Output(0) 
+#define A_OUT_1                   P6_bit.no6=1          //有功输出
+#define A_OUT_0                   P6_bit.no6=0
+#define R_OUT_1                   P6_bit.no7=1   //无功输出  
+#define R_OUT_0                   P6_bit.no7=0
 /*
 #define IC_CARD_POWR_ON           P6_bit.no3=1   //输出
 #define IC_CARD_POWR_OFF          P6_bit.no3=0   //输出

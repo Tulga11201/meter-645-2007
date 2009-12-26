@@ -477,16 +477,16 @@ void Dis_Meter_Loop(void)
    
    if(LIGHT_SEC_TIMER_DIFF!=0)
    {
-      //红外/插卡/剩余金额 < 报警金额 显示模式显示模式
-     if((Light_Mode EQ LIGHT_ON_IRDA || Light_Mode EQ LIGHT_ON_CARD ||  Light_Mode EQ LIGHT_ON_MONEY)&& LIGHT_SEC_TIMER_DIFF>IRDA_LIGHT_ON_TIME) 
+      //红外/剩余金额 < 报警金额 显示模式显示模式
+     if((Light_Mode EQ LIGHT_ON_IRDA ||  Light_Mode EQ LIGHT_ON_MONEY)&& LIGHT_SEC_TIMER_DIFF>IRDA_LIGHT_ON_TIME) 
      {
        //Light_Mode=LIGHT_ON_NONE;
        CLR_LIGHT_ON;     
        lcdlight(FALSE);
      }
      
-     //按钮
-     if(Light_Mode EQ LIGHT_ON_KEY && LIGHT_SEC_TIMER_DIFF>KEY_LIGHT_ON_TIME)
+     //按钮/插卡
+     if((Light_Mode EQ LIGHT_ON_CARD || Light_Mode EQ LIGHT_ON_KEY) && (LIGHT_SEC_TIMER_DIFF>KEY_LIGHT_ON_TIME))
      {
 #if SYS_ERR_DIS_EN >0
        //Sys_Err_Info.LoopDis=0;

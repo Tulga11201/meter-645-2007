@@ -551,6 +551,9 @@ void Init_Inter_Abs(INT32U Mode)
         START_RTC_COUNTER;
         START_MIN_ALARM;        
         START_UP_KEY;
+        
+        PIF11 = 0;
+        STOP_IRDA_WAKE;
         START_IRDA_WAKE;
         
 #if    ALL_LOSS_TYPE!=ALL_LOSS_SOFT 

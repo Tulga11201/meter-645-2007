@@ -1115,8 +1115,7 @@ void Test_HardWare_PUCK(void)
   //Buf_Mem_Test();   //此函数是对存储器的 大数据频繁读写，一般不要打开！
    
   Test_Lcd();
-  while(1)  
-    Clr_Ext_Inter_Dog();
+  Clr_Ext_Inter_Dog();
   
   Test_Measure();
   Clr_Ext_Inter_Dog();

@@ -41,12 +41,20 @@ void Inter_CF1(void)
   {
     if(Pri_MeasuStatVar.MeasuIntOk)
     {
-      Pulse_Num_Temp.Ac_Pulse_Num++;  
-      if(Pulse_Num_Temp.Ac_Pulse_Num>=Sys_Pulse_Var.Ac_Pulse_Freq)
-      {        
-        Send_Acpower_Pulse();
-        Pulse_Num_Temp.Ac_Pulse_Num-=Sys_Pulse_Var.Ac_Pulse_Freq;
-        //Prepaid_Power_Ctrl_Pulse_Hook();
+      if(P14_bit.no0 EQ 0) //脉冲输入
+      {
+        Pulse_Num_Temp.Ac_Pulse_Num++; 
+        if(Pulse_Num_Temp.Ac_Pulse_Num>=Sys_Pulse_Var.Ac_Pulse_Freq)
+        {
+          A_OUT_0;
+          MEASU_A_LED_0;
+          Pulse_Num_Temp.Ac_Pulse_Num-=Sys_Pulse_Var.Ac_Pulse_Freq;
+        }
+      }
+      else
+      {
+        A_OUT_1;
+        MEASU_A_LED_1;
       }
     }
   }
@@ -66,11 +74,20 @@ void Inter_CF2(void)
   {
     if(Pri_MeasuStatVar.MeasuIntOk)
     {
-      Pulse_Num_Temp.Rea_Pulse_Num++;
-      if(Pulse_Num_Temp.Rea_Pulse_Num>=Sys_Pulse_Var.Reac_Pulse_Freq)
-      {   
-        Send_Reacpower_Pulse();
-        Pulse_Num_Temp.Rea_Pulse_Num-=Sys_Pulse_Var.Reac_Pulse_Freq;
+     if(P12_bit.no0 EQ 0) //无功脉冲输入
+      {
+        Pulse_Num_Temp.Rea_Pulse_Num++; 
+        if(Pulse_Num_Temp.Rea_Pulse_Num>=Sys_Pulse_Var.Reac_Pulse_Freq)
+        {
+          R_OUT_0;
+          MEASU_R_LED_0;
+          Pulse_Num_Temp.Rea_Pulse_Num-=Sys_Pulse_Var.Reac_Pulse_Freq;
+        }
+      }
+      else
+      {
+        R_OUT_1;
+        MEASU_R_LED_1;
       }
     }
   }

@@ -428,7 +428,7 @@ void Goto_Sleep_PUCK(void)
 返回：
     无
 ********************************************************************************/
-#define WAKE_UP_TIMES 5
+#define WAKE_UP_TIMES 60  //红外和全失压唤醒总次数
 void Cpu_Sleep_Proc(void)
 {
   static S_Int8U Counts={CHK_BYTE,0,CHK_BYTE};

@@ -547,7 +547,7 @@ void Init_LCD_Mode(INT32U Mode,INT8U Status)
         HTLCD_RC_32K();	//选择片上RC振荡器
         HTLCD_SYS_EN();	//开振荡器"*/
         HTLCD_LCD_ON();	//开LCD显示  
-        //FillAllScreen();
+        FillAllScreen();
     break;
     
     case SYS_RESUME:

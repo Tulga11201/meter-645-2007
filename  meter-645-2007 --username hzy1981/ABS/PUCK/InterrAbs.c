@@ -2,6 +2,11 @@
 #include "Pub_PUCK.h"
 
 
+#define IRDA_WAKE_UP_MS    80//80   //判定唤醒帧的超时时间：ms
+#define IRDA_WAKE_UP_NUM   8//7   //判定唤醒帧的脉冲数目：个数
+
+
+
 //初始化中断相关变量
 void Init_Interr_Sram(void)
 {

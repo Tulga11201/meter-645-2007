@@ -74,7 +74,7 @@ TriggerName=main
 LimitSize=0
 ByteLimit=50
 [DebugChecksum]
-Checksum=187384565
+Checksum=1590033541
 [InstructionProfiling]
 Enabled=_ 0
 [DriverProfiling]
@@ -90,11 +90,6 @@ UseAuto=0
 TypeViolation=1
 UnspecRange=1
 ActionState=1
-[Breakpoints]
-Bp0=_ "STD_CODE" "{F:\A\APP\Main\C\Main_Proc.c}.73.3@1" 1 0 0 0 "" 0 ""
-Bp1=_ "STD_CODE" "{F:\A\APP\HUCK\Protocol\C\Data_Trans.c}.8722.5@1" 1 0 0 0 "" 0 ""
-Bp2=_ "STD_CODE" "{F:\A\APP\HUCK\Protocol\C\Data_Trans.c}.8694.8@1" 1 0 0 0 "" 0 ""
-Count=3
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
@@ -105,3 +100,8 @@ LogFile=_ ""
 [TraceHelper]
 Enabled=0
 ShowSource=1
+[Breakpoints]
+Bp0=_ "STD_CODE" "{F:\A\APP\Main\C\Main_Proc.c}.73.3@1" 1 0 0 0 "" 0 ""
+Bp1=_ "STD_CODE" "{F:\A\APP\HUCK\Protocol\C\Data_Trans.c}.8722.5@1" 1 0 0 0 "" 0 ""
+Bp2=_ "STD_CODE" "{F:\A\APP\HUCK\Protocol\C\Data_Trans.c}.8694.8@1" 1 0 0 0 "" 0 ""
+Count=3

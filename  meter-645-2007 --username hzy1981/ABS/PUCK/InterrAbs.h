@@ -23,9 +23,6 @@
 #define MIN_KEY_VALUE   UP_KEY_VALUE
 #define MAX_KEY_VALUE   B_KEY_VALUE
 
-#define IRDA_WKUP_MS_TIME  160   //单位：毫秒
-#define IRDA_WKUP_NUM     5    //脉冲个数 
-
 typedef struct
 { 
   INT8U Head;
@@ -107,8 +104,6 @@ typedef struct
 #define CLEAR_VAR_PUCK(Var)  {mem_set((void *)(&Var),0,sizeof(Var),(void *)(&Var),sizeof(Var));\
                               SET_VAR_CS_PUCK(Var);}
 
-#define IRDA_WAKE_UP_MS    15//80   //判定唤醒帧的超时时间：ms
-#define IRDA_WAKE_UP_NUM   1//7   //判定唤醒帧的脉冲数目：个数
 INTER_ABS_PUCK_EXT INT32U  Irda_WkUP_Ms_Timr;
 
 typedef struct

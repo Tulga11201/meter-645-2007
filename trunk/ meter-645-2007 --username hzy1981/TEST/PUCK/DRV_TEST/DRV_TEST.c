@@ -1097,15 +1097,7 @@ void Test_HardWare_PUCK(void)
   if(Get_Meter_Hard_Mode()!=MODE_TEST)
     return ;   
   
-  FillAllScreen();
-   //延时500ms
-   for(i=0;i<200;i++)
-   {
-     OS_TimeDly_Ms(10);
-     Clr_Ext_Inter_Dog();
-   }
-   
-  
+    
   Ext_Device_Stat.Status=TEST_STATUS_PUCK;  //置自检模式
   
   Init_DebugChanel_PUCK(0);

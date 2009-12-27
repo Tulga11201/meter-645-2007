@@ -996,21 +996,9 @@ CONST S_Data_Para_Storage_Info Data_Para_Storage[] =
   //{SDI_LAST_LOSS_VOL_OCCUR_TIME, IMP_EVENT1, 6, 1},//最近一次失压发生时刻
   //{SDI_LAST_LOSS_VOL_END_TIME, IMP_EVENT1, 6, 1}, //最近一次失压结束时刻
 
-/*
-  #define IMP_FAC_PARA  IMP_0 //工厂参数 
-  #define IMP_IMP_PARA  IMP_1 //重要参数      
-  #define IMP_NOR_PARA  IMP_2 //普通参数     
-  #define IMP_IMP_DATA  IMP_3 //重要数据      
-  #define IMP_IMP_BAK_DATA  IMP_4 //重要数据的备份   
-  #define IMP_NOR_DATA  IMP_5 //普通数据
-  #define IMP_HIS_DATA  IMP_6 //历史数据     
-  #define IMP_EVENT_CUMU  IMP_7 //事件累计信息  
-  #define IMP_EVENT0    IMP_8 //第0类事件，不频繁，与数据混存       
-  #define IMP_EVENT1    IMP_9 //第1类事件，数据量大且频繁，存独立EEROM     
-  #define IMP_EVENT0    IMP_A //第2类事件，数据量大，但是不频繁，一般存Flash          
-  #define IMP_LOAD_REC  IMP_B //负荷记录，存Flash      
-  #define IMP_PD_DATA   IMP_C //掉电存储数据，存FRAM 
-  */
+  {EH_DI(0x00000000), IMP_LOAD_REC, 4*MAX_ENERGY_SETTLE_NUM*(MAX_RATES + 1), 11},
+  {EH_DI(0x01010000), IMP_LOAD_REC, 8*MAX_DEMAND_SETTLE_NUM*(MAX_RATES + 1), 10},
+  
   EXTEND_STORA
   //-----------------------------------------------------------------------------------------------
   {_SDI_CHK_IMP0, IMP_FAC_PARA, 1, 1},  //IMP每类数据的测试字 
@@ -1027,7 +1015,7 @@ CONST S_Data_Para_Storage_Info Data_Para_Storage[] =
   {_SDI_CHK_IMPB, IMP_LOAD_REC, 1, 1}, 
   {_SDI_CHK_IMPC, IMP_PD_DATA, 1, 1},
   
-  {_SDI_CHG_CS, IMP_LOAD_REC, 10, 1}  //用于改变整个存储数据的CS,改变其长度可改变这个CS，从而自动设参数
+  {_SDI_CHG_CS, IMP_LOAD_REC, 1, 1}  //用于改变整个存储数据的CS,改变其长度可改变这个CS，从而自动设参数
 }; 
 
 //extern void Clear_CPU_Dog(void); 

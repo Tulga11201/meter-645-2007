@@ -346,8 +346,9 @@ EXT volatile S_Para_Modify Para_Modify;
 //#define _PDI_ADJ_FLAG                0x80000043//校表标识字
 
 #define _PDI_ADJ_BEF_TIME            0x800000A0//校时前时间
+#define _PDI_ADJ_AFT_TIME            0x800000A1//校时后时间
 
-#define _PDI_RTC_ERR_TIME           0x800000A1 //硬件错误时钟
+#define _PDI_RTC_ERR_TIME           0x800000A2 //硬件错误时钟
 
 #define _PDI_NULL_1BYTE              0x800000EE//无意义的标识字 
 

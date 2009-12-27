@@ -2,7 +2,7 @@
 #include "Includes.h"
 
 
-#define SOFTWARE_VERSION "09122716 V1.3 " //软件版本号
+#define SOFTWARE_VERSION "09122803 V1.3 " //软件版本号
 
 
 CONST INT32U All_Loss_Vol_Curr = 1000;
@@ -22,6 +22,32 @@ CONST INT8U BROAD_ADDR_AA[] =
 
 CONST S_P_Data_Info P_Data_Info[] =
 {
+  {INIT(PDI, 0x000000FF),
+  INIT(DI_Set_Flag, 1),
+  INIT(PSW_Flag, PSW_RD_ONLY),
+  INIT(Storage, S_RAM),
+  INIT(pSrc, (void *) Zero),
+  //INIT(Src_Off, 0),
+  INIT(Src_Len, 4),
+  INIT(Src_Format, S_INTS),
+  INIT(Dst_Start, 1),
+  INIT(Dst_Len, 4),
+  INIT(Num, 0x000B0000 | ((MAX_RATES + 1) << 8)),
+  INIT(Spec_Flag, SPEC_ENERGY)}, 
+  
+  {INIT(PDI, 0x010100FF),
+  INIT(DI_Set_Flag, 1),
+  INIT(PSW_Flag, PSW_RD_ONLY),
+  INIT(Storage, S_RAM),
+  INIT(pSrc, (void *) Zero),
+  //INIT(Src_Off, 0),
+  INIT(Src_Len, 4),
+  INIT(Src_Format, S_INTS),
+  INIT(Dst_Start, 1),
+  INIT(Dst_Len, 8),
+  INIT(Num, 0x000A0000 | ((MAX_RATES + 1) << 8)),
+  INIT(Spec_Flag, SPEC_DEMAND)}, 
+  
   //当前以及历史电量
   //当前总组合有功), 有符号
   {INIT(PDI, 0x00000000),
@@ -5938,7 +5964,19 @@ CONST S_P_Data_Info P_Data_Info[] =
   INIT(Dst_Len, 6),
   INIT(Num, 0),
   INIT(Spec_Flag, SPEC_NO)},
-  
+  //校时后时间
+   {INIT(PDI, _PDI_ADJ_AFT_TIME),
+  INIT(DI_Set_Flag, 0),
+  INIT(PSW_Flag, PSW_RD_ONLY),
+  INIT(Storage, S_RAM),
+  INIT(pSrc, Adj_Aft_Time.Time),
+  //INIT(Src_Off, 0),
+  INIT(Src_Len, 6),
+  INIT(Src_Format, S_BCD),
+  INIT(Dst_Start, 0),
+  INIT(Dst_Len, 6),
+  INIT(Num, 0),
+  INIT(Spec_Flag, SPEC_NO)}, 
   //当前无功象限
   {INIT(PDI, _PDI_CURRENT_QUADRANT),
   INIT(DI_Set_Flag, 0),
@@ -6733,6 +6771,8 @@ void Prog_Timer_Proc()
 void Prog_Timer_Proc()
 {
   INT8U Status;
+  static S_Int8U Sec_Bak = {CHK_BYTE, 0xFF, CHK_BYTE};
+  static S_Int8U Counts = {CHK_BYTE, 0, CHK_BYTE};
   
   if(Check_Meter_Prog_Status() || Check_Meter_Factory_Status()) //处于编程状态
     Status = 1;
@@ -6760,6 +6800,26 @@ void Prog_Timer_Proc()
     SET_STRUCT_SUM(Event_Data);
   
     EN_PD_INT;
+  }
+  
+  if(Adj_Time_Flag.Var EQ 0x55)
+  {
+    if(Sec_Bak.Var != Cur_Time1.Sec)
+    {
+      Counts.Var ++;
+      Sec_Bak.Var = Cur_Time1.Sec;
+    }
+    
+    if(Counts.Var > 2)
+    {
+      Adj_Time_Flag.Var = 0;
+      Counts.Var = 0;
+      //Event_Data_Proc(ID_EVENT_ADJUST_TIME, EVENT_OCCUR);
+      Event_Cumu_Proc(ID_EVENT_ADJUST_TIME,EVENT_OCCUR,EVENT_REAL);
+      OS_TimeDly_Ms(100);
+      Event_Separate_Proc(ID_EVENT_ADJUST_TIME,EVENT_OCCUR,EVENT_REAL);
+    
+    }  
   }
 }
 

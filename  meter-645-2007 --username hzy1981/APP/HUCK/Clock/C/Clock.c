@@ -822,12 +822,20 @@ INT8U Adj_Time(S_BCD_Time *pTime, INT8U Flag)
 {
     //设置事件时间
   
-    //保存校时前时间  
+    //保存校时前时间
     mem_cpy((void *)&Adj_Bef_Time, (void *)&Cur_Time2, sizeof(Cur_Time2),\
             (void *)&Adj_Bef_Time, sizeof(Adj_Bef_Time));
             
     if(Set_Time_EXT_INTER_Ram_RTC(pTime))
     {
+      Adj_Time_Flag.Var = 0x55;
+      
+      Adj_Aft_Time.Time[0] = pTime->Sec;
+      Adj_Aft_Time.Time[1] = pTime->Min;
+      Adj_Aft_Time.Time[2] = pTime->Hour;
+      Adj_Aft_Time.Time[3] = pTime->Date;
+      Adj_Aft_Time.Time[4] = pTime->Month;
+      Adj_Aft_Time.Time[5] = pTime->Year; 
       //Set_Event_Instant(ID_EVENT_ADJUST_TIME);//校时开始
       //OS_Waitfor_Sec(Read_Event_Status(ID_EVENT_ADJUST_TIME) EQ 1,5);//等待5s还没有处理完则报断言错误
       //if(Read_Event_Status(ID_EVENT_ADJUST_TIME)!=1)
@@ -843,13 +851,13 @@ INT8U Adj_Time(S_BCD_Time *pTime, INT8U Flag)
         
       }
       */
-      
+      /*
       if(Flag EQ 1) //记录校时记录，不调用Event_Data_Proc,执行更快
       {
         Event_Cumu_Proc(ID_EVENT_ADJUST_TIME,EVENT_OCCUR,EVENT_REAL);
         Event_Separate_Proc(ID_EVENT_ADJUST_TIME,EVENT_OCCUR,EVENT_REAL);
       }
-      
+      */
       //Event_MultiTimes_Proc(ID_EVENT_ADJUST_TIME,EVENT_END,EVENT_REAL);
       Clr_Demand_Accu();//需量累加单元清0
       

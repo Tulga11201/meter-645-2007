@@ -363,7 +363,7 @@ CONST PROTO_DI CONST_PDI16[]=
 {
     _PDI_OPERATOR_ID,  //操作者代码 4
     _PDI_ADJ_BEF_TIME, //校时前时间 6
-    _PDI_CUR_TIME, //校时后时间 ，即当前时间
+    _PDI_ADJ_AFT_TIME, //校时后时间 ，即当前时间
   };
 
 CONST PROTO_DI CONST_PDI17[]={

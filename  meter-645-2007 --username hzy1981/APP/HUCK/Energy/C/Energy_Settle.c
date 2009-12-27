@@ -345,6 +345,51 @@ void Settle_Energy_Data(S_HEX_Time* pTime)
   OS_Mutex_Post(PUB_BUF_SEM_ID);
 }
 */
+void _mem_cpy(INT8U *pDst, INT8U *pSrc, INT16U SrcLen, INT8U *pDst_Start, INT16U DstLen)
+{
+  INT16U i;
+  for(i = 0; i < SrcLen; i ++)
+  {
+    *(pDst + SrcLen -1 - i) = *(pSrc + SrcLen -1 -i); 
+  }
+}
+
+//Flag位0表示清0，1表示结算
+void Settle_Energy_FF_Data(INT8U Flag)
+{
+  INT8U i,j,k,Type;
+  INT16U Len;
+  PROTO_DI PDI;
+  
+  Len = 0;
+  OS_Mutex_Pend(PUB_BUF0_SEM_ID);
+  for(i =0; i <= 10; i ++)
+  { 
+    //Len = 0;
+    if(Flag > 0)
+    {
+      Len = Read_Storage_Data(EH_DI(0x00000000) + i, (INT8U *)Pub_Buf0, (INT8U *)Pub_Buf0, sizeof(Pub_Buf0));  
+      if(Len EQ 0)
+        mem_set((INT8U *)Pub_Buf0, 0, sizeof(Pub_Buf0), (INT8U *)Pub_Buf0, sizeof(Pub_Buf0));
+      
+      for(j = 0; j <= MAX_RATES; j ++)
+      {
+        _mem_cpy((INT8U *)Pub_Buf0 + (INT16U)j*MAX_ENERGY_SETTLE_NUM*4 + 4, (INT8U *)Pub_Buf0 + (INT16U)j*MAX_ENERGY_SETTLE_NUM*4,\
+                  MAX_ENERGY_SETTLE_NUM*4 - 4, (INT8U *)Pub_Buf0, sizeof(Pub_Buf0));
+        
+        PDI = 0x00000000 + ((INT32U)i << 16) + ((INT32U)j << 8);
+        Len =_Get_DLT645_Data(PDI, (void *) Zero, 0, (INT8U *)(INT8U *)Pub_Buf0 + (INT16U)j*MAX_ENERGY_SETTLE_NUM*4, \
+                             (INT8U *)Pub_Buf0, sizeof(Pub_Buf0), FOR_EVENT, &Type);  
+      }
+    }
+    else
+      mem_set((INT8U *)Pub_Buf0, 0, sizeof(Pub_Buf0), (INT8U *)Pub_Buf0, sizeof(Pub_Buf0));
+      
+    Len = Get_Storage_Data_Len(EH_DI(0x00000000) + i);
+    Write_Storage_Data(EH_DI(0x00000000) + i, (INT8U *)Pub_Buf0, Len);   
+  }
+  OS_Mutex_Post(PUB_BUF0_SEM_ID);
+}
 
 //上电冻结电量数据----不补结算!!!!
 //pTime为掉电时间后的第一个结算时间或者当前结算时间,从pTime开始补结算
@@ -356,13 +401,14 @@ void Settle_Energy_Data(S_HEX_Time* pTime)
   //S_HEX_Time TempTime;
   //S_HEX_Time Settle_From_Time;
   STORA_DI Last_SDI;
+  INT8U Settle_Flag;
 
   Debug_Print("----------Settle Energy Data----------");
 
   OS_Mutex_Pend(PUB_BUF_SEM_ID);
   //先读取最近一次的电量结算数据
   Last_SDI = Read_Last_Settle_Energy_DI();
-     
+  Settle_Flag = 0;   
   if(Check_HEX_Time(pTime))
   {
     Debug_Print("Settle Time:");
@@ -378,7 +424,7 @@ void Settle_Energy_Data(S_HEX_Time* pTime)
       INC_ENERGY_SETTLE_DI(Last_SDI);
       Write_Storage_Data(Last_SDI, (void *) &Cur_Energy, sizeof(Cur_Energy));
       Write_Storage_Data(_SDI_LAST_SETTLE_ENERGY_DI, &Last_SDI, sizeof(Last_SDI));     
-      
+      Settle_Flag = 1;
       //Prepaid_Clr_Month_Eng_Chk(pTime);      
     }
     else
@@ -388,6 +434,9 @@ void Settle_Energy_Data(S_HEX_Time* pTime)
     ASSERT_FAILED();
   
   OS_Mutex_Post(PUB_BUF_SEM_ID);
+  
+  if(Settle_Flag EQ 1)
+     Settle_Energy_FF_Data(1);
 }
 //上电后月数据的冻结，前溯HIS_ENERGY_DATA_MONTHS个月
 void PowerOn_Settle_Energy_Data()

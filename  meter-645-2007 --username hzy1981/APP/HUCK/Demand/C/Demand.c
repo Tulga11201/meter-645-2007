@@ -1241,6 +1241,7 @@ void Set_Def_Demand_Data()
     Get_Next_Settle_Time(&TempTime, &TempTime, &TempTime, sizeof(TempTime));
   }
   Write_Storage_Data(_SDI_LAST_SETTLE_DEMAND_DI, &SDI, sizeof(SDI));
+  Settle_Demand_FF_Data(0);
 }
 
 //读取存在当前需量存储区中的总或分费率需量数据

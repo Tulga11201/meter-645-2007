@@ -15,6 +15,7 @@
 EXT void Write_Demand_Time(STORA_DI SDI, S_HEX_Time* pTime);
 EXT void Write_Demand_Rate_Data(STORA_DI SDI, INT8U Rate, void* pSrc, INT16U SrcLen);
 EXT void Settle_Demand_Data(S_HEX_Time* pTime);
+EXT void Settle_Demand_FF_Data(INT8U Flag);
 EXT void Write_Demand_Phase_Data(STORA_DI SDI, void* pSrc, INT16U SrcLen);
 EXT INT16U Read_His_Demand_Time_Data(INT8U Bef_Counts, S_HEX_Time * pDst, void* pDst_Start, INT16U DstLen);
 EXT INT16U Read_His_Demand_Rate_Data(INT8U Bef_Counts, INT8U Rate, void* pDst, void* pDst_Start, INT16U DstLen);

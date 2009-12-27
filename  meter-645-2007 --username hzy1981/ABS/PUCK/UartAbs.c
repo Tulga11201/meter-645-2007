@@ -179,8 +179,8 @@ void Channel_DataReceive_PUCK(INT8U Type,INT32U Status)
   Len=Search_Protocol_Frame(RecBufPtr,MaxRecLen,&offset);
   if((Len>=MIN_FRAME_PROCO_SIZE)&&(Len<=MAX_UART_REC_SIZE)&&(offset<=MaxRecLen))  //确实有645数据,645最少长度为12字节
   {
-   Debug_Print("<---------Receive Data,Channel_Id=%d,Len=%d",Type,Len);
-    DEBUG_BUF_PRINT(RecBufPtr,Len+offset,PRINT_HEX,30);  //把乱码帧前的也打出来
+    Debug_Print("<---------Receive Data,Channel_Id=%d,Len=%d",Type,Len);
+    //DEBUG_BUF_PRINT(RecBufPtr,Len+offset,PRINT_HEX,30);  //把乱码帧前的也打出来
     Len=Rcv_PROTOCOL_Frame_Proc(Type,RecBufPtr+offset,Len,(void *)Temp_Buf_PUCK, (void *)Temp_Buf_PUCK, TEMP_BUF_LEN);
     
      if(Len)   //需要应答
@@ -194,7 +194,7 @@ void Channel_DataReceive_PUCK(INT8U Type,INT32U Status)
 #endif
     //先发送后打印调试信息，确保速度
     Debug_Print("--------->Send Data,Channel_Id=%d,Len=%d",Type,Len);
-    DEBUG_BUF_PRINT((INT8U *)Temp_Buf_PUCK,Len,PRINT_HEX,30);
+    //DEBUG_BUF_PRINT((INT8U *)Temp_Buf_PUCK,Len,PRINT_HEX,30);
     Chanel_Para[Type].ExitFlag=1;
     SET_STRUCT_SUM(Chanel_Para[Type]);
 

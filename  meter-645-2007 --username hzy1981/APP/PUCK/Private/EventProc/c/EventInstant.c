@@ -1005,13 +1005,13 @@ void Check_MeterAddr_Key(void)
 #ifdef ID_EVENT_UP_COVER_OPEN
 void Check_UpCover(void)
 {
-  if(Get_Sys_Status()!=SYS_NORMAL || UP_COVER_STATUS ==0)    //VCC
+  if(Get_Sys_Status()!=SYS_NORMAL || UP_COVER_STATUS)    //VCC
   {
     Clr_Event_Instant(ID_EVENT_UP_COVER_OPEN);
     return ;
   }
   
-  if(UP_COVER_STATUS)   //正常情况下是按下去的
+  if(UP_COVER_STATUS EQ 0)   //UP_COVER_STATUS,1-----按下去,表示表盖是盖上;0-----表示表盖拿下
   {
     Set_Event_Instant(ID_EVENT_UP_COVER_OPEN);
   }

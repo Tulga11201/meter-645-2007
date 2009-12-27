@@ -147,7 +147,7 @@ EVENTSTATUS_C_EXT const EventProperty EventPropertyVar[MAX_EVENT_NUM]={
   #endif  
   
 #ifdef ID_EVENT_ADJUST_TIME
-  {.DoubleFlag=0,.StartSave=1,.EndSave=1,.StartCount=1,.EndCount=1,.EventName="Adjust RTC"},    //校时-----------------26----HUCK Will do
+  {.DoubleFlag=0,.StartSave=0,.EndSave=1,.StartCount=1,.EndCount=5,.EventName="Adjust RTC"},    //校时-----------------26----HUCK Will do
   #endif  
   
 #ifdef ID_EVENT_RTCERR_RUN                          //运行时钟乱-----------27----HUCK Will do

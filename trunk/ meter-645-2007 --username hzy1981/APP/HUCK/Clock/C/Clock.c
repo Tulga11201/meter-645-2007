@@ -823,9 +823,12 @@ INT8U Adj_Time(S_BCD_Time *pTime, INT8U Flag)
     //设置事件时间
   
     //保存校时前时间
-    mem_cpy((void *)&Adj_Bef_Time, (void *)&Cur_Time2, sizeof(Cur_Time2),\
-            (void *)&Adj_Bef_Time, sizeof(Adj_Bef_Time));
-            
+    if(Adj_Time_Flag.Var != 0x55)
+    {
+      mem_cpy((void *)&Adj_Bef_Time, (void *)&Cur_Time2, sizeof(Cur_Time2),\
+              (void *)&Adj_Bef_Time, sizeof(Adj_Bef_Time));
+    } 
+    
     if(Set_Time_EXT_INTER_Ram_RTC(pTime))
     {
       Adj_Time_Flag.Var = 0x55;

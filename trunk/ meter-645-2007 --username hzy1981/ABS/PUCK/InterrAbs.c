@@ -44,7 +44,7 @@ void Init_Interr_Sram(void)
 //有功脉冲计数,中断等级--------INTER_GRADE_LOWERST
 void Inter_CF1(void)
 {
-  static volatile S_Int32U Ac_Ms_Timer={CHK_BYTE,0x000000,CHK_BYTE};
+  //static volatile S_Int32U Ac_Ms_Timer={CHK_BYTE,0x000000,CHK_BYTE};
   
   EI();
   
@@ -62,12 +62,12 @@ void Inter_CF1(void)
           MEASU_A_LED_0;
           Pulse_Num_Temp.Ac_Pulse_Num-=Sys_Pulse_Var.Ac_Pulse_Freq;          
           Pulse_Num_Temp.AcNum=0;
-          Ac_Ms_Timer.Var=Ms_Timer_Pub;
+          //Ac_Ms_Timer.Var=Ms_Timer_Pub;
         }
       }
       else
       {
-        if(Ms_Timer_Pub-Ac_Ms_Timer.Var>=Sys_Pulse_Var.Pulse_Width)
+        //if(Ms_Timer_Pub-Ac_Ms_Timer.Var>=Sys_Pulse_Var.Pulse_Width)
         {
           Pulse_Num_Temp.AcValid=0;
           A_OUT_1;
@@ -86,7 +86,9 @@ void Inter_CF1(void)
 //无功脉冲计数,中断等级--------INTER_GRADE_LOWERST
 void Inter_CF2(void)
 {
-  static volatile S_Int32U Reac_Ms_Timer={CHK_BYTE,0x000000,CHK_BYTE};
+ 
+  //static volatile S_Int32U Reac_Ms_Timer={CHK_BYTE,0x000000,CHK_BYTE};
+  
   EI();
   if(CHECK_STRUCT_VAR(Pulse_Num_Temp))
   {
@@ -102,12 +104,12 @@ void Inter_CF2(void)
           MEASU_R_LED_0;
           Pulse_Num_Temp.Rea_Pulse_Num-=Sys_Pulse_Var.Reac_Pulse_Freq;          
           Pulse_Num_Temp.ReacNum=0;
-          Reac_Ms_Timer.Var=Ms_Timer_Pub;
+          //Reac_Ms_Timer.Var=Ms_Timer_Pub;
         }
       }
       else
       {
-        if(Ms_Timer_Pub-Reac_Ms_Timer.Var>=Sys_Pulse_Var.Pulse_Width)
+        //if(Ms_Timer_Pub-Reac_Ms_Timer.Var>=Sys_Pulse_Var.Pulse_Width)
         {
           Pulse_Num_Temp.ReacValid=0;
           R_OUT_1;

@@ -1944,6 +1944,8 @@ void Set_Def_Energy_Data()
   }
 
   Write_Storage_Data(_SDI_LAST_SETTLE_ENERGY_DI, &SDI, sizeof(SDI));
+  
+  Settle_Energy_FF_Data(0);
 //--------------------------------------送检专用，正式版需去掉-------------------
   if(PREPAID_EN > 0 && PREPAID_LOCAL_REMOTE EQ PREPAID_LOCAL) //本地费控表才预置电量电费
   {
@@ -2658,7 +2660,7 @@ void Check_Energy_Para_Modified()
   }
 
   //修改当前任务相关参数后10S，重新初始化参数
-  if(Count.Var >= 1 && 1 EQ Init_Para_Flag.Var)
+  if(Count.Var >= 2 && 1 EQ Init_Para_Flag.Var)
   {
     //设置了电量相关参数
     Init_Para_Flag.Var = 0;

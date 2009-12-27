@@ -30,5 +30,6 @@ EXT void Get_N_Last_Settle_Time(INT8U N, S_HEX_Time* pSrc, S_HEX_Time* pDst, voi
 EXT void Get_N_Next_Settle_Time(INT8U N, S_HEX_Time* pSrc, S_HEX_Time* pDst, void* pDst_Start, INT16U DstLen);
 EXT INT16U Read_His_Energy_Data(INT8U Bef_Counts, INT8U* pDst, INT8U* pDst_Start, INT16U DstLen);
 EXT void Settle_Energy_Data(S_HEX_Time* pTime);
+EXT void Settle_Energy_FF_Data(INT8U Flag);
 EXT void PowerOn_Settle_Energy_Data();
 #endif

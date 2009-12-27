@@ -639,13 +639,53 @@ void Settle_Demand_Data(S_HEX_Time* pTime)
   Set_Def_Cur_Demand_Data(&TempTime); //结算完后清需量  
 }
 */
+extern void _mem_cpy(INT8U *pDst, INT8U *pSrc, INT16U SrcLen, INT8U *pDst_Start, INT16U DstLen);
+//Flag位0表示清0，1表示正常结算
+void Settle_Demand_FF_Data(INT8U Flag)
+{
+  INT8U i,j,k, Type;
+  INT16U Len;
+  PROTO_DI PDI;
+
+  Len = 0;  
+  OS_Mutex_Pend(PUB_BUF0_SEM_ID);
+  for(i =0; i <= 9; i ++)
+  { 
+    if(Flag > 0)
+    {
+      Len = Read_Storage_Data(EH_DI(0x01010000) + i, (INT8U *)Pub_Buf0, (INT8U *)Pub_Buf0, sizeof(Pub_Buf0));  
+      if(Len EQ 0)
+        mem_set((INT8U *)Pub_Buf0, 0, sizeof(Pub_Buf0), (INT8U *)Pub_Buf0, sizeof(Pub_Buf0));
+      
+      for(j = 0; j <= MAX_RATES; j ++)
+      {
+        _mem_cpy((INT8U *)Pub_Buf0 + (INT16U)j*MAX_DEMAND_SETTLE_NUM*8 + 8, (INT8U *)Pub_Buf0 + (INT16U)j*MAX_DEMAND_SETTLE_NUM*8,\
+                  MAX_DEMAND_SETTLE_NUM*8 - 8, (INT8U *)Pub_Buf0, sizeof(Pub_Buf0));
+        
+        PDI = 0x01010000 + ((INT32U)i << 16) + ((INT32U)j << 8);
+       
+        if(Flag EQ 1)
+          Len =_Get_DLT645_Data(PDI, (void *) Zero, 0, (INT8U *)Pub_Buf0 + (INT16U)j*MAX_DEMAND_SETTLE_NUM*8, \
+                               (INT8U *)Pub_Buf0, sizeof(Pub_Buf0), FOR_EVENT, &Type); 
+        else //if(Flag > 1) //非第一结算日，数据置成FF
+          mem_set((INT8U *)Pub_Buf0 + (INT16U)j*MAX_DEMAND_SETTLE_NUM*8, 0xFF, 8, (INT8U *)Pub_Buf0, sizeof(Pub_Buf0)); 
+      }
+    }
+    else
+      mem_set((INT8U *)Pub_Buf0, 0, sizeof(Pub_Buf0), (INT8U *)Pub_Buf0, sizeof(Pub_Buf0));
+      
+    Len = Get_Storage_Data_Len(EH_DI(0x01010000) + i);
+    Write_Storage_Data(EH_DI(0x01010000) + i, (INT8U *)Pub_Buf0, Len);   
+  }
+  OS_Mutex_Post(PUB_BUF0_SEM_ID);
+}
 
 //冻结需量数据, pTime就是冻结时间点
 //pTime为掉电时间后的第一个结算时间或者当前结算时间
 void Settle_Demand_Data(S_HEX_Time* pTime)
 {
   STORA_DI Last_SDI; 
-  //INT8U i; 
+  //INT8U Flag;
   S_HEX_Time TempTime; 
   //S_HEX_Time Last_Data_Time, Cur_Data_Time; 
 
@@ -673,6 +713,7 @@ void Settle_Demand_Data(S_HEX_Time* pTime)
   {
     //--------------------------  
     Save_Cur_Demand_Data();//将内存中的需量数据保存到 ROM中的当前需量区
+    Settle_Demand_FF_Data(0x01);
     //这则需量数据时间
     INC_DEMAND_SETTLE_DI(Last_SDI);  
     Write_Demand_Time(Last_SDI, pTime); 
@@ -680,16 +721,20 @@ void Settle_Demand_Data(S_HEX_Time* pTime)
     
     //更新当前需量数据区数据,同时需量数据区时间为当前分钟
     //mem_cpy(&TempTime, (S_HEX_Time *)&Cur_Time0, sizeof(S_HEX_Time), &TempTime, sizeof(TempTime));
-    Set_Def_Cur_Demand_Data(pTime); //结算完后清需量     
+    Set_Def_Cur_Demand_Data(pTime); //结算完后清需量
+    //Flag = 0x01;
   }
   else //不是第一结算日，则置数据为FF
   {
+    Settle_Demand_FF_Data(0x02);
     Debug_Print("Not the first settle day!");
     INC_DEMAND_SETTLE_DI(Last_SDI);     
     Set_Demand_His_Invalid_Data(Last_SDI);
+    //Flag = 0x02;
   }
   
   Write_Last_Settle_Demand_DI(Last_SDI);//保存Last_DI到_SDI_LAST_SETTLE_DEMAND_DI 
+  
 }
 
 //上电补冻需量数据

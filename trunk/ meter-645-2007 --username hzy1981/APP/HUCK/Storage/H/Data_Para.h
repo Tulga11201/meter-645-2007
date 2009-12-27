@@ -83,6 +83,7 @@
 
 #define ES_DI(X) (X|EXT_SEPA_EVENT)//分次事件扩充DI
 #define EC_DI(X) (X|EXT_CUMU_EVENT)//累计事件扩充DI
+#define EH_DI(x) (x|EXT_HIS_DATA) //历史数据
 
 #define SCREEN_ID_LEN 5 //键盘显示和循环显示ID的数据长度
 

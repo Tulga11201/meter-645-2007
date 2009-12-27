@@ -73,12 +73,13 @@ EXT NO_INIT volatile S_HEX_Time Cur_Time0;             //当前时间0
 EXT NO_INIT volatile S_Clock_Info Clock_Info;
 
 EXT NO_INIT volatile S_BCD_Time Cur_Time1;             //当前时间1
-
+//EXT volatile S_Int16U Adj_Time_Flag;
 EXT volatile S_Adj_Time_Para Adj_Time_Para;  //每日校时次数
 EXT volatile INT8U RTC_Err_Time[5];//错误时间,用于记录事件记录时用
 EXT volatile S_Event_Time Cur_Time2;
 EXT NO_INIT volatile S_BCD_Time Cur_Time_Bak;          //Cur_Tim1的一个备份
 EXT volatile S_Event_Time Adj_Bef_Time;  //校时前时间
+EXT volatile S_Event_Time Adj_Aft_Time;  //校时后时间
 EXT volatile S_Event_Time PD_Time; //前次掉电时间
 EXT volatile S_Event_Time PO_Time; //前次上电时间
 EXT volatile S_HEX_Time Hex_PD_Time; //掉电时间

@@ -188,13 +188,21 @@ INT16U _Get_Energy_Proto_Data(PROTO_DI PDI, INT8U* pDst, INT8U* pDst_Start, INT1
   INT8U Temp, Src_Type;
   INT32U Off, U_Data;
   INT32S S_Data;
-
+  INT8U FF_Flag;
+  
   TRACE();
 
   if(!(pDst >= pDst_Start && pDst + 4 <= pDst_Start + DstLen))
   {
     ASSERT_FAILED();
     return 0;
+  }
+  
+  FF_Flag = 0;
+  if((PDI & 0xFF) EQ 0xFF && BYTE_2(PDI) <= 0x0A) //读取上N个结算日数据块
+  {
+    FF_Flag = 1;
+    PDI = PDI & 0xFFFFFF00;
   }
   
   Bef_Counts = (INT8U) (PDI & 0x0000000F);//前几个结算日数据?  
@@ -375,6 +383,21 @@ INT16U _Get_Energy_Proto_Data(PROTO_DI PDI, INT8U* pDst, INT8U* pDst_Start, INT1
     ASSERT_FAILED();
     return 0;
   }
+  
+  if(FF_Flag EQ 1)//
+  {
+    PDI = EH_DI(0x00000000) + BYTE_2(PDI);
+    Len = Read_Storage_Data(PDI, (INT8U *)Pub_Buf, (INT8U *)Pub_Buf, sizeof(Pub_Buf)); 
+    if(Len > 0)
+    {
+      mem_cpy(pDst + 4, (INT8U *)Pub_Buf + ((INT32U)BYTE_1(PDI))*MAX_ENERGY_SETTLE_NUM*4, \
+              MAX_ENERGY_SETTLE_NUM*4, pDst_Start, DstLen);
+      return (MAX_ENERGY_SETTLE_NUM + 1) * 4;
+    }
+    else
+      return 0;
+  }  
+  
   return Data_Len;
 }
 

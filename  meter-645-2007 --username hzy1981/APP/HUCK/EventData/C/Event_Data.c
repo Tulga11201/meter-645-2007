@@ -222,6 +222,46 @@ void Event_Data_Proc(INT8U Event_ID,INT8U Occur_Or_End)
   OS_TimeDly_Ms(10); //延迟10ms
 }
 
+extern INT16U Get_Event_Cumu_Data_Index(INT8U Event_ID);
+//清除事件清零记录
+void Clear_Clr_Event_Data()
+{
+  PROTO_DI PDI;
+  STORA_DI SDI;
+  INT16U Index, i, Len;
+  INT8U Event_ID;
+  
+  DISP_CLR_DATA_INFO;
+  
+  PDI = Get_Event_Separate_Start_PDI(0x03300300);
+  PDI = ((PDI & 0xFFFFFF00) | 0x01);
+  Index = Get_Event_Separate_Proto_Index(PDI); //该事件在分次事件数据中的索引
+  
+  OS_Mutex_Pend(PUB_BUF0_SEM_ID);
+ 
+  mem_set((void *)Pub_Buf0, 0, sizeof(Pub_Buf0), (void *)Pub_Buf0, sizeof(Pub_Buf0));
+  
+  for(i = 0; i < Event_Separate_Data_Info[Index].Storage_Num; i ++)
+  {
+    SDI = Event_Separate_Data_Info[Index].SDI + i;
+    Len = Get_Storage_Data_Len(SDI);
+    Write_Storage_Data(SDI, (void *)Pub_Buf0, Len);
+  }
+  
+  SDI = NULL_EVENT_STORA_DI;
+  Write_Storage_Data(Event_Separate_Data_Info[Index].Last_SDI, &SDI, sizeof(SDI));
+  
+  Event_ID = Event_Separate_Data_Info[Index].Event_ID;  
+  Index = Get_Event_Cumu_Data_Index(Event_ID);
+
+  Len = Get_Storage_Data_Len(Event_Cumu_Data_Info[Index].Occur_Stora_DI);
+  Write_Storage_Data(Event_Cumu_Data_Info[Index].Occur_Stora_DI, (INT8U *)Pub_Buf0, Len);
+
+  Len = Get_Storage_Data_Len(Event_Cumu_Data_Info[Index].Total_Stora_DI);
+  Write_Storage_Data(Event_Cumu_Data_Info[Index].Total_Stora_DI, (INT8U *)Pub_Buf0, Len);
+
+  OS_Mutex_Post(PUB_BUF0_SEM_ID);   
+}
 
 //清除事件
 void Clear_Event_Data(PROTO_DI Clr_PDI)

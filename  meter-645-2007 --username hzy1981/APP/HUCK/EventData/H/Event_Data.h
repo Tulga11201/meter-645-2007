@@ -167,5 +167,6 @@ EXT void Save_Event_PD_Data();
 EXT void PowerOn_Event_Proc();
 EXT void Wait_Event_Data_Proc_End(INT8U Event_ID);
 EXT void Set_Def_Event_PD_Data();
+EXT void Clear_Clr_Event_Data();
 #endif
 

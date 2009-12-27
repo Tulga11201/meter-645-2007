@@ -197,6 +197,7 @@ void Check_Clear_Data()
     Clear_Demand_Data();
     Clear_VolStat_Data();
     Clear_Event_Data(0xFFFFFFFF);
+    Clear_Clr_Event_Data(); //清事件清零记录
     Clear_Load_Data();
     Clear_Data_End();//清数据完成
     

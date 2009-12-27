@@ -265,7 +265,90 @@ INT16U Get_Spec_Event_Sparate_Proto_Data(STORA_DI SDI, INT8U *pDst, INT8U *pDst_
       
     return RD_Len;
   }
+  else if((SDI & 0x1FFFFF00) EQ 0x03300200 && (SDI & 0xFF) > 0)
+  {
+    *pFlag = 1;
+    
+    Frame_Ack_Info.Follow_Flag = 0;//初始化为没有后续数据
+    
+    if(Frame_Ack_Info.Read_Follow_Flag EQ 0)
+    {
+      Off.Var = 1;
+      SDI_Bak = SDI;
+    }
+    else
+    {
+      if(SDI_Bak != SDI)
+        return 0;
+    }
+    
+    OS_Mutex_Pend(PUB_BUF0_SEM_ID);
+    Len = Read_Storage_Data(SDI, (INT8U *)Pub_Buf0, (INT8U *)Pub_Buf0, sizeof(Pub_Buf0));
+    OS_Mutex_Post(PUB_BUF0_SEM_ID);
+    
+    if(Len EQ 0 || Off.Var >= Len)//Off.Var表示当次应该读取的偏移
+      return 0;
+    
+    if(Off.Var EQ 1)
+      RD_Len = 194;
+    else
+      RD_Len = 8;
 
+    mem_cpy(pDst, (INT8U *)Pub_Buf0 + Off.Var, RD_Len, pDst_Start, DstLen);
+    Off.Var += RD_Len;
+    
+    if(Len > Off.Var)
+      Frame_Ack_Info.Follow_Flag = 1;//有后续数据
+    else
+      Frame_Ack_Info.Follow_Flag = 0;
+      
+    return RD_Len;
+  }
+  else if((SDI & 0x1FFFFF00) EQ 0x03300800 && (SDI & 0xFF) > 0) //节假日编程
+  {
+    *pFlag = 1;
+    
+    Frame_Ack_Info.Follow_Flag = 0;//初始化为没有后续数据
+    
+    if(Frame_Ack_Info.Read_Follow_Flag EQ 0)
+    {
+      Off.Var = 1;
+      SDI_Bak = SDI;
+    }
+    else
+    {
+      if(SDI_Bak != SDI)
+        return 0;
+    }
+    
+    OS_Mutex_Pend(PUB_BUF0_SEM_ID);
+    mem_set((INT8U *)Pub_Buf0, 0, sizeof(Pub_Buf0),(INT8U *)Pub_Buf0, sizeof(Pub_Buf0)); 
+    
+    if(Off.Var EQ 1)
+      Len = Read_Storage_Data(SDI, (INT8U *)Pub_Buf0, (INT8U *)Pub_Buf0, sizeof(Pub_Buf0));
+
+    Len = 1026 + 1;
+    OS_Mutex_Post(PUB_BUF0_SEM_ID);
+      
+    
+    if(Len EQ 0 || Off.Var >= Len)//Off.Var表示当次应该读取的偏移
+      return 0;
+    
+    if(Off.Var EQ 1)
+      RD_Len = 192;
+    else
+      RD_Len = (Len - Off.Var) < 192? (Len - Off.Var):192;
+
+    mem_cpy(pDst, (INT8U *)Pub_Buf0 + 1, RD_Len, pDst_Start, DstLen);
+    Off.Var += RD_Len;
+    
+    if(Len > Off.Var)
+      Frame_Ack_Info.Follow_Flag = 1;//有后续数据
+    else
+      Frame_Ack_Info.Follow_Flag = 0;
+      
+    return RD_Len;
+  }  
   return 0;  
 }
 

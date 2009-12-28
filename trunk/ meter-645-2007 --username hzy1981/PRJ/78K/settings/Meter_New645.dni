@@ -54,7 +54,7 @@ SeqData24=0,0,0,0,0,0
 TraceSettings=64,0,0,0,0,0,8192
 TimerSettings=0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 CoverSettings=1048192,1048207,0
-Version=1,xxx.txt
+Version=1,78k0rtrace.txt
 LastDevFile=DF1166A0.78K
 EmulType=320
 EventLimits=0, 1, 1, 2
@@ -74,7 +74,7 @@ TriggerName=main
 LimitSize=0
 ByteLimit=50
 [DebugChecksum]
-Checksum=1583328625
+Checksum=1115345811
 [InstructionProfiling]
 Enabled=_ 0
 [DriverProfiling]
@@ -90,18 +90,15 @@ UseAuto=0
 TypeViolation=1
 UnspecRange=1
 ActionState=1
-[TermIOLog]
-LoggingEnabled=_ 0
-LogFile=_ ""
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
 Category=_ 0
+[TermIOLog]
+LoggingEnabled=_ 0
+LogFile=_ ""
 [TraceHelper]
 Enabled=0
 ShowSource=1
 [Breakpoints]
-Bp0=_ "STD_CODE" "{F:\A\APP\HUCK\Protocol\C\Data_Trans.c}.8722.5@1" 1 0 0 0 "" 0 ""
-Bp1=_ "STD_CODE" "{F:\A\APP\HUCK\Protocol\C\Data_Trans.c}.8694.8@1" 1 0 0 0 "" 0 ""
-Bp2=_ "STD_CODE" "{F:\A\APP\Main\C\Main_Proc.c}.73.3@1" 1 0 0 0 "" 0 ""
-Count=3
+Count=0

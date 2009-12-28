@@ -331,7 +331,7 @@ EVENTSTATUS_C_EXT const EventProperty EventPropertyVar[MAX_EVENT_NUM]={
 
 #ifdef ID_EVENT_AB_LOSS_CURR                                //AB相失流--------------69
   {.DoubleFlag=1,.StartSave=1,.EndSave=1,.StartCount=30,.EndCount=20,.EventName="A_B Loss Cur"},
-#endif  
+#endif
   
 #ifdef ID_EVENT_AC_LOSS_CURR                                //AC相失流--------------70
   {.DoubleFlag=1,.StartSave=1,.EndSave=1,.StartCount=30,.EndCount=20,.EventName="A_C Loss Cur"},

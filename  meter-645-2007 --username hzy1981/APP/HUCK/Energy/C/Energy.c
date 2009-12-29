@@ -1911,7 +1911,7 @@ void Set_Def_Energy_Data()
   INT8U i;
   S_HEX_Time TempTime;
   STORA_DI SDI;
-  
+  INT32U Temp_Counts, Temp_Money;
   //±¾µØ¿¨bak_up
   if(PREPAID_EN > 0 && PREPAID_LOCAL_REMOTE EQ PREPAID_LOCAL)
   {

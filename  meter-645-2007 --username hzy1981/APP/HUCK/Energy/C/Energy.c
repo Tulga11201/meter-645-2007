@@ -1895,17 +1895,56 @@ void Save_Cur_Energy_Bak2_Data()
   }
 }
 
+//设置默认的购电次数和金额
+void Set_Def_Prepaid_Buy_Counts_Money()
+{
+  Cur_Energy.Prepaid_Info.Total_Prepaid_Money_Counts = 0;
+  Cur_Energy.Prepaid_Info.Total_Prepaid_Money = 0;
+
+  Cur_Energy.Prepaid_Info.Total_Prepaid_Energy_Counts = 0;
+  Cur_Energy.Prepaid_Info.Total_Prepaid_Energy = 0;  
+}
+
 //设置默认的电量数据
 void Set_Def_Energy_Data()
 {
   INT8U i;
   S_HEX_Time TempTime;
   STORA_DI SDI;
-
+  
+  //本地卡bak_up
+  if(PREPAID_EN > 0 && PREPAID_LOCAL_REMOTE EQ PREPAID_LOCAL)
+  {
+    if(PREPAID_MODE EQ PREPAID_MONEY) //电费型
+    {
+      Temp_Counts = Cur_Energy.Prepaid_Info.Total_Prepaid_Money_Counts;
+      Temp_Money = Cur_Energy.Prepaid_Info.Total_Prepaid_Money;
+    }
+    else
+    {
+      Temp_Counts = Cur_Energy.Prepaid_Info.Total_Prepaid_Energy_Counts;
+      Temp_Money = Cur_Energy.Prepaid_Info.Total_Prepaid_Energy;      
+    }
+  }
+  
   Debug_Print("Set Def Energy Data");
   mem_set((void *) &Cur_Energy, 0, sizeof(Cur_Energy), (void *) &Cur_Energy, sizeof(Cur_Energy));
-  SET_STRUCT_SUM(Cur_Energy);
+  //SET_STRUCT_SUM(Cur_Energy);
 
+  if(PREPAID_EN > 0 && PREPAID_LOCAL_REMOTE EQ PREPAID_LOCAL)
+  {
+    if(PREPAID_MODE EQ PREPAID_MONEY) //电费型
+    {
+      Cur_Energy.Prepaid_Info.Total_Prepaid_Money_Counts = Temp_Counts;
+      Cur_Energy.Prepaid_Info.Total_Prepaid_Money = Temp_Money;
+    }
+    else
+    {
+      Cur_Energy.Prepaid_Info.Total_Prepaid_Energy_Counts = Temp_Counts;
+      Cur_Energy.Prepaid_Info.Total_Prepaid_Energy =Temp_Money;      
+    }
+  }
+  
   INIT_STRUCT_VAR(Cur_Energy);
   SET_DATA_READY_FLAG(Cur_Energy);
   SET_STRUCT_SUM(Cur_Energy);

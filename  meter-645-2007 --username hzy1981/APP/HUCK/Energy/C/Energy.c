@@ -1898,11 +1898,15 @@ void Save_Cur_Energy_Bak2_Data()
 //设置默认的购电次数和金额
 void Set_Def_Prepaid_Buy_Counts_Money()
 {
-  Cur_Energy.Prepaid_Info.Total_Prepaid_Money_Counts = 0;
-  Cur_Energy.Prepaid_Info.Total_Prepaid_Money = 0;
-
-  Cur_Energy.Prepaid_Info.Total_Prepaid_Energy_Counts = 0;
-  Cur_Energy.Prepaid_Info.Total_Prepaid_Energy = 0;  
+  //本地费控表只能用参数预置卡设置购电次数和金额,以及在置默认参数时置0  
+  if(PREPAID_EN > 0 && PREPAID_LOCAL_REMOTE EQ PREPAID_LOCAL)
+  {
+    Cur_Energy.Prepaid_Info.Total_Prepaid_Money_Counts = 0;
+    Cur_Energy.Prepaid_Info.Total_Prepaid_Money = 0;
+  
+    Cur_Energy.Prepaid_Info.Total_Prepaid_Energy_Counts = 0;
+    Cur_Energy.Prepaid_Info.Total_Prepaid_Energy = 0;
+  }  
 }
 
 //设置默认的电量数据
@@ -1912,7 +1916,8 @@ void Set_Def_Energy_Data()
   S_HEX_Time TempTime;
   STORA_DI SDI;
   INT32U Temp_Counts, Temp_Money;
-  //本地卡bak_up
+  
+  //本地费控表只能用参数预置卡设置购电次数和金额,以及在置默认参数时置0
   if(PREPAID_EN > 0 && PREPAID_LOCAL_REMOTE EQ PREPAID_LOCAL)
   {
     if(PREPAID_MODE EQ PREPAID_MONEY) //电费型

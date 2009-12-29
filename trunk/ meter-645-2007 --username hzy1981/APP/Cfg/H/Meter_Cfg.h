@@ -41,7 +41,7 @@
 
 #define SHELL_EN      0//shell使能
 
-#define SET_ENERGY_EN 1//Mode_Word.Mode[0].Bit.Bit3 //是否允许设置初始电量
+#define SET_ENERGY_EN 0//Mode_Word.Mode[0].Bit.Bit3 //是否允许设置初始电量
 
 #define METER_CLR_EN        1 //Mode_Word.Mode[0].Bit.Bit1 //是否允许出厂电表清零?
 #define NEG_ADD_POS_ACT_EN  0 //Mode_Word.Mode[0].Bit.Bit0 //反向有功是否计入正向

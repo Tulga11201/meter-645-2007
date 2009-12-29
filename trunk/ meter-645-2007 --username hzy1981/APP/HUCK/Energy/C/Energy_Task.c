@@ -347,8 +347,8 @@ void Refresh_Para_From_Rom()
   Read_LoadData_Para_From_Rom();//负荷曲线相关参数
   OS_TimeDly_Ms(100);
   Read_Ctrl_Para_From_Rom();//读取负荷控制参数
-  OS_TimeDly_Ms(100);
-  Read_Settle_Para_From_Rom(); //读取结算相关参数
+  //OS_TimeDly_Ms(100);
+  //Read_Settle_Para_From_Rom(); //读取结算相关参数
   OS_TimeDly_Ms(100);
   Read_Freeze_Para_From_Rom(); //读取冻结相关参数
   OS_TimeDly_Ms(100);

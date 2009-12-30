@@ -370,9 +370,9 @@ LC是所要读取的明文数据＋MAC+分散因子的总长度，它是1字节的十六进制数。"*/
         //组装发送的数据域，不管数据标示，/////////0x33类型函数中转站, 0x33类型的函数，的数据域的入口参数数据都为除去数据标示和操作者代码的 数据域，
 //出口都为：也不要管数据标示，的直接存放在FarPaidBuff
         mem_cpy(FarPaidBuff,Data_Point,8,FarPaidBuff,Length_FarPaidBuff);//8字节数据回抄标识
-	My_memcpyRev( FarPaidBuff+8,receive_send_buffer,((unsigned char)(Far_Read_078001FF_Format.Data_Length)) );
-	My_memcpyRev( FarPaidBuff+8+((unsigned char)(Far_Read_078001FF_Format.Data_Length)),receive_send_buffer+((unsigned char)(Far_Read_078001FF_Format.Data_Length)), 4);
-	FarPrePayment.Far_SendLen = 8+((unsigned char)(Far_Read_078001FF_Format.Data_Length))+4;
+	My_memcpyRev( FarPaidBuff+8,receive_send_buffer,(( INT8U)(Far_Read_078001FF_Format.Data_Length)) );
+	My_memcpyRev( FarPaidBuff+8+((INT8U )(Far_Read_078001FF_Format.Data_Length)),receive_send_buffer+((INT8U)(Far_Read_078001FF_Format.Data_Length)), 4);
+	FarPrePayment.Far_SendLen = 8+((INT8U)(Far_Read_078001FF_Format.Data_Length))+4;
 
 	
 //	My_memcpyRev( far_data_p+14,receive_send_buffer,((unsigned char)(Far_Read_078001FF_Format->Data_Length)) );

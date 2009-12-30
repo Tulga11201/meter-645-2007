@@ -1,7 +1,7 @@
 #include "MyIncludesAll.h"
 #undef Debug_Print
- #define Debug_Print(...)
-//#define Debug_Print _Debug_Print
+//#define Debug_Print(...)
+#define Debug_Print _Debug_Print
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //// ÑÓÊ±_64us¸ö64us //      
@@ -504,7 +504,7 @@ void PrintErrState(void ){
     if(Card_Error_State.CardErrorState. Password_Count_Number_Is_Zero_Err ){
      Debug_Print("   ÃÜÔ¿¿¨ĞŞ¸Ä´ÎÊıÎªÁã´íÎó "  );
   }
-    if(Card_Error_State.CardErrorState.Password_State_Err  ){
+    if(Card_Error_State.CardErrorState.Password_Version_Err  ){
      Debug_Print("  ÃÜÔ¿¿¨×´Ì¬´íÎó  "  );
   }
     if(Card_Error_State.CardErrorState.ESAM_DO_ERR  ){

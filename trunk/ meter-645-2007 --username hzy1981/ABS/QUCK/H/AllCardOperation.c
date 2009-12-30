@@ -42,13 +42,14 @@ INT8U ICcardMain(void) {
         //处理放回状态字
 	if(ret!= OK){
 		if(   Card_Error_State.CardErrorState.MeterIdErr EQ 1 //表号不匹配，计入非法卡插入次数 
-                   || Card_Error_State.CardErrorState.CardIdErr EQ 1 // 用户编号错误 ,当表开户了后会出现 表未开户不会出现  
+                   || Card_Error_State.CardErrorState.CardIdErr EQ 1 // 用户编号错误 ,当表开户了后会出现 ,表未开户不会出现  
                    || Card_Error_State.CardErrorState.CpuCardExternlAuthenticationErr EQ 1 //外部认证错误
                    || Card_Error_State.CardErrorState.CpuCardInternlAuthenticationErr EQ 1// 内部认证， 即身份验证。计入非法卡插入次数
                    || Card_Error_State.CardErrorState.CARD_STATE_ERR EQ 1//未开户状态插入购电卡和补卡/
+             //      || Card_Error_State.CardErrorState.WhenInOperation_Insert_FirstUserCard_Err EQ 1//运行状态插入开户卡
                    || Card_Error_State.CardErrorState.BUY_CARD_KIND_ERR EQ 1// 购电卡卡类型错 补卡，开户卡。类型没找到以及开户卡状态 插入 开户卡
                    || Card_Error_State.CardErrorState.CARD_BUY_COUNT_ERR EQ 1//购电次数错误  计入非法卡插入次数
-                   || Card_Error_State.CardErrorState.Cpu_Card_Li_San_Yin_Zi_Err EQ 1 /// 离散因子错了， 计入非法卡插入次数
+                    || Card_Error_State.CardErrorState.Cpu_Card_Li_San_Yin_Zi_Err EQ 1 /// 离散因子错了， 计入非法卡插入次数
                   )
 		{
                         //非法卡次数加1，写到e方中去
@@ -616,8 +617,8 @@ unsigned char Set_In_Card(void){///出厂预制卡"
         //更新购电次数,更新剩余金额
         Prepaid_Set_Buy_Money_Counts(Moneybag_Data.Remain_Money, Moneybag_Data.Buy_Count);
         //表的运行状态
-	Pre_Payment_Para.Meter_Run_State=0;
-        Write_Storage_Data(_SDI_PREPAID_RUN_STATUS ,&Pre_Payment_Para.Meter_Run_State  , 1 );
+	//Pre_Payment_Para.Meter_Run_State=0;
+        //Write_Storage_Data(_SDI_PREPAID_RUN_STATUS ,&Pre_Payment_Para.Meter_Run_State  , 1 );
         //清除远程非法攻击次数
         FarPrePayment.ID_Ins_Counter  =0;
 	Write_Storage_Data(_SDI_INVALID_COUNTS_AllOW, &FarPrePayment.ID_Ins_Counter, 1);
@@ -739,7 +740,7 @@ unsigned char Password_Card(void)//密钥下装卡/恢复卡
 		if( File_Point.Password_Info[3] <= Esam_Password_Info[3] )//密钥下装卡中  密钥版本 
 		{
                           ASSERT_FAILED();
-			  Card_Error_State.CardErrorState.Password_State_Err=1;
+			  Card_Error_State.CardErrorState.Password_Version_Err=1;
 			  return ERR;
 		}
 	}
@@ -748,7 +749,7 @@ unsigned char Password_Card(void)//密钥下装卡/恢复卡
 		if(  File_Point.Password_Info[3] != 0 )/// 如果 密钥修复卡中 密钥版本 不为0
 		{
                           ASSERT_FAILED();
-			  Card_Error_State.CardErrorState.Password_State_Err=1;
+			  Card_Error_State.CardErrorState.Password_Version_Err=1;
 			  return ERR;
 		}
         }
@@ -775,7 +776,7 @@ unsigned char Password_Card(void)//密钥下装卡/恢复卡
         //// 保存用的是 密钥恢复卡，还是密钥下装卡 ");
         // 保存用的是 密钥恢复卡，还是密钥下装卡//该变量只有在这里修改，是用来做编程记录的
 	Pre_Payment_Para.PassWord_Kind=PassWord_Kind;////密钥类型,密钥下装卡， 还是密钥恢复卡
-         if(Write_Storage_Data(_SDI_PREPAID_PSW_KIND , &Pre_Payment_Para.PassWord_Kind ,1) );
+        Write_Storage_Data(_SDI_PREPAID_PSW_KIND , &Pre_Payment_Para.PassWord_Kind ,1) ;
 	return OK;
 }
        

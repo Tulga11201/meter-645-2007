@@ -51,11 +51,18 @@ unsigned char Judge_User_Card_OK(unsigned char BuyCard_Kind,unsigned long Buy_Co
         {
                // // 判断是否用户编号不对// " );
 		if( My_Memcmp(Pre_Payment_Para.UserID,file.Client_ID,6) )
-			{
+		{
                           ASSERT_FAILED();
 			  Card_Error_State.CardErrorState.CardIdErr=1;
 			  return ERR;
-			}
+		}
+                ////如果是运行状态插入 开户卡 
+                if( BuyCard_Kind ==GWFAR_USER_CARD_NEW )
+                {
+                        ASSERT_FAILED();
+			Card_Error_State.CardErrorState.WhenInOperation_Insert_FirstUserCard_Err=1;
+			return ERR;
+		}
                  //"//如果购电次数相等则直接回写// " );
                 CurrMeter_MoneyCount=Get_Buy_Eng_Counts();
 		
@@ -65,12 +72,12 @@ unsigned char Judge_User_Card_OK(unsigned char BuyCard_Kind,unsigned long Buy_Co
 			return OK;
 		}
                 ////如果是运行状态插入 开户卡， 计入非法卡插入次数 " );
-		if( BuyCard_Kind ==GWFAR_USER_CARD_NEW )
+		/*if( BuyCard_Kind ==GWFAR_USER_CARD_NEW )
                 {
                         ASSERT_FAILED();
 			Card_Error_State.CardErrorState.BUY_CARD_KIND_ERR=1;
 			return ERR;
-		}
+		} */
 	} //运行状态判断结束
 	else{
                //// 判断是否未开户状态插入购电卡，补卡  " );

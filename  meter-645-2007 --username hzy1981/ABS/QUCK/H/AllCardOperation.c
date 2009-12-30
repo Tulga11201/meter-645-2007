@@ -617,14 +617,14 @@ unsigned char Set_In_Card(void){///出厂预制卡"
         //更新购电次数,更新剩余金额
         Prepaid_Set_Buy_Money_Counts(Moneybag_Data.Remain_Money, Moneybag_Data.Buy_Count);
         //表的运行状态
-	//Pre_Payment_Para.Meter_Run_State=0;
-        //Write_Storage_Data(_SDI_PREPAID_RUN_STATUS ,&Pre_Payment_Para.Meter_Run_State  , 1 );
+	Pre_Payment_Para.Meter_Run_State=0;
+        Write_Storage_Data(_SDI_PREPAID_RUN_STATUS ,&Pre_Payment_Para.Meter_Run_State  , 1 );
         //清除远程非法攻击次数
         FarPrePayment.ID_Ins_Counter  =0;
 	Write_Storage_Data(_SDI_INVALID_COUNTS_AllOW, &FarPrePayment.ID_Ins_Counter, 1);
         //本地非法卡插入次数清0
-        Temp=0;
-        Write_Storage_Data(_SDI_INVALID_CARD_COUNTS ,&Temp,4);
+        //Temp=0;
+        //Write_Storage_Data(_SDI_INVALID_CARD_COUNTS ,&Temp,4);
         //事件记录清0， 只是改全局变量， 真正的清0 ，在后面的任务中进行
         Card_Clr_All_Data(); 
                

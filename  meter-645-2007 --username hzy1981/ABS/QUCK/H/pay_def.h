@@ -79,14 +79,14 @@ typedef struct {
    INT32U Meter_Not_Prog_Status_Err   : 1;// ，未按编程键  
    INT32U Meter_Id_Set_Card_Id_Is_FULL_Err    : 1; ///表号设置卡表号满错误  
    INT32U Password_Count_Number_Is_Zero_Err   : 1; //密钥卡修改次数为零错误       还没用到
-   INT32U Password_State_Err : 1; //密钥卡版本错了    
+   INT32U Password_Version_Err : 1; //密钥卡版本错了    
    INT32U ESAM_DO_ERR  : 1; //ESAM操作错误     还没用到
            
    INT32U CPU_Para_Card_Version_Err      : 1; //参数设置卡版本错误或计数器到零  
    INT32U CPU_NEW_CARD_INI_ERR  : 1; //已经插过表的开户卡重复插未当前未开户表
-   INT32U ReadWriteE2romErr    : 1; ///<       
+   INT32U ReadWriteE2romErr    : 1; ///<  读写e2rom错误     
    INT32U Esam_Extern_Auth_Err     : 1; ///<  esam 外部认证 错误
-   INT32U ji_ti     : 1; // 
+   INT32U WhenInOperation_Insert_FirstUserCard_Err    : 1; // 运行状态插入 开户卡
    
    INT32U XXXX   : 1; //    
    INT32U re_erved  : 1; ///预留  bits

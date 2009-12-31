@@ -837,7 +837,6 @@ void Demand_Check_Max()
 {
   INT8U i,j,Re, Max_Flag;
   INT8U TempTime[5];
-  static S_Demand_Rate_Mins Demand_Rate_Mins = {.Head = CHK_BYTE, .Rate_Bak = 0xFF, .Min_Bak = 0xFF, .Mins = 0, .Tail = CHK_BYTE};
   
   Re = 1;
   Re &= CHECK_STRUCT_SUM(Cur_Time0);//检查当前需量累加单元

@@ -587,6 +587,17 @@ INT16U Get_Load_Proto_Data(PROTO_DI PDI, INT8U Para[], INT8U ParaLen, void* pDst
     return 0;
 }
 
+//判断一个PDI是否是负荷记录的PDI
+INT8U Check_Load_Data_PDI(PROTO_DI PDI)
+{
+  if((PDI & 0xFF00FF00) EQ 0x06000000 && \
+     (PDI & 0x00FF0000) <= 0x00070000 && \
+     (PDI & 0x000000FF) <= 0x00000003)
+     return 1;
+  else
+    return 0;
+}
+
 /*
 //可读取多条的负荷记录处理
 INT16U _Get_Load_Proto_Data(PROTO_DI PDI, INT8U Para[], INT8U ParaLen, void* pDst, void* pDst_Start, INT16U DstLen)

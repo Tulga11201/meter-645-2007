@@ -2,7 +2,7 @@
 #include "Includes.h"
 
 
-#define SOFTWARE_VERSION "09122803 V1.3 " //软件版本号
+#define SOFTWARE_VERSION "09123113 V1.3 " //软件版本号
 
 
 CONST INT32U All_Loss_Vol_Curr = 1000;

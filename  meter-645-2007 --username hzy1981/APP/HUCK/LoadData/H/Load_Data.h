@@ -71,6 +71,7 @@ EXT void Save_LoadData_PD_Data();
 EXT INT8U Write_Load_Data(INT8U Type, INT8U Flag, INT8U* pSrc, INT16U SrcLen);
 EXT void Check_LoadData_Index_Avail();
 EXT void Check_LoadData_Para_Avail();
+EXT INT8U Check_Load_Data_PDI(PROTO_DI PDI);
 EXT INT32U Get_LoadData_Time_Index(INT8U Time[]);
 EXT INT8U Check_LoadData_Index(S_LoadData_Index* pInfo);
 EXT void Save_LoadData_PD_Data();

@@ -482,7 +482,10 @@ void Reset_Demand_Ram_Data()
     SET_STRUCT_SUM(Cur_Demand.Phase_Demand[i]);
   }
   
-  Cur_Demand.Rate = 1;//Cur_Rate_Info.Rate; //当前需量费率,Cur_Rate_Info可能还没有初始化好
+  if(CHECK_STRUCT_SUM(Cur_Rate_Info) && CHECK_STRUCT_VAR(Cur_Rate_Info))
+    Cur_Demand.Rate = Cur_Rate_Info.Rate; //当前需量费率,Cur_Rate_Info可能还没有初始化好
+  else
+    Cur_Demand.Rate = 1;
   
   INIT_STRUCT_VAR(Cur_Demand);
   SET_DATA_READY_FLAG(Cur_Demand);
@@ -491,7 +494,6 @@ void Reset_Demand_Ram_Data()
   EN_PD_INT;
   
   Clr_Demand_Accu(); //清需量累加单元
-  
   //Clear_Cur_Demand_Ram_Data();
   /*
   INT8U i;
@@ -643,7 +645,7 @@ extern void _mem_cpy(INT8U *pDst, INT8U *pSrc, INT16U SrcLen, INT8U *pDst_Start,
 //Flag位0表示清0，1表示正常结算
 void Settle_Demand_FF_Data(INT8U Flag)
 {
-  INT8U i,j,k, Type;
+  INT8U i,j,Type;
   INT16U Len;
   PROTO_DI PDI;
 

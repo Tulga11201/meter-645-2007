@@ -227,9 +227,11 @@ EXT volatile S_Demand_Para Demand_Para;
 EXT volatile S_Demand_Accu Demand_Accu;
 EXT NO_INIT volatile S_Demand Cur_Demand;     //当前最大需量数据结构体
 EXT volatile S_Sign_Demand Sign_Demand;   //有符号的当前需量，主要用于协议抄读
+EXT volatile S_Demand_Rate_Mins Demand_Rate_Mins; //
 
 #ifdef DEMAND_C
 volatile S_Sign_Demand Sign_Demand = {CHK_BYTE, 0, 0, 0, CHK_BYTE};   //有符号的当前需量，主要用于协议抄读
+volatile S_Demand_Rate_Mins Demand_Rate_Mins = {.Head = CHK_BYTE, .Rate_Bak = 0xFF, .Min_Bak = 0xFF, .Mins = 0, .Tail = CHK_BYTE};
 #endif
 EXT volatile INT8U Clear_Demand_Way;//请需量方式
 

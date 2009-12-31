@@ -576,9 +576,9 @@ INT8U Get_Prepaid_Status()
     }
     else
       return PREPAID_MONEY_ENOUGH;    
-    
-    
   }
+  
+  //return PREPAID_MONEY_ENOUGH; 
 }
 
 INT32U Get_Money_Hoard_Limit() //获取剩余金额囤积门限，单位0.01元

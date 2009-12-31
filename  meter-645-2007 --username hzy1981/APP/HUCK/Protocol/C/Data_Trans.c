@@ -2846,7 +2846,7 @@ CONST S_P_Data_Info P_Data_Info[] =
   INIT(Src_Format, S_INTU),
   INIT(Dst_Start, 0),
   INIT(Dst_Len, 6),
-  INIT(Num, 0x00002200 | CUR_UNBALANCE_NUM),
+  INIT(Num, 0x00002300 | CUR_UNBALANCE_NUM),
   INIT(Spec_Flag, SPEC_S_EVENT)},   
   
   //电流不平衡最近十次事件记录块
@@ -9198,7 +9198,7 @@ INT16U Rcv_DLT645_Data_Proc(INT8U Ch, INT8U* pFrame, INT8U FrameLen, INT8U* pDst
       Frame_Ack_Info.Follow_Flag = 0;
       mem_cpy(&PDI, pSrc, sizeof(PDI), &PDI, sizeof(PDI));  
       Len = _Get_DLT645_Data(PDI, pSrc + sizeof(PDI), (INT8U) (SrcLen - sizeof(PDI)), pDst + 14, pDst_Start, DstLen, FOR_COMM, &Type); 
-      if(Len > 0)
+      if(Len > 0 || Check_Load_Data_PDI(PDI)) //负荷记录数据在抄读不到的情况下应该返回正确应答
       {
         Re = 1; 
         mem_cpy(pDst + 10, &PDI, sizeof(PDI), pDst_Start, DstLen); 

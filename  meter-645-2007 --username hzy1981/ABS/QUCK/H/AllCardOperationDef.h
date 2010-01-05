@@ -133,7 +133,7 @@ struct Para_Table6
 /*" 回写数据,给用户卡，ESAM用 1ss"*/
 struct Run_Inf_Data
 	{	
-          unsigned char temp;	//用来字节对齐，因为Remain_Money必须放在一个额数位置，
+         unsigned char temp;	//用来字节对齐，因为Remain_Money必须放在一个额数位置，
 	unsigned char User_Kind;					/*" 用户类型 "*/
 	unsigned char Current_CT[3];				/*" 电流互感器变比 "*/
 	unsigned char Voltage_PT[3];				/*" 电压互感器变比 "*/	

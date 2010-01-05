@@ -423,7 +423,6 @@ INT8U  WhenCardInsertedInitPrePayData(void) { //上电从e方读取数据到全局变量
      Dir_Return_Flag = 0;
      Para_Updata_Flag=0;
      INIT_STRUCT_VAR(_Far_Pre_Payment_Para);
-     INIT_STRUCT_VAR(_Pre_Payment_Para);
      SET_STRUCT_SUM(Pre_Payment_Para);
      return 1;
 }

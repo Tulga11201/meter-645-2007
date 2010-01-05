@@ -73,7 +73,7 @@ typedef struct {
    INT32U CPU_CARD_DATA_HEAD_ERR    : 1; //数据区68头错
    INT32U CPU_CARD_DATA_END_ERR    : 1; ///<  数据区16尾错
    INT32U CPU_CARD_DATA_CHECK_ERR      : 1; //数据区效验错
-   INT32U CPU_CARD_COMM_DELAY_ERR  : 1; //CPU卡接收错  
+   INT32U CPU_CARD_COMM_DELAY_ERR  : 1; //CPU卡接收错 也可以说是提前拔卡
    INT32U Password_Key_Updata_ERR  : 1; ///  密钥更新错 
    
    INT32U Meter_Not_Prog_Status_Err   : 1;// ，未按编程键  

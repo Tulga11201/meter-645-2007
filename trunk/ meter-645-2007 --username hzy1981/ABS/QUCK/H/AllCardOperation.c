@@ -21,7 +21,9 @@ INT8U ICcardMain(void) {
         }else{//卡不存在
            Debug_Print("-----------没检测到卡插入--------- " );
            return  0;
-        }        
+        } 
+      
+        
         WhenCardInsertedInitPrePayData();//更新我管理的全局变量
 	Card_Switch_On();//黄工的函数，好像是 处理，插卡时，允许合闸的
 	if(Check_CPU_Occur()){

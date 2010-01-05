@@ -635,9 +635,7 @@ unsigned char PassWord_Updata(unsigned char Card_ID)
 //根据电表信息，更新esam返写文件 "
 unsigned char Updata_Esam_Return_File(unsigned char Order_Kind)
 {
-        //缓冲清0， 因为缓冲中有的数据 在下面的流程中并不会覆盖，  但是又想要设置为0
-        mem_set(Card_WR_Buff,0x00,sizeof(LENGTH_RUN_INF_DATA)+6,Card_WR_Buff,Length_Card_WR_Buff);
-	
+ 
 	Card_WR_Buff[0] = 0x68;
 	Card_WR_Buff[1] = Order_Kind;//卡类型
 	Card_WR_Buff[2] = 0;
@@ -687,7 +685,8 @@ void Deal_Run_Inf_Data(unsigned char * Source_Point,unsigned char Mode)
         
         INT32U Temp ;
         INT8U  DataTemp[5];
-
+        
+        Temp=sizeof(Run_Inf_Data);
         //" 用户编号，表号，用户类型"
         mem_cpy(&Run_Inf_Data.Client_ID[0],Pre_Payment_Para.UserID,6,&Run_Inf_Data.Client_ID[0],6);
         mem_cpy(&Run_Inf_Data.Meter_ID[0],Pre_Payment_Para.BcdMeterID,6,&Run_Inf_Data.Meter_ID[0],6);

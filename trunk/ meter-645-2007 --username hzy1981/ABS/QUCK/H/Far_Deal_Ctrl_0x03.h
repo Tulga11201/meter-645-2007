@@ -52,7 +52,7 @@ typedef struct {
     INT8U  ID_Ins_Counter  ;//远程预付费用， 如果写esam错误次数超过3次，不允许写esam，如果写成功一次，该值清0，如果该
     INT8U Far_SendLen;//发送的数据域长度，645协议中定义的L字段值  //自己定义的
    // INT8U Far_Auth_Day_Follow;// 身份认证有效日 跟随日， 
-    INT8U  c_esam_number[8];//可以局部变量代替，   扩展用
+    INT8U  c_esam_number[8];//可以局部变量代替，     扩展用
     }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  C_Far_Pre_Payment_Para ;
 
 DECLARE_VAR_TYPE(C_Far_Pre_Payment_Para, _C_Far_Pre_Payment_Para);

@@ -348,6 +348,13 @@ void Settle_Energy_Data(S_HEX_Time* pTime)
 void _mem_cpy(INT8U *pDst, INT8U *pSrc, INT16U SrcLen, INT8U *pDst_Start, INT16U DstLen)
 {
   INT16U i;
+  
+  if(!(pDst >= pDst_Start && pDst + SrcLen <= pDst_Start + DstLen))
+  {
+    ASSERT_FAILED();
+    return;
+  }
+  
   for(i = 0; i < SrcLen; i ++)
   {
     *(pDst + SrcLen -1 - i) = *(pSrc + SrcLen -1 -i); 
@@ -357,7 +364,7 @@ void _mem_cpy(INT8U *pDst, INT8U *pSrc, INT16U SrcLen, INT8U *pDst_Start, INT16U
 //Flag位0表示清0，1表示结算
 void Settle_Energy_FF_Data(INT8U Flag)
 {
-  INT8U i,j,k,Type;
+  INT8U i,j,Type;
   INT16U Len;
   PROTO_DI PDI;
   

@@ -20,8 +20,8 @@ INT8U Check_Event_Occuring(INT8U Event_ID)
   }
 }
 
-#undef Debug_Print
-#define Debug_Print _Debug_Print
+//#undef Debug_Print
+//#define Debug_Print _Debug_Print
 //全失压次数和时间统计
 //上电后调用该函数一次，Counts表示掉电期间失压总次数，Mins表示掉电期间失压总分钟数
 void All_Loss_Vol_Counts_Time_Proc(INT32U Counts,INT32U Mins)
@@ -142,8 +142,8 @@ void All_Loss_Vol_Data_Proc(INT8U Start_Time[],INT8U End_Time[], INT32U Curr)
     Write_Storage_Data(SDI_LAST_LOSS_VOL_OCCUR_TIME, (void *)All_Loss_Vol_Time.Start_Time, 6);//最近一次全失压发生和结束时刻
     Write_Storage_Data(SDI_LAST_LOSS_VOL_END_TIME, (void *)All_Loss_Vol_Time.End_Time, 6);
 }
-#undef Debug_Print
-#define Debug_Print(...)
+//#undef Debug_Print
+//#define Debug_Print(...)
 
 void Store_Op_ID(INT8U Op_ID[],INT8U *pDst, INT8U *pDst_Start, INT8U DstLen)
 {

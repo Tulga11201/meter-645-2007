@@ -36,7 +36,7 @@
 #define ROM_CS_BYTES  2//ROM中存储数据的校验和字节数
 #define MAX_RATES     4///最大费率数
 
-#define NET_METER     NOPREPAID_METER//CARRIER_METER//是否用于网络表的基表，可以是NOT_NET_METER或CARRIER_METER或者GPRS_METER
+#define NET_METER     NONET_METER//CARRIER_METER//是否用于网络表的基表，可以是NOT_NET_METER或CARRIER_METER或者GPRS_METER
 #define PREPAID_METER 0 //是否是预付费表? 0表示不是，1表示是
 
 #define SHELL_EN      0//shell使能
@@ -91,7 +91,7 @@
 #define MAX_DEMAND_SETTLE_NUM 12 //需量最大结算条数
 #define MAX_VOLSTAT_SETTLE_NUM 12 //电压统计最大结算条数
 
-#define PERIOD_FREEZE_NUM   60 //定时冻结个数
+#define PERIOD_FREEZE_NUM   12 //定时冻结个数
 #define INSTANT_FREEZE_NUM  3 //瞬时冻结个数
 
 #define YEAR_TABLE_SWITCH_NUM 2 //年时表切换记录个数

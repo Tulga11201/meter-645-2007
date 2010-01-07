@@ -198,14 +198,12 @@ INT16U _Get_Demand_Proto_Data(PROTO_DI PDI, INT8U* pDst, INT8U* pDst_Start, INT1
   {
     //PDI = EH_DI(0x01010000) + BYTE_2(PDI) - 1;
     Len = Read_Storage_Data(EH_DI(0x01010000) + BYTE_2(PDI) - 1, (INT8U *)Pub_Buf, (INT8U *)Pub_Buf, sizeof(Pub_Buf)); 
-    if(Len > 0)
-    {
-      mem_cpy(pDst + 8, (INT8U *)Pub_Buf + ((INT32U)BYTE_1(PDI))*MAX_DEMAND_SETTLE_NUM*8, \
-              MAX_DEMAND_SETTLE_NUM*8, pDst_Start, DstLen);
-      return (MAX_DEMAND_SETTLE_NUM + 1) * 8;
-    }
-    else
-      return 0;
+    if(Len EQ 0)
+      mem_set((INT8U *)Pub_Buf, 0, sizeof(Pub_Buf), (INT8U *)Pub_Buf, sizeof(Pub_Buf));    
+
+    mem_cpy(pDst + 8, (INT8U *)Pub_Buf + ((INT32U)BYTE_1(PDI))*MAX_DEMAND_SETTLE_NUM*8, \
+            MAX_DEMAND_SETTLE_NUM*8, pDst_Start, DstLen);
+    return (MAX_DEMAND_SETTLE_NUM + 1) * 8;
   }  
   return 8;
 }

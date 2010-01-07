@@ -14,7 +14,7 @@
 
 //判断当前CPU卡是否已经插入:1------插入;0----------没有插入
 #define JUDGE_CPU_INSERT   (CPU_CARD_INSERT==1)
-
+#define JUDGE_CPU_OUTPUT   (CPU_CARD_INSERT==0)
 
 
 

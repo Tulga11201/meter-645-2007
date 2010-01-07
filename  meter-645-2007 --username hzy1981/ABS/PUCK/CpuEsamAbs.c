@@ -148,21 +148,28 @@ INT8U Convert_Dis_Code(void)
           Cpu_Esam------------非0-----表示打开 CPU_ESAM; 0---------表示打开485口
 
 **********************************************************************************/ 
-void Dis_Card_Result(INT8U Result)
+void Dis_Card_Result(INT8U Ok_Flag,INT8U Result)
 {
   Mult_List temp_list={0};
   char temp[10];
   
-  if(Result EQ OK) //操作成功
-  { 
-    SetOnDevice_PUCK(S_DUKA);
+  SetOnDevice_PUCK(S_DUKA);
+  if(Ok_Flag) //操作成功
+  {
     SetOnDevice_PUCK(S_CHENGGONG);
     
     switch(GetCardKind())
     {
-        case GWFAR_USER_CARD:
-        case GWFAR_INIT_CARD:  
-        case GWFAR_ADDD_MONEY_CARD:          
+       
+      case GWFAR_MOD_METERID_CARD:
+        temp_list.exist=MULIT_EXSIT;
+        temp_list.len=4;
+        temp_list.subindex=1;
+        temp_list.fmtindex=9;
+        temp_list.offset=2;        
+        lcd_data(PDI_METER_ID, "########|",temp_list);   //表号低8位
+        break;
+      default:
         SetOnDevice_PUCK(S_DANGQIAN);
         SetOnDevice_PUCK(S_SHENGYU);
         SetOnDevice_PUCK(S_DIAN);
@@ -181,28 +188,15 @@ void Dis_Card_Result(INT8U Result)
         
         lcd_thismonth(1); ///< "本月",
         lcd_Pre_Pay (1,1);              ///< 显示"预付费类容"
-        UpdataLcdShow();
         break;
-        
-      case GWFAR_MOD_METERID_CARD:
-        temp_list.exist=MULIT_EXSIT;
-        temp_list.len=4;
-        temp_list.subindex=1;
-        temp_list.fmtindex=9;
-        temp_list.offset=2;
-        
-        lcd_data(PDI_METER_ID, "########|",temp_list);   //表号低8位
-        UpdataLcdShow();
-      break;
     }
-    
+    UpdataLcdShow();    
   }
   else
   {
     if(Card_Error_State.CardErrorState.MoneyLimitErr)  //囤积
       SetOnDevice_PUCK(S_TUNJI);
     
-    SetOnDevice_PUCK(S_DUKA);
     SetOnDevice_PUCK(S_SHIBAI);
     strcpy(temp,"ERR: ");
     temp[5]=Result/10+'0';
@@ -220,7 +214,7 @@ void CPU_Card_Main_Proc(void)
 {
 
 #if PREPAID_METER>0
-  INT8U Result,Flag; 
+  INT8U Result,Ok_Flag; 
   char temp[10];
 
   if(PREPAID_LOCAL_REMOTE !=PREPAID_LOCAL)
@@ -242,25 +236,25 @@ void CPU_Card_Main_Proc(void)
         Main_Dis_Info("In CARD");
         Turn_Light_On();
         
-        Flag=0;
+        Ok_Flag=1;
         if(Check_Max_Volt_Below(Get_Un()*0.7))   //电压太低，不能买电
-          Flag=1;
+          Ok_Flag=0;
 
-        Result=ICcardMain();        
-        if(Result)
+        Ok_Flag&=ICcardMain();        
+        if(Ok_Flag)
         {
           Port_Out_Pub(INTER_ID_ALARM_BEEP,300);  //叫1秒
-          strcpy(temp,"SUCCEED");
+          //strcpy(temp,"SUCCEED");
         }
         else
         {
           Port_Out_Pub(INTER_ID_ALARM_BEEP,1000);  //叫3秒
-          strcpy(temp,"FAILED");
+          //strcpy(temp,"FAILED");
         }
         Main_Dis_Info(temp);
-        OS_TimeDly_Sec(1);//1s睡眠
+        //OS_TimeDly_Sec(1);//1s睡眠
         
-        if(Flag)           //电压太低，不能买电
+        if(Ok_Flag EQ 0)           //电压太低，不能买电
           Result=DIS_LOW_VOLT_ERR;
         else
           Result=Convert_Dis_Code(); 
@@ -270,7 +264,7 @@ void CPU_Card_Main_Proc(void)
           OS_TimeDly_Ms(100);
           Clear_Ext_Dog();    //最快的任务：清CPU外部看门狗
           Clear_Task_Dog();   //清任务看门狗          
-          Dis_Card_Result(Result);          
+          Dis_Card_Result(Ok_Flag,Result);          
         }
         Realse_Local_Pay_Source();
       }
@@ -284,7 +278,7 @@ void CPU_Card_Main_Proc(void)
         
         Sys_Err_Info.DisIndex=0;
         Main_Dis_Info("OUT CARD");
-        Port_Out_Pub(INTER_ID_ALARM_BEEP,500);
+        Port_Out_Pub(INTER_ID_ALARM_BEEP,300);
         Curr_Media_Status.Media_Type=PAY_NONE;
         SET_STRUCT_SUM(Curr_Media_Status);
         Realse_Local_Pay_Source();

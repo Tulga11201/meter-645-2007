@@ -935,7 +935,6 @@ INT8U Check_Prog_Status(void)
 {
   return  (Key_Value_Pub.Key.Bit.PrgKey);
   //return (Read_Event_Status(ID_EVENT_PRGKEY_ON));  
-  
 }
 /********************************************************************************
 º¯ÊýÔ­ÐÍ£ºvoid Check_MeterAddr_Status(void)

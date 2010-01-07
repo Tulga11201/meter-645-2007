@@ -1691,6 +1691,7 @@ INT32U Get_Storage_Info_CS()
 {
   INT32U CS0, CS1, CS2, CS3;
    
+  Clear_All_Dog();
   CS0 = Get_Sys_Mem_Info_CS();
   CS1 = Get_Def_Para_Info_CS();
   OS_Set_Sum((INT8U *)Data_Mem_Map, sizeof(Data_Mem_Map), &CS2, sizeof(CS2), &CS2, sizeof(CS2));

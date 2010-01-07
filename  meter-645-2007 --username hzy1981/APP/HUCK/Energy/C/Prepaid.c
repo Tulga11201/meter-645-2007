@@ -19,9 +19,16 @@ void Read_Prepaid_Para_From_Rom()
   ASSERT(Len EQ 3);
   
   //梯度值
-  Len = Read_Storage_Data(0x04000207, (INT8U *)&Prepaid_Para.Step_Num, (INT8U *)&Prepaid_Para.Step_Num, sizeof(Prepaid_Para.Step_Num));
-  ASSERT(Len EQ 1);
-
+  if(PREPAID_EN > 0 && PREPAID_MONEY_MODE EQ PREPAID_STEP)
+  {
+    Len = Read_Storage_Data(0x04000207, (INT8U *)&Prepaid_Para.Step_Num, (INT8U *)&Prepaid_Para.Step_Num, sizeof(Prepaid_Para.Step_Num));
+    ASSERT(Len EQ 1);
+  }
+  else
+  {
+    Prepaid_Para.Step_Num = 1;  
+  }
+  
   //电流互感器变比
   Prepaid_Para.CT_Ratio = 0;
   Len = Read_Storage_Data(0x04000306, (INT8U *)&Prepaid_Para.CT_Ratio, (INT8U *)&Prepaid_Para.CT_Ratio, sizeof(Prepaid_Para.CT_Ratio));

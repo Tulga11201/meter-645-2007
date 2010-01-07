@@ -42,7 +42,7 @@ CONST S_Data_Mem_Map Data_Mem_Map[] =
 #define IMP3_DATA_SIZE 2400L   //重要数据          
 #define IMP4_DATA_SIZE 3500L   //重要数据的备份          
 #define IMP5_DATA_SIZE 0L    //普通数据          
-#define IMP6_DATA_SIZE 27500L  //历史数据          
+#define IMP6_DATA_SIZE 27000L  //历史数据          
 #define IMP7_DATA_SIZE 5000L   //事件累计信息          
 #define IMP8_DATA_SIZE 14000L  //第0类事件，不频繁，与数据混存       
 #define IMP9_DATA_SIZE 59500L  //第1类事件，数据量大且频繁，存独立EEROM    

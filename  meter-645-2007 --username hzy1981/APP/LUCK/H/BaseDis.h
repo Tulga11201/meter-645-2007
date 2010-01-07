@@ -33,5 +33,4 @@ typedef struct {
 
 stat_t getstat (void);
 void lcd_update (void);
-//void lcd_data (item_t item, const char* s);
 #endif

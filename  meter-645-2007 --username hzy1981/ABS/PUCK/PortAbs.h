@@ -58,14 +58,14 @@
 #define EXT_ID_AUX_ALARM          (INTER_ID_ALARM_DIS+1)  //辅助端子报警输出-----------------------------6
 #define EXT_ID_TOGGLE             (EXT_ID_AUX_ALARM+1)     //跳闸输出-----------------------------------7
 
-#define EXT_ID_ACPOWER            (EXT_ID_TOGGLE+1)       //有功脉冲-----------------------------------8
-#define EXT_ID_REACPOWER          (EXT_ID_ACPOWER+1)      //无功脉冲-----------------------------------9
-#define EXT_ID_DEMAND             (EXT_ID_REACPOWER+1)    //需量周期到输出--------------------------10
+//#define EXT_ID_ACPOWER            (EXT_ID_TOGGLE+1)       //有功脉冲-----------------------------------8
+//#define EXT_ID_REACPOWER          (EXT_ID_ACPOWER+1)      //无功脉冲-----------------------------------9
+#define EXT_ID_DEMAND             (EXT_ID_TOGGLE+1)    //需量周期到输出--------------------------10
 #define EXT_ID_SLIPE              (EXT_ID_DEMAND+1)       //滑差周期输出-------------------------------11
 #define EXT_ID_PARSE              (EXT_ID_SLIPE+1)        //时段切换输出--------------------------------12
-#define GERNAL_ID_ACPOWER         (EXT_ID_PARSE+1)        //总有功脉冲---------------------------------13
-#define GERNAL_ID_REACPOWER       (GERNAL_ID_ACPOWER+1)   //总无功脉冲---------------------------------14
-#define INTER_ID_ALARM_BEEP       (GERNAL_ID_REACPOWER+1) //报警喇叭------------------------------------15
+//#define GERNAL_ID_ACPOWER         (EXT_ID_PARSE+1)        //总有功脉冲---------------------------------13
+//#define GERNAL_ID_REACPOWER       (GERNAL_ID_ACPOWER+1)   //总无功脉冲---------------------------------14
+#define INTER_ID_ALARM_BEEP       (EXT_ID_PARSE+1) //报警喇叭------------------------------------15
 #define INTER_ID_RELAY_ON        (INTER_ID_ALARM_BEEP+1)  //脉冲触发式继电器开启------------------------16
 #define INTER_ID_RELAY_OFF       (INTER_ID_RELAY_ON+1)     //脉冲触发式继电器关闭-----------------------17
   

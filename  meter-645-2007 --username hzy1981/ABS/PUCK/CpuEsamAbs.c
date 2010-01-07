@@ -58,11 +58,11 @@ void Realse_Local_Pay_Source(void)
     Curr_Media_Status.Uart_Type=PAY_NONE;
     SET_STRUCT_SUM(Curr_Media_Status);
 }
-/**********************************************************************************
+*********************************************************************************
 函数功能：转换显示代码
 
 **********************************************************************************/ 
-
+/*
 INT8U Convert_Dis_Code(void)
 {
     
@@ -77,7 +77,7 @@ INT8U Convert_Dis_Code(void)
    
   if(Card_Error_State.CardErrorState.Esam_Extern_Auth_Err)  
        return DIS_CUR_VERY_NOEVEN;   //11-------ESAM验证失败
-                        
+
   if(Card_Error_State.CardErrorState.MeterIdErr)
         return DIS_GUEST_ID_ERR;        //12-------ESAM验证失败
   
@@ -140,7 +140,76 @@ INT8U Convert_Dis_Code(void)
   
   return OK;
 }
+*/ 
 #endif
+/**********************************************************************************
+函数功能：CPU卡切换处理
+入口：
+          Cpu_Esam------------非0-----表示打开 CPU_ESAM; 0---------表示打开485口
+
+**********************************************************************************/ 
+void Dis_Card_Result(INT8U Result)
+{
+  Mult_List temp_list={0};
+  char temp[10];
+  
+  if(Result EQ OK) //操作成功
+  { 
+    SetOnDevice_PUCK(S_DUKA);
+    SetOnDevice_PUCK(S_CHENGGONG);
+    
+    switch(GetCardKind())
+    {
+        case GWFAR_USER_CARD:
+        case GWFAR_INIT_CARD:  
+        case GWFAR_ADDD_MONEY_CARD:          
+        SetOnDevice_PUCK(S_DANGQIAN);
+        SetOnDevice_PUCK(S_SHENGYU);
+        SetOnDevice_PUCK(S_DIAN);
+        if(PREPAID_MODE EQ PREPAID_ENG)  //电量型预付费
+        {
+          SetOnDevice_PUCK(S_LIANG);
+          //显示剩余电费.......
+          lcd_data(0x00900100, "XXXXX#.##|kWh",temp_list);   //当前剩余电量
+        }
+        else                                //电费型预付费
+        {
+          SetOnDevice_PUCK(S_FEI);
+          //显示剩余电费.......
+          lcd_data(0x00900200, "XXXXXXX#.##|yuan",temp_list);   //当前剩余金额
+        }            
+        
+        lcd_thismonth(1); ///< "本月",
+        lcd_Pre_Pay (1,1);              ///< 显示"预付费类容"
+        UpdataLcdShow();
+        break;
+        
+      case GWFAR_MOD_METERID_CARD:
+        temp_list.exist=MULIT_EXSIT;
+        temp_list.len=4;
+        temp_list.subindex=1;
+        temp_list.fmtindex=9;
+        temp_list.offset=2;
+        
+        lcd_data(PDI_METER_ID, "########|",temp_list);   //表号低8位
+        UpdataLcdShow();
+      break;
+    }
+    
+  }
+  else
+  {
+    if(Card_Error_State.CardErrorState.MoneyLimitErr)  //囤积
+      SetOnDevice_PUCK(S_TUNJI);
+    
+    SetOnDevice_PUCK(S_DUKA);
+    SetOnDevice_PUCK(S_SHIBAI);
+    strcpy(temp,"ERR: ");
+    temp[5]=Result/10+'0';
+    temp[6]=Result%10+'0';
+    Main_Dis_Info(temp);
+  }
+}
 /**********************************************************************************
 函数功能：CPU卡切换处理
 入口：
@@ -151,8 +220,7 @@ void CPU_Card_Main_Proc(void)
 {
 
 #if PREPAID_METER>0
-  INT8U Result,Flag;
-  char temp[10];
+  INT8U Result,Flag; 
   
 
   if(PREPAID_LOCAL_REMOTE !=PREPAID_LOCAL)
@@ -201,44 +269,8 @@ void CPU_Card_Main_Proc(void)
           Turn_Light_On();
           OS_TimeDly_Ms(100);
           Clear_Ext_Dog();    //最快的任务：清CPU外部看门狗
-          Clear_Task_Dog();   //清任务看门狗
-          
-          SetOnDevice_PUCK(S_DUKA);
-          if(Result EQ OK) //操作成功
-          {
-            SetOnDevice_PUCK(S_CHENGGONG);
-            SetOnDevice_PUCK(S_DANGQIAN);
-            SetOnDevice_PUCK(S_SHENGYU);
-            SetOnDevice_PUCK(S_DIAN);          
-            if(PREPAID_MODE EQ PREPAID_ENG)  //电量型预付费
-            {
-              SetOnDevice_PUCK(S_LIANG);              
-              //显示剩余电费.......
-              lcd_data(0x00900100, "XXXXX#.##|kWh");   //当前剩余电量
-            }
-            else                                //电费型预付费
-            {
-              SetOnDevice_PUCK(S_FEI); 
-              //显示剩余电费.......
-              lcd_data(0x00900200, "XXXXXXX#.##|yuan");   //当前剩余金额   
-            }            
-            
-            lcd_thismonth(1); ///< "本月",
-            lcd_Pre_Pay (1,1);              ///< 显示"预付费类容",  
-            UpdataLcdShow();
-          }
-          else
-          {
-            if(Card_Error_State.CardErrorState.MoneyLimitErr)  //囤积
-              SetOnDevice_PUCK(S_TUNJI);
-            
-            SetOnDevice_PUCK(S_SHIBAI);
-            strcpy(temp,"ERR: ");
-            temp[5]=Result/10+'0';
-            temp[6]=Result%10+'0';
-            Main_Dis_Info(temp);                        
-          }          
-          
+          Clear_Task_Dog();   //清任务看门狗          
+          Dis_Card_Result();          
         }
         Realse_Local_Pay_Source();
       }

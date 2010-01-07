@@ -812,7 +812,7 @@ void screen (u8 type, curs_t curs)
     }
     
     curs %= vlist.dlen;
-    lcd_data     (scrn.item, scrn.frmt);   //18ms
+    lcd_data     (scrn.item, scrn.frmt, Sub_Vlist);   //18ms
     lcd_code     (vlist.user, vlist.code, curs, Sub_Vlist.subindex,vlist.ChangeFlag,vlist.ChangeCode);       //26ms
     lcd_mode     (type);                ///A/B/C 3种模式
     lcd_total    (scrn.elem.total    ); ///< "总",

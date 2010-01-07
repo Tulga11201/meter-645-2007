@@ -3,8 +3,8 @@
 #include "Pub_PUCK.h"
 
 #undef Debug_Print
-//#define Debug_Print(...)
-#define Debug_Print _Debug_Print
+#define Debug_Print(...)
+//#define Debug_Print _Debug_Print
 
 
 #if CAL_METER_TYPE >= SELF_CAL_TYPE 

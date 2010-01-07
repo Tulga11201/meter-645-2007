@@ -795,10 +795,13 @@ INT8U Calc_Cur_Step_Scheme(INT8U Flag)
     }
     return Scheme; 
   }
-  else
+  else //非阶梯预付费的情况下
   {
     if(Cur_Rate_Info.Step_Scheme != STEP_SCHEME0)
+    {
       Cur_Rate_Info.Step_Scheme = STEP_SCHEME0;
+      SET_STRUCT_SUM(Cur_Rate_Info);
+    }
     
     if(Cur_Scheme.Step_Scheme != STEP_SCHEME0 ||\
        Cur_Scheme.Step_Scheme_Time != AFT_SWITCH_TIME)

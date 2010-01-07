@@ -999,6 +999,9 @@ CONST S_Data_Para_Storage_Info Data_Para_Storage[] =
   {EH_DI(0x00000000), IMP_LOAD_REC, 4*MAX_ENERGY_SETTLE_NUM*(MAX_RATES + 1), 11},
   {EH_DI(0x01010000), IMP_LOAD_REC, 8*MAX_DEMAND_SETTLE_NUM*(MAX_RATES + 1), 10},
   
+  {EH_DI(0x00000100), IMP_LOAD_REC, 4*MAX_ENERGY_SETTLE_NUM*(MAX_RATES + 1), 11},
+  {EH_DI(0x01010100), IMP_LOAD_REC, 8*MAX_DEMAND_SETTLE_NUM*(MAX_RATES + 1), 10},
+  
   EXTEND_STORA
   //-----------------------------------------------------------------------------------------------
   {_SDI_CHK_IMP0, IMP_FAC_PARA, 1, 1},  //IMP每类数据的测试字 

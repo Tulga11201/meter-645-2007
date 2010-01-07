@@ -1,8 +1,8 @@
 #define DEF_PARA_C
 #include "Includes.h"
 
-#define UB (INT32U)577//577 //额定电压
-#define IB (INT32U)150//150 //1.50,两位小数 
+#define UB 577UL//577 //额定电压
+#define IB 150UL//150 //1.50,两位小数 
 #define PB (UB*IB) //额定功率
 #define PMAX (UB*IB*4) //最大功率
 
@@ -360,16 +360,34 @@ CONST INT8U Def_04000402[] =
 //资产管理编号
 #define Def_04000403 "00000000000000000000000000000000"
 
+#if UB == 577
 //额定电压
 CONST INT8U Def_04000404[] =
 {
   "  7.75"
 };
+#else
+//额定电压
+CONST INT8U Def_04000404[] =
+{
+  "   022"
+};
+#endif
+
+#if IB == 150
 //额定电流
 CONST INT8U Def_04000405[] =
 {
   "  05.1"
 };
+#else
+//额定电流
+CONST INT8U Def_04000405[] =
+{
+  "    01"
+};
+#endif
+
 //最大电流
 CONST INT8U Def_04000406[] =
 {
@@ -386,18 +404,28 @@ CONST INT8U Def_04000408[] =
   " 0.2"
 };
 
+#if UB == 577
 //有无功脉冲常数
 CONST INT8U Def_04000409_2[] =
 {
-  0x00, 0x04, 0x00, 
-  0x00, 0x04, 0x00
+  0x00, 0x00, 0x02, 
+  0x00, 0x00, 0x02
 };
+#else
+//有无功脉冲常数
+CONST INT8U Def_04000409_2[] =
+{
+  0x00, 0x06, 0x00, 
+  0x00, 0x06, 0x00
+};
+#endif
 
 //电表型号
 CONST INT8U Def_0400040B[] =
 {
   "     001RD"
 };
+
 //生产日期
 CONST INT8U Def_0400040C[] =
 {
@@ -1617,7 +1645,7 @@ void Check_Boot_On_Flag()
   {
     if(Check_Sys_Status() EQ SYS_NORMAL)//系统电源正常的情况下才进行数据冻结和需量处理
     {
-      //Check_Sys_Storage();//存储器自检
+      Check_Sys_Storage();//存储器自检
       
       if(Set_Def_Para_Flag EQ 1)
       {

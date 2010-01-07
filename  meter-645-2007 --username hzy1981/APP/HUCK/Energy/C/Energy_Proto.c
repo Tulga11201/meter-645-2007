@@ -388,14 +388,12 @@ INT16U _Get_Energy_Proto_Data(PROTO_DI PDI, INT8U* pDst, INT8U* pDst_Start, INT1
   {
     //PDI = EH_DI(0x00000000) + BYTE_2(PDI);
     Len = Read_Storage_Data(EH_DI(0x00000000) + BYTE_2(PDI), (INT8U *)Pub_Buf, (INT8U *)Pub_Buf, sizeof(Pub_Buf)); 
-    if(Len > 0)
-    {
-      mem_cpy(pDst + 4, (INT8U *)Pub_Buf + ((INT32U)BYTE_1(PDI))*MAX_ENERGY_SETTLE_NUM*4, \
-              MAX_ENERGY_SETTLE_NUM*4, pDst_Start, DstLen);
-      return (MAX_ENERGY_SETTLE_NUM + 1) * 4;
-    }
-    else
-      return 0;
+    if(Len EQ 0)
+      mem_set((INT8U *)Pub_Buf, 0, sizeof(Pub_Buf), (INT8U *)Pub_Buf, sizeof(Pub_Buf));
+    
+    mem_cpy(pDst + 4, (INT8U *)Pub_Buf + ((INT32U)BYTE_1(PDI))*MAX_ENERGY_SETTLE_NUM*4, \
+            MAX_ENERGY_SETTLE_NUM*4, pDst_Start, DstLen);
+    return (MAX_ENERGY_SETTLE_NUM + 1) * 4;
   }  
   
   return Data_Len;

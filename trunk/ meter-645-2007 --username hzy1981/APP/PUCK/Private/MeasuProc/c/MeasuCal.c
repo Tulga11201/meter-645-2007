@@ -25,7 +25,7 @@ typedef struct
 }CONST_CAL_PARA_INFO;
 
 //以下对所有输出口的抽象定义
-CONST CONST_CAL_PARA_INFO  Const_Cal_Para_Info[MAX_PORT_NUM]={
+CONST CONST_CAL_PARA_INFO  Const_Cal_Para_Info[]={
   {0},
   
   {DI_POWER_A_0,&Cal_Proc_Status.Min_Power_Err,&Cal_Proc_Status.Max_Power_Err,&(Pri_TempIntantVar.AcPower.A),&(Cal_Proc_Status.Power_Value[0]),

@@ -76,8 +76,8 @@ typedef struct
 //以下对所有输出口的抽象定义
 CONST CONST_PORT_STATUS  Const_Port_Status[MAX_PORT_NUM]={
   {0},
-  {0,1,0,0,0,LEVEL_MODE,&PORT_ChangeP64Output,0,0},    //有功方向输出------------------------------------------------------------1
-  {0,1,0,0,0,LEVEL_MODE,&PORT_ChangeP65Output,0,0},    //无功方向输出------------------------------------------------------------2
+  //{0,1,0,0,0,LEVEL_MODE,&PORT_ChangeP64Output,0,0},    //有功方向输出------------------------------------------------------------1
+  //{0,1,0,0,0,LEVEL_MODE,&PORT_ChangeP65Output,0,0},    //无功方向输出------------------------------------------------------------2
   {1,1,0,0,0,LEVEL_MODE,&PORT_ChangeP82Output,&Get_Sec_Out_En,0},    //秒脉冲使能------------------------------------------------3
   {1,0,0,1,0,LEVEL_MODE,&PORT_ChangeP131Output,0,0},    //跳闸指示灯--------------------------------------------------------------4
   {1,0,0,1,0,LEVEL_MODE,&PORT_ChangeP157Output,0,0},    //报警指示灯--------------------------------------------------------------5
@@ -159,7 +159,7 @@ INT8U  Change_Sec_Out(void)
     无
 ********************************************************************************/
 void Get_Port_Out_Mode(void)
-{  
+{
    if(Read_Storage_Data_PUCK(SDI_OUTPUT_MODE,(INT8U *)(&Multi_Port_Mode.ReadMode),1) EQ 0)
      ASSERT_FAILED();
    INIT_STRUCT_VAR(Multi_Port_Mode);  //把头尾填齐;

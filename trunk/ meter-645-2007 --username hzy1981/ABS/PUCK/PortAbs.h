@@ -49,9 +49,9 @@
 
 //所有PORT设备ID
 #define EXT_ID_NONE         0  //无效端子
-#define EXT_ID_AP_DIR             (EXT_ID_NONE+1)         //有功脉冲方向-------------------------------1
-#define EXT_ID_RP_DIR             (EXT_ID_AP_DIR+1)        //无功脉冲方向----------------------------2
-#define EXT_ID_SEC_EN             (EXT_ID_RP_DIR+1)        //秒脉冲使能------------------------------3
+//#define EXT_ID_AP_DIR             (EXT_ID_NONE+1)         //有功脉冲方向-------------------------------1
+//#define EXT_ID_RP_DIR             (EXT_ID_AP_DIR+1)        //无功脉冲方向----------------------------2
+#define EXT_ID_SEC_EN             (EXT_ID_NONE+1)        //秒脉冲使能------------------------------3
 #define INTER_ID_TOGGLE_DIS        (EXT_ID_SEC_EN+1)       //跳闸指示灯---------------------------------4
 #define INTER_ID_ALARM_DIS        (INTER_ID_TOGGLE_DIS+1)  //报警指示灯---------------------------------5
 
@@ -77,7 +77,7 @@
 
 
 //最大的LEVEL_PORT设备ID数目
-#define MIN_LEVEL_PORT_DI       EXT_ID_AP_DIR
+#define MIN_LEVEL_PORT_DI       (EXT_ID_NONE+1)
 #define MAX_LEVEL_PORT_DI       EXT_ID_TOGGLE
 
 

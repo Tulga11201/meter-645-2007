@@ -82,8 +82,12 @@ void Check_Energy_Para_Avil()
   Re &= CHECK_STRUCT_SUM(Year_Scheme_Switch_Time);
   Re &= CHECK_STRUCT_VAR(_Rate_Scheme_Switch_Time);
   Re &= CHECK_STRUCT_SUM(Rate_Scheme_Switch_Time);
-  Re &= CHECK_STRUCT_VAR(_Step_Scheme_Switch_Time);
-  Re &= CHECK_STRUCT_SUM(Step_Scheme_Switch_Time);
+  
+  if(PREPAID_EN > 0 && PREPAID_MONEY_MODE EQ PREPAID_STEP)
+  {
+    Re &= CHECK_STRUCT_VAR(_Step_Scheme_Switch_Time);
+    Re &= CHECK_STRUCT_SUM(Step_Scheme_Switch_Time);
+  }
 
   Re &= CHECK_STRUCT_VAR(Multi_Rate_Para);
   Re &= CHECK_STRUCT_SUM(Multi_Rate_Para);
@@ -99,8 +103,12 @@ void Check_Energy_Para_Avil()
   Re &= CHECK_STRUCT_VAR(Prepaid_Para);
   Re &= CHECK_STRUCT_VAR(Rate_Scheme_Para);
   Re &= CHECK_STRUCT_SUM(Rate_Scheme_Para);
-  Re &= CHECK_STRUCT_VAR(Step_Scheme_Para);
-  Re &= CHECK_STRUCT_SUM(Step_Scheme_Para);
+  
+  if(PREPAID_EN > 0 && PREPAID_MONEY_MODE EQ PREPAID_STEP)
+  {  
+    Re &= CHECK_STRUCT_VAR(Step_Scheme_Para);
+    Re &= CHECK_STRUCT_SUM(Step_Scheme_Para);
+  }
   
   Re &= CHECK_STRUCT_SUM(Cur_Rate_Info);
   if(1 != Re)//ASSERT(1 EQ Re))
@@ -710,87 +718,114 @@ INT8U Calc_Cur_Step_Scheme(INT8U Flag)
 
   TRACE();
 
-  //读取主副阶梯方案切换时刻
-  if(CALC_ROM EQ Flag)//表示从ROM中重新读取相关数据，进行计算
+  if(PREPAID_EN > 0 && PREPAID_MONEY_MODE EQ PREPAID_STEP)
   {
-    Read_Step_Scheme_Switch_Time();
-  }
-
-  //检查内存中相关变量的正确性
-  Re = 1;
-  Re &= Check_HEX_Time((S_HEX_Time *) &Cur_Time0);//检查Cur_Time0时间
-  Re &= CHECK_STRUCT_SUM(Mode_Word);//检查模式字是否允许费率切换
-  Re &= CHECK_STRUCT_SUM(Step_Scheme_Switch_Time);//检查两套阶梯切换时间
-  Re &= CHECK_STRUCT_SUM(Cur_Rate_Info);//检查当前费率信息
-  if(1 != Re)//ASSERT(0 != Re))
-  {
-    ASSERT_FAILED();
-    Check_Data_Avail();
-  }
-
-  Scheme = Cur_Scheme.Step_Scheme;
-  
-  if(STEP_SCH_SWITCH_EN EQ 1)//是否允许切换日时段表方案?
-  {
-    if(_Check_HEX_Time((INT8U *) Step_Scheme_Switch_Time.Time))
+    //读取主副阶梯方案切换时刻
+    if(CALC_ROM EQ Flag)//表示从ROM中重新读取相关数据，进行计算
     {
-      Re = Cmp_Time((S_HEX_Time *) &Cur_Time0, (S_HEX_Time *) &Step_Scheme_Switch_Time);//当前时间是否在费率切换时间之后?
-      if(Re != TIME_BEF)//当前时间在费率方案切换时间之后
+      Read_Step_Scheme_Switch_Time();
+    }
+  
+    //检查内存中相关变量的正确性
+    Re = 1;
+    Re &= Check_HEX_Time((S_HEX_Time *) &Cur_Time0);//检查Cur_Time0时间
+    Re &= CHECK_STRUCT_SUM(Mode_Word);//检查模式字是否允许费率切换
+    Re &= CHECK_STRUCT_SUM(Step_Scheme_Switch_Time);//检查两套阶梯切换时间
+    Re &= CHECK_STRUCT_SUM(Cur_Rate_Info);//检查当前费率信息
+    if(1 != Re)//ASSERT(0 != Re))
+    {
+      ASSERT_FAILED();
+      Check_Data_Avail();
+    }
+  
+    Scheme = Cur_Scheme.Step_Scheme;
+    
+    if(STEP_SCH_SWITCH_EN EQ 1)//是否允许切换日时段表方案?
+    {
+      if(_Check_HEX_Time((INT8U *) Step_Scheme_Switch_Time.Time))
       {
-        if(Cur_Scheme.Step_Scheme_Time EQ BEF_SWITCH_TIME)//前一次的判断时间在切换时间以前,则必须发生一次切换
+        Re = Cmp_Time((S_HEX_Time *) &Cur_Time0, (S_HEX_Time *) &Step_Scheme_Switch_Time);//当前时间是否在费率切换时间之后?
+        if(Re != TIME_BEF)//当前时间在费率方案切换时间之后
         {
-          if(Cur_Scheme.Step_Scheme EQ STEP_SCHEME1)
-            Scheme = STEP_SCHEME0;
-          else
-            Scheme = STEP_SCHEME1;
-          
-          Cur_Scheme.Step_Scheme_Time = AFT_SWITCH_TIME;//当前在切换时间以后了
-          SET_STRUCT_SUM(Cur_Scheme);
-          Write_Storage_Data(_SDI_CUR_SCHEME, (void *)&Cur_Scheme, sizeof(Cur_Scheme));
-          
-          //阶梯方案切换时间置0
-          mem_set((INT8U *) Step_Scheme_Switch_Time.Time, 0, sizeof(Step_Scheme_Switch_Time.Time),\
-                  (INT8U *) Step_Scheme_Switch_Time.Time, sizeof(Step_Scheme_Switch_Time.Time));
-          SET_STRUCT_SUM(Step_Scheme_Switch_Time);
-          
-          Write_Storage_Data(SDI_STEP_SCHE_CHG_TIME, (INT8U *) Step_Scheme_Switch_Time.Time, sizeof(Step_Scheme_Switch_Time.Time));
+          if(Cur_Scheme.Step_Scheme_Time EQ BEF_SWITCH_TIME)//前一次的判断时间在切换时间以前,则必须发生一次切换
+          {
+            if(Cur_Scheme.Step_Scheme EQ STEP_SCHEME1)
+              Scheme = STEP_SCHEME0;
+            else
+              Scheme = STEP_SCHEME1;
+            
+            Cur_Scheme.Step_Scheme_Time = AFT_SWITCH_TIME;//当前在切换时间以后了
+            SET_STRUCT_SUM(Cur_Scheme);
+            Write_Storage_Data(_SDI_CUR_SCHEME, (void *)&Cur_Scheme, sizeof(Cur_Scheme));
+            
+            //阶梯方案切换时间置0
+            mem_set((INT8U *) Step_Scheme_Switch_Time.Time, 0, sizeof(Step_Scheme_Switch_Time.Time),\
+                    (INT8U *) Step_Scheme_Switch_Time.Time, sizeof(Step_Scheme_Switch_Time.Time));
+            SET_STRUCT_SUM(Step_Scheme_Switch_Time);
+            
+            Write_Storage_Data(SDI_STEP_SCHE_CHG_TIME, (INT8U *) Step_Scheme_Switch_Time.Time, sizeof(Step_Scheme_Switch_Time.Time));
+          }
+        }
+        else
+        {
+          //切换时间往前调?
+          if(Cur_Scheme.Step_Scheme_Time EQ AFT_SWITCH_TIME)//前一次的判断时间在切换时间以后,则必须发生一次切换
+          {
+            Cur_Scheme.Step_Scheme_Time = BEF_SWITCH_TIME;//当前在切换时间以后了
+            SET_STRUCT_SUM(Cur_Scheme);
+            Write_Storage_Data(_SDI_CUR_SCHEME, (void *)&Cur_Scheme, sizeof(Cur_Scheme));          
+          }      
         }
       }
-      else
+    }
+  
+    //和当前使用的费率方案不一致，应该切换费率方案
+    //使用ROM中参数计算费率方案时，强制认为发生了一次费率切换, 以免出错
+    if(Cur_Rate_Info.Step_Scheme != Scheme || CALC_ROM EQ Flag)
+    {
+      Cur_Rate_Info.Step_Scheme = Scheme;
+      SET_STRUCT_SUM(Cur_Rate_Info); 
+      Step_Scheme_Changed_Proc();//费率方案切换处理
+      
+      if(Cur_Scheme.Step_Scheme != Scheme)
       {
-        //切换时间往前调?
-        if(Cur_Scheme.Step_Scheme_Time EQ AFT_SWITCH_TIME)//前一次的判断时间在切换时间以后,则必须发生一次切换
-        {
-          Cur_Scheme.Step_Scheme_Time = BEF_SWITCH_TIME;//当前在切换时间以后了
-          SET_STRUCT_SUM(Cur_Scheme);
-          Write_Storage_Data(_SDI_CUR_SCHEME, (void *)&Cur_Scheme, sizeof(Cur_Scheme));          
-        }      
+        Debug_Print("Cur_Step_Scheme Changed!");
+        Cur_Scheme.Step_Scheme = Scheme;
+        SET_STRUCT_SUM(Cur_Scheme);
+        Write_Storage_Data(_SDI_CUR_SCHEME, (void *)&Cur_Scheme, sizeof(Cur_Scheme));
+        Event_Data_Proc(ID_EVENT_STEP_SCH_SWITCH_FREEZE, EVENT_OCCUR);
       }
     }
+    return Scheme; 
   }
-
-  //和当前使用的费率方案不一致，应该切换费率方案
-  //使用ROM中参数计算费率方案时，强制认为发生了一次费率切换, 以免出错
-  if(Cur_Rate_Info.Step_Scheme != Scheme || CALC_ROM EQ Flag)
+  else
   {
-    Cur_Rate_Info.Step_Scheme = Scheme;
-    SET_STRUCT_SUM(Cur_Rate_Info); 
-    Step_Scheme_Changed_Proc();//费率方案切换处理
-    
-    if(Cur_Scheme.Step_Scheme != Scheme)
+    if(Cur_Rate_Info.Step_Scheme != STEP_SCHEME0 ||\
+       Cur_Scheme.Step_Scheme != STEP_SCHEME0 ||\
+       Cur_Scheme.Step_Scheme_Time != AFT_SWITCH_TIME)
     {
-      Debug_Print("Cur_Step_Scheme Changed!");
-      Cur_Scheme.Step_Scheme = Scheme;
+      Cur_Rate_Info.Step_Scheme = STEP_SCHEME0;
+      
+      Cur_Scheme.Step_Scheme = STEP_SCHEME0;
+      Cur_Scheme.Step_Scheme_Time = AFT_SWITCH_TIME;
       SET_STRUCT_SUM(Cur_Scheme);
-      Write_Storage_Data(_SDI_CUR_SCHEME, (void *)&Cur_Scheme, sizeof(Cur_Scheme));
-      Event_Data_Proc(ID_EVENT_STEP_SCH_SWITCH_FREEZE, EVENT_OCCUR);
     }
+    return STEP_SCHEME0;
   }
-  return Scheme; 
 }
 #endif
 
 extern CONST S_Cur_Scheme Def_SDI_CUR_SCHEME;
+
+void Set_Def_Cur_Scheme()
+{
+    ASSERT_FAILED();
+    mem_cpy((INT8U *)&Cur_Scheme, (INT8U *) &Def_SDI_CUR_SCHEME, sizeof(S_Cur_Scheme),\
+            (INT8U *)&Cur_Scheme, sizeof(Cur_Scheme));
+    INIT_STRUCT_VAR(Cur_Scheme);
+    SET_STRUCT_SUM(Cur_Scheme); 
+    Write_Storage_Data(_SDI_CUR_SCHEME, (void *) &Cur_Scheme, sizeof(Cur_Scheme));  
+}
 
 void Check_Cur_Scheme_Info()
 {
@@ -800,17 +835,18 @@ void Check_Cur_Scheme_Info()
      (Cur_Scheme.Step_Scheme != STEP_SCHEME0 && Cur_Scheme.Step_Scheme != STEP_SCHEME1) ||\
      (Cur_Scheme.Year_Scheme_Time != BEF_SWITCH_TIME && Cur_Scheme.Year_Scheme_Time != AFT_SWITCH_TIME) ||\
      (Cur_Scheme.Date_Scheme_Time != BEF_SWITCH_TIME && Cur_Scheme.Date_Scheme_Time != AFT_SWITCH_TIME) ||\
-     (Cur_Scheme.Rate_Scheme_Time != BEF_SWITCH_TIME && Cur_Scheme.Rate_Scheme_Time != AFT_SWITCH_TIME) ||\
-     (Cur_Scheme.Step_Scheme_Time != BEF_SWITCH_TIME && Cur_Scheme.Step_Scheme_Time != AFT_SWITCH_TIME))  
+     (Cur_Scheme.Rate_Scheme_Time != BEF_SWITCH_TIME && Cur_Scheme.Rate_Scheme_Time != AFT_SWITCH_TIME))  
   {
-    ASSERT_FAILED();
-    mem_cpy((INT8U *)&Cur_Scheme, (INT8U *) &Def_SDI_CUR_SCHEME, sizeof(S_Cur_Scheme),\
-            (INT8U *)&Cur_Scheme, sizeof(Cur_Scheme));
-    INIT_STRUCT_VAR(Cur_Scheme);
-    SET_STRUCT_SUM(Cur_Scheme); 
-    Write_Storage_Data(_SDI_CUR_SCHEME, (void *) &Cur_Scheme, sizeof(Cur_Scheme));
+    Set_Def_Cur_Scheme();
   }
-  
+ 
+  if(PREPAID_EN > 0 && PREPAID_MONEY_MODE EQ PREPAID_STEP)
+  {
+    if(Cur_Scheme.Step_Scheme_Time != BEF_SWITCH_TIME && Cur_Scheme.Step_Scheme_Time != AFT_SWITCH_TIME)
+    {
+      Set_Def_Cur_Scheme();
+    }
+  }
 }
 
 /*

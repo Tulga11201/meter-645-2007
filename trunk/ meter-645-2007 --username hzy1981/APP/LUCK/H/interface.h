@@ -202,7 +202,7 @@ void lcd_dianjia   (u8 flg); ///电价
 void lcd_value (const char* s);
 
 // 输出显示数据的内容
-void lcd_data (item_t item, const char* frmt);
+void lcd_data (item_t item, const char* frmt,Mult_List list);
 
 // 输出显示代码的内容
 void lcd_code (code_t user, code_t code, curs_t curs,u8 SubCurs,u8 changeFlag,code_t changecode);

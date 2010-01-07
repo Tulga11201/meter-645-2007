@@ -933,7 +933,7 @@ PUCK:
 // mode4.bit3 1 "高位补0" : 为0，"高位不补0";
 // 电能[协议和显示]小数位[范围: 2或3]
 // 功率&需量[显示]小数位[范围: 2或3或4; 协议固定为4]
-void lcd_data (item_t item, const char* s) 
+void lcd_data (item_t item, const char* s,Mult_List Sub_Vlist) 
 {
   INT8S frmt[MAX_DIS_BYTE];
 

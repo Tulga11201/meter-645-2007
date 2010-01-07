@@ -337,7 +337,28 @@ unsigned char Far_Deal_078001FF(unsigned char *Data_Point )
 	struct Far_Read_078001FF_Format	 Far_Read_078001FF_Format;
 	unsigned char Offset;
         mem_cpy(&Far_Read_078001FF_Format,Data_Point,sizeof(struct Far_Read_078001FF_Format),&Far_Read_078001FF_Format,sizeof(Far_Read_078001FF_Format));
-
+	/*
+        if( (unsigned char)(Far_Read_078001FF_Format.File) == 0x01 ){
+		if(Far_Read_Esam(                                       0x04,Read_Record,0x01,
+							                                    0x0C,
+					                                                      4 , 
+						              			 Data_Point)!=OK)
+                {
+                    ASSERT_FAILED();
+                    return ERR;  
+                }
+                ///
+		if(Far_Read_Esam(                                       0x04,Read_Record,0x03,
+							                                    0x0C,
+					                                                      4 , 
+						              			 Data_Point)!=OK)
+                {
+                    ASSERT_FAILED();
+                    return ERR;  
+                }	
+	}
+        */
+        ///
 	if( (unsigned char)(Far_Read_078001FF_Format.File) == 0x01 ){
 		if( (unsigned char)(Far_Read_078001FF_Format.Data_Start_Addr )== 0x00 )
 			Offset = 0x01;
@@ -351,8 +372,7 @@ unsigned char Far_Deal_078001FF(unsigned char *Data_Point )
                     ASSERT_FAILED();
                     return ERR;  
                 }
-			
-	}
+        }
 	else{
 /*"04b082（83，84，86）+ P2(偏移地址)＋11+4字节随机数1+04d686+00+LC+8字节分散因子。
 LC是所要读取的明文数据＋MAC+分散因子的总长度，它是1字节的十六进制数。"*/

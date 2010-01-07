@@ -53,7 +53,7 @@ unsigned char Judge_User_Card_OK(unsigned char BuyCard_Kind,unsigned long Buy_Co
 		if( My_Memcmp(Pre_Payment_Para.UserID,file.Client_ID,6) )
 		{
                           ASSERT_FAILED();
-			  Card_Error_State.CardErrorState.CardIdErr=1;
+			  Card_Error_State.CardErrorState.Client_Id_Err=1;
 			  return ERR;
 		}
                 ////如果是运行状态插入 开户卡 
@@ -321,7 +321,6 @@ unsigned char Buy_Card(void){
         //这里也可以说是读esam 的运行信息文件到cpu卡中运行信息文件中 5,7
 	if( Cpu_File_Updata(USER_CARD_RUN_INF_FILE,ESAM_RUN_INF_FILE,0,0,LENGTH_RUN_INF_DATA-1+6) != OK )
         {
-        
           ASSERT_FAILED();
           return ERR;
         }

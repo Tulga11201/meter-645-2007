@@ -39,19 +39,19 @@ void UpdataEsamMoneyBag(void);
  
  
 /*" 国网远程预付费卡类型 "*/
-#define GWFAR_USER_CARD                   0x01       /*" 用户卡 "*/
-	#define  GWFAR_USER_CARD_NEW    	0x01	/*" 新卡 "*/
-	#define  GWFAR_USER_CARD_BUY		0x02	/*" 购电卡 "*/
-	#define  GWFAR_USER_CARD_BACK		0x03	/*" 补卡 "*/
+#define GWFAR_USER_CARD                   0x01       // 用户卡  
+	#define  GWFAR_USER_CARD_NEW    	0x01	// 新卡  
+	#define  GWFAR_USER_CARD_BUY		0x02	// 购电卡  
+	#define  GWFAR_USER_CARD_BACK		0x03	//补卡  
 
-#define GWFAR_MOD_PASSWORD_CARD           0x02       /*" 修改密钥卡 "*/
-#define GWFAR_RES_PASSWORD_CARD           0x03       /*" 恢复密钥卡 "*/
-#define GWFAR_PARA_SET_CARD               0x04       /*" 参数设置卡 "*/
-#define GWFAR_READ_ESAM_CARD              0x05       /*" ESAM数据回抄卡 "*/
-#define GWFAR_INIT_CARD                   0x06       /*" 出厂设置卡 "*/
-#define GWFAR_MOD_METERID_CARD            0x07       /*" 表号设置卡 "*/
-#define GWFAR_ADDD_MONEY_CARD            0x08       /*" 增加电费卡 "*/
-#define GWFAR_RELAY_TEST_CARD            0x09       /*" 继电器测试卡 "*/
+#define GWFAR_MOD_PASSWORD_CARD           0x02       //密钥下装卡 
+#define GWFAR_RES_PASSWORD_CARD           0x03       // 密钥恢复卡   
+#define GWFAR_PARA_SET_CARD               0x04       //现场参数设置卡  
+#define GWFAR_READ_ESAM_CARD              0x05       //ESAM数据回抄卡  
+#define GWFAR_INIT_CARD                   0x06       // 参数预置卡
+#define GWFAR_MOD_METERID_CARD            0x07       /// 表号设置卡  
+#define GWFAR_ADDD_MONEY_CARD            0x08      //增加电费卡  
+#define GWFAR_RELAY_TEST_CARD            0x09       // 继电器测试卡  
 
 //---
 #define UN_TYPE_CARD 				0x00

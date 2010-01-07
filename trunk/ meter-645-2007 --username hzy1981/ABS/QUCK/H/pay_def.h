@@ -54,7 +54,7 @@ typedef struct {
 
    INT32U CardKindErr   : 1; ///卡类型错（购电卡， 参数预置卡。。）计入非法卡插入次数
    INT32U MeterIdErr  : 1; /// 表号不匹配，计入非法卡插入次数 
-   INT32U CardIdErr    : 1; ///<用户号码错误当表开户了后会出现 表未开户不会出现  用户编号错误  计入非法卡插入次数
+   INT32U Client_Id_Err    : 1; ///<用户号码错误当表开户了后会出现 表未开户不会出现  用户编号错误  计入非法卡插入次数
    INT32U CpuCardExternlAuthenticationErr  : 1; /// 外部认证错  计入非法卡插入次数
    INT32U CpuCardInternlAuthenticationErr  :1; /// 内部认证， 即身份验证。计入非法卡插入次数
   
@@ -88,7 +88,7 @@ typedef struct {
    INT32U Esam_Extern_Auth_Err     : 1; ///<  esam 外部认证 错误
    INT32U WhenInOperation_Insert_FirstUserCard_Err    : 1; // 运行状态插入 开户卡
    
-   INT32U XXXX   : 1; //    
+   INT32U InsertBadCard_Err   : 1; //    
    INT32U re_erved  : 1; ///预留  bits
    
 } C_CardErrorState;

@@ -1,9 +1,9 @@
 #define SYS_MEMORY_C
 #include "Includes.h"
 
-#undef Debug_Print
+//#undef Debug_Print
 //#define Debug_Print(...)
-#define Debug_Print _Debug_Print
+//#define Debug_Print _Debug_Print
 
 //¶ÁÐ´´æ´¢º¯ÊýÖÐµÄÎ¹¹·
 void WR_Memory_Clear_Dog()

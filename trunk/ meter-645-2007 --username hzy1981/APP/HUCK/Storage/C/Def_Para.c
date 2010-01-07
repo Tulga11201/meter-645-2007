@@ -1,8 +1,8 @@
 #define DEF_PARA_C
 #include "Includes.h"
 
-#define UB 577UL//577 //额定电压
-#define IB 150UL//150 //1.50,两位小数 
+#define UB 2200UL//577 //额定电压
+#define IB 1000UL//150 //1.50,两位小数 
 #define PB (UB*IB) //额定功率
 #define PMAX (UB*IB*4) //最大功率
 

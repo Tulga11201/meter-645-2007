@@ -440,7 +440,7 @@ void PrintErrState(void ){
     if( Card_Error_State.CardErrorState. MeterIdErr){
      Debug_Print("  表号不匹配，计入非法卡插入次数   "  );
   }
-    if( Card_Error_State.CardErrorState.CardIdErr ){
+    if( Card_Error_State.CardErrorState.Client_Id_Err ){
      Debug_Print(" 用户号码错误当表开户了后会出现 表未开户不会出现  用户编号错误  计入非法卡插入次数   "  );
   }
     if( Card_Error_State.CardErrorState.CpuCardExternlAuthenticationErr ){
@@ -520,4 +520,93 @@ void PrintErrState(void ){
   }
 
 }
+//////////代码转换
+INT8U Convert_Dis_Code(void)
+{
+    
+  if(Card_Error_State.CardErrorState.CpuCardExternlAuthenticationErr)
+        return DIS_CERTI_ERR;           //10-------认证错误
+ 
+ if(Card_Error_State.CardErrorState.CpuCardInternlAuthenticationErr)
+        return DIS_CERTI_ERR;             //10-------认证错误
+  
+//  if(Card_Error_State.CardErrorState.Cpu_Card_Li_San_Yin_Zi_Err)
+  //      return DIS_CERTI_ERR;           //10-------认证错误
+   
+ // if(Card_Error_State.CardErrorState.Esam_Extern_Auth_Err)  
+   //    return DIS_CUR_VERY_NOEVEN;   //11-------ESAM验证失败
+                        
+  //if(Card_Error_State.CardErrorState.Client_Id_Err)
+    //    return DIS_GUEST_ID_ERR;        //12-------ESAM验证失败
+  if(Card_Error_State.CardErrorState.Client_Id_Err)
+  {
+     return DIS_GUEST_ID_ERR;//客户编号不匹配
+  }
+  if(Card_Error_State.CardErrorState.CARD_BUY_COUNT_ERR)
+        return DIS_CHARGE_NUM_ERR;    //13-------充值次数错误
+  
+  if(Card_Error_State.CardErrorState.MoneyLimitErr)
+        return DIS_BUY_TOO_ENOUGH;    //14-------购电超囤积
+  
+  if(Card_Error_State.CardErrorState.CPU_Para_Card_Version_Err)
+       return DIS_CUR_PARA_CARD_INVALID;      //15-------现场参数设置卡对本表已经失效
+  
+  if(Card_Error_State.CardErrorState.Password_Key_Updata_ERR 
+     || Card_Error_State.CardErrorState.Password_Version_Err )
+        return DIS_CUR_MODI_KEY_ERR;   //16-------修改密钥错误
+    
+  if(Card_Error_State.CardErrorState.Meter_Not_Prog_Status_Err)
+        return DIS_NO_LEAD_KEY_ERR;    //17-------未按铅封键
+   
+  if(Card_Error_State.CardErrorState.CPU_CARD_LOSE)
+        return DIS_CPU_CARD_LOSE_ERR;            //18-------提前拔卡
+  
+  if(Card_Error_State.CardErrorState.Meter_Id_Set_Card_Id_Is_FULL_Err)
+      return DIS_CUR_MODI_METER_ERR;   //19-------修改表号卡满（该卡无空余表号分配）
+  
+  
+  if(Card_Error_State.CardErrorState.Password_Count_Number_Is_Zero_Err)
+        return DIS_CUR_KEY_CARD0_ERR;    //20---------修改密钥卡次数为0
+  
+  
+  if(Card_Error_State.CardErrorState.Client_Id_Err)
+        return DIS_METER_REGISTERD_ERR;    //21-------表计已开户（开户卡插入已经开过户的表计）
+  
+  
+  if(Card_Error_State.CardErrorState.CARD_STATE_ERR)
+        return DIS_METER_NO_REGIST_ERR;     //22------------表计未开户（用户卡插入还未开过户的表计）
+  
+  
+  if(Card_Error_State.CardErrorState.CPU_CARD_CARD_ATR_ERR)
+        return DIS_NOKNOWED_CARD_ERR;       //23------------卡损坏或不明类型卡（如反插卡，插铁片等）
+
+  
+  //DIS_LOW_VOLT_ERR                      //24--------------表计电压过低（此时表计操作IC卡可能会导致表计复位或损害IC卡）
+  
+  if(Card_Error_State.CardErrorState.CPU_CARD_DATA_HEAD_ERR || 
+     Card_Error_State.CardErrorState.CPU_CARD_DATA_END_ERR  || 
+     Card_Error_State.CardErrorState.CPU_CARD_DATA_CHECK_ERR || 
+     Card_Error_State.CardErrorState.CPU_CARD_COMM_DELAY_ERR )
+    return DIS_CARD_FILED_FORMAT_ERR;             //25--------------卡文件格式不合法（包括帧头错，帧尾错，效验错）
+  
+  if(Card_Error_State.CardErrorState.CardKindErr)
+        return DIS_CARD_TYPE_ERR;            //26--------------卡类型错
+  if(Card_Error_State.CardErrorState.BUY_CARD_KIND_ERR)
+        return DIS_CARD_TYPE_ERR;          //26--------------卡类型错
+   
+  if(Card_Error_State.CardErrorState.CPU_NEW_CARD_INI_ERR)
+        return DIS_CARD_REGISTERD_ERR;    //27--------------已经开过户的新开户卡（新开户卡回写区有数据）
+    
+  
+  return DIS_OTHER_ERR;            //28--------------其他错误（卡片选择文件错，读文件错，些文件错等）
+ 
+}
+//得到卡的类型,在卡操作完之后操作
+INT8U GetCardKind(void){
+    INT8U Temp;
+    Temp=CardType;
+    return Temp;
+
+}
+
 

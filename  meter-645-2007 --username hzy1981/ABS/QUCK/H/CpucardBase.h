@@ -13,6 +13,8 @@
           MaxDstLen-------pDstStart目标缓冲区的数据最大长度.
 出口： CPU,ESAM操作宏.
 **********************************************************************************/ 
+INT8U Convert_Dis_Code(void);
+INT8U GetCardKind(void);
 //INT8U Cpu_Esam_All_Operate(INT8U Type,INT8U Operate,INT8U *pDst,INT8U *pDstStart,INT16U MaxDstLen);
  void PrintErrState(void );
 void My_Memcpy(INT8U *pDst,INT8U *pSrc,INT8U length);

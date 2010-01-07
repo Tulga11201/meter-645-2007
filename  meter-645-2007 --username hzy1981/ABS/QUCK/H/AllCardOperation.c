@@ -44,14 +44,14 @@ INT8U ICcardMain(void) {
         //处理放回状态字
 	if(ret!= OK){
 		if(   Card_Error_State.CardErrorState.MeterIdErr EQ 1 //表号不匹配，计入非法卡插入次数 
-                   || Card_Error_State.CardErrorState.CardIdErr EQ 1 // 用户编号错误 ,当表开户了后会出现 ,表未开户不会出现  
+                   || Card_Error_State.CardErrorState.Client_Id_Err EQ 1 // 用户编号错误 ,当表开户了后会出现 ,表未开户不会出现  
                    || Card_Error_State.CardErrorState.CpuCardExternlAuthenticationErr EQ 1 //外部认证错误
                    || Card_Error_State.CardErrorState.CpuCardInternlAuthenticationErr EQ 1// 内部认证， 即身份验证。计入非法卡插入次数
                    || Card_Error_State.CardErrorState.CARD_STATE_ERR EQ 1//未开户状态插入购电卡和补卡/
-             //      || Card_Error_State.CardErrorState.WhenInOperation_Insert_FirstUserCard_Err EQ 1//运行状态插入开户卡
-                   || Card_Error_State.CardErrorState.BUY_CARD_KIND_ERR EQ 1// 购电卡卡类型错 补卡，开户卡。类型没找到以及开户卡状态 插入 开户卡
+                   || Card_Error_State.CardErrorState.CardKindErr  EQ 1  ////"卡类型或状态不对",购电卡，参数预置卡
+                   || Card_Error_State.CardErrorState.BUY_CARD_KIND_ERR EQ 1// 购电卡卡类型错， 补卡，开户卡。类型没找到
                    || Card_Error_State.CardErrorState.CARD_BUY_COUNT_ERR EQ 1//购电次数错误  计入非法卡插入次数
-                    || Card_Error_State.CardErrorState.Cpu_Card_Li_San_Yin_Zi_Err EQ 1 /// 离散因子错了， 计入非法卡插入次数
+                   || Card_Error_State.CardErrorState.Cpu_Card_Li_San_Yin_Zi_Err EQ 1 /// 离散因子错了， 计入非法卡插入次数
                   )
 		{
                         //非法卡次数加1，写到e方中去
@@ -171,7 +171,7 @@ INT8U ICcardProcess(){
 			ret=1;
 			break;
        }
-       if(Check_Meter_Prog_Status())
+       if(Check_Meter_Prog_Status() && (Para_Updata_Flag != 0))
        {
             CardProgrammeEvent();//编程按钮按下时 ，调用  z编程记录
        }
@@ -185,11 +185,8 @@ INT8U ICcardProcess(){
 // 返回类型没用， 不会判断
 void CardProgrammeEvent(void)
 {
-         union Long_To_Char  progman,progdata;
+        union Long_To_Char  progman,progdata;
 	INT32U Temp;
-	if( Para_Updata_Flag ==0 )
-		return  ;
-        
 	My_memcpyRev(&progman.U_char[0], &cpucard_number[4], 4);
 	progdata.U_char[0] = Para_Updata_Flag;
 	progdata.U_char[1] = CardType;

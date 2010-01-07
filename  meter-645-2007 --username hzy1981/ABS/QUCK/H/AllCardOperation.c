@@ -47,7 +47,7 @@ INT8U ICcardMain(void) {
                    || Card_Error_State.CardErrorState.Client_Id_Err EQ 1 // 用户编号错误 ,当表开户了后会出现 ,表未开户不会出现  
                    || Card_Error_State.CardErrorState.CpuCardExternlAuthenticationErr EQ 1 //外部认证错误
                    || Card_Error_State.CardErrorState.CpuCardInternlAuthenticationErr EQ 1// 内部认证， 即身份验证。计入非法卡插入次数
-                   || Card_Error_State.CardErrorState.CARD_STATE_ERR EQ 1//未开户状态插入购电卡和补卡/
+                   || Card_Error_State.CardErrorState.WhenInTest_Insert_UserCard_Err EQ 1//未开户状态插入购电卡和补卡/
                    || Card_Error_State.CardErrorState.CardKindErr  EQ 1  ////"卡类型或状态不对",购电卡，参数预置卡
                    || Card_Error_State.CardErrorState.BUY_CARD_KIND_ERR EQ 1// 购电卡卡类型错， 补卡，开户卡。类型没找到
                    || Card_Error_State.CardErrorState.CARD_BUY_COUNT_ERR EQ 1//购电次数错误  计入非法卡插入次数
@@ -88,7 +88,7 @@ INT8U ICcardProcess(){
         //CPU
 	if(  OK != Cpucard_Atr() )
         {
-           ASSERT_FAILED();
+           Card_Error_State.CardErrorState.CPU_CARD_CARD_ATR_ERR=1;//cpu卡复位错误
            return ERR;
         }
 	if( OK  !=Select_File(0,0xDF,1) )

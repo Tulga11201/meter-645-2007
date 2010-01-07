@@ -449,7 +449,7 @@ void PrintErrState(void ){
     if( Card_Error_State.CardErrorState. CpuCardInternlAuthenticationErr){
      Debug_Print(" 内部认证， 即身份验证。计入非法卡插入次数   "  );
   }
-    if( Card_Error_State.CardErrorState.CARD_STATE_ERR ){
+    if( Card_Error_State.CardErrorState.WhenInTest_Insert_UserCard_Err ){
      Debug_Print("  开户状态插入购电卡，补卡  "  );
   }
     if( Card_Error_State.CardErrorState. BUY_CARD_KIND_ERR){
@@ -558,7 +558,7 @@ INT8U Convert_Dis_Code(void)
   if(Card_Error_State.CardErrorState.Meter_Not_Prog_Status_Err)
         return DIS_NO_LEAD_KEY_ERR;    //17-------未按铅封键
    
-  if(Card_Error_State.CardErrorState.CPU_CARD_LOSE)
+  if(Card_Error_State.CardErrorState.CPU_CARD_LOSE ||Card_Error_State.CardErrorState.CPU_CARD_COMM_DELAY_ERR)
         return DIS_CPU_CARD_LOSE_ERR;            //18-------提前拔卡
   
   if(Card_Error_State.CardErrorState.Meter_Id_Set_Card_Id_Is_FULL_Err)
@@ -569,11 +569,11 @@ INT8U Convert_Dis_Code(void)
         return DIS_CUR_KEY_CARD0_ERR;    //20---------修改密钥卡次数为0
   
   
-  if(Card_Error_State.CardErrorState.Client_Id_Err)
+  if(Card_Error_State.CardErrorState.WhenInOperation_Insert_FirstUserCard_Err)
         return DIS_METER_REGISTERD_ERR;    //21-------表计已开户（开户卡插入已经开过户的表计）
   
   
-  if(Card_Error_State.CardErrorState.CARD_STATE_ERR)
+  if(Card_Error_State.CardErrorState.WhenInTest_Insert_UserCard_Err)
         return DIS_METER_NO_REGIST_ERR;     //22------------表计未开户（用户卡插入还未开过户的表计）
   
   
@@ -585,12 +585,12 @@ INT8U Convert_Dis_Code(void)
   
   if(Card_Error_State.CardErrorState.CPU_CARD_DATA_HEAD_ERR || 
      Card_Error_State.CardErrorState.CPU_CARD_DATA_END_ERR  || 
-     Card_Error_State.CardErrorState.CPU_CARD_DATA_CHECK_ERR || 
-     Card_Error_State.CardErrorState.CPU_CARD_COMM_DELAY_ERR )
+     Card_Error_State.CardErrorState.CPU_CARD_DATA_CHECK_ERR   )
     return DIS_CARD_FILED_FORMAT_ERR;             //25--------------卡文件格式不合法（包括帧头错，帧尾错，效验错）
   
   if(Card_Error_State.CardErrorState.CardKindErr)
         return DIS_CARD_TYPE_ERR;            //26--------------卡类型错
+  
   if(Card_Error_State.CardErrorState.BUY_CARD_KIND_ERR)
         return DIS_CARD_TYPE_ERR;          //26--------------卡类型错
    
@@ -601,12 +601,4 @@ INT8U Convert_Dis_Code(void)
   return DIS_OTHER_ERR;            //28--------------其他错误（卡片选择文件错，读文件错，些文件错等）
  
 }
-//得到卡的类型,在卡操作完之后操作
-INT8U GetCardKind(void){
-    INT8U Temp;
-    Temp=CardType;
-    return Temp;
-
-}
-
-
+ 

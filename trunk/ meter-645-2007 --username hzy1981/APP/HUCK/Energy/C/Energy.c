@@ -80,14 +80,7 @@ void Check_Energy_Para_Avil()
   Re &= CHECK_STRUCT_SUM(Date_Scheme_Switch_Time);
   Re &= CHECK_STRUCT_VAR(_Year_Scheme_Switch_Time);
   Re &= CHECK_STRUCT_SUM(Year_Scheme_Switch_Time);
-  Re &= CHECK_STRUCT_VAR(_Rate_Scheme_Switch_Time);
-  Re &= CHECK_STRUCT_SUM(Rate_Scheme_Switch_Time);
-  
-  if(PREPAID_EN > 0 && PREPAID_MONEY_MODE EQ PREPAID_STEP)
-  {
-    Re &= CHECK_STRUCT_VAR(_Step_Scheme_Switch_Time);
-    Re &= CHECK_STRUCT_SUM(Step_Scheme_Switch_Time);
-  }
+
 
   Re &= CHECK_STRUCT_VAR(Multi_Rate_Para);
   Re &= CHECK_STRUCT_SUM(Multi_Rate_Para);
@@ -99,15 +92,25 @@ void Check_Energy_Para_Avil()
   Re &= CHECK_STRUCT_SUM(Cur_Scheme);
   Re &= CHECK_STRUCT_VAR(Cur_Scheme);
   
-  Re &= CHECK_STRUCT_SUM(Prepaid_Para);
-  Re &= CHECK_STRUCT_VAR(Prepaid_Para);
-  Re &= CHECK_STRUCT_VAR(Rate_Scheme_Para);
-  Re &= CHECK_STRUCT_SUM(Rate_Scheme_Para);
-  
-  if(PREPAID_EN > 0 && PREPAID_MONEY_MODE EQ PREPAID_STEP)
-  {  
-    Re &= CHECK_STRUCT_VAR(Step_Scheme_Para);
-    Re &= CHECK_STRUCT_SUM(Step_Scheme_Para);
+  if(PREPAID_EN > 0)
+  {
+    Re &= CHECK_STRUCT_SUM(Prepaid_Para);
+    Re &= CHECK_STRUCT_VAR(Prepaid_Para);
+    
+    Re &= CHECK_STRUCT_VAR(Rate_Scheme_Para);
+    Re &= CHECK_STRUCT_SUM(Rate_Scheme_Para);
+    
+    Re &= CHECK_STRUCT_VAR(_Rate_Scheme_Switch_Time);
+    Re &= CHECK_STRUCT_SUM(Rate_Scheme_Switch_Time);    
+
+    if(PREPAID_MONEY_MODE EQ PREPAID_STEP)
+    {  
+      Re &= CHECK_STRUCT_VAR(Step_Scheme_Para);
+      Re &= CHECK_STRUCT_SUM(Step_Scheme_Para);
+      
+      Re &= CHECK_STRUCT_VAR(_Step_Scheme_Switch_Time);
+      Re &= CHECK_STRUCT_SUM(Step_Scheme_Switch_Time);   
+    }
   }
   
   Re &= CHECK_STRUCT_SUM(Cur_Rate_Info);
@@ -125,12 +128,6 @@ void Check_Energy_Para_Avil()
   Check_Multi_Rate_Para();//检查复费率参数的合法性
   Check_Prepaid_Para();
   Check_Cur_Scheme_Info();
-}
-
-//检查电量参数的逻辑性，并纠正之
-void Check_Energy_Para()
-{
-	TRACE();
 }
 
 //读取当前方案
@@ -800,12 +797,12 @@ INT8U Calc_Cur_Step_Scheme(INT8U Flag)
   }
   else
   {
-    if(Cur_Rate_Info.Step_Scheme != STEP_SCHEME0 ||\
-       Cur_Scheme.Step_Scheme != STEP_SCHEME0 ||\
-       Cur_Scheme.Step_Scheme_Time != AFT_SWITCH_TIME)
-    {
+    if(Cur_Rate_Info.Step_Scheme != STEP_SCHEME0)
       Cur_Rate_Info.Step_Scheme = STEP_SCHEME0;
-      
+    
+    if(Cur_Scheme.Step_Scheme != STEP_SCHEME0 ||\
+       Cur_Scheme.Step_Scheme_Time != AFT_SWITCH_TIME)
+    {  
       Cur_Scheme.Step_Scheme = STEP_SCHEME0;
       Cur_Scheme.Step_Scheme_Time = AFT_SWITCH_TIME;
       SET_STRUCT_SUM(Cur_Scheme);
@@ -819,7 +816,6 @@ extern CONST S_Cur_Scheme Def_SDI_CUR_SCHEME;
 
 void Set_Def_Cur_Scheme()
 {
-    ASSERT_FAILED();
     mem_cpy((INT8U *)&Cur_Scheme, (INT8U *) &Def_SDI_CUR_SCHEME, sizeof(S_Cur_Scheme),\
             (INT8U *)&Cur_Scheme, sizeof(Cur_Scheme));
     INIT_STRUCT_VAR(Cur_Scheme);
@@ -829,23 +825,67 @@ void Set_Def_Cur_Scheme()
 
 void Check_Cur_Scheme_Info()
 {
-  if((Cur_Scheme.Year_Scheme != YEAR_SCHEME0 && Cur_Scheme.Year_Scheme != YEAR_SCHEME1) ||\
-     (Cur_Scheme.Date_Scheme != DATE_SCHEME0 && Cur_Scheme.Date_Scheme != DATE_SCHEME1) ||\
-     (Cur_Scheme.Rate_Scheme != RATE_SCHEME0 && Cur_Scheme.Rate_Scheme != RATE_SCHEME1) ||\
-     (Cur_Scheme.Step_Scheme != STEP_SCHEME0 && Cur_Scheme.Step_Scheme != STEP_SCHEME1) ||\
-     (Cur_Scheme.Year_Scheme_Time != BEF_SWITCH_TIME && Cur_Scheme.Year_Scheme_Time != AFT_SWITCH_TIME) ||\
-     (Cur_Scheme.Date_Scheme_Time != BEF_SWITCH_TIME && Cur_Scheme.Date_Scheme_Time != AFT_SWITCH_TIME) ||\
-     (Cur_Scheme.Rate_Scheme_Time != BEF_SWITCH_TIME && Cur_Scheme.Rate_Scheme_Time != AFT_SWITCH_TIME))  
+  INT8U Err_Flag = 0;
+  
+  if(Cur_Scheme.Year_Scheme != YEAR_SCHEME0 && Cur_Scheme.Year_Scheme != YEAR_SCHEME1)
   {
-    Set_Def_Cur_Scheme();
+    Err_Flag |=0x01;
+    Cur_Scheme.Year_Scheme = YEAR_SCHEME0;
   }
- 
-  if(PREPAID_EN > 0 && PREPAID_MONEY_MODE EQ PREPAID_STEP)
+
+  if(Cur_Scheme.Year_Scheme_Time != BEF_SWITCH_TIME && Cur_Scheme.Year_Scheme_Time != AFT_SWITCH_TIME)
   {
-    if(Cur_Scheme.Step_Scheme_Time != BEF_SWITCH_TIME && Cur_Scheme.Step_Scheme_Time != AFT_SWITCH_TIME)
+    Err_Flag |=0x04;     
+    Cur_Scheme.Year_Scheme_Time = AFT_SWITCH_TIME;
+  }
+  
+  if(Cur_Scheme.Date_Scheme != DATE_SCHEME0 && Cur_Scheme.Date_Scheme != DATE_SCHEME1)
+  {
+    Err_Flag |=0x02;    
+    Cur_Scheme.Date_Scheme = DATE_SCHEME0;
+  }
+  
+  if(Cur_Scheme.Date_Scheme_Time != BEF_SWITCH_TIME && Cur_Scheme.Date_Scheme_Time != AFT_SWITCH_TIME)
+  {
+    Err_Flag |=0x08;    
+    Cur_Scheme.Date_Scheme_Time = AFT_SWITCH_TIME;
+  }
+      
+  if(PREPAID_EN > 0)
+  {
+    if(Cur_Scheme.Rate_Scheme != RATE_SCHEME0 && Cur_Scheme.Rate_Scheme != RATE_SCHEME1)
     {
-      Set_Def_Cur_Scheme();
+      Err_Flag |=0x10;       
+      Cur_Scheme.Rate_Scheme = RATE_SCHEME0;
     }
+    
+    if(Cur_Scheme.Rate_Scheme_Time != BEF_SWITCH_TIME && Cur_Scheme.Rate_Scheme_Time != AFT_SWITCH_TIME)
+    {
+      Err_Flag |=0x20;  
+      Cur_Scheme.Rate_Scheme_Time = AFT_SWITCH_TIME;
+    }
+    
+    if(PREPAID_MONEY_MODE EQ PREPAID_STEP)
+    {
+      if(Cur_Scheme.Step_Scheme != STEP_SCHEME0 && Cur_Scheme.Step_Scheme != STEP_SCHEME1)
+      {
+        Err_Flag |=0x40;
+        Cur_Scheme.Step_Scheme = STEP_SCHEME0;
+      }
+      
+      if(Cur_Scheme.Step_Scheme_Time != BEF_SWITCH_TIME && Cur_Scheme.Step_Scheme_Time != AFT_SWITCH_TIME)
+      {
+        Err_Flag |=0x80;        
+        Cur_Scheme.Step_Scheme_Time = AFT_SWITCH_TIME;
+      }
+    }
+  }
+      
+  if(Err_Flag > 0)
+  {
+    ASSERT_FAILED();
+    _Debug_Print("Err_Flag = %d", Err_Flag);
+    SET_STRUCT_SUM(Cur_Scheme);
   }
 }
 
@@ -911,23 +951,29 @@ void Check_Prepaid_Para()
 {
   TRACE();
 
-  if(Prepaid_Para.Step_Num > PREPAID_MAX_STEP)
+  if(PREPAID_EN > 0)
   {
-    ASSERT_FAILED();
-    Prepaid_Para.Step_Num = PREPAID_MAX_STEP;
-    SET_STRUCT_SUM(Prepaid_Para);
-  }
-  
-  if(Prepaid_Para.PT_Ratio EQ 0)
-  {
-    Prepaid_Para.PT_Ratio = 1;
-    SET_STRUCT_SUM(Prepaid_Para);
-  }
-  
-  if(Prepaid_Para.CT_Ratio EQ 0)
-  {
-    Prepaid_Para.CT_Ratio = 1;
-    SET_STRUCT_SUM(Prepaid_Para);
+    if(PREPAID_MONEY_MODE EQ PREPAID_STEP)
+    {
+      if(Prepaid_Para.Step_Num > PREPAID_MAX_STEP)
+      {
+        ASSERT_FAILED();
+        Prepaid_Para.Step_Num = PREPAID_MAX_STEP;
+        SET_STRUCT_SUM(Prepaid_Para);
+      }
+    }
+
+    if(Prepaid_Para.PT_Ratio EQ 0)
+    {
+      Prepaid_Para.PT_Ratio = 1;
+      SET_STRUCT_SUM(Prepaid_Para);
+    }
+    
+    if(Prepaid_Para.CT_Ratio EQ 0)
+    {
+      Prepaid_Para.CT_Ratio = 1;
+      SET_STRUCT_SUM(Prepaid_Para);
+    }
   }
 }
 

@@ -56,13 +56,7 @@ unsigned char Judge_User_Card_OK(unsigned char BuyCard_Kind,unsigned long Buy_Co
 			  Card_Error_State.CardErrorState.Client_Id_Err=1;
 			  return ERR;
 		}
-                ////如果是运行状态插入 开户卡 
-                if( BuyCard_Kind ==GWFAR_USER_CARD_NEW )
-                {
-                        ASSERT_FAILED();
-			Card_Error_State.CardErrorState.WhenInOperation_Insert_FirstUserCard_Err=1;
-			return ERR;
-		}
+
                  //"//如果购电次数相等则直接回写// " );
                 CurrMeter_MoneyCount=Get_Buy_Eng_Counts();
 		
@@ -71,6 +65,13 @@ unsigned char Judge_User_Card_OK(unsigned char BuyCard_Kind,unsigned long Buy_Co
 			Dir_Return_Flag = 0xFF;////标示购电次数相等时直接 返写cpu卡   " );
 			return OK;
 		}
+                ////如果是运行状态插入 开户卡 
+                if( BuyCard_Kind ==GWFAR_USER_CARD_NEW )
+                {
+                        ASSERT_FAILED();
+			Card_Error_State.CardErrorState.WhenInOperation_Insert_FirstUserCard_Err=1;
+			return ERR;
+		}                
                 ////如果是运行状态插入 开户卡， 计入非法卡插入次数 " );
 		/*if( BuyCard_Kind ==GWFAR_USER_CARD_NEW )
                 {
@@ -84,7 +85,7 @@ unsigned char Judge_User_Card_OK(unsigned char BuyCard_Kind,unsigned long Buy_Co
 		if( BuyCard_Kind !=GWFAR_USER_CARD_NEW )
 			{
                          ASSERT_FAILED();
-			 Card_Error_State.CardErrorState.CARD_STATE_ERR=1;
+			 Card_Error_State.CardErrorState.WhenInTest_Insert_UserCard_Err=1;
 			 return ERR;
 			}
 		else

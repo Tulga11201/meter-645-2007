@@ -58,7 +58,7 @@ typedef struct {
    INT32U CpuCardExternlAuthenticationErr  : 1; /// 外部认证错  计入非法卡插入次数
    INT32U CpuCardInternlAuthenticationErr  :1; /// 内部认证， 即身份验证。计入非法卡插入次数
   
-   INT32U CARD_STATE_ERR   : 1; //未开户状态插入购电卡，补卡/
+   INT32U WhenInTest_Insert_UserCard_Err   : 1; //未开户状态插入购电卡，补卡/
    INT32U BUY_CARD_KIND_ERR      : 1; // 购电卡卡类型错 补卡，开户卡。类型没找到以及.卡户状态 插入 开户卡， 计入非法卡插入次数
    INT32U CARD_BUY_COUNT_ERR : 1; //购电次数错误  计入非法卡插入次数
    INT32U Cpu_Card_Li_San_Yin_Zi_Err   : 1; /// 离散因子错了， 计入非法卡插入次数

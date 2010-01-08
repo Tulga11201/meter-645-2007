@@ -681,6 +681,7 @@ void Prepaid_Set_Buy_Money_Counts(INT32U Money, INT32U Counts)
     Cur_Energy.Prepaid_Info.Total_Prepaid_Energy_Counts = Counts; 
   }
   
+  _Debug_Print("Set_Left_Money:%ld, Counts:%ld", Money, Counts);
   SET_STRUCT_SUM(Cur_Energy);
   
   Save_Cur_Energy_PD_Data();

@@ -22,6 +22,7 @@ CONST INT8U BROAD_ADDR_AA[] =
 
 CONST S_P_Data_Info P_Data_Info[] =
 {
+#if BLOCK_DATA_SETTLE_EN > 0  
   {INIT(PDI, 0x000000FF),
   INIT(DI_Set_Flag, 1),
   INIT(PSW_Flag, PSW_RD_ONLY),
@@ -47,7 +48,8 @@ CONST S_P_Data_Info P_Data_Info[] =
   INIT(Dst_Len, 8),
   INIT(Num, 0x000A0000 | ((MAX_RATES + 1) << 8)),
   INIT(Spec_Flag, SPEC_DEMAND)}, 
-  
+#endif
+
   //当前以及历史电量
   //当前总组合有功), 有符号
   {INIT(PDI, 0x00000000),
@@ -8458,14 +8460,15 @@ Bit7	Bit6	Bit5	Bit4	Bit3	Bit2	Bit1	Bit0
 #define RATE_EXCEED_ERR        0x40//费率数超
 */
 //检查设置数据的格式，正确返回1，错误返回0
-INT8U Set_Data_Format_Check(INT16U Index, PROTO_DI PDI, INT8U* pSrc, INT8U SrcLen)
+INT8U _Set_Data_Format_Check(INT16U Index, PROTO_DI PDI, INT8U* pSrc, INT8U SrcLen)
 {
   INT8U Re;
-  INT8U Spec_Flag;
+  INT8U Spec_Flag, Err_Flag;
   //INT8U Temp[5];
   
   TRACE();
 
+  Err_Flag = 0;
   //在P_Data_Info中查找到该项
   //for(i=0;i<S_NUM(P_Data_Info);i++)
   Re = Check_P_Data_Single(Index, PDI, FOR_COMM, &Spec_Flag);
@@ -8475,15 +8478,15 @@ INT8U Set_Data_Format_Check(INT16U Index, PROTO_DI PDI, INT8U* pSrc, INT8U SrcLe
     {
       if(!Check_BCD_Data(pSrc, SrcLen))//发送来的数据是BCD?
       {
-        SET_BIT(Sys_Run_Flag.Err_Flag, OTHER_ERR);
-        return 0;
+        SET_BIT(Err_Flag, OTHER_ERR);
+        return Err_Flag;
       }
     }
     
     if(P_Data_Info[Index].Dst_Len != SrcLen) //数据长度不对?
     {
-      SET_BIT(Sys_Run_Flag.Err_Flag, OTHER_ERR);
-      return 0;
+      SET_BIT(Err_Flag, OTHER_ERR);
+      return Err_Flag;
     }
   }
   
@@ -8492,8 +8495,8 @@ INT8U Set_Data_Format_Check(INT16U Index, PROTO_DI PDI, INT8U* pSrc, INT8U SrcLe
     Re = Bcd2Hex(pSrc,1);
     if(Re EQ 0 || Re > MAX_YEAR_PERIODS)//年时区数超
     {
-      SET_BIT(Sys_Run_Flag.Err_Flag, YEAR_PERIOD_EXCEED_ERR);
-      return 0;
+      SET_BIT(Err_Flag, YEAR_PERIOD_EXCEED_ERR);
+      return Err_Flag;
     }
   }
   else if(PDI EQ 0x04000202)//日时段表数超
@@ -8501,8 +8504,8 @@ INT8U Set_Data_Format_Check(INT16U Index, PROTO_DI PDI, INT8U* pSrc, INT8U SrcLe
     Re = Bcd2Hex(pSrc,1);
     if(Re EQ 0 || Re > MAX_DATE_TABLES)
     {
-      SET_BIT(Sys_Run_Flag.Err_Flag, OTHER_ERR);
-      return 0;
+      SET_BIT(Err_Flag, OTHER_ERR);
+      return Err_Flag;
     }
   }
   else if(PDI EQ 0x04000203)//日时段数超
@@ -8510,8 +8513,8 @@ INT8U Set_Data_Format_Check(INT16U Index, PROTO_DI PDI, INT8U* pSrc, INT8U SrcLe
     Re = Bcd2Hex(pSrc,1);
     if(Re EQ 0 || Re > MAX_DATE_PERIODS)
     {
-      SET_BIT(Sys_Run_Flag.Err_Flag, DATE_PERIOD_EXCEED_ERR);
-      return 0;
+      SET_BIT(Err_Flag, DATE_PERIOD_EXCEED_ERR);
+      return Err_Flag;
     }
   }
   else if(PDI EQ 0x04000204)//费率数超
@@ -8519,35 +8522,41 @@ INT8U Set_Data_Format_Check(INT16U Index, PROTO_DI PDI, INT8U* pSrc, INT8U SrcLe
     Re = Bcd2Hex(pSrc,1);
     if(Re EQ 0 || Re > MAX_RATES) 
     {
-      SET_BIT(Sys_Run_Flag.Err_Flag, RATE_EXCEED_ERR);
-      return 0;
+      SET_BIT(Err_Flag, RATE_EXCEED_ERR);
+      return Err_Flag;
     }
   }
   else if(PDI EQ 0x04000205) //公共假日数超
   {
     if(Bcd2Hex(pSrc,2) > MAX_YEAR_HOLIDAYS)
     {
-      SET_BIT(Sys_Run_Flag.Err_Flag, OTHER_ERR);
-      return 0;       
+      SET_BIT(Err_Flag, OTHER_ERR);
+      return Err_Flag;       
     }
   }
   else if(PDI EQ 0x04000207) //预付费梯度数
   {
     if(Bcd2Hex(pSrc,1) > PREPAID_MAX_STEP)
     {
-      SET_BIT(Sys_Run_Flag.Err_Flag, OTHER_ERR);      
-      return 0;
+      SET_BIT(Err_Flag, OTHER_ERR);      
+      return Err_Flag;
     }
   }
   else if(PDI EQ 0x04000409 || PDI EQ 0x0400040A)//有无功脉冲常数
   {
     if(Judge_Pulse_Legal(Bcd2Hex(pSrc,3)) EQ 0) //检查脉冲常数的合法性
-      return 0;
+    {
+      SET_BIT(Err_Flag, OTHER_ERR);      
+      return Err_Flag;
+    }
   }
   else if(PDI EQ 0x04000401) //写通信地址
   {
     if(Check_WR_Comm_Addr(pSrc) EQ 0)
-      return 0;
+    {
+      SET_BIT(Err_Flag, OTHER_ERR);      
+      return Err_Flag;
+    }
   }
 
 /*
@@ -8584,7 +8593,7 @@ INT8U Set_Data_Format_Check(INT16U Index, PROTO_DI PDI, INT8U* pSrc, INT8U SrcLe
      }
   }
 */
-  return 1;
+  return Err_Flag;
 }
 
 //参数设置成功的后处理
@@ -8612,37 +8621,33 @@ void Save_Op_ID(INT8U *pSrc)
   EN_PD_INT;  
 }
 
-//设置数据处理
-//*pAck_Flag表示是否已经给过应答，1表示在函数内部已经给过应答，0表示没有给应答
-INT8U Set_Data_Proc(INT8U Ch, INT8U* pSrc, INT8U SrcLen, INT8U *pAck_Flag)
+//检查数据格式的合法性
+//pSrc为数据域起始
+//SrcLen为数据域长度
+//*pIndex用于返回数据在P_Data_Info中的索引
+//返回0表示数据正确，其他为返回错误信息
+INT8U Set_Data_Format_Check(INT8U* pSrc, INT8U SrcLen, INT16U *pIndex)
 {
-  INT8U Re;
   PROTO_DI PDI;
   INT16U i;
-  INT8U Single_Flag, Spec_Flag;
-
-  TRACE();
+  INT8U Single_Flag,Spec_Flag, Err_Flag;
   
-  *pAck_Flag = 0;
+  Err_Flag = 0;
   PDI = 0;
   mem_cpy(&PDI, pSrc, sizeof(PDI), &PDI, sizeof(PDI));//DI=*(INT16U *)pSrc;
-  
+
   if(Check_PDI_Answer_En(PDI) EQ 0)
   {
     ASSERT_FAILED();
-    SET_BIT(Sys_Run_Flag.Err_Flag, NO_REQ_DATA_ERR);//非法数据
-    return 0;//0;    
+    SET_BIT(Err_Flag, NO_REQ_DATA_ERR);//非法数据
+    return Err_Flag;//0;    
   }
-  
-  //保存操作者ID
-  //备份前一次操作员ID
-  Record_Op_ID(pSrc + 8);
   
   if(!(SrcLen >= 12))//包括标识和密码起码有8字节
   {
     ASSERT_FAILED();
-    SET_BIT(Sys_Run_Flag.Err_Flag, OTHER_ERR);//非法数据
-    return 0;//0;
+    SET_BIT(Err_Flag, OTHER_ERR);    
+    return Err_Flag;//0;
   }
 
   Single_Flag = 0;//是否是个独立的数据项，而不是数据集之类
@@ -8657,18 +8662,49 @@ INT8U Set_Data_Proc(INT8U Ch, INT8U* pSrc, INT8U SrcLen, INT8U *pAck_Flag)
 
   if(Single_Flag EQ 0)//不是条独立数据项
   {
-    SET_BIT(Sys_Run_Flag.Err_Flag, OTHER_ERR);//数据标识错
-    return 0;
+    SET_BIT(Err_Flag, OTHER_ERR);    
+    return Err_Flag;//0;
   }
 
-  Re = Set_Data_Format_Check(i, PDI, pSrc + 12, (INT8U) (SrcLen - 12));//检查数据格式等
-  if(0 EQ Re)
+  *pIndex = i;
+  
+  Err_Flag = _Set_Data_Format_Check(i, PDI, pSrc + 12, (INT8U) (SrcLen - 12));//检查数据格式等
+  if(0 != Err_Flag)
   {
     ASSERT_FAILED();
+    SET_BIT(Err_Flag, OTHER_ERR);    
+    return Err_Flag;//0;
+  }
+
+  return 0;  
+}
+
+//设置数据处理
+//*pAck_Flag表示是否已经给过应答，1表示在函数内部已经给过应答，0表示没有给应答
+INT8U Set_Data_Proc(INT8U Ch, INT8U* pSrc, INT8U SrcLen, INT8U *pAck_Flag)
+{
+  INT8U Re;
+  PROTO_DI PDI;
+  INT16U Index;
+  INT8U Spec_Flag;
+  
+  TRACE();
+  
+  *pAck_Flag = 0;
+  
+  Re = Set_Data_Format_Check(pSrc, SrcLen, &Index);
+  if(Re != 0)
+  {
+    ASSERT_FAILED();
+    Sys_Run_Flag.Err_Flag = Re;
     return 0;
   }
 
-
+  Record_Op_ID(pSrc + 8);  
+  PDI = 0;
+  mem_cpy(&PDI, pSrc, sizeof(PDI), &PDI, sizeof(PDI));//DI=*(INT16U *)pSrc;
+  Spec_Flag = P_Data_Info[Index].Spec_Flag;
+  
   Set_Prog_Record_Pre_Porc(Ch, PDI, pAck_Flag);
   //DI到数据之间有6字节的密码哦  
   if((Spec_Flag & 0x80) != 0)
@@ -8677,7 +8713,7 @@ INT8U Set_Data_Proc(INT8U Ch, INT8U* pSrc, INT8U SrcLen, INT8U *pAck_Flag)
   }//正常项的设置
   else
   {
-    Re = Set_DI_Data_Proc(i, PDI, pSrc + 12, (INT8U) (SrcLen - 12));
+    Re = Set_DI_Data_Proc(Index, PDI, pSrc + 12, (INT8U) (SrcLen - 12));
   }
 
   if(1 EQ Re)

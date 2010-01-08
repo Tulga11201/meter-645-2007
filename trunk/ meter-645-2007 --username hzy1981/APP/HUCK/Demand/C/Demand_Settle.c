@@ -649,6 +649,9 @@ void Settle_Demand_FF_Data(INT8U Flag)
   INT16U Len;
   PROTO_DI PDI;
 
+  if(BLOCK_DATA_SETTLE_EN EQ 0)
+    return;
+    
   Len = 0;  
   OS_Mutex_Pend(PUB_BUF0_SEM_ID);
   for(i =0; i <= 9; i ++)

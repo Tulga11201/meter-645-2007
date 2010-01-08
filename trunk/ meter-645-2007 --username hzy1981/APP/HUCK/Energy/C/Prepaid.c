@@ -621,6 +621,13 @@ void Prepaid_Prog_Record(PROTO_DI PDI, INT8U Op_ID[])
   SET_STRUCT_SUM(Card_Op_Info);
 }
 
+//插卡的前处理
+void Prepaid_Card_Op_Bef_Proc()
+{
+  Card_Switch_On(); //插卡合闸
+  Clr_Card_Op_Info(); //操作者代码等信息的清除
+}
+
 //插卡的后处理
 void Prepaid_Card_Op_Aft_Proc()
 {

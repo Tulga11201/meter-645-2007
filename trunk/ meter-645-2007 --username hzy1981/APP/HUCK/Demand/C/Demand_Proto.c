@@ -32,11 +32,14 @@ INT16U _Get_Demand_Proto_Data(PROTO_DI PDI, INT8U* pDst, INT8U* pDst_Start, INT1
     return 0;
   }
 
-  FF_Flag = 0;
-  if((PDI & 0xFF) EQ 0xFF && BYTE_2(PDI) <= 0x0A) //读取上N个结算日数据块
+  if(BLOCK_DATA_SETTLE_EN > 0)
   {
-    FF_Flag = 1;
-    PDI = PDI & 0xFFFFFF00;
+    FF_Flag = 0;
+    if((PDI & 0xFF) EQ 0xFF && BYTE_2(PDI) <= 0x0A) //读取上N个结算日数据块
+    {
+      FF_Flag = 1;
+      PDI = PDI & 0xFFFFFF00;
+    }
   }
   
   Bef_Counts = (INT8U) (PDI & 0x0000000F);//前几个结算日数据?
@@ -194,16 +197,19 @@ INT16U _Get_Demand_Proto_Data(PROTO_DI PDI, INT8U* pDst, INT8U* pDst_Start, INT1
   //Hex2Bcd_Buf(p + S_OFF(S_Demand_Time, Time[0]), 5, (INT8U *) pDst + 3, pDst_Start, DstLen);
   mem_cpy(pDst + 3, p + S_OFF(S_Demand_Time, Time[0]), 5, pDst_Start, DstLen);
   
-  if(FF_Flag EQ 1)//
+  if(BLOCK_DATA_SETTLE_EN > 0)
   {
-    //PDI = EH_DI(0x01010000) + BYTE_2(PDI) - 1;
-    Len = Read_Storage_Data(EH_DI(0x01010000) + BYTE_2(PDI) - 1, (INT8U *)Pub_Buf, (INT8U *)Pub_Buf, sizeof(Pub_Buf)); 
-    if(Len EQ 0)
-      mem_set((INT8U *)Pub_Buf, 0, sizeof(Pub_Buf), (INT8U *)Pub_Buf, sizeof(Pub_Buf));    
-
-    mem_cpy(pDst + 8, (INT8U *)Pub_Buf + ((INT32U)BYTE_1(PDI))*MAX_DEMAND_SETTLE_NUM*8, \
-            MAX_DEMAND_SETTLE_NUM*8, pDst_Start, DstLen);
-    return (MAX_DEMAND_SETTLE_NUM + 1) * 8;
+    if(FF_Flag EQ 1)//
+    {
+      //PDI = EH_DI(0x01010000) + BYTE_2(PDI) - 1;
+      Len = Read_Storage_Data(EH_DI(0x01010000) + BYTE_2(PDI) - 1, (INT8U *)Pub_Buf, (INT8U *)Pub_Buf, sizeof(Pub_Buf)); 
+      if(Len EQ 0)
+        mem_set((INT8U *)Pub_Buf, 0, sizeof(Pub_Buf), (INT8U *)Pub_Buf, sizeof(Pub_Buf));    
+  
+      mem_cpy(pDst + 8, (INT8U *)Pub_Buf + ((INT32U)BYTE_1(PDI))*MAX_DEMAND_SETTLE_NUM*8, \
+              MAX_DEMAND_SETTLE_NUM*8, pDst_Start, DstLen);
+      return (MAX_DEMAND_SETTLE_NUM + 1) * 8;
+    }
   }  
   return 8;
 }

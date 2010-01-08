@@ -71,7 +71,9 @@
 #define PREPAID_MAX_STEP      4 //阶梯预付费最大梯度值
 
 #define SCHEME_SWITCH_MODE 1 //年时区和日时段切换方式,0表示切换时间以前用主方案，切换时间后用副方案，
-                                //1表示只要跨切换时间就改变方案
+#define BLOCK_DATA_SETTLE_EN 1 //电量和需量的上1-12月块数据是否单独结算
+
+//1表示只要跨切换时间就改变方案
 #define LOAD_DATA_NUM      43000//存储的负荷曲线条数
 #define LOAD_DATA_INDEX_HOUR_NUM 12 //每小时索引个数
 

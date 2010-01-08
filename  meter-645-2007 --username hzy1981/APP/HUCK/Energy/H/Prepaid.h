@@ -48,6 +48,7 @@ EXT INT8U Get_Array_Time(INT8U Type,INT8U *pDst, INT8U *pDst_Start, INT16U DstLe
 EXT INT8U UpdataUnlawCardInsetEvent();
 EXT INT8U Get_Prepaid_Status();
 EXT void Prepaid_Prog_Record(PROTO_DI PDI, INT8U Op_ID[]);
+EXT void Prepaid_Card_Op_Bef_Proc();
 EXT void Prepaid_Card_Op_Aft_Proc();
 EXT void Card_Set_Para_Notice();
 EXT void Clr_Card_Op_Info();

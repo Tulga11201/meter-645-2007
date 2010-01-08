@@ -644,6 +644,7 @@ EXT INT16U Rcv_PROTOCOL_Frame_Proc(INT8U Ch,INT8U *pSrc,INT16U SrcLen,INT8U *pDs
 EXT INT16U Rcv_DLT645_Data_Proc(INT8U Ch, INT8U* pFrame, INT8U FrameLen, INT8U* pDst, INT8U* pDst_Start, INT16U DstLen);
 EXT void Send_Set_Data_Ack_Frame(INT8U Ch);
 
+EXT INT8U Set_Data_Format_Check(INT8U* pSrc, INT8U SrcLen, INT16U *pIndex);
 EXT INT8U Set_DI_Data_Proc(INT16U Index, PROTO_DI PDI, INT8U* pSrc, INT8U SrcLen);
 EXT INT8U Set_Spec_Data_Proc(PROTO_DI PDI, INT8U Spec_Flag, INT8U* pSrc, INT8U SrcLen);
 

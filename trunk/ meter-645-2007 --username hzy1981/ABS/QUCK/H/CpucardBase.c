@@ -1,7 +1,7 @@
 #include "MyIncludesAll.h"
 #undef Debug_Print
-#define Debug_Print(...)
-//#define Debug_Print _Debug_Print
+//#define Debug_Print(...)
+#define Debug_Print _Debug_Print
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //// 延时_64us个64us //      
@@ -376,17 +376,7 @@ unsigned char CPU_Card_Driver(const unsigned char *Order_Head,
 
 
 //可能要反相，所以 在这个函数中外包一层
-INT16U C_Read_Storage_Data(STORA_DI SDI, void* pDst, void* pDst_Start, INT16U DstLen){
-  if( Read_Storage_Data( SDI, pDst,  pDst, DstLen ) ){
-   
-    return 1;  
-    
-  }else{
-   ASSERT_FAILED();
-   return 0;
-  }
-       
-}
+ 
 //在远程通讯中 ，进程开户操作的时， 余金额，购电次数是正常顺序，   在数据查询给的也是正常顺序
 //在卡操作的返写过程中，从电能表得到剩余金额和购电次数后，反相后，更新esam 再更新cpu卡
 //结论，ic卡操作中给esam和卡数据要反的顺序， 从他们中得到数据也要反相后才可以得到正常顺序
@@ -399,21 +389,20 @@ INT8U  WhenCardInsertedInitPrePayData(void) { //上电从e方读取数据到全局变量
      //  当充值的时候，是先反相主站的客户编号后再与e方中的客户编号相比较的
       //由此可以看出,主站来的数据是正常顺序，把数据给esam要反相顺序，  然而给 e方用正常顺序
     //除去　客户编号外，　客户编号从主站来时反是的顺序，写到ｅ方中要反相  发给主站要用反得顺序
-     C_Read_Storage_Data( SDI_CUTOMER_ID, Pre_Payment_Para.UserID,  Pre_Payment_Para.UserID,sizeof(Pre_Payment_Para.UserID)  ); 
+     Read_Storage_Data( SDI_CUTOMER_ID, Pre_Payment_Para.UserID,  Pre_Payment_Para.UserID,sizeof(Pre_Payment_Para.UserID)  ); 
      Reverse_data(   Pre_Payment_Para.UserID,6);
      //如果是读写运行状态
-     C_Read_Storage_Data( _SDI_PREPAID_RUN_STATUS, &Pre_Payment_Para.Meter_Run_State ,  &Pre_Payment_Para.Meter_Run_State,sizeof(Pre_Payment_Para.Meter_Run_State)  );    
+     Read_Storage_Data( _SDI_PREPAID_RUN_STATUS, &Pre_Payment_Para.Meter_Run_State ,  &Pre_Payment_Para.Meter_Run_State,sizeof(Pre_Payment_Para.Meter_Run_State)  );    
      //如果是写离散因子
-     C_Read_Storage_Data( _SDI_DISCRETE_INFO, Pre_Payment_Para.Cpucard_Number_old_BackUpInEerom, Pre_Payment_Para.Cpucard_Number_old_BackUpInEerom, 8);    
+     Read_Storage_Data( _SDI_DISCRETE_INFO, Pre_Payment_Para.Cpucard_Number_old_BackUpInEerom, Pre_Payment_Para.Cpucard_Number_old_BackUpInEerom, 8);    
      //密钥类型,密钥下装卡， 还是密钥恢复卡 
-     C_Read_Storage_Data( _SDI_PREPAID_PSW_KIND, &Pre_Payment_Para.PassWord_Kind,  &Pre_Payment_Para.PassWord_Kind,1);  
+     Read_Storage_Data( _SDI_PREPAID_PSW_KIND, &Pre_Payment_Para.PassWord_Kind,  &Pre_Payment_Para.PassWord_Kind,1);  
      //取表号  
-     C_Read_Storage_Data( SDI_METER_ID, &Pre_Payment_Para.BcdMeterID,  &Pre_Payment_Para.BcdMeterID,6); 
+     Read_Storage_Data( SDI_METER_ID, &Pre_Payment_Para.BcdMeterID,  &Pre_Payment_Para.BcdMeterID,6); 
      //使用的时候要反相表号 ，注意，只是使用在 现场参数卡， 返写操作， 密钥更新，购电卡判断
      Reverse_data(Pre_Payment_Para.BcdMeterID,6);
     //现场参数设置卡版本号  
-     C_Read_Storage_Data(_SDI_PREPAID_PARA_CARD_VER,&Pre_Payment_Para.Para_Card_Version, &Pre_Payment_Para.Para_Card_Version, 4) ;
-     
+     Read_Storage_Data(_SDI_PREPAID_PARA_CARD_VER,&Pre_Payment_Para.Para_Card_Version, &Pre_Payment_Para.Para_Card_Version, 4) ;
      //Pre_Payment_Para.Remain_Money_Hoard_Limit=Get_Money_Hoard_Limit();
      //Pre_Payment_Para.Buy_Count=Get_Buy_Eng_Counts();//从黄工那里获得购电次数，
      Card_Error_State.CardErrorState_INT32U=0x00000000;

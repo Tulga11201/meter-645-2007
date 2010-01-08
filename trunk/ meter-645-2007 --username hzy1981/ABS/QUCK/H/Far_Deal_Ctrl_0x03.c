@@ -593,7 +593,7 @@ unsigned char Far_Deal_070101FF(unsigned char * Data_Point )
 
 	mem_cpy(&Far_Deal_070101FF_format,Data_Point,sizeof(Far_Deal_070101FF_format),&Far_Deal_070101FF_format,sizeof(Far_Deal_070101FF_format));
 	
-        C_Read_Storage_Data( _SDI_PREPAID_RUN_STATUS, &Pre_Payment_Para.Meter_Run_State ,  &Pre_Payment_Para.Meter_Run_State,sizeof(Pre_Payment_Para.Meter_Run_State)  );    
+        Read_Storage_Data( _SDI_PREPAID_RUN_STATUS, &Pre_Payment_Para.Meter_Run_State ,  &Pre_Payment_Para.Meter_Run_State,sizeof(Pre_Payment_Para.Meter_Run_State)  );    
      	if( Pre_Payment_Para.Meter_Run_State!=MeterRunState_Test_0 )
 		return ERR;
         //读钱包文件并反相
@@ -666,7 +666,7 @@ unsigned char Far_Deal_070102FF(unsigned char * Data_Point )
 	struct Far_Deal_070102FF_format    Far_Deal_070102FF_format;
 	struct Moneybag_Data Moneybag_Data;
         
-        C_Read_Storage_Data( _SDI_PREPAID_RUN_STATUS, &Pre_Payment_Para.Meter_Run_State ,  &Pre_Payment_Para.Meter_Run_State,sizeof(Pre_Payment_Para.Meter_Run_State)  ); 
+        Read_Storage_Data( _SDI_PREPAID_RUN_STATUS, &Pre_Payment_Para.Meter_Run_State ,  &Pre_Payment_Para.Meter_Run_State,sizeof(Pre_Payment_Para.Meter_Run_State)  ); 
 	if( Pre_Payment_Para.Meter_Run_State!=MeterRunState_Run_3 ) 	
         {
            ASSERT_FAILED();
@@ -684,7 +684,7 @@ unsigned char Far_Deal_070102FF(unsigned char * Data_Point )
 	Reverse_data((unsigned char *)&(Far_Deal_070102FF_format.Client_ID[0]),6);
 	Reverse_data((unsigned char *)&(Far_Deal_070102FF_format.Client_ID_Mac[0]),4);
         // 比较客户编号， 在e方中 
-        C_Read_Storage_Data( SDI_CUTOMER_ID, Pre_Payment_Para.UserID,  Pre_Payment_Para.UserID,6 ); 
+        Read_Storage_Data( SDI_CUTOMER_ID, Pre_Payment_Para.UserID,  Pre_Payment_Para.UserID,6 ); 
         Reverse_data(Pre_Payment_Para.UserID,6);
 	if( My_Memcmp(Pre_Payment_Para.UserID,&Far_Deal_070102FF_format.Client_ID[0],6) != 0 )
         {

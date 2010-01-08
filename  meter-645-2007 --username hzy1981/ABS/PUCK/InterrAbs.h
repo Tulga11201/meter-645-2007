@@ -39,7 +39,7 @@ typedef struct
 
 
 INTER_ABS_PUCK_EXT PULSE_NUM_STRUC  Pulse_Num_Temp;
-INTER_ABS_PUCK_EXT INT16U Fast_Timer_Reg;  //INT32U ¸ÄÎª INT16U  09£­04£­05 RiseSun
+INTER_ABS_PUCK_EXT INT32U Fast_Timer_Reg;
 
 typedef struct
 {

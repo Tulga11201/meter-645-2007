@@ -74,7 +74,7 @@ TriggerName=main
 LimitSize=0
 ByteLimit=50
 [DebugChecksum]
-Checksum=-1568523191
+Checksum=344527577
 [InstructionProfiling]
 Enabled=_ 0
 [DriverProfiling]
@@ -90,9 +90,6 @@ UseAuto=0
 TypeViolation=1
 UnspecRange=1
 ActionState=1
-[Breakpoints]
-Bp0=_ "STD_CODE" "{F:\A\APP\Main\C\Main_Proc.c}.80.3@1" 1 0 0 0 "" 0 ""
-Count=1
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
@@ -103,3 +100,6 @@ LogFile=_ ""
 [TraceHelper]
 Enabled=0
 ShowSource=1
+[Breakpoints]
+Bp0=_ "STD_CODE" "{F:\A\APP\Main\C\Main_Proc.c}.80.3@1" 1 0 0 0 "" 0 ""
+Count=1

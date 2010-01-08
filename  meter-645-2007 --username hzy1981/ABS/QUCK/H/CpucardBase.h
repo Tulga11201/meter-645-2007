@@ -70,7 +70,6 @@ unsigned char Cpucard_Atr(void);
 unsigned char Esamcard_Atr(void);
 
 INT8U  WhenCardInsertedInitPrePayData(void);//上电从e方读取数据到全局变量
-INT16U C_Read_Storage_Data(STORA_DI SDI, void* pDst, void* pDst_Start, INT16U DstLen);
-   
+ 
 
 #endif

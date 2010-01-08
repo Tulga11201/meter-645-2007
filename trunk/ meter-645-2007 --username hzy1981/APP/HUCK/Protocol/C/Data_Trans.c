@@ -8662,6 +8662,7 @@ INT8U Set_Data_Format_Check(INT8U* pSrc, INT8U SrcLen, INT16U *pIndex)
 
   if(Single_Flag EQ 0)//不是条独立数据项
   {
+    ASSERT_FAILED();
     SET_BIT(Err_Flag, OTHER_ERR);    
     return Err_Flag;//0;
   }
@@ -8672,7 +8673,6 @@ INT8U Set_Data_Format_Check(INT8U* pSrc, INT8U SrcLen, INT16U *pIndex)
   if(0 != Err_Flag)
   {
     ASSERT_FAILED();
-    SET_BIT(Err_Flag, OTHER_ERR);    
     return Err_Flag;//0;
   }
 

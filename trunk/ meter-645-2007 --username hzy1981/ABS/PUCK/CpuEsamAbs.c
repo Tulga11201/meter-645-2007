@@ -240,8 +240,8 @@ void CPU_Card_Main_Proc(void)
         if(Check_Max_Volt_Below(Get_Un()*0.7))   //电压太低，不能买电
           Ok_Flag=0;
 
-        Ok_Flag&=ICcardMain();        
-        if(Ok_Flag)
+        Result=ICcardMain();        
+        if(Ok_Flag && Result)
         {
           Port_Out_Pub(INTER_ID_ALARM_BEEP,300);  //叫1秒
           //strcpy(temp,"SUCCEED");

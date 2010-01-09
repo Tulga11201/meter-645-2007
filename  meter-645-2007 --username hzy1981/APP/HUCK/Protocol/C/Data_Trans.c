@@ -9329,6 +9329,10 @@ INT16U Rcv_DLT645_Data_Proc(INT8U Ch, INT8U* pFrame, INT8U FrameLen, INT8U* pDst
       Record_Op_ID(pSrc + 4);
       Set_Clear_Data_Flag(CLEAR_ALL_FLAG); 
 
+      //对于本地费控表，购电次数和剩余金额需要单独清零。
+      if(PREPAID_EN> 0 && PREPAID_LOCAL_REMOTE EQ PREPAID_LOCAL)
+        Prepaid_Set_Buy_Money_Counts(0,0);     
+      
       Re = 1; 
       Len = 0; 
       break; 

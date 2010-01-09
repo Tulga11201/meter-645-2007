@@ -13,7 +13,24 @@ INT8U ICcardMain(void) {
        
        INT32U Temp;
        char ret;
-
+       INT8U a,b;
+       a=0;
+       b=3;
+       if((a)>(b)?(a):(b))
+       {
+        Debug_Print("--------B- " );
+       }
+       
+       if((JUDGE_CPU_INSERT)?(OK):(ERR))
+       {
+             b=(JUDGE_CPU_INSERT)?(OK):(ERR);
+             Debug_Print("--------OK--:%d- ",b );
+           
+       }else{
+                    b=(JUDGE_CPU_INSERT)?(OK):(ERR);
+             Debug_Print("--------OK--:%d- ",b );
+       }
+       
        //Prepaid_Set_Buy_Money_Counts(0,0); 
         if( JUDGE_CPU_INSERT)//卡存在
         {
@@ -41,15 +58,15 @@ INT8U ICcardMain(void) {
         Debug_Print("-------ret:%d---- ------ ",ret );
         //处理放回状态字
 	if(ret!= OK){
-		if(   Card_Error_State.CardErrorState.MeterIdErr EQ 1 //表号不匹配，计入非法卡插入次数 
-                   || Card_Error_State.CardErrorState.Client_Id_Err EQ 1 // 用户编号错误 ,当表开户了后会出现 ,表未开户不会出现  
-                   || Card_Error_State.CardErrorState.CpuCardExternlAuthenticationErr EQ 1 //外部认证错误
-                   || Card_Error_State.CardErrorState.CpuCardInternlAuthenticationErr EQ 1// 内部认证， 即身份验证。计入非法卡插入次数
-                   || Card_Error_State.CardErrorState.WhenInTest_Insert_UserCard_Err EQ 1//未开户状态插入购电卡和补卡/
-                   || Card_Error_State.CardErrorState.CardKindErr  EQ 1  ////"卡类型或状态不对",购电卡，参数预置卡
-                   || Card_Error_State.CardErrorState.BUY_CARD_KIND_ERR EQ 1// 购电卡卡类型错， 补卡，开户卡。类型没找到
-                   || Card_Error_State.CardErrorState.CARD_BUY_COUNT_ERR EQ 1//购电次数错误  计入非法卡插入次数
-                   || Card_Error_State.CardErrorState.Cpu_Card_Li_San_Yin_Zi_Err EQ 1 /// 离散因子错了， 计入非法卡插入次数
+		if(   Card_Error_State.CardErrorState.MeterIdErr  //表号不匹配，计入非法卡插入次数 
+                   || Card_Error_State.CardErrorState.Client_Id_Err  // 用户编号错误 ,当表开户了后会出现 ,表未开户不会出现  
+                   || Card_Error_State.CardErrorState.CpuCardExternlAuthenticationErr //外部认证错误
+                   || Card_Error_State.CardErrorState.CpuCardInternlAuthenticationErr // 内部认证， 即身份验证。计入非法卡插入次数
+                   || Card_Error_State.CardErrorState.WhenInTest_Insert_UserCard_Err //未开户状态插入购电卡和补卡/
+                   || Card_Error_State.CardErrorState.CardKindErr  ////"卡类型或状态不对",购电卡，参数预置卡
+                   || Card_Error_State.CardErrorState.BUY_CARD_KIND_ERR// 购电卡卡类型错， 补卡，开户卡。类型没找到
+                   || Card_Error_State.CardErrorState.CARD_BUY_COUNT_ERR //购电次数错误  计入非法卡插入次数
+                   || Card_Error_State.CardErrorState.Cpu_Card_Li_San_Yin_Zi_Err /// 离散因子错了， 计入非法卡插入次数
                   )
 		{
                         //非法卡次数加1，写到e方中去

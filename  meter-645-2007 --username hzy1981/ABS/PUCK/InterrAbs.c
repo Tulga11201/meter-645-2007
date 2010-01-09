@@ -1,23 +1,17 @@
 #define INTER_ABS_PUCK
 #include "Pub_PUCK.h"
 
-//江机硬件: IRDA_WAKE_UP_MS=25;     IRDA_WAKE_UP_NUM=1   90~110 hz
+//遥控器:200hz以上(即:5ms有一个低脉冲)
+//日光灯:100hz左右(即:10ms有1个低脉冲)
+//手抄器:50～100 hz左右(即:20/10ms有一个低脉冲)
+
+//江机硬件: IRDA_WAKE_UP_MS=25;     IRDA_WAKE_UP_NUM=1   
 //IBE: IRDA_WAKE_UP_10US=18000;     IRDA_WAKE_UP_NUM=62
 
-#define IRDA_WAKE_UP_10US  18000L//100ms   //判定唤醒帧的超时时间：10us
-//#define IRDA_WAKE_UP_MS    100L//80   //判定唤醒帧的超时时间：ms
-
-#ifdef IRDA_WAKE_UP_10US
-  #define IRDA_WAKE_UP_TIME IRDA_WAKE_UP_10US
-#endif
-
-#ifdef IRDA_WAKE_UP_MS
-  #define IRDA_WAKE_UP_TIME IRDA_WAKE_UP_MS
-#endif
-
- #define IRDA_WAKE_MAX_TIME (IRDA_WAKE_UP_TIME*3)
-#define IRDA_WAKE_UP_NUM   62//7   //判定唤醒帧的脉冲数目：个数
-
+#define IRDA_WAKE_UP_TIME 200L
+#define IRDA_WAKE_MAX_TIME (IRDA_WAKE_UP_TIME*3)
+#define IRDA_WAKE_MIN_NUM   11//7   //判定唤醒帧的最小脉冲数目：55hz以下
+#define IRDA_WAKE_MAX_NUM   65//7   //判定唤醒帧的最大脉冲数目：320hz以上
 
 #define PULSE_OUT_FLAG          0x36  
 #define MAX_CLR_AC_NUM          30
@@ -262,6 +256,8 @@ void Inter_ALL_LOSS(void) //正常模式下，此中断关闭，只有在sleep下中断打开
 //红外唤醒,中断等级--------INTER_GRADE_LOW(默认：INTP3_vect) 
 void Irda_Wake_Up(void)  //正常模式下，此中断关闭，只有在sleep和resume下中断打开
 {
+  INT8U Flag=0;
+  
   EI();
   if(CHECK_STRUCT_VAR(Irda_Wake_Ctrl)==0)//头尾不对
   {
@@ -284,8 +280,7 @@ void Irda_Wake_Up(void)  //正常模式下，此中断关闭，只有在sleep和resume下中断打开
     Irda_Wake_Ctrl.Start=1;
     Irda_Wake_Ctrl.PulseNum=0;
     Fast_Timer_Reg=0;
-    //START_TIMER_1mS;
-    START_TIMER_10uS;
+    START_TIMER_1mS;
     return ;
   } 
   
@@ -294,7 +289,18 @@ void Irda_Wake_Up(void)  //正常模式下，此中断关闭，只有在sleep和resume下中断打开
     Irda_Wake_Ctrl.PulseNum++;
   }
    
-  if((Fast_Timer_Reg<=IRDA_WAKE_UP_TIME)&&(Irda_Wake_Ctrl.PulseNum>=IRDA_WAKE_UP_NUM))
+  
+  if((Fast_Timer_Reg<=IRDA_WAKE_UP_TIME) && (Irda_Wake_Ctrl.PulseNum>=IRDA_WAKE_MAX_NUM))  //高频信号
+  {
+    Flag=1;    
+  }
+  
+  if((Fast_Timer_Reg >IRDA_WAKE_UP_TIME) && (Irda_Wake_Ctrl.PulseNum<=IRDA_WAKE_MIN_NUM))  //低频信号
+  {
+    Flag=1;    
+  }
+  
+  if(Flag)  //限定带宽
   {
     Irda_Wake_Ctrl.Start=0;
     Irda_Wake_Ctrl.PulseNum=0;
@@ -307,7 +313,6 @@ void Irda_Wake_Up(void)  //正常模式下，此中断关闭，只有在sleep和resume下中断打开
     Irda_WkUP_Ms_Timr=Ms_Timer_Pub;
   }
 }
-
 
 //1000us/10us中断脉冲,中断等级--------INTER_GRADE_LOW(默认：INTTM06_vect)
 void Fast_Timer(void)
@@ -325,7 +330,7 @@ void Fast_Timer(void)
       return ;
     }
   
-    if(Fast_Timer_Reg>IRDA_WAKE_UP_TIME)   //时间超限,关闭定时器，由唤醒脚来启动
+    if(Fast_Timer_Reg>=IRDA_WAKE_MAX_TIME)   //时间超限,关闭定时器，由唤醒脚来启动
     {
       Fast_Timer_Reg=0;
       STOP_FAST_TIMER;

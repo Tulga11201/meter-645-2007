@@ -71,7 +71,7 @@ unsigned char Judge_Return_Flag(void)
         return ERR;
         }
     if(CommunicationPortMode !=  ESAM ){
-         if(Check_CPU_Occur())			
+         if(Check_CPU_Out())			
         {
         ASSERT_FAILED();
         Card_Error_State.CardErrorState.CPU_CARD_LOSE=1;
@@ -183,7 +183,7 @@ unsigned char Write(unsigned char cla,unsigned char ins,unsigned char t_p1,
 } 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 判断卡是否在 //
-INT8U Check_CPU_Occur(void)
+INT8U Check_CPU_Out(void)
     {
         if(JUDGE_CPU_INSERT)//卡存在
         {
@@ -201,7 +201,7 @@ unsigned char Cpucard_Atr(void){
         
 
 	CPU_ESAM_CARD_Control(CPU);
-	if(Check_CPU_Occur() )			
+	if(Check_CPU_Out() )			
 	{      
                 ASSERT_FAILED(); 
 		Card_Error_State.CardErrorState.CPU_CARD_LOSE=1;
@@ -412,7 +412,7 @@ INT8U  WhenCardInsertedInitPrePayData(void) { //上电从e方读取数据到全局变量
      Dir_Return_Flag = 0;
      Para_Updata_Flag=0;
      INIT_STRUCT_VAR(_Far_Pre_Payment_Para);
-     SET_STRUCT_SUM(Pre_Payment_Para);
+     //SET_STRUCT_SUM(Pre_Payment_Para);
      return 1;
 }
 

@@ -227,13 +227,13 @@ void CPU_Card_Main_Proc(void)
         return;
         
         ENABLE_BEEP_ALARM;
+        Turn_Light_On();
         Curr_Media_Status.Media_Type=PAY_CPU_CARD;
         SET_STRUCT_SUM(Curr_Media_Status);
         Light_Mode=LIGHT_ON_CARD;
         SetOnDevice_PUCK(S_DUKA);
         SetOnDevice_PUCK(S_ZHONG);
-        Main_Dis_Info("In CARD");
-        Turn_Light_On();
+        UpdataLcdShow();        
         
         Ok_Flag=1;
         if(Check_Max_Volt_Below(Get_Un()*0.7))   //电压太低，不能买电
@@ -276,7 +276,6 @@ void CPU_Card_Main_Proc(void)
         return;
         
         Sys_Err_Info.DisIndex=0;
-        Main_Dis_Info("OUT CARD");
         Port_Out_Pub(INTER_ID_ALARM_BEEP,300);
         Curr_Media_Status.Media_Type=PAY_NONE;
         SET_STRUCT_SUM(Curr_Media_Status);

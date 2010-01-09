@@ -215,7 +215,6 @@ void CPU_Card_Main_Proc(void)
 
 #if PREPAID_METER>0
   INT8U Result,Ok_Flag; 
-  char temp[10];
 
   if(PREPAID_LOCAL_REMOTE !=PREPAID_LOCAL)
      return ;
@@ -241,7 +240,7 @@ void CPU_Card_Main_Proc(void)
           Ok_Flag=0;
 
         Result=ICcardMain();        
-        if(Ok_Flag && Result)
+        if(Ok_Flag && Result)   //操作成功
         {
           Port_Out_Pub(INTER_ID_ALARM_BEEP,300);  //叫1秒
           //strcpy(temp,"SUCCEED");
@@ -251,7 +250,7 @@ void CPU_Card_Main_Proc(void)
           Port_Out_Pub(INTER_ID_ALARM_BEEP,1000);  //叫3秒
           //strcpy(temp,"FAILED");
         }
-        Main_Dis_Info(temp);
+        //Main_Dis_Info(temp);
         //OS_TimeDly_Sec(1);//1s睡眠
         
         if(Ok_Flag EQ 0)           //电压太低，不能买电
@@ -264,7 +263,7 @@ void CPU_Card_Main_Proc(void)
           OS_TimeDly_Ms(100);
           Clear_Ext_Dog();    //最快的任务：清CPU外部看门狗
           Clear_Task_Dog();   //清任务看门狗          
-          Dis_Card_Result(Ok_Flag,Result);          
+          Dis_Card_Result(Ok_Flag,Result); 
         }
         Realse_Local_Pay_Source();
       }

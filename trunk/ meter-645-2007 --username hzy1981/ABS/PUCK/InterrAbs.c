@@ -2,8 +2,9 @@
 #include "Pub_PUCK.h"
 
 //江机硬件: IRDA_WAKE_UP_MS=25;     IRDA_WAKE_UP_NUM=1   90~110 hz
+//IBE: IRDA_WAKE_UP_10US=20000;     IRDA_WAKE_UP_NUM=45
 
-#define IRDA_WAKE_UP_10US  100000//100ms   //判定唤醒帧的超时时间：10us
+#define IRDA_WAKE_UP_10US  20000//100ms   //判定唤醒帧的超时时间：10us
 //#define IRDA_WAKE_UP_MS    100//80   //判定唤醒帧的超时时间：ms
 
 #ifdef IRDA_WAKE_UP_10US
@@ -14,7 +15,7 @@
   #define IRDA_WAKE_UP_TIME IRDA_WAKE_UP_MS
 #endif
 
-#define IRDA_WAKE_UP_NUM   8//7   //判定唤醒帧的脉冲数目：个数
+#define IRDA_WAKE_UP_NUM   45//7   //判定唤醒帧的脉冲数目：个数
 
 
 #define PULSE_OUT_FLAG          0x36  

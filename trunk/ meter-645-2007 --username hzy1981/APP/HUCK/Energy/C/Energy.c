@@ -2008,12 +2008,12 @@ void Set_Def_Energy_Data()
     if(PREPAID_MODE EQ PREPAID_MONEY) //电费型
     {
       Temp_Counts = Cur_Energy.Prepaid_Info.Total_Prepaid_Money_Counts;
-      Temp_Money = Cur_Energy.Prepaid_Info.Total_Prepaid_Money;
+      Temp_Money = Cur_Energy.Prepaid_Info.Left_Money;
     }
     else
     {
       Temp_Counts = Cur_Energy.Prepaid_Info.Total_Prepaid_Energy_Counts;
-      Temp_Money = Cur_Energy.Prepaid_Info.Total_Prepaid_Energy;      
+      Temp_Money = Cur_Energy.Prepaid_Info.Left_Energy;      
     }
   }
   
@@ -2026,12 +2026,12 @@ void Set_Def_Energy_Data()
     if(PREPAID_MODE EQ PREPAID_MONEY) //电费型
     {
       Cur_Energy.Prepaid_Info.Total_Prepaid_Money_Counts = Temp_Counts;
-      Cur_Energy.Prepaid_Info.Total_Prepaid_Money = Temp_Money;
+      Cur_Energy.Prepaid_Info.Left_Money = Temp_Money;
     }
     else
     {
       Cur_Energy.Prepaid_Info.Total_Prepaid_Energy_Counts = Temp_Counts;
-      Cur_Energy.Prepaid_Info.Total_Prepaid_Energy =Temp_Money;      
+      Cur_Energy.Prepaid_Info.Left_Energy =Temp_Money;      
     }
   }
   

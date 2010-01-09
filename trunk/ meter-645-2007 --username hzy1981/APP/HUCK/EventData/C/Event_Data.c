@@ -417,6 +417,7 @@ void Card_Clr_All_Data()
 {
   INT32U Op_ID;
   
+  Set_Authority_Flag();
   Op_ID = 0xFFFFFFFF;
   Record_Op_ID((INT8U *)&Op_ID);
   Set_Clear_Data_Flag(CLEAR_ALL_FLAG);

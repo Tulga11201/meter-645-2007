@@ -39,7 +39,7 @@ typedef struct
 
 
 INTER_ABS_PUCK_EXT PULSE_NUM_STRUC  Pulse_Num_Temp;
-INTER_ABS_PUCK_EXT INT32U Fast_Timer_Reg;
+INTER_ABS_PUCK_EXT INT16U Fast_Timer_Reg;
 
 typedef struct
 {
@@ -116,7 +116,8 @@ typedef struct
   INT8U Head;
   INT8U Start:1;     //接收第一个bit0标志
   INT8U WakeUp:1;    //是否曾经唤醒
-  INT8U PulseNum:6;  //当前接收到的脉冲个数
+  INT8U res:6;
+  INT8U PulseNum;  //当前接收到的脉冲个数
   INT8U Tail;
 }IRDA_WAKE_UP;
 INTER_ABS_PUCK_EXT IRDA_WAKE_UP Irda_Wake_Ctrl;

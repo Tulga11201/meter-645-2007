@@ -11,7 +11,7 @@
 /*"**************************************************************************"*/
 unsigned char Cpucard_Esamcard_Internal_Auth(void)  //内部认证//
 {
-    if(Check_CPU_Occur())			
+    if(Check_CPU_Out())			
     {
         ASSERT_FAILED();   
         Card_Error_State.CardErrorState.CPU_CARD_LOSE=1;
@@ -57,7 +57,7 @@ unsigned char Cpucard_Esamcard_Internal_Auth(void)  //内部认证//
 unsigned char Cpucard_External_Auth(void)
 {
 
-    if(Check_CPU_Occur())			
+    if(Check_CPU_Out())			
         {
          ASSERT_FAILED();
         Card_Error_State.CardErrorState.CPU_CARD_LOSE=1;
@@ -106,7 +106,7 @@ unsigned char Cpucard_External_Auth(void)
 /*"**************************************************************************"*/
 unsigned char Esamcard_External_Auth(void)
 	{                  
-	if(Check_CPU_Occur())			
+	if(Check_CPU_Out())			
 		{
                 ASSERT_FAILED();   
 		Card_Error_State.CardErrorState.CPU_CARD_LOSE=1;
@@ -153,7 +153,7 @@ unsigned char Esamcard_External_Auth(void)
 /*"**************************************************************************"*/
 /*" 功能：钱包文件剩余电费读出给CPU卡 "*///1,0   3,4
 unsigned char Remain_Money_Moneybag_To_Cpu_Step(unsigned char Rec_Addr,unsigned char Rec_Offset)
-	{
+{
 	unsigned char temp_buffer_2[30],Order_Head[4];
 
 	  Debug_Print("从cpu卡得到4字节随机数  " );//821C48C29000
@@ -201,7 +201,7 @@ unsigned char Remain_Money_Moneybag_To_Cpu_Step(unsigned char Rec_Addr,unsigned 
 		
 
     return OK;
-	}
+}
 
 /*"**************************************************************************"*/
 /*" 功能：钱包文件剩余电费或购电次数初始化 "*/

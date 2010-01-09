@@ -52,17 +52,11 @@ INT8U Set_Esam_Para(  INT8U *pSrc, INT8U SrcLen)
 {//一类数据修改
         INT8U DataPdi[4];
         unsigned char i,j;
+        INT16U Temp;
   
 	struct Far_Deal_Para_Flag_T1  Far_Deal_Para_Flag_T1;
 	struct Far_645_Frame_T1   Far_645_Frame_T1;
         // 
-        CPU_ESAM_CARD_Control(ESAM);
-        if( Select_File(0,0x3F,0) != OK )
-        {
-            ASSERT_FAILED();
-            Card_Error_State.CardErrorState.CPU_CARD_ESAM_ATR_ERR=1;
-            return 0;
-        }
         //查看 身份认证有效时间有没有到
         Far_Identity_Auth_Ok_Flag=!Chk_Pay_Time_Arrive();
         if(Far_Identity_Auth_Ok_Flag != 1)
@@ -71,13 +65,23 @@ INT8U Set_Esam_Para(  INT8U *pSrc, INT8U SrcLen)
            ASSERT_FAILED();
            return 0;
         }
-        mem_cpy(DataPdi,pSrc,4,DataPdi,4);
+        //        
+        CPU_ESAM_CARD_Control(ESAM);
+        if( Select_File(0,0x3F,0) != OK )
+        {
+            ASSERT_FAILED();
+            Card_Error_State.CardErrorState.CPU_CARD_ESAM_ATR_ERR=1;
+            return 0;
+        }
         
 	if(FarPrePayment.ID_Ins_Counter >=15 )
         {    
              ASSERT_FAILED();
              return 0;
         }
+        
+        mem_cpy(DataPdi,pSrc,4,DataPdi,4);
+        
         mem_cpy(&Far_645_Frame_T1,pSrc+4,sizeof(Far_645_Frame_T1),&Far_645_Frame_T1,sizeof(Far_645_Frame_T1)); 
 
 	for( i=0;i<S_NUM(Far_Deal_Para_List_T1);i++ )
@@ -98,10 +102,15 @@ INT8U Set_Esam_Para(  INT8U *pSrc, INT8U SrcLen)
             ASSERT_FAILED();
             return 0;		
         }
-			
+        ///////
 	for( j=0;j<LENGTH_FAR_DEAL_PARA_FLAG_T1;j++ )
 		*(((unsigned char *)(&Far_Deal_Para_Flag_T1))+j) = *(((const unsigned char *)&Far_Deal_Para_List_T1[i])+j);
-
+        //检查数据合法性
+        if( Set_Data_Format_Check(pSrc+LENGTH_FAR_645_FRAME_T1+4,Far_Deal_Para_Flag_T1.Esam_Length, &Temp) )
+        {
+            ASSERT_FAILED();
+            return 0;  
+        }
 	if(Far_Write_Esam(0x04,Update_Binary,0x80+Far_Deal_Para_Flag_T1.Esam_File,
 			(unsigned char)Far_Deal_Para_Flag_T1.Esam_Offset,
 			Far_Deal_Para_Flag_T1.Esam_Length,

@@ -3,8 +3,8 @@
 #include "MyIncludesAll.h"
 
 #undef Debug_Print
-#define Debug_Print(...)
-//#define Debug_Print _Debug_Print
+//#define Debug_Print(...)
+#define Debug_Print _Debug_Print
 extern INT8U Esam_Remote_Auth(INT8U *pSrc, INT8U SrcLen, INT8U *pDst, INT8U *pLen, INT8U *pDst_Start, INT16U DstLen);
 //C_Pre_Payment_Para Pre_Payment_Para;
 //ic卡 入口函数
@@ -25,14 +25,12 @@ INT8U ICcardMain(void) {
       
         
         WhenCardInsertedInitPrePayData();//更新我管理的全局变量
-	Card_Switch_On();//黄工的函数，好像是 处理，插卡时，允许合闸的
-	if(Check_CPU_Occur()){
+	Prepaid_Card_Op_Bef_Proc();
+	if(Check_CPU_Out()){
 		Card_Error_State.CardErrorState.CPU_CARD_LOSE=1;
 		return 0;
 	}
 
-        Clr_Card_Op_Info(); //  这个函数 黄工给的 具体什么工能不知道
-        
         OS_Mutex_Pend(PUB_BUF_SEM_ID);//使用缓冲：Pub_Buf0
         OS_Mutex_Pend(PUB_BUF0_SEM_ID); //使用信号量，以便使用缓冲	
 	ret=ICcardProcess();//Card Operate
@@ -369,7 +367,7 @@ unsigned char Field_Para_Set_Card(void){//现场参数设置卡
 								USER_KIND_ESAM,
 								2,
 								Card_WR_Buff+USER_KIND_SET_CARD) != OK )
-                                        {
+                                         {
                                                       ASSERT_FAILED();
                                                       return ERR;
                                          }
@@ -611,7 +609,8 @@ unsigned char Set_In_Card(void){///出厂预制卡"
         }
         // 从esam 中读取被更新后的钱包文件，用他来更新到电表中 读出来后会反相
 	Read_Esam_Moneybag_File( (INT8U * )&Moneybag_Data);
-
+        Debug_Print( " 打印钱包文件剩余金额 %ld ",Moneybag_Data.Remain_Money  );
+        
         // " 开始更新电表中的数据"  );
         //更新购电次数,更新剩余金额
         Prepaid_Set_Buy_Money_Counts(Moneybag_Data.Remain_Money, Moneybag_Data.Buy_Count);

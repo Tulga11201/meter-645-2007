@@ -805,7 +805,6 @@ unsigned char Far_PassWord_Updata(unsigned char * Data_Point,unsigned char PassW
                 ASSERT_FAILED();  
 		return ERR;
 	  }        
-        
         }
 
 	if( Far_Write_Esam(0x04,Update_Binary,0x80+ESAM_FAR_PASSWORD_INF_FILE,0x00,0x04,(Far_Deal_070201FF_format.PassWord_Inf),0xFF)!=OK)  

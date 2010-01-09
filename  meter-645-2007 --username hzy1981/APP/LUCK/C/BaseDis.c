@@ -645,6 +645,9 @@ void Init_Event_DIS_PUCK(stat_t *stat)
    if(temp[0] EQ ALLOW_SWITCH_ON)
       stat->RelayOff=0;
    
+   //通信状态指示
+  stat->stat_communi  = Get_Curr_ComType_PUCK(LUCK);  //< 通信状态(RS1,RS2,红外)(常亮)
+  
   SET_STRUCT_SUM(Meter_Run_Status);  
 }
 
@@ -660,7 +663,7 @@ stat_t getstat (void)
   
   data = 0;
   
-  if(poweroff())
+  if(poweroff())  //掉电情况下显示的内容
   {
     stat.loss_volt_a  = 1;
     stat.loss_volt_b  = 1;
@@ -729,6 +732,9 @@ stat_t getstat (void)
    //远程合闸命令后，手动合闸前,“拉闸”字符停止显示，跳闸指示灯闪烁（亮1s，灭1s）。
    if(temp[0] EQ ALLOW_SWITCH_ON)
       stat.RelayOff=0;
+  
+   //通信状态指示
+   stat.stat_communi  = Get_Curr_ComType_PUCK(LUCK);  //< 通信状态(RS1,RS2,红外)(常亮)
   
     return (stat);
     

@@ -16,6 +16,14 @@ CONST INT8U Zero[200] =
   0
 };
 
+/*
+CONST S_Def_Event_Para_Info Def_Event_Para_Info[]=
+{
+  
+  
+}
+*/
+
 //默认校表参数
 CONST INT8U Def_SDI_ADJ_METER_PUL_VOL_CUR_SPEC[]={0x00,0x01,0x00};
 CONST INT8U Def_SDI_ADJ_METER_PARA_STATUS[]={0x00};
@@ -1475,6 +1483,40 @@ void Set_Def_Para_Except_Adj()
     }
   }  
 }
+
+/*
+//设置默认的事件参数
+void Set_Def_Event_Para()
+{
+  INT8U i;
+  
+  for(i = 0; i < S_NUM(Def_Event_Para_Info); i ++)
+  {
+     if(Def_Event_Para_Info[i].Type EQ E_VOL) //电压参数
+     {
+        
+     }
+     else if(Def_Event_Para_Info[i].Type EQ E_CUR) 
+     {
+        
+     }
+     else if(Def_Event_Para_Info[i].Type EQ E_POW)
+     {
+       
+     }
+     else if(Def_Event_Para_Info[i].Type EQ E_VOL_S)
+     {
+       
+     }
+     else if(Def_Event_Para_Info[i].Type EQ E_CUR_S)
+     {
+       
+     }
+    
+  }
+}
+*/
+
 
 //读数据项DI的默认参数
 INT16U Read_Def_Para(STORA_DI SDI, void* pDst, INT16U Len, void* pDst_Start, INT16U DstLen)

@@ -15,6 +15,16 @@
 
 #define DISP_CLR_DATA_INFO Main_Dis_Info("CLr dATA")
 
+#define E_VOL 0x01
+#define E_CUR 0x02
+#define E_POW 0x03
+#define E_MAX_POW 0x04
+
+#define E_VOL_S 0x05
+#define E_CUR_S 0x06
+#define E_POW_S 0x07
+#define E_POW_MAX_S 0x08
+
 //#define FIRST_BOOT_ON_FLAG 0x55AAA55A
 
 typedef struct
@@ -23,6 +33,13 @@ typedef struct
     INT8U Num;
     CONST INT8U* pPara;
 }S_Def_Para_Info;
+
+typedef struct
+{
+  STORA_DI SDI;
+  INT16U Ratio;
+  INT8U Type;  
+}S_Def_Event_Para_Info;
 
 extern CONST S_Def_Para_Info Def_Para[];
 

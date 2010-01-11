@@ -491,6 +491,7 @@ void Deal_Set_Para_Inf_File(INT8U * Source_Point,INT8U Mode )
 //参数预置卡
 INT8U Set_In_Card(void){///出厂预制卡"
         INT8U Order_Head[11];
+        INT8U DataTemp[4];
         INT32U Temp;
 
 	struct Moneybag_Data Moneybag_Data;
@@ -621,7 +622,8 @@ INT8U Set_In_Card(void){///出厂预制卡"
         //Temp=0;
         //Write_Storage_Data(_SDI_INVALID_CARD_COUNTS ,&Temp,4);
         //事件记录清0， 只是改全局变量， 真正的清0 ，在后面的任务中进行
-        Card_Clr_All_Data(); 
+        My_memcpyRev(&DataTemp[0], (INT8U *)&cpucard_number[4], 4);
+        Card_Clr_All_Data(DataTemp); 
                
 	return OK;
 }

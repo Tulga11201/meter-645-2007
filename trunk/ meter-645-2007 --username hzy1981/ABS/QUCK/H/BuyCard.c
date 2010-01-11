@@ -40,7 +40,7 @@ INT8U Judge_User_Card_OK(INT8U BuyCard_Kind,INT32U Buy_Count){
 	 	return ERR;
 		}
         
-	if( My_Memcmp(&(file.Meter_ID[0]),(INT8U *)&Pre_Payment_Para.BcdMeterID[0],6) )
+	if( My_Memcmp(&(file.Meter_ID[0]),(INT8U *)&Pre_Payment_Para.BcdMeterID[0],sizeof(Pre_Payment_Para.BcdMeterID)) )
         {
                 ASSERT_FAILED();
 		Card_Error_State.CardErrorState.MeterIdErr=1;
@@ -50,7 +50,7 @@ INT8U Judge_User_Card_OK(INT8U BuyCard_Kind,INT32U Buy_Count){
 	if(  Pre_Payment_Para.Meter_Run_State  EQ MeterRunState_Run_3 )
         {
                // // 判断是否用户编号不对// " );
-		if( My_Memcmp((INT8U *)Pre_Payment_Para.UserID,file.Client_ID,6) )
+		if( My_Memcmp((INT8U *)Pre_Payment_Para.UserID,file.Client_ID,LENGTH_USER_ID) )
 		{
                           ASSERT_FAILED();
 			  Card_Error_State.CardErrorState.Client_Id_Err=1;
@@ -114,7 +114,7 @@ INT8U Judge_User_Card_OK(INT8U BuyCard_Kind,INT32U Buy_Count){
         // //判断是否离散因子错了 " );
 	if( BuyCard_Kind == GWFAR_USER_CARD_BUY )
 	{
-		 if( My_Memcmp((INT8U *)Pre_Payment_Para.Cpucard_Number_old_BackUpInEerom, (INT8U *)cpucard_number, 8) )
+		 if( My_Memcmp((INT8U *)Pre_Payment_Para.Cpucard_Number_old_BackUpInEerom, (INT8U *)cpucard_number, LENGTH_CARD_ID_WHEN_CARD_INSERT) )
                  {
                            ASSERT_FAILED();
 			   Card_Error_State.CardErrorState.Cpu_Card_Li_San_Yin_Zi_Err=1 ;//卡错误。离散因子错了,有补卡更新了离散因子
@@ -270,12 +270,12 @@ INT8U Buy_Card(void){
 		if( Buy_Card_Kind== GWFAR_USER_CARD_NEW )
                 {
                         // / 新卡保存用户号和变更表计运行状态 // " );
-                        My_memcpyRev((INT8U *)Pre_Payment_Para.UserID,UserID,6);
-		    	Write_Storage_Data(SDI_CUTOMER_ID, (INT8U *)Pre_Payment_Para.UserID, 6);
-                        Reverse_data(   (INT8U *)Pre_Payment_Para.UserID,6);
+                        My_memcpyRev((INT8U *)Pre_Payment_Para.UserID,UserID,LENGTH_USER_ID);
+		    	Write_Storage_Data(SDI_CUTOMER_ID, (INT8U *)Pre_Payment_Para.UserID, LENGTH_USER_ID);
+                        Reverse_data(   (INT8U *)Pre_Payment_Para.UserID,LENGTH_USER_ID);
                         
 			Pre_Payment_Para.Meter_Run_State=MeterRunState_Run_3 ;
-                        Write_Storage_Data(_SDI_PREPAID_RUN_STATUS,(INT8U *)&Pre_Payment_Para.Meter_Run_State, 1);
+                        Write_Storage_Data(_SDI_PREPAID_RUN_STATUS,(INT8U *)&Pre_Payment_Para.Meter_Run_State,sizeof(Pre_Payment_Para.Meter_Run_State) );
 		}
 	} 
        // Meter_Ins_Flag = 0x00;
@@ -306,8 +306,8 @@ INT8U Buy_Card(void){
 	if( Buy_Card_Kind != GWFAR_USER_CARD_BUY )//开户卡， 和补卡更新 离散因子
 	{
           //开户卡， 和补卡更新 离散因子   " );
-	  My_Memcpy((INT8U *)Pre_Payment_Para.Cpucard_Number_old_BackUpInEerom, (INT8U *)cpucard_number, 8);
-	  Write_Storage_Data(_SDI_DISCRETE_INFO ,(INT8U *)&Pre_Payment_Para.Cpucard_Number_old_BackUpInEerom,  8);
+	  My_Memcpy((INT8U *)Pre_Payment_Para.Cpucard_Number_old_BackUpInEerom, (INT8U *)cpucard_number, LENGTH_CARD_ID_WHEN_CARD_INSERT);
+	  Write_Storage_Data(_SDI_DISCRETE_INFO ,(INT8U *)&Pre_Payment_Para.Cpucard_Number_old_BackUpInEerom,LENGTH_CARD_ID_BACKUP);
         }
         
         // 回写文件处理 //
@@ -340,13 +340,19 @@ void Deal_Triff_Data(INT8U * Source_Point,INT8U SrcLen,INT8U WhichTable){
         }
         mem_cpy(&Triff_Data,Source_Point,sizeof( struct Triff_Data),&Triff_Data,sizeof(struct Triff_Data) );
         //判断是那一套费率
-        if(1 EQ WhichTable){
+        /*if(1 EQ WhichTable){
               Temp=SDI_RATE_SCHEME0_0;
         }else if(2 EQ WhichTable){
               Temp=SDI_RATE_SCHEME1_0;
         }else{
              ASSERT_FAILED();
+        }*/
+        if((WhichTable !=1)
+           ||(WhichTable != 2))
+        {
+           ASSERT_FAILED();
         }
+        Temp=Get_Card_Set_Rate_Scheme_SDI(WhichTable);
         ////把费率反相后 写到e方中取， 由黄工解释 " );
         //把费率反相后 写到e方中取， 由黄工解释
         if(MAX_RATES <= ( sizeof(struct Triff_Data)/4 ) ){

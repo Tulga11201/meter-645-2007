@@ -413,13 +413,14 @@ void Check_Event_Data_Avail()
   
 }
 
-void Card_Clr_All_Data()
+//参数预置卡，清零函数供QUCK调用,Op_ID记录管理卡卡号的低4个字节
+void Card_Clr_All_Data(INT8U Op_ID[])
 {
-  INT32U Op_ID;
+  //INT32U Op_ID;
   
   Set_Authority_Flag();
-  Op_ID = 0xFFFFFFFF;
-  Record_Op_ID((INT8U *)&Op_ID);
+  //Op_ID = 0xFFFFFFFF;
+  Record_Op_ID((INT8U *)Op_ID);
   Set_Clear_Data_Flag(CLEAR_ALL_FLAG);
 }
 

@@ -152,7 +152,7 @@ EXT volatile S_Event_Data Event_Data;
 #define Adj_Time_Counts Event_Data._Adj_Time_Counts
 #define Clear_Event_PDI Event_Data._Clear_Event_PDI
 
-EXT void Card_Clr_All_Data();
+EXT void Card_Clr_All_Data(INT8U Op_ID[]);
 EXT void Check_Event_Data_Avail();
 EXT INT8U Check_Event_Occuring(INT8U Event_ID);
 EXT void Event_Data_Proc(INT8U Event_ID,INT8U Occur_Or_End);

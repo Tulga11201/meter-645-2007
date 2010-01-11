@@ -51,5 +51,6 @@ EXT void Prepaid_Prog_Record(PROTO_DI PDI, INT8U Op_ID[]);
 EXT void Prepaid_Card_Op_Bef_Proc();
 EXT void Prepaid_Card_Op_Aft_Proc();
 EXT void Card_Set_Para_Notice();
+EXT STORA_DI Get_Card_Set_Rate_Scheme_SDI(INT8U Scheme);
 EXT void Clr_Card_Op_Info();
 #endif

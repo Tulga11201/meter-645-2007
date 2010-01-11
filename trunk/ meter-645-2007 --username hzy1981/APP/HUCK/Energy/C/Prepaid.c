@@ -166,6 +166,31 @@ INT8U Check_Buy_Money_Exceed_Limit(INT32U Money)
     return 0;
 }
 
+//获取参数设置卡需要设置的费率参数的存储DI
+//设置方案1参数，1表示当前套，2表示备用套
+//Scheme 1表示更新当前套参数,2表示备用套参数
+//返回需要存储的DI
+STORA_DI Get_Card_Set_Rate_Scheme_SDI(INT8U Scheme)
+{
+  if(Scheme EQ 1) //当前费率
+  {
+     if(Cur_Scheme.Rate_Scheme EQ RATE_SCHEME0)
+       return SDI_RATE_SCHEME0_0;
+     else
+       return SDI_RATE_SCHEME1_0;
+  }
+  else
+  {
+    if(Scheme != 2)
+      ASSERT_FAILED();
+    
+    if(Cur_Scheme.Rate_Scheme EQ RATE_SCHEME0)
+      return SDI_RATE_SCHEME1_0;
+    else
+      return SDI_RATE_SCHEME0_0;
+  }  
+}
+
 //电费型预付费处理
 //Money单位时0.01元
 INT8U Prepaid_Buy_Money_Proc(INT32U Money)

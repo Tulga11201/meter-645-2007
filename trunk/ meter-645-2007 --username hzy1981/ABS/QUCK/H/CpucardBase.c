@@ -127,7 +127,7 @@ INT8U External_Auth(INT8U t_p2,INT8U lc,INT8U *address)
 
 //**************************************************************************
 /*"cpu卡：文件选择 :3f01 "*/
-INT8U Select_File(INT8U t_p1,INT8U date1,INT8U date2)
+INT8U Select_Directry(INT8U t_p1,INT8U date1,INT8U date2)
     {
 		INT8U Order_Head[4];
 		INT8U W_Data[2];
@@ -273,7 +273,8 @@ INT8U CPU_Card_Driver(const INT8U *Order_Head,
 			                             INT8U *W_Data,
 			                             INT8U Length_LE,
 			                             INT8U Change_Door,
-			                             INT8U Spec_Length_LE){
+			                             INT8U Spec_Length_LE)
+{
 	INT8U i;
         INT8U Command_Temp[5];
         INT8U Length_Le_Temp;
@@ -321,7 +322,7 @@ INT8U CPU_Card_Driver(const INT8U *Order_Head,
 	}      
         //如果有lc不等于0 发数据位W_Data
          if( ( Length_LC !=0)&& (Length_LE  EQ 0 ) ){
-            //发送数据或不发数据  然后接收数据      
+            //发送数据  然后接收数据      
             if(CPU_ESAM_DRV_OK !=  Cpu_Esam_Comm_Proc(Change_Door,// 方向，是发给 esam ，还是cpu卡
                           W_Data,// 要发送的数据
                           Length_LC,//发送的数据长度 ， 包括  命令头4字节， 1个长度为， 要发送的数据长度
@@ -333,7 +334,7 @@ INT8U CPU_Card_Driver(const INT8U *Order_Head,
              ){
                    ASSERT_FAILED();
                    return ERR; 
-           }         
+            }         
          }else if( (0 != Length_LE)&& (Length_LC EQ 0) ){
            //挤掉缓冲的第一个字节//不能移动缓冲Length_LE+2
              //这里不能使用Length_receive_send_buffer-1 而是用Length_LE+2, 因为我再以后的函数中使用了缓冲存放数据
@@ -342,15 +343,17 @@ INT8U CPU_Card_Driver(const INT8U *Order_Head,
                    ASSERT_FAILED();
                    return ERR;       
          }
-       //判读是否还要发命令接收， 特别对待 00 c0命令
+       //判读是否还要发命令接收， 特别对待 00 c0命令,对lc类型的命令Leng_LE为0，对于le类型的命令Length_TH不确定
 	if(receive_send_buffer[0+Length_LE]==0x61)
 	{
 		if( *(Order_Head+1)!= Get_Response )
-		{
+		{       
+                        //确定长度
 	        	if( Spec_Length_LE!=0 )
 				i = Spec_Length_LE;
 			else
 				i = receive_send_buffer[1+Length_LE];
+                        //发然后接收
 	        	if(	Read(0,Get_Response,0,0,i )==OK ) 
 	       	    	        return OK;
 		        else
@@ -359,7 +362,7 @@ INT8U CPU_Card_Driver(const INT8U *Order_Head,
 		else
 			return OK;
 	}
-	else if((receive_send_buffer[0+Length_LE]==0x90)&&(receive_send_buffer[1+Length_LE]==0))
+	else if((receive_send_buffer[0+Length_LE] EQ 0x90)&&(receive_send_buffer[1+Length_LE] EQ 0))
 		return OK; 
 	return ERR;
 }

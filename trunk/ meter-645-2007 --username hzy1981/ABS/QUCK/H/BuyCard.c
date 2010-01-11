@@ -348,7 +348,7 @@ void Deal_Triff_Data(INT8U * Source_Point,INT8U SrcLen,INT8U WhichTable){
              ASSERT_FAILED();
         }*/
         if((WhichTable !=1)
-           ||(WhichTable != 2))
+          &&(WhichTable != 2))
         {
            ASSERT_FAILED();
         }

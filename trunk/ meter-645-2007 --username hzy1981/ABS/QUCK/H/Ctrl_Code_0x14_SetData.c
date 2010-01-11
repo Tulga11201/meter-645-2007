@@ -67,7 +67,7 @@ INT8U Set_Esam_Para(  INT8U *pSrc, INT8U SrcLen)
         }
         //        
         CPU_ESAM_CARD_Control(ESAM);
-        if( Select_File(0,0x3F,0) != OK )
+        if( Select_Directry(0,0x3F,0) != OK )
         {
             ASSERT_FAILED();
             Card_Error_State.CardErrorState.CPU_CARD_ESAM_ATR_ERR=1;
@@ -204,7 +204,7 @@ INT8U  Esam_Auth_Check(  INT8U *pSrc, INT16U SrcLen, INT8U * DstLen)
 	INT8U ID_a,ID_b,ID_c,ID_d;
         
         CPU_ESAM_CARD_Control(ESAM);
-        if( Select_File(0,0x3F,0) != OK )
+        if( Select_Directry(0,0x3F,0) != OK )
         {
             ASSERT_FAILED();
             Card_Error_State.CardErrorState.CPU_CARD_ESAM_ATR_ERR=1;

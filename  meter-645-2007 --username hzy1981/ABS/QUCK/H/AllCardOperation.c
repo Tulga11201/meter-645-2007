@@ -75,7 +75,7 @@ INT8U ICcardProcess(){
            return ERR;
         }
 		
-	if( OK != Select_File(0,0x3F,00) )
+	if( OK != Select_Directry(0,0x3F,00) )
         {
            return ERR;
         }
@@ -85,7 +85,7 @@ INT8U ICcardProcess(){
            Card_Error_State.CardErrorState.CPU_CARD_CARD_ATR_ERR=1;//cpu卡复位错误
            return ERR;
         }
-	if( OK  !=Select_File(0,0xDF,1) )
+	if( OK  !=Select_Directry(0,0xDF,1) )
 		return ERR;
         //读写cpu卡二进制文件
 	if(OK  != Read(0,Read_Binary,0x80+1,0,4) ){
@@ -928,7 +928,7 @@ void UpdataEsamMoneyBag(void)
       {
        return ;
       }
-     if( OK != Select_File(0,0x3F,00) )
+     if( OK != Select_Directry(0,0x3F,00) )
       {
          return  ; 
       }

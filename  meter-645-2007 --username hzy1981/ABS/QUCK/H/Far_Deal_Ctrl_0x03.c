@@ -166,7 +166,7 @@ INT8U Far_Deal_070000FF(INT8U * Data_Point )
        } 
        mem_cpy((INT8U *)esam_number,receive_send_buffer+5,8,(INT8U *)esam_number,8);
        CPU_ESAM_CARD_Control(ESAM);
-	if( Select_File(0,0x3F,0) != OK )
+	if( Select_Directry(0,0x3F,0) != OK )
         {
                 ASSERT_FAILED();
                 Card_Error_State.CardErrorState.CPU_CARD_ESAM_ATR_ERR=1;
@@ -867,7 +867,7 @@ INT8U Esam_Decrypt(INT8U *pSrc, INT16U SrcLen)
 {
   
   CPU_ESAM_CARD_Control(ESAM);
-  if( Select_File(0,0x3F,0) != OK )
+  if( Select_Directry(0,0x3F,0) != OK )
   {
       ASSERT_FAILED();
       Card_Error_State.CardErrorState.CPU_CARD_ESAM_ATR_ERR=1;

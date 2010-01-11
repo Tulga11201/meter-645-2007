@@ -31,7 +31,7 @@ INT8U Internal_Auth(INT8U,INT8U,INT8U,INT8U,INT8U,INT8U *);
                                                /*" 内部命令，不公开 "*/
 INT8U External_Auth(INT8U ,INT8U ,INT8U *);
                                                /*" 内部命令，不公开 "*/
-INT8U Select_File(INT8U ,INT8U ,INT8U );
+INT8U Select_Directry(INT8U ,INT8U ,INT8U );
                                                /*" 文件选择命令，用于选择ESAM或CPU卡中的某个文件 "*/
                                                /*" 参数有待讨论 "*/
 INT8U Read(INT8U ,INT8U ,INT8U ,INT8U ,INT8U );

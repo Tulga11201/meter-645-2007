@@ -13,23 +13,23 @@
    
 //上电时从e方取的数据，下电后需要保存到 e方中取的 数据， ，具体见说明
 typedef struct {
-    unsigned char	UserID[ 6 ];                          //用户编号 "// ，如果是运行态就从e方中取，如果为未开户态，取不取都无所谓
-    unsigned char	Cpucard_Number_old_BackUpInEerom[8];//离散因子，对表第一次上电值不作要求，当为开户卡，或补卡时修改，从e方取，无初始值
-    unsigned char PassWord_Kind;                 //密钥类型"*/ //上电的时候要得到是 正式密钥状态，还是公开密钥状态
-    unsigned long Para_Card_Version;           //"现场参数设置卡版本号,上电初始化要请零"
+    INT8U	UserID[ 6 ];                          //用户编号 "// ，如果是运行态就从e方中取，如果为未开户态，取不取都无所谓
+    INT8U	Cpucard_Number_old_BackUpInEerom[8];//离散因子，对表第一次上电值不作要求，当为开户卡，或补卡时修改，从e方取，无初始值
+    INT8U PassWord_Kind;                 //密钥类型"*/ //上电的时候要得到是 正式密钥状态，还是公开密钥状态
+    INT32U Para_Card_Version;           //"现场参数设置卡版本号,上电初始化要请零"
     //当开户卡插入时修改
-    unsigned char Meter_Run_State;  //电表运行状态，00厂内/01安装/02运行 "表第一次上电值为0，被存在e方中，上电时从e方取，当是补卡或开户卡时修改
-    unsigned     char    BcdMeterID[6];//表号，对表第一次上电值不作要求，被表号设置卡修改 和开户卡修改
+    INT8U Meter_Run_State;  //电表运行状态，00厂内/01安装/02运行 "表第一次上电值为0，被存在e方中，上电时从e方取，当是补卡或开户卡时修改
+    INT8U   BcdMeterID[6];//表号，对表第一次上电值不作要求，被表号设置卡修改 和开户卡修改
     
-    //unsigned long Remain_Money; //剩余金额，插卡后，从黄工那里得到,购电后通知黄工更新
-    //unsigned long Remain_Money_Hoard_Limit;           //剩余电费囤积门限 0.01元   黄工已经有了，
-    //unsigned long Buy_Count;// 购电次数   插卡后 从黄工那里得到,购电后通知黄工更新该变量
+    //INT32U Remain_Money; //剩余金额，插卡后，从黄工那里得到,购电后通知黄工更新
+    //INT32U Remain_Money_Hoard_Limit;           //剩余电费囤积门限 0.01元   黄工已经有了，
+    //INT32U Buy_Count;// 购电次数   插卡后 从黄工那里得到,购电后通知黄工更新该变量
     
     
     //一下参数使用了宏定义转换
-    unsigned char C_cpucard_number_WhemCardInsert[8];        //没当卡插入然后复位时得到的
-    unsigned char C_CommunicationPortMode;
-    unsigned char C_Meter_Ins_Flag ; //用来 变化 指令的， 没上面用
+    INT8U C_cpucard_number_WhemCardInsert[8];        //没当卡插入然后复位时得到的
+    INT8U C_CommunicationPortMode;
+    INT8U C_Meter_Ins_Flag ; //用来 变化 指令的， 没上面用
     INT8U C_Para_Updata_Flag;// 卡插进来时，从卡中得到，用来判断更新那个文件
     INT8U  C_CardType;// 卡类型，密钥恢复卡，还是用户卡，
     INT8U C_Dir_Return_Flag; //直接回写标志  当购电的次数相等时，使该变量为0xff，以便直接回写卡，不操作  
@@ -37,7 +37,7 @@ typedef struct {
     } C_Pre_Payment_Para ;
 
 DECLARE_VAR_TYPE(C_Pre_Payment_Para, _C_Pre_Payment_Para);
-EXT   _C_Pre_Payment_Para  _Pre_Payment_Para;
+EXT  volatile _C_Pre_Payment_Para  _Pre_Payment_Para;
 #define  Pre_Payment_Para _Pre_Payment_Para.Var 
 //EXT C_Pre_Payment_Para   Pre_Payment_Para;
 //Pre_Payment_Para.BcdMeterID 
@@ -99,7 +99,11 @@ typedef union {
         INT32U   CardErrorState_INT32U;
         
 }C_C_CardErrorState;
-EXT   C_C_CardErrorState  Card_Error_State;
+//EXT volatile  C_C_CardErrorState Card_Error_State;
+
+DECLARE_VAR_TYPE(C_C_CardErrorState, _C_C_CardErrorState);
+EXT volatile  _C_C_CardErrorState  c_Card_Error_State;
+#define Card_Error_State  c_Card_Error_State.Var
 //Far_Secure_Error_State.CPU_CARD_ESAM_ATR_ERR
  //Card_Error_State.CardErrorState_INT32U
 #endif

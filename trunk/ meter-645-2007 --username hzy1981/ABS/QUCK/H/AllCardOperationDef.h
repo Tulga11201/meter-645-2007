@@ -67,15 +67,15 @@
 /*" 费率信息文件1 "*/
 struct Triff_Data
 	{
-	unsigned long Triff[63];
+	INT32U Triff[63];
 	};
 #define LENGTH_TRIFF_DATA  sizeof(struct Triff_Data)
 	#define TRIFF_CPU    4
 /*" 钱包信息数据 "*/
 struct Moneybag_Data
 	{
-	unsigned long Remain_Money;
-	unsigned long Buy_Count;
+	INT32U Remain_Money;
+	INT32U Buy_Count;
 	};
 #define LENGTH_MONEYBAG_DATA  sizeof(struct Moneybag_Data)
 	#define REMAIN_MONEY_CPU_ESAM			0
@@ -88,43 +88,43 @@ struct Moneybag_Data
 /*" 参数卡共用数据1 "*/
 struct Para_Table1
 	{
-	unsigned char Card_Kind;                 /*" 电卡类型 "*/
-	unsigned char Client_ID[6];              /*" 客户编号 "*/
-	unsigned char Meter_ID[6];               /*" 表号 "*/
+	INT8U Card_Kind;                 /*" 电卡类型 "*/
+	INT8U Client_ID[6];              /*" 客户编号 "*/
+	INT8U Meter_ID[6];               /*" 表号 "*/
 	};
 #define LENGTH_PARA_TABLE1  sizeof(struct Para_Table1)
 /*" 参数卡共用数据2 "*/
 struct Para_Table2
 	{
-	unsigned char User_Kind;                  /*" 用户类型 "*/
-	unsigned char Para_UpData_Flag;          /*" 参数更新标志位 "*/
+	INT8U User_Kind;                  /*" 用户类型 "*/
+	INT8U Para_UpData_Flag;          /*" 参数更新标志位 "*/
 	};
 #define LENGTH_PARA_TABLE2  sizeof(struct Para_Table2)
 /*" 参数卡共用数据3 "*/
 struct Para_Table3
 	{
-	unsigned long Remain_Money_Alarm1_Limit; /*" 报警金额1 "*/
-	unsigned long Remain_Money_Alarm2_Limit; /*" 报警金额2 "*/
-	unsigned char Current_CT[3];             /*" 电流互感器变比 "*/
-	unsigned char Voltage_PT[3];             /*" 电压互感器变比 "*/
+	INT32U Remain_Money_Alarm1_Limit; /*" 报警金额1 "*/
+	INT32U Remain_Money_Alarm2_Limit; /*" 报警金额2 "*/
+	INT8U Current_CT[3];             /*" 电流互感器变比 "*/
+	INT8U Voltage_PT[3];             /*" 电压互感器变比 "*/
 	};
 #define LENGTH_PARA_TABLE3  sizeof(struct Para_Table3)
 /*" 参数卡共用数据4 "*/
 struct Para_Table4
 	{
-	unsigned char Triff_Switch_Time[5];      /*" 两套分时费率切换时间 "*/
+	INT8U Triff_Switch_Time[5];      /*" 两套分时费率切换时间 "*/
 	};
 #define LENGTH_PARA_TABLE4  sizeof(struct Para_Table4)
 /*" 参数卡共用数据5 "*/
 struct Para_Table5
 	{
-	unsigned long Para_Card_Version;      /*" 现场参数设置卡版本号 "*/
+	INT32U Para_Card_Version;      /*" 现场参数设置卡版本号 "*/
 	};
 #define LENGTH_PARA_TABLE5  sizeof(struct Para_Table5)
 /*" 参数卡共用数据6 "*/
 struct Para_Table6
 	{
-	unsigned int  Identity_Auth_Time;       /*" 身份认证时效 "*/
+	INT16U  Identity_Auth_Time;       /*" 身份认证时效 "*/
 	};
 #define LENGTH_PARA_TABLE6  sizeof(struct Para_Table6)
 //------------------------------------------------------------------
@@ -133,19 +133,19 @@ struct Para_Table6
 /*" 回写数据,给用户卡，ESAM用 1ss"*/
 struct Run_Inf_Data
 	{	
-         unsigned char temp;	//用来字节对齐，因为Remain_Money必须放在一个额数位置，
-	unsigned char User_Kind;					/*" 用户类型 "*/
-	unsigned char Current_CT[3];				/*" 电流互感器变比 "*/
-	unsigned char Voltage_PT[3];				/*" 电压互感器变比 "*/	
-	unsigned char Meter_ID[6];					/*" 表号 "*/
-	unsigned char Client_ID[6];				/*" 客户编号 "*/
+         INT8U temp;	//用来字节对齐，因为Remain_Money必须放在一个额数位置，
+	INT8U User_Kind;					/*" 用户类型 "*/
+	INT8U Current_CT[3];				/*" 电流互感器变比 "*/
+	INT8U Voltage_PT[3];				/*" 电压互感器变比 "*/	
+	INT8U Meter_ID[6];					/*" 表号 "*/
+	INT8U Client_ID[6];				/*" 客户编号 "*/
 	
-        unsigned long Remain_Money;				/*" 剩余金额 "*/
-	unsigned long Buy_Count;					/*" 购电次数 "*/
-	unsigned long Low_Zero_Money;				/*" 过零金额 "*/
-	unsigned char Password_Info[4];			/*" 1，包括：状态，方式，条数，版本 "*/
-	unsigned char Unlawful_Card_Count[3];		/*" 非法卡插入次数 "*/
-	unsigned char Return_DT[5];				/*" 返写日期时间 "*/
+        INT32U Remain_Money;				/*" 剩余金额 "*/
+	INT32U Buy_Count;					/*" 购电次数 "*/
+	INT32U Low_Zero_Money;				/*" 过零金额 "*/
+	INT8U Password_Info[4];			/*" 1，包括：状态，方式，条数，版本 "*/
+	INT8U Unlawful_Card_Count[3];		/*" 非法卡插入次数 "*/
+	INT8U Return_DT[5];				/*" 返写日期时间 "*/
 	};
 #define LENGTH_RUN_INF_DATA  sizeof(struct Run_Inf_Data)
 //------------------------------------------------------------------
@@ -156,19 +156,19 @@ struct Run_Inf_Data
 // ESAM文件数据结构 ,也指令信息文件或则参数信息文件
 struct Esam_Para_Inf_File
 	{
-	unsigned char User_Kind;                 /*" 用户类型 "*/
-	unsigned char Para_UpData_Flag;          /*" 参数更新标志位 "*/
-	unsigned long Para_Card_Version;      /*" 现场参数设置卡版本号 "*/
-	unsigned char Triff_Switch_Time[5];      /*" 两套分时费率切换时间 "*/
-	unsigned char No_Use;                      /*" 保留 "*/
-	unsigned long Remain_Money_Alarm1_Limit; /*" 报警金额1 "*/
-	unsigned long Remain_Money_Alarm2_Limit; /*" 报警金额2 "*/
-	unsigned char Current_CT[3];             /*" 电流互感器变比 "*/
-	unsigned char Voltage_PT[3];             /*" 电压互感器变比 "*/
-	unsigned char Meter_ID[6];               /*" 表号 "*/
-	unsigned char Client_ID[6];              /*" 客户编号 "*/
-	unsigned char Card_Kind;                 /*" 电卡类型 "*/
-	unsigned int  Identity_Auth_Time;       /*" 身份认证时效 "*/
+	INT8U User_Kind;                 /*" 用户类型 "*/
+	INT8U Para_UpData_Flag;          /*" 参数更新标志位 "*/
+	INT32U Para_Card_Version;      /*" 现场参数设置卡版本号 "*/
+	INT8U Triff_Switch_Time[5];      /*" 两套分时费率切换时间 "*/
+	INT8U No_Use;                      /*" 保留 "*/
+	INT32U Remain_Money_Alarm1_Limit; /*" 报警金额1 "*/
+	INT32U Remain_Money_Alarm2_Limit; /*" 报警金额2 "*/
+	INT8U Current_CT[3];             /*" 电流互感器变比 "*/
+	INT8U Voltage_PT[3];             /*" 电压互感器变比 "*/
+	INT8U Meter_ID[6];               /*" 表号 "*/
+	INT8U Client_ID[6];              /*" 客户编号 "*/
+	INT8U Card_Kind;                 /*" 电卡类型 "*/
+	INT16U  Identity_Auth_Time;       /*" 身份认证时效 "*/
 	};
 #define LENGTH_ESAM_PARA_INF_FILE  sizeof(struct Esam_Para_Inf_File)
 	#define  ESAM_PARA_INF_FILE_ESAM		4
@@ -190,18 +190,18 @@ struct Esam_Para_Inf_File
 /*" 购电卡文件数据结构 "*/
 struct Buy_Para_Inf_File
 	{
-	unsigned char User_Kind;                 /*" 用户类型 "*/
-	unsigned char Para_UpData_Flag;          /*" 参数更新标志位 "*/
-	unsigned char No_Use0[4];      /*" 保留 "*/
-	unsigned char Triff_Switch_Time[5];      /*" 两套分时费率切换时间 "*/
-	unsigned char No_Use1;                      /*" 保留 "*/
-	unsigned long Remain_Money_Alarm1_Limit; /*" 报警金额1 "*/
-	unsigned long Remain_Money_Alarm2_Limit; /*" 报警金额2 "*/
-	unsigned char Current_CT[3];             /*" 电流互感器变比 "*/
-	unsigned char Voltage_PT[3];             /*" 电压互感器变比 "*/
-	unsigned char Meter_ID[6];               /*" 表号 "*/
-	unsigned char Client_ID[6];              /*" 客户编号 "*/
-	unsigned char Card_Kind;                 /*" 电卡类型 "*/
+	INT8U User_Kind;                 /*" 用户类型 "*/
+	INT8U Para_UpData_Flag;          /*" 参数更新标志位 "*/
+	INT8U No_Use0[4];      /*" 保留 "*/
+	INT8U Triff_Switch_Time[5];      /*" 两套分时费率切换时间 "*/
+	INT8U No_Use1;                      /*" 保留 "*/
+	INT32U Remain_Money_Alarm1_Limit; /*" 报警金额1 "*/
+	INT32U Remain_Money_Alarm2_Limit; /*" 报警金额2 "*/
+	INT8U Current_CT[3];             /*" 电流互感器变比 "*/
+	INT8U Voltage_PT[3];             /*" 电压互感器变比 "*/
+	INT8U Meter_ID[6];               /*" 表号 "*/
+	INT8U Client_ID[6];              /*" 客户编号 "*/
+	INT8U Card_Kind;                 /*" 电卡类型 "*/
 	};
 #define LENGTH_BUY_PARA_INF_FILE  sizeof(struct Buy_Para_Inf_File)
 	#define BUY_PARA_INF_FILE_BUY_CARD					4
@@ -225,33 +225,33 @@ struct Buy_Para_Inf_File
 /*" 密钥信息文件 "*/
 struct Password_Inf_File
 	{
-	unsigned char Start_Byte;
-	unsigned char Order_Byte;//卡类型 05 下装卡， 
-	unsigned int 	File_Length;
-	unsigned char Password_Info[4];          /*" 密钥信息，包括：状态，方式，条数，版本 "*/
-	unsigned char Add_CS;
-	unsigned char End_Byte;
+	INT8U Start_Byte;
+	INT8U Order_Byte;//卡类型 05 下装卡， 
+	INT16U 	File_Length;
+	INT8U Password_Info[4];          /*" 密钥信息，包括：状态，方式，条数，版本 "*/
+	INT8U Add_CS;
+	INT8U End_Byte;
 	};
 /*" 密钥文件 "*/
 struct Password_File
 	{
-	unsigned char Start_Byte;
-	unsigned char Order_Byte;
-	unsigned int 	File_Length;
-	unsigned char New_Password[4][32];
-	unsigned char Add_CS;
-	unsigned char End_Byte;
+	INT8U Start_Byte;
+	INT8U Order_Byte;
+	INT16U 	File_Length;
+	INT8U New_Password[4][32];
+	INT8U Add_CS;
+	INT8U End_Byte;
 	};	
 //------------------------------------------------------------------
 //------------------------------------------------------------------
 /*" 现场参数设置卡 "*/
 struct Set_Para_Inf_File
 	{
-	unsigned char User_Kind;                 /*" 用户类型 "*/
-	unsigned char Para_UpData_Flag;          /*" 参数更新标志位 "*/
-	unsigned long Para_Card_Version;      /*" 现场参数设置卡版本号 "*/
-	unsigned char Triff_Switch_Time[5];      /*" 两套分时费率切换时间 "*/
-	unsigned char No_Use1;                      /*" 保留 "*/
+	INT8U User_Kind;                 /*" 用户类型 "*/
+	INT8U Para_UpData_Flag;          /*" 参数更新标志位 "*/
+	INT32U Para_Card_Version;      /*" 现场参数设置卡版本号 "*/
+	INT8U Triff_Switch_Time[5];      /*" 两套分时费率切换时间 "*/
+	INT8U No_Use1;                      /*" 保留 "*/
 	};
 #define LENGTH_SET_PARA_INF_FILE  sizeof(struct Set_Para_Inf_File)
 	#define SET_PARA_INF_FILE_SET_CARD			4
@@ -269,15 +269,15 @@ struct Set_Para_Inf_File
 /*" 参数预置卡 "*/
 struct Init_Para_Inf_File
 	{
-	unsigned char User_Kind;                 /*" 用户类型 "*/
-	unsigned char Para_UpData_Flag;          /*" 参数更新标志位 "*/
-	unsigned long Para_Card_Version;      /*" 现场参数设置卡版本号 "*/
-	unsigned char Triff_Switch_Time[5];      /*" 两套分时费率切换时间 "*/
-	unsigned char No_Use1;                      /*" 保留 "*/
-	unsigned long Remain_Money_Alarm1_Limit; /*" 报警金额1 "*/
-	unsigned long Remain_Money_Alarm2_Limit; /*" 报警金额2 "*/
-	unsigned char Current_CT[3];             /*" 电流互感器变比 "*/
-	unsigned char Voltage_PT[3];             /*" 电压互感器变比 "*/
+	INT8U User_Kind;                 /*" 用户类型 "*/
+	INT8U Para_UpData_Flag;          /*" 参数更新标志位 "*/
+	INT32U Para_Card_Version;      /*" 现场参数设置卡版本号 "*/
+	INT8U Triff_Switch_Time[5];      /*" 两套分时费率切换时间 "*/
+	INT8U No_Use1;                      /*" 保留 "*/
+	INT32U Remain_Money_Alarm1_Limit; /*" 报警金额1 "*/
+	INT32U Remain_Money_Alarm2_Limit; /*" 报警金额2 "*/
+	INT8U Current_CT[3];             /*" 电流互感器变比 "*/
+	INT8U Voltage_PT[3];             /*" 电压互感器变比 "*/
 	};
 #define LENGTH_INIT_PARA_INF_FILE  sizeof(struct Init_Para_Inf_File)
 	#define INIT_PARA_INF_FILE_INIT_CARD		4
@@ -296,24 +296,24 @@ struct Init_Para_Inf_File
 /*" 指令信息文件 "*/
 struct MeterID_Para_Inf_File
 	{
-	unsigned char Start_Byte;
-	unsigned char Order_Byte;
-	unsigned int 	File_Length;
-	unsigned char Start_Meter_ID[6];
-	unsigned char End_Meter_ID[6];	
-	unsigned char Add_CS;
-	unsigned char End_Byte;
+	INT8U Start_Byte;
+	INT8U Order_Byte;
+	INT16U 	File_Length;
+	INT8U Start_Meter_ID[6];
+	INT8U End_Meter_ID[6];	
+	INT8U Add_CS;
+	INT8U End_Byte;
 	};
 /*" 返写信息文件 "*/
 struct MeterID_Return_Inf_File
 	{
-	unsigned char Start_Byte;
-	unsigned char Order_Byte;
-	unsigned int 	File_Length;
-	unsigned char NO_Use[26];
-	unsigned char Next_Meter_ID[6];//当前要设置的表号
-	unsigned char Add_CS;
-	unsigned char End_Byte;
+	INT8U Start_Byte;
+	INT8U Order_Byte;
+	INT16U 	File_Length;
+	INT8U NO_Use[26];
+	INT8U Next_Meter_ID[6];//当前要设置的表号
+	INT8U Add_CS;
+	INT8U End_Byte;
 	};
 #define LENGTH_METERID_RETURN_INF_FILE  sizeof(struct MeterID_Return_Inf_File)
 	#define  NO_USE_METERID					4
@@ -324,13 +324,13 @@ struct MeterID_Return_Inf_File
 /*" 指令信息文件 "*/
 struct Add_Money_Para_Inf_File
 	{
-	unsigned char Start_Byte;
-	unsigned char Order_Byte;
-	unsigned int  File_Length;
-	unsigned long Buy_Money;
-	unsigned long Buy_Money_Count;	
-	unsigned char Add_CS;
-	unsigned char End_Byte;
+	INT8U Start_Byte;
+	INT8U Order_Byte;
+	INT16U  File_Length;
+	INT32U Buy_Money;
+	INT32U Buy_Money_Count;	
+	INT8U Add_CS;
+	INT8U End_Byte;
 	};
 #define LENGTH_ADD_MONEY_PARA_INF_FILE  sizeof(struct Add_Money_Para_Inf_File)
 	#define BUY_MONEY_CARD					4

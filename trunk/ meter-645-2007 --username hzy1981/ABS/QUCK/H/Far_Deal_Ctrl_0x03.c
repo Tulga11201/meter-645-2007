@@ -38,7 +38,7 @@ INT8U Esam_Remote_Auth(INT8U *pSrc, INT8U SrcLen, INT8U *pDst, INT8U *pLen, INT8
         }
         
         //³õÊ¼»¯£ºFarPrePayment.ID_Ins_Counter
-        Read_Storage_Data(_SDI_INVALID_COUNTS_AllOW ,&FarPrePayment.ID_Ins_Counter,&FarPrePayment.ID_Ins_Counter, 1) ;
+        Read_Storage_Data(_SDI_INVALID_COUNTS_AllOW ,(INT8U *)&FarPrePayment.ID_Ins_Counter,(INT8U *)&FarPrePayment.ID_Ins_Counter, 1) ;
         if(FarPrePayment.ID_Ins_Counter != 0 )//ÅÐ¶ÏÊÇ·ñÐèÒª¸üÐÂID_Ins_Counter £¬
         {//Cur_Time0.Date
           DataTemp[0 ]=Cur_Time1.Year;
@@ -53,7 +53,7 @@ INT8U Esam_Remote_Auth(INT8U *pSrc, INT8U SrcLen, INT8U *pDst, INT8U *pLen, INT8
             mem_cpy((INT8U *)&Far_Auth_Day_Follow,DataTemp,4,(INT8U *)&Far_Auth_Day_Follow,4);
             Write_Storage_Data(_SDI_FAR_AUTH_DAY_FOLLOW ,&Far_Auth_Day_Follow, 4);
             FarPrePayment.ID_Ins_Counter  =0;
-	    Write_Storage_Data(_SDI_INVALID_COUNTS_AllOW, &FarPrePayment.ID_Ins_Counter, 1);
+	    Write_Storage_Data(_SDI_INVALID_COUNTS_AllOW, (INT8U *)&FarPrePayment.ID_Ins_Counter, 1);
           }
         }
         mem_cpy(&Temp,pSrc,4,&Temp,4);
@@ -85,9 +85,9 @@ INT8U Esam_Remote_Auth(INT8U *pSrc, INT8U SrcLen, INT8U *pDst, INT8U *pLen, INT8
         }else{
             OTHER_ERR_DEFINE =1;
         }
-	mem_cpy( pDst, (unsigned char *)&Far_Security_Auth_Err_Info.intd, 2,pDst_Start,DstLen);
+	mem_cpy( pDst, (INT8U *)&Far_Security_Auth_Err_Info.intd, 2,pDst_Start,DstLen);
         FarPrePayment.Far_SendLen=2;
-        pLen=&FarPrePayment.Far_SendLen;
+        pLen=(INT8U *)&FarPrePayment.Far_SendLen;
 
         OS_Mutex_Post(PUB_BUF0_SEM_ID);
         OS_Mutex_Post(PUB_BUF_SEM_ID);
@@ -117,9 +117,9 @@ INT8U Esam_Remote_Auth(INT8U *pSrc, INT8U SrcLen, INT8U *pDst, INT8U *pLen, INT8
         0xFF,0x04,0x02,0x07,48,Far_Deal_070204FF,//Ö÷¿ØÃÜÔ¿¸üÐÂ
 	};
 /////////0x33ÀàÐÍº¯ÊýÖÐ×ªÕ¾,  
-unsigned char Far_Deal_Order_0x03(unsigned char * Data_Point ,unsigned char Source_Length)
+INT8U Far_Deal_Order_0x03(INT8U * Data_Point ,INT8U Source_Length)
 {
-	unsigned char i;
+	INT8U i;
 
 	for( i=0;i<S_NUM(Far_645_Frame_Flag_0x03_List);i++ )
         {
@@ -153,18 +153,18 @@ unsigned char Far_Deal_Order_0x03(unsigned char * Data_Point ,unsigned char Sour
 /*"            ³ö:4+8 ·ÅÔÚFarPaidBuffÖÐ"*/
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-unsigned char Far_Deal_070000FF(unsigned char * Data_Point )
+INT8U Far_Deal_070000FF(INT8U * Data_Point )
 {     
      
       INT16U ValidTimeTemp;
         ///esam¸´Î»
-       if( (Esamcard_Atr() )!=OK )
+       if( (Esamcard_Reset() )!=OK )
        { 
                 ASSERT_FAILED();
 		Card_Error_State.CardErrorState.CPU_CARD_ESAM_ATR_ERR=1;
 		return ERR;
        } 
-       mem_cpy(esam_number,receive_send_buffer+5,8,esam_number,8);
+       mem_cpy((INT8U *)esam_number,receive_send_buffer+5,8,(INT8U *)esam_number,8);
        CPU_ESAM_CARD_Control(ESAM);
 	if( Select_File(0,0x3F,0) != OK )
         {
@@ -183,7 +183,7 @@ unsigned char Far_Deal_070000FF(unsigned char * Data_Point )
 		}
                 //×é×°Òª·¢ËÍµÄÊý¾Ý
 		My_memcpyRev(FarPaidBuff,receive_send_buffer,4);    //×ªÒÆËæ»úÊý2//
-		My_memcpyRev(FarPaidBuff+4,esam_number,8);     //×ªÒÆESAMÐòÁÐºÅ//
+		My_memcpyRev(FarPaidBuff+4,(INT8U *)esam_number,8);     //×ªÒÆESAMÐòÁÐºÅ//
 		FarPrePayment.Far_SendLen=12;//²»Òª¹ÜÊý¾Ý±êÊ¾µÄ³¤¶È£¬ÔÚÉÏÃæ»á×Ô¶¯¼Ó4
                 //FarPrePayment.Far_SendLen=0;//²»Òª¹ÜÊý¾Ý±êÊ¾µÄ³¤¶È£¬ÔÚÉÏÃæ»á×Ô¶¯¼Ó4
                 //Éí·ÝÈÏÖ¤ÓÐÐ§Ê±³¤³õÊ¼»¯ 
@@ -193,9 +193,9 @@ unsigned char Far_Deal_070000FF(unsigned char * Data_Point )
                    ASSERT_FAILED();
                    return ERR;
                 }
-                Reverse_data((unsigned char *) &receive_send_buffer[0],2);
-                //ValidTimeTemp=Bcd2Hex((unsigned char *)&ValidTimeTemp , 2);
-                ValidTimeTemp=Bcd2Hex((unsigned char *) &receive_send_buffer[0], 2);
+                Reverse_data((INT8U *) &receive_send_buffer[0],2);
+                //ValidTimeTemp=Bcd2Hex((INT8U *)&ValidTimeTemp , 2);
+                ValidTimeTemp=Bcd2Hex((INT8U *) &receive_send_buffer[0], 2);
                 if(ValidTimeTemp EQ 0 )
                 {
                    ValidTimeTemp=5;
@@ -208,12 +208,12 @@ unsigned char Far_Deal_070000FF(unsigned char * Data_Point )
 	return ERR;
 }
 ///
-unsigned char Far_Read_Esam(unsigned char cla,unsigned char ins,unsigned char t_p1,
-              unsigned char t_p2,unsigned char lc,unsigned char *address)
+INT8U Far_Read_Esam(INT8U cla,INT8U ins,INT8U t_p1,
+              INT8U t_p2,INT8U lc,INT8U *address)
 {
-	unsigned char Order_Head[4];
+	INT8U Order_Head[4];
 
-	My_memcpyRev( Card_WR_Buff, (unsigned char *)&Far_Identity_Auth_Data.Instruction.random_number1[4], 4);
+	My_memcpyRev( Card_WR_Buff, (INT8U *)&Far_Identity_Auth_Data.Instruction.random_number1[4], 4);
         //
 	*(Card_WR_Buff+4)=0x04;
 	*(Card_WR_Buff+5)=0xd6;
@@ -223,13 +223,13 @@ unsigned char Far_Read_Esam(unsigned char cla,unsigned char ins,unsigned char t_
 	else
 		*(Card_WR_Buff+7)=t_p2;
 	Card_WR_Buff[8]=lc+12;	//data+mac+disperse_gene
-	My_memcpyRev(Card_WR_Buff+9, (unsigned char *)&Far_Identity_Auth_Data.Instruction.disperse_gene[0], 8);
+	My_memcpyRev(Card_WR_Buff+9, (INT8U *)&Far_Identity_Auth_Data.Instruction.disperse_gene[0], 8);
         //Ã÷ÎÄ+mac+ÀëÉ¢¶Á
 	Order_Head[0] = cla;
 	Order_Head[1] = ins;
 	Order_Head[2] = t_p1;
 	Order_Head[3] = t_p2;
-	if( CPU_Card_Driver((const unsigned char *)Order_Head,0x11,Card_WR_Buff,0,CommunicationPortMode,lc+4)!= OK )
+	if( CPU_Card_Driver((const INT8U *)Order_Head,0x11,Card_WR_Buff,0,CommunicationPortMode,lc+4)!= OK )
 	{
                   ASSERT_FAILED();
 		  OTHER_ERR_DEFINE =1;
@@ -241,11 +241,11 @@ unsigned char Far_Read_Esam(unsigned char cla,unsigned char ins,unsigned char t_
 ///
 /*"**************************************************************************"*/
 /*" Ð´ESAM¿¨ £¬´øMAC  Ð´"*/
-unsigned char Far_Write_Esam(unsigned char cla,unsigned char ins,unsigned char t_p1,
-			unsigned char t_p2,unsigned char lc,unsigned char *address,unsigned char Flag )
+INT8U Far_Write_Esam(INT8U cla,INT8U ins,INT8U t_p1,
+			INT8U t_p2,INT8U lc,INT8U *address,INT8U Flag )
 {
-	unsigned char i;   
-	unsigned char Order_Head[4];
+	INT8U i;   
+	INT8U Order_Head[4];
        // INT8U  MyMac[4];
  
 	CPU_ESAM_CARD_Control(ESAM);
@@ -266,10 +266,10 @@ unsigned char Far_Write_Esam(unsigned char cla,unsigned char ins,unsigned char t
 	Order_Head[1] = ins;
 	Order_Head[2] = t_p1;
 	Order_Head[3] = t_p2;
-	if( CPU_Card_Driver((const unsigned char *)Order_Head,lc+4,Card_WR_Buff,0,CommunicationPortMode,0)!= OK ){
+	if( CPU_Card_Driver((const INT8U *)Order_Head,lc+4,Card_WR_Buff,0,CommunicationPortMode,0)!= OK ){
 		ESAM_AUTH_ERR_DEFINE =1;
 		FarPrePayment.ID_Ins_Counter++;
-                Write_Storage_Data(_SDI_INVALID_COUNTS_AllOW, &FarPrePayment.ID_Ins_Counter, 1);
+                Write_Storage_Data(_SDI_INVALID_COUNTS_AllOW, (INT8U *)&FarPrePayment.ID_Ins_Counter, 1);
 		if((FarPrePayment.ID_Ins_Counter %3)==0 ||  FarPrePayment.ID_Ins_Counter >=15){
                         Reset_Pay_Timer(0);
 			Far_Identity_Auth_Ok_Flag=0;
@@ -280,10 +280,10 @@ unsigned char Far_Write_Esam(unsigned char cla,unsigned char ins,unsigned char t
 		return ERR;
 	}
         FarPrePayment.ID_Ins_Counter  =0;
-	Write_Storage_Data(_SDI_INVALID_COUNTS_AllOW, &FarPrePayment.ID_Ins_Counter, 1);
+	Write_Storage_Data(_SDI_INVALID_COUNTS_AllOW, (INT8U *)&FarPrePayment.ID_Ins_Counter, 1);
 	return OK;
 }
-unsigned char Far_Esamcard_Internal_Auth(unsigned char *Point)   //Ô¶³ÌÏµÍ³Éí·ÝÈÏÖ¤//
+INT8U Far_Esamcard_Internal_Auth(INT8U *Point)   //Ô¶³ÌÏµÍ³Éí·ÝÈÏÖ¤//
 	{
 	My_memcpyRev(Card_WR_Buff+110, Point, 8);       //"×ªÒÆÃÜÎÄ1//  
 	My_memcpyRev(Card_WR_Buff+100, Point+8, 8);    //"×ªÒÆËæ»úÊý1//   
@@ -311,7 +311,7 @@ unsigned char Far_Esamcard_Internal_Auth(unsigned char *Point)   //Ô¶³ÌÏµÍ³Éí·ÝÈ
 		return ERR;      
 	}
         //¶ÔÕû¸öFar_Identity_Auth_Data½øÐÐ³õÊ¼»¯£¬¶ø²»ÊÇ²¿·Ö£¬Ê¹ÓÃÊ±ÐèÒª·´Ïà
-	My_Memcpy((unsigned char *)&Far_Identity_Auth_Data.Instruction.cryptograph1[0], Point, sizeof(struct Authentication_Instruction));
+	My_Memcpy((INT8U *)&Far_Identity_Auth_Data.Instruction.cryptograph1[0], Point, sizeof(struct Authentication_Instruction));
 	return OK;  /*"ÄÚ²¿ÈÏÖ¤½áÊø"*/  
 }
 //-----------------------------------------------------------------------------
@@ -326,19 +326,19 @@ unsigned char Far_Esamcard_Internal_Auth(unsigned char *Point)   //Ô¶³ÌÏµÍ³Éí·ÝÈ
 /*"**************************************************************************"*/
 struct Far_Read_078001FF_Format
 	{
-	unsigned int	Data_Length;
-	unsigned int	Data_Start_Addr;
-	unsigned int	File;
-	unsigned int	Name;
+	INT16U	Data_Length;
+	INT16U	Data_Start_Addr;
+	INT16U	File;
+	INT16U	Name;
 	};
 
-unsigned char Far_Deal_078001FF(unsigned char *Data_Point )
+INT8U Far_Deal_078001FF(INT8U *Data_Point )
 {
 	struct Far_Read_078001FF_Format	 Far_Read_078001FF_Format;
-	unsigned char Offset;
+	INT8U Offset;
         mem_cpy(&Far_Read_078001FF_Format,Data_Point,sizeof(struct Far_Read_078001FF_Format),&Far_Read_078001FF_Format,sizeof(Far_Read_078001FF_Format));
 	/*
-        if( (unsigned char)(Far_Read_078001FF_Format.File) == 0x01 ){
+        if( (INT8U)(Far_Read_078001FF_Format.File) == 0x01 ){
 		if(Far_Read_Esam(                                       0x04,Read_Record,0x01,
 							                                    0x0C,
 					                                                      4 , 
@@ -359,14 +359,14 @@ unsigned char Far_Deal_078001FF(unsigned char *Data_Point )
 	}
         */
         ///
-	if( (unsigned char)(Far_Read_078001FF_Format.File) == 0x01 ){
-		if( (unsigned char)(Far_Read_078001FF_Format.Data_Start_Addr )== 0x00 )
+	if( (INT8U)(Far_Read_078001FF_Format.File) == 0x01 ){
+		if( (INT8U)(Far_Read_078001FF_Format.Data_Start_Addr )== 0x00 )
 			Offset = 0x01;
 		else
 			Offset = 0x03;
 		if(Far_Read_Esam(                                       0x04,Read_Record,Offset,
 							                                    0x0C,
-					   (unsigned char)(Far_Read_078001FF_Format.Data_Length), 
+					   (INT8U)(Far_Read_078001FF_Format.Data_Length), 
 						              			 Data_Point)!=OK)
                 {
                     ASSERT_FAILED();
@@ -377,9 +377,9 @@ unsigned char Far_Deal_078001FF(unsigned char *Data_Point )
 /*"04b082£¨83£¬84£¬86£©+ P2(Æ«ÒÆµØÖ·)£«11+4×Ö½ÚËæ»úÊý1+04d686+00+LC+8×Ö½Ú·ÖÉ¢Òò×Ó¡£
 LCÊÇËùÒª¶ÁÈ¡µÄÃ÷ÎÄÊý¾Ý£«MAC+·ÖÉ¢Òò×ÓµÄ×Ü³¤¶È£¬ËüÊÇ1×Ö½ÚµÄÊ®Áù½øÖÆÊý¡£"*/
 
-		if(Far_Read_Esam(0x04,Read_Binary,0x80+(unsigned char)(Far_Read_078001FF_Format.File),
-											 (unsigned char)(Far_Read_078001FF_Format.Data_Start_Addr),
-											 (unsigned char)(Far_Read_078001FF_Format.Data_Length), 
+		if(Far_Read_Esam(0x04,Read_Binary,0x80+(INT8U)(Far_Read_078001FF_Format.File),
+											 (INT8U)(Far_Read_078001FF_Format.Data_Start_Addr),
+											 (INT8U)(Far_Read_078001FF_Format.Data_Length), 
 											 Data_Point)!=OK)
                 {
                    ASSERT_FAILED();
@@ -395,9 +395,9 @@ LCÊÇËùÒª¶ÁÈ¡µÄÃ÷ÎÄÊý¾Ý£«MAC+·ÖÉ¢Òò×ÓµÄ×Ü³¤¶È£¬ËüÊÇ1×Ö½ÚµÄÊ®Áù½øÖÆÊý¡£"*/
 	FarPrePayment.Far_SendLen = 8+((INT8U)(Far_Read_078001FF_Format.Data_Length))+4;
 
 	
-//	My_memcpyRev( far_data_p+14,receive_send_buffer,((unsigned char)(Far_Read_078001FF_Format->Data_Length)) );
-//	My_memcpyRev( far_data_p+14+((unsigned char)(Far_Read_078001FF_Format->Data_Length)),receive_send_buffer+((unsigned char)(Far_Read_078001FF_Format->Data_Length)), 4);
-//	Co.c.len = ((unsigned char)(Far_Read_078001FF_Format->Data_Length))+4;
+//	My_memcpyRev( far_data_p+14,receive_send_buffer,((INT8U)(Far_Read_078001FF_Format->Data_Length)) );
+//	My_memcpyRev( far_data_p+14+((INT8U)(Far_Read_078001FF_Format->Data_Length)),receive_send_buffer+((INT8U)(Far_Read_078001FF_Format->Data_Length)), 4);
+//	Co.c.len = ((INT8U)(Far_Read_078001FF_Format->Data_Length))+4;
 	return OK;
 }
 
@@ -409,16 +409,16 @@ LCÊÇËùÒª¶ÁÈ¡µÄÃ÷ÎÄÊý¾Ý£«MAC+·ÖÉ¢Òò×ÓµÄ×Ü³¤¶È£¬ËüÊÇ1×Ö½ÚµÄÊ®Áù½øÖÆÊý¡£"*/
 /*"**************************************************************************"*/
 struct Far_Read_07810201_Format
 	{
-	unsigned long	Remain_Money;
-	unsigned char	Remain_Money_Mac[4];
-	unsigned long	Buy_Count;
-	unsigned char	Buy_Count_MAC[4];
-	unsigned char Client_ID[6];
-	unsigned char Password_Info[4];
+	INT32U	Remain_Money;
+	INT8U	Remain_Money_Mac[4];
+	INT32U	Buy_Count;
+	INT8U	Buy_Count_MAC[4];
+	INT8U Client_ID[6];
+	INT8U Password_Info[4];
 	};
 #define LENGTH_FAR_READ_07810201_FORMAT  sizeof( struct Far_Read_07810201_Format )
 //-----------------------------------------------------------------------------
-unsigned char Far_Deal_07810201(unsigned char *Data_Point )
+INT8U Far_Deal_07810201(INT8U *Data_Point )
 {
 	struct Far_Read_07810201_Format	 Far_Read_07810201_Format;
         //mem_cpy(&Far_Read_07810201_Format,Data_Point,sizeof(Far_Read_07810201_Format),&Far_Read_07810201_Format,sizeof(Far_Read_07810201_Format));
@@ -430,23 +430,23 @@ unsigned char Far_Deal_07810201(unsigned char *Data_Point )
           return ERR;
         }
 		
-	My_memcpyRev((unsigned char *)&(Far_Read_07810201_Format.Remain_Money), receive_send_buffer,4);
-	My_memcpyRev((unsigned char *)&(Far_Read_07810201_Format.Remain_Money_Mac[0]), receive_send_buffer+4,4);
+	My_memcpyRev((INT8U *)&(Far_Read_07810201_Format.Remain_Money), receive_send_buffer,4);
+	My_memcpyRev((INT8U *)&(Far_Read_07810201_Format.Remain_Money_Mac[0]), receive_send_buffer+4,4);
 	//×é×°¹ºµç´ÎÊý
 	if(Far_Read_Esam(0x04,Read_Record,3,0x0c,4,0)!=OK)
 		return ERR;
-	My_memcpyRev((unsigned char *)&(Far_Read_07810201_Format.Buy_Count), receive_send_buffer,4);
-	My_memcpyRev((unsigned char *)&(Far_Read_07810201_Format.Buy_Count_MAC[0]), receive_send_buffer+4,4);
+	My_memcpyRev((INT8U *)&(Far_Read_07810201_Format.Buy_Count), receive_send_buffer,4);
+	My_memcpyRev((INT8U *)&(Far_Read_07810201_Format.Buy_Count_MAC[0]), receive_send_buffer+4,4);
         //×é×°¿Í»§±àºÅ
-	if( Get_File_Data(ESAM,ESAM_PARA_INF_FILE,CLIENT_ID_ESAM,6,(unsigned char *)&(Far_Read_07810201_Format.Client_ID[0])) != OK )
+	if( Get_File_Data(ESAM,ESAM_PARA_INF_FILE,CLIENT_ID_ESAM,6,(INT8U *)&(Far_Read_07810201_Format.Client_ID[0])) != OK )
 		return ERR;
 
-	Reverse_data((unsigned char *)&(Far_Read_07810201_Format.Client_ID[0]),6);
+	Reverse_data((INT8U *)&(Far_Read_07810201_Format.Client_ID[0]),6);
 	//×é×°Ô¶³ÌÃÜÔ¿ÐÅÏ¢
-	if( Get_File_Data(ESAM,ESAM_FAR_PASSWORD_INF_FILE,0,4,(unsigned char *)&(Far_Read_07810201_Format.Password_Info[0])) != OK )
+	if( Get_File_Data(ESAM,ESAM_FAR_PASSWORD_INF_FILE,0,4,(INT8U *)&(Far_Read_07810201_Format.Password_Info[0])) != OK )
 		return ERR;
 
-	Reverse_data((unsigned char *)&(Far_Read_07810201_Format.Password_Info[0]),4); 
+	Reverse_data((INT8U *)&(Far_Read_07810201_Format.Password_Info[0]),4); 
         
         mem_cpy(FarPaidBuff,(INT8U *)&Far_Read_07810201_Format,sizeof(struct Far_Read_07810201_Format),FarPaidBuff,Length_FarPaidBuff);
 	FarPrePayment.Far_SendLen= LENGTH_FAR_READ_07810201_FORMAT;
@@ -459,7 +459,7 @@ unsigned char Far_Deal_07810201(unsigned char *Data_Point )
 /*" Data_Point:Èë:ÎÞ "*/
 /*"            ³ö:Êý¾Ý¸ñÊ½¼ûÏÂ "*/
 /*"**************************************************************************"*/
-unsigned  char Far_Deal_078102FF(unsigned char * Data_Point )
+INT8U Far_Deal_078102FF(INT8U * Data_Point )
 	{
 	return Far_Deal_07810201(Data_Point);
 	}
@@ -470,17 +470,15 @@ unsigned  char Far_Deal_078102FF(unsigned char * Data_Point )
 /*"            ³ö:0×Ö½Ú "*/ 
 struct Far_Deal_070001FF_format
 	{
-	unsigned int Identity_Limit;
-	unsigned char Identity_Limit_Mac[4];
+	INT16U Identity_Limit;
+	INT8U Identity_Limit_Mac[4];
 	};
 #define LENGTH_FAR_DEAL_070001FF_FORMAT      sizeof(struct Far_Deal_070001FF_format)
 //-----------------------------------------------------------------------------
-unsigned char Far_Deal_070001FF(unsigned char * Data_Point ){
+INT8U Far_Deal_070001FF(INT8U * Data_Point ){
         INT16U ValidTimeTemp;
 	struct Far_Deal_070001FF_format   Far_Deal_070001FF_format;
 	mem_cpy(&Far_Deal_070001FF_format,Data_Point,sizeof(Far_Deal_070001FF_format),&Far_Deal_070001FF_format,sizeof(Far_Deal_070001FF_format));
-//	Reverse_data((unsigned char *)&(Far_Deal_070001FF_format->Identity_Limit),2)
-//	Reverse_data((uns igned char *)&(Far_Deal_070001FF_format->Identity_Limit_Mac[0]),4)
 
 	if( Far_Deal_070001FF_format.Identity_Limit == 0 )
         {
@@ -498,9 +496,9 @@ unsigned char Far_Deal_070001FF(unsigned char * Data_Point ){
            ASSERT_FAILED();
            return ERR;
         }
-        Reverse_data((unsigned char *) &receive_send_buffer[0],2);	
+        Reverse_data((INT8U *) &receive_send_buffer[0],2);	
         
-        ValidTimeTemp=Bcd2Hex((unsigned char *) &receive_send_buffer[0], 2);
+        ValidTimeTemp=Bcd2Hex((INT8U *) &receive_send_buffer[0], 2);
         if(ValidTimeTemp EQ 0 )
         { 
             ValidTimeTemp=5;
@@ -520,34 +518,34 @@ unsigned char Far_Deal_070001FF(unsigned char * Data_Point ){
 //-----------------------------------------------------------------------------
 struct Far_Deal_07000201_format
 	{
-	unsigned char Client_ID[6];
-	unsigned long	Remain_Money;
-	unsigned long	Buy_Count;
-	unsigned char Password_Info[4];
+	INT8U Client_ID[6];
+	INT32U	Remain_Money;
+	INT32U	Buy_Count;
+	INT8U Password_Info[4];
 	};
 #define LENGTH_FAR_DEAL_07000201_FORMAT      sizeof(struct Far_Deal_07000201_format)
-unsigned char Far_Deal_07000201(unsigned char * Data_Point ){
+INT8U Far_Deal_07000201(INT8U * Data_Point ){
 	struct Far_Deal_07000201_format   Far_Deal_07000201_format;
 
 	//mem_cpy(&Far_Deal_07000201_format,Data_Point,sizeof(Far_Deal_07000201_format),&Far_Deal_07000201_format,sizeof(Far_Deal_07000201_format));
 	// ´ÓesamÈ¡³öÊ£Óà½ð¶îÊý¾Ý
 	if(Far_Read_Esam(0x04,Read_Record,1,0x0c,4,0)!=OK)
 		return ERR;
-	My_memcpyRev((unsigned char *)&(Far_Deal_07000201_format.Remain_Money), receive_send_buffer,4);
+	My_memcpyRev((INT8U *)&(Far_Deal_07000201_format.Remain_Money), receive_send_buffer,4);
 	//´ÓesamÖÐÈ¡³ö¹ºµç´ÎÊýÊý¾Ý
 	if(Far_Read_Esam(0x04,Read_Record,3,0x0c,4,0)!=OK)
 		return ERR;
-	My_memcpyRev((unsigned char *)&(Far_Deal_07000201_format.Buy_Count), receive_send_buffer,4);
+	My_memcpyRev((INT8U *)&(Far_Deal_07000201_format.Buy_Count), receive_send_buffer,4);
         //µÃµ½¿Í»§±àºÅÊý¾Ý
-	if( Get_File_Data(ESAM,ESAM_PARA_INF_FILE,CLIENT_ID_ESAM,6,(unsigned char *)&(Far_Deal_07000201_format.Client_ID[0])) != OK )
+	if( Get_File_Data(ESAM,ESAM_PARA_INF_FILE,CLIENT_ID_ESAM,6,(INT8U *)&(Far_Deal_07000201_format.Client_ID[0])) != OK )
 		return ERR;
  
-	Reverse_data((unsigned char *)&(Far_Deal_07000201_format.Client_ID[0]),6);
+	Reverse_data((INT8U *)&(Far_Deal_07000201_format.Client_ID[0]),6);
 	//µÃµ½ÃÜÔ¿ÐÅÏ¢
-	if( Get_File_Data(ESAM,ESAM_FAR_PASSWORD_INF_FILE,0,4,(unsigned char *)&(Far_Deal_07000201_format.Password_Info[0])) != OK )
+	if( Get_File_Data(ESAM,ESAM_FAR_PASSWORD_INF_FILE,0,4,(INT8U *)&(Far_Deal_07000201_format.Password_Info[0])) != OK )
 		return ERR;
 
-	Reverse_data((unsigned char *)&(Far_Deal_07000201_format.Password_Info[0]),4);
+	Reverse_data((INT8U *)&(Far_Deal_07000201_format.Password_Info[0]),4);
         //°Ñ Éí·ÝÈÏÖ¤Ê±Ð§Çå0 £¬ Éí·ÝÈÏÖ¤±êÖ¾Î»Çå0
 	Far_Identity_Auth_Ok_Flag=0;
         Reset_Pay_Timer(0);
@@ -565,7 +563,7 @@ unsigned char Far_Deal_07000201(unsigned char * Data_Point ){
 /*" Data_Point:Èë:wu"*/
 /*"            ³ö:Êý¾Ý¸ñÊ½¼ûÏÂ "*/
 //-----------------------------------------------------------------------------
-unsigned char Far_Deal_070002FF(unsigned char * Data_Point )
+INT8U Far_Deal_070002FF(INT8U * Data_Point )
 	{
 	return Far_Deal_07000201(Data_Point);
 	}
@@ -579,25 +577,25 @@ unsigned char Far_Deal_070002FF(unsigned char * Data_Point )
 //-----------------------------------------------------------------------------
 struct Far_Deal_070101FF_format
 	{
-	unsigned long	Remain_Money;//Õý³£Ë³ÐòµÄ£¬ÅÐ¶ÏÊ±²»Òª·´×ª
-	unsigned long	Buy_Count;//Õý³£Ë³ÐòµÄ
-	unsigned char BagMoney_Mac[4];//Õý³£Ë³ÐòµÄ
-	unsigned char Client_ID[6];//  ÒòÎª´«¹ýÀ´µÄÊÇ·´µÃË³Ðò±í   ÖÐÒ»  Ö±±£´æµÄÊÇÕý³£Ë³Ðò
-	unsigned char Client_ID_Mac[4];//
+	INT32U	Remain_Money;//Õý³£Ë³ÐòµÄ£¬ÅÐ¶ÏÊ±²»Òª·´×ª
+	INT32U	Buy_Count;//Õý³£Ë³ÐòµÄ
+	INT8U BagMoney_Mac[4];//Õý³£Ë³ÐòµÄ
+	INT8U Client_ID[6];//  ÒòÎª´«¹ýÀ´µÄÊÇ·´µÃË³Ðò±í   ÖÐÒ»  Ö±±£´æµÄÊÇÕý³£Ë³Ðò
+	INT8U Client_ID_Mac[4];//
 	};
 #define LENGTH_FAR_DEAL_070101FF_FORMAT      sizeof(struct Far_Deal_070101FF_format)
-unsigned char Far_Deal_070101FF(unsigned char * Data_Point )
+INT8U Far_Deal_070101FF(INT8U * Data_Point )
 {
 	struct Far_Deal_070101FF_format  Far_Deal_070101FF_format;
 	struct Moneybag_Data Moneybag_Data;
 
 	mem_cpy(&Far_Deal_070101FF_format,Data_Point,sizeof(Far_Deal_070101FF_format),&Far_Deal_070101FF_format,sizeof(Far_Deal_070101FF_format));
 	
-        Read_Storage_Data( _SDI_PREPAID_RUN_STATUS, &Pre_Payment_Para.Meter_Run_State ,  &Pre_Payment_Para.Meter_Run_State,sizeof(Pre_Payment_Para.Meter_Run_State)  );    
+        Read_Storage_Data( _SDI_PREPAID_RUN_STATUS, (INT8U *)&Pre_Payment_Para.Meter_Run_State ,  (INT8U *)&Pre_Payment_Para.Meter_Run_State,sizeof(Pre_Payment_Para.Meter_Run_State)  );    
      	if( Pre_Payment_Para.Meter_Run_State!=MeterRunState_Test_0 )
 		return ERR;
         //¶ÁÇ®°üÎÄ¼þ²¢·´Ïà
-	if( Read_Esam_Moneybag_File((unsigned char *)&Moneybag_Data) != OK )
+	if( Read_Esam_Moneybag_File((INT8U *)&Moneybag_Data) != OK )
 		return ERR;
         // ÅÐ¶Ï¹ºµç´ÎÊý
 	if( Far_Deal_070101FF_format.Buy_Count != (Moneybag_Data.Buy_Count+1))
@@ -620,25 +618,25 @@ unsigned char Far_Deal_070101FF(unsigned char * Data_Point )
 		return ERR;
 	}
 
-	Reverse_data((unsigned char *)&(Far_Deal_070101FF_format.Remain_Money),4);
-	Reverse_data((unsigned char *)&(Far_Deal_070101FF_format.Buy_Count),4);
-	Reverse_data((unsigned char *)&(Far_Deal_070101FF_format.BagMoney_Mac[0]),4);
-	if( Write(0x84,Increase,0x01,0x0C,0x0C,((unsigned char *)&Far_Deal_070101FF_format.Remain_Money))!=OK)
+	Reverse_data((INT8U *)&(Far_Deal_070101FF_format.Remain_Money),4);
+	Reverse_data((INT8U *)&(Far_Deal_070101FF_format.Buy_Count),4);
+	Reverse_data((INT8U *)&(Far_Deal_070101FF_format.BagMoney_Mac[0]),4);
+	if( Write(0x84,Increase,0x01,0x0C,0x0C,((INT8U *)&Far_Deal_070101FF_format.Remain_Money))!=OK)
 	{
             ASSERT_FAILED();  
 	    return ERR;
 	}
 	Reverse_data((INT8U *)&(Far_Deal_070101FF_format.Remain_Money),4);
-	Reverse_data((unsigned char *)&(Far_Deal_070101FF_format.Buy_Count),4);
+	Reverse_data((INT8U *)&(Far_Deal_070101FF_format.Buy_Count),4);
         //Ê£Óà½ð¶î±ØÐë±£³Ö ¸üÐÂ£¬ Õâ¸ö±äÁ¿£¬ÔÚºóÃæµÄ¿Û¿îÖÐ»áÓÃµ½
         //mem_cpy((INT8U*)&Moneybag_Data.Remain_Money,(INT8U *)&(Far_Deal_070101FF_format.Remain_Money),4,(INT8U)&Moneybag_Data.Remain_Money,4);
         Meter_Money_And_Count_Updata(Far_Deal_070101FF_format.Remain_Money,Far_Deal_070101FF_format.Buy_Count );
 	
         //¸üÐÂ¿Í»§±àºÅ
-	My_Memcpy(Pre_Payment_Para.UserID,Far_Deal_070101FF_format.Client_ID,6);
-	Write_Storage_Data(SDI_CUTOMER_ID , Pre_Payment_Para.UserID , 6);
+	My_Memcpy((INT8U *)Pre_Payment_Para.UserID,Far_Deal_070101FF_format.Client_ID,6);
+	Write_Storage_Data(SDI_CUTOMER_ID , (INT8U *)Pre_Payment_Para.UserID , 6);
 	Pre_Payment_Para.Meter_Run_State=0x03;
-	Write_Storage_Data(_SDI_PREPAID_RUN_STATUS  ,&Pre_Payment_Para.Meter_Run_State , 1);
+	Write_Storage_Data(_SDI_PREPAID_RUN_STATUS  ,(INT8U *)&Pre_Payment_Para.Meter_Run_State , 1);
         //¸æËß»Æ¹¤£¬ÐÞ¸ÄÁË Êý¾Ý
         Card_Set_Para_Notice();
         FarPrePayment.Far_SendLen=0;            
@@ -654,19 +652,19 @@ unsigned char Far_Deal_070101FF(unsigned char * Data_Point )
 
 struct Far_Deal_070102FF_format
 	{
-	unsigned long	Remain_Money;//´«¹ýÀ´µÄÎªÕý³£Ë³Ðò ±È½ÏÊµ£¬²»Òª·´Ïà
-	unsigned long	Buy_Count;//´«¹ýÀ´µÄÎªÕý³£Ë³Ðò ±È½ÏÊµ£¬²»Òª·´Ïà
-	unsigned char BagMoney_Mac[4];//´«¹ýÀ´µÄÎªÕý³£Ë³Ðò ±È½ÏÊµ£¬²»Òª·´Ïà
-	unsigned char Client_ID[6];//´«¹ýÀ´µÄÎªÕý³£Ë³Ðò ±È½ÏÊµ£¬ Òª·´Ïà£¬ÒòÎª£¬±íÖÐ±£´æµÄ·´µÃ, ±£´æ·´ÏàºóµÄ
-	unsigned char Client_ID_Mac[4];//´«¹ýÀ´µÄÎªÕý³£Ë³Ðò ±È½ÏÊµ£¬ Òª·´Ïà
+	INT32U	Remain_Money;//´«¹ýÀ´µÄÎªÕý³£Ë³Ðò ±È½ÏÊµ£¬²»Òª·´Ïà
+	INT32U	Buy_Count;//´«¹ýÀ´µÄÎªÕý³£Ë³Ðò ±È½ÏÊµ£¬²»Òª·´Ïà
+	INT8U BagMoney_Mac[4];//´«¹ýÀ´µÄÎªÕý³£Ë³Ðò ±È½ÏÊµ£¬²»Òª·´Ïà
+	INT8U Client_ID[6];//´«¹ýÀ´µÄÎªÕý³£Ë³Ðò ±È½ÏÊµ£¬ Òª·´Ïà£¬ÒòÎª£¬±íÖÐ±£´æµÄ·´µÃ, ±£´æ·´ÏàºóµÄ
+	INT8U Client_ID_Mac[4];//´«¹ýÀ´µÄÎªÕý³£Ë³Ðò ±È½ÏÊµ£¬ Òª·´Ïà
 	};
 #define LENGTH_FAR_DEAL_070102FF_FORMAT      sizeof(struct Far_Deal_070102FF_format)
-unsigned char Far_Deal_070102FF(unsigned char * Data_Point )
+INT8U Far_Deal_070102FF(INT8U * Data_Point )
 {
 	struct Far_Deal_070102FF_format    Far_Deal_070102FF_format;
 	struct Moneybag_Data Moneybag_Data;
         
-        Read_Storage_Data( _SDI_PREPAID_RUN_STATUS, &Pre_Payment_Para.Meter_Run_State ,  &Pre_Payment_Para.Meter_Run_State,sizeof(Pre_Payment_Para.Meter_Run_State)  ); 
+        Read_Storage_Data( _SDI_PREPAID_RUN_STATUS, (INT8U *)&Pre_Payment_Para.Meter_Run_State ,  (INT8U *)&Pre_Payment_Para.Meter_Run_State,sizeof(Pre_Payment_Para.Meter_Run_State)  ); 
 	if( Pre_Payment_Para.Meter_Run_State!=MeterRunState_Run_3 ) 	
         {
            ASSERT_FAILED();
@@ -674,30 +672,30 @@ unsigned char Far_Deal_070102FF(unsigned char * Data_Point )
         }
 		
         // ¶ÁESAMÇ®°üÎÄ¼þÊ£Óàµç·ÑºÍ¹ºµç´ÎÊý ²¢·´Ïà
-	if( Read_Esam_Moneybag_File((unsigned char *)&Moneybag_Data) != OK )
+	if( Read_Esam_Moneybag_File((INT8U *)&Moneybag_Data) != OK )
         {
            ASSERT_FAILED();
            return ERR;
         }
 	mem_cpy(&Far_Deal_070102FF_format,Data_Point,sizeof(Far_Deal_070102FF_format),&Far_Deal_070102FF_format,sizeof(Far_Deal_070102FF_format));
 	
-	Reverse_data((unsigned char *)&(Far_Deal_070102FF_format.Client_ID[0]),6);
-	Reverse_data((unsigned char *)&(Far_Deal_070102FF_format.Client_ID_Mac[0]),4);
+	Reverse_data((INT8U *)&(Far_Deal_070102FF_format.Client_ID[0]),6);
+	Reverse_data((INT8U *)&(Far_Deal_070102FF_format.Client_ID_Mac[0]),4);
         // ±È½Ï¿Í»§±àºÅ£¬ ÔÚe·½ÖÐ 
-        Read_Storage_Data( SDI_CUTOMER_ID, Pre_Payment_Para.UserID,  Pre_Payment_Para.UserID,6 ); 
-        Reverse_data(Pre_Payment_Para.UserID,6);
-	if( My_Memcmp(Pre_Payment_Para.UserID,&Far_Deal_070102FF_format.Client_ID[0],6) != 0 )
+        Read_Storage_Data( SDI_CUTOMER_ID, (INT8U *)Pre_Payment_Para.UserID,  (INT8U *)Pre_Payment_Para.UserID,6 ); 
+        Reverse_data((INT8U *)Pre_Payment_Para.UserID,6);
+	if( My_Memcmp((INT8U *)Pre_Payment_Para.UserID,&Far_Deal_070102FF_format.Client_ID[0],6) != 0 )
         {
                 ASSERT_FAILED();
 		CLIENT_ID_ERR_DEFINE = 1;
 		return ERR;
 	}
 
-	Reverse_data((unsigned char *)&(Far_Deal_070102FF_format.Client_ID[0]),6);
-	Reverse_data((unsigned char *)&(Far_Deal_070102FF_format.Client_ID_Mac[0]),4);
+	Reverse_data((INT8U *)&(Far_Deal_070102FF_format.Client_ID[0]),6);
+	Reverse_data((INT8U *)&(Far_Deal_070102FF_format.Client_ID_Mac[0]),4);
          
 	CPU_ESAM_CARD_Control(ESAM);
-        //???Õâ¸öÎªÊ²Ã´Òª¸üÐÂ¿Í»§±àºÅµ½esam£¬¶ø²»¸üÐÂe·½µÄ
+        // ÕâÀï ²»ÊÇ¸üÐÂesam£¬ÕâÀïÊÇÅÐ¶Ï£¬O(¡É_¡É)O~
 	if( Far_Write_Esam(0x04,Update_Binary,0x80+ESAM_PARA_INF_FILE,CLIENT_ID_ESAM,0x06,(Far_Deal_070102FF_format.Client_ID),0)!=OK)
         {
           ASSERT_FAILED();
@@ -727,17 +725,17 @@ unsigned char Far_Deal_070102FF(unsigned char * Data_Point )
 		return ERR;
 	}
 
-	Reverse_data((unsigned char *)&(Far_Deal_070102FF_format.Remain_Money),4);
-	Reverse_data((unsigned char *)&(Far_Deal_070102FF_format.Buy_Count),4);
-	Reverse_data((unsigned char *)&(Far_Deal_070102FF_format.BagMoney_Mac[0]),4);
+	Reverse_data((INT8U *)&(Far_Deal_070102FF_format.Remain_Money),4);
+	Reverse_data((INT8U *)&(Far_Deal_070102FF_format.Buy_Count),4);
+	Reverse_data((INT8U *)&(Far_Deal_070102FF_format.BagMoney_Mac[0]),4);
         //ÅÐ¶ÏÍê±Ï£¬¿ªÊ¼ÕýÊ½³äÖµ
-	if( Write(0x84,Increase,0x01,0x0C,0x0C,((unsigned char *)&Far_Deal_070102FF_format.Remain_Money))!=OK)
+	if( Write(0x84,Increase,0x01,0x0C,0x0C,((INT8U *)&Far_Deal_070102FF_format.Remain_Money))!=OK)
         {
                 ASSERT_FAILED();
 		return ERR;
 	}
-	Reverse_data((unsigned char *)&(Far_Deal_070102FF_format.Remain_Money),4);
-	Reverse_data((unsigned char *)&(Far_Deal_070102FF_format.Buy_Count),4);
+	Reverse_data((INT8U *)&(Far_Deal_070102FF_format.Remain_Money),4);
+	Reverse_data((INT8U *)&(Far_Deal_070102FF_format.Buy_Count),4);
 	Meter_Money_And_Count_Updata(Far_Deal_070102FF_format.Remain_Money,Far_Deal_070102FF_format.Buy_Count );
 //	if( Far_Write_Esam(0x04,Update_Binary,0x82,0x05,0x06,(Far_Deal_070102FF_format->Client_ID))!=OK)
 //		{
@@ -755,16 +753,16 @@ unsigned char Far_Deal_070102FF(unsigned char * Data_Point )
 //-----------------------------------------------------------------------------
 struct Far_Deal_070201FF_format
 	{
-	unsigned char PassWord_Inf[8];//4¸ö×Ö½ÚÃÜÔ¿ÐÅÏ¢£¬ 4¸ö×Ö½Úmac
-//	unsigned char PassWord_Inf_Mac[4];
-	unsigned char PassWord[32];
+	INT8U PassWord_Inf[8];//4¸ö×Ö½ÚÃÜÔ¿ÐÅÏ¢£¬ 4¸ö×Ö½Úmac
+//	INT8U PassWord_Inf_Mac[4];
+	INT8U PassWord[32];
 	};
 #define LENGTH_FAR_DEAL_070201FF_FORMAT      sizeof(struct Far_Deal_070201FF_format)
-unsigned char Far_PassWord_Updata(unsigned char * Data_Point,unsigned char PassWord_ID )
+INT8U Far_PassWord_Updata(INT8U * Data_Point,INT8U PassWord_ID )
 {       
         INT8U  Temp;
 	struct Far_Deal_070201FF_format   Far_Deal_070201FF_format;
-	unsigned char PassWord_Inf[4];//±¾µØµÄesamµÄÔ¶³ÌÃÜÔ¿ÐÅÏ¢ÎÄ¼þ
+	INT8U PassWord_Inf[4];//±¾µØµÄesamµÄÔ¶³ÌÃÜÔ¿ÐÅÏ¢ÎÄ¼þ
         
 	mem_cpy(&Far_Deal_070201FF_format,Data_Point,sizeof(Far_Deal_070201FF_format),&Far_Deal_070201FF_format,sizeof(Far_Deal_070201FF_format)); 
 	if(OK != Get_File_Data(ESAM,ESAM_FAR_PASSWORD_INF_FILE,0,4,&PassWord_Inf[0]))
@@ -789,7 +787,7 @@ unsigned char Far_PassWord_Updata(unsigned char * Data_Point,unsigned char PassW
 	Reverse_data(Far_Deal_070201FF_format.PassWord_Inf,8);
 	
 	CPU_ESAM_CARD_Control(ESAM);
-	Reverse_data((unsigned char *)&(Far_Deal_070201FF_format.PassWord[0]),32);
+	Reverse_data((INT8U *)&(Far_Deal_070201FF_format.PassWord[0]),32);
         if(PassWord_ID EQ 4)
         {
 	  if( Write(0x84,Write_Key,0x01,0x00,0x20,(Far_Deal_070201FF_format.PassWord))!=OK)
@@ -827,7 +825,7 @@ unsigned char Far_PassWord_Updata(unsigned char * Data_Point,unsigned char PassW
 /*" Data_Point:Èë:Êý¾Ý¸ñÊ½¼ûÏÂ "*/
 /*"            ³ö:Êý¾Ý¸ñÊ½¼ûÏÂ "*/
 //-----------------------------------------------------------------------------
-unsigned char Far_Deal_070201FF(unsigned char * Data_Point )
+INT8U Far_Deal_070201FF(INT8U * Data_Point )
 	{
 	return Far_PassWord_Updata(Data_Point,2);
 	}
@@ -837,7 +835,7 @@ unsigned char Far_Deal_070201FF(unsigned char * Data_Point )
 /*" Data_Point:Èë:Êý¾Ý¸ñÊ½¼ûÏÂ "*/
 /*"            ³ö:Êý¾Ý¸ñÊ½¼ûÏÂ "*/
 //-----------------------------------------------------------------------------
-unsigned char Far_Deal_070202FF(unsigned char * Data_Point )
+INT8U Far_Deal_070202FF(INT8U * Data_Point )
 	{
 	return Far_PassWord_Updata(Data_Point,1);
 	}
@@ -847,7 +845,7 @@ unsigned char Far_Deal_070202FF(unsigned char * Data_Point )
 /*" Data_Point:Èë:Êý¾Ý¸ñÊ½¼ûÏÂ "*/
 /*"            ³ö:Êý¾Ý¸ñÊ½¼ûÏÂ "*/
 //-----------------------------------------------------------------------------
-unsigned char Far_Deal_070203FF(unsigned char * Data_Point )
+INT8U Far_Deal_070203FF(INT8U * Data_Point )
 	{
 	return Far_PassWord_Updata(Data_Point,3);
 	}
@@ -859,7 +857,7 @@ unsigned char Far_Deal_070203FF(unsigned char * Data_Point )
    Far_Deal_070204FF
 
 */
-unsigned char Far_Deal_070204FF(unsigned char * Data_Point )
+INT8U Far_Deal_070204FF(INT8U * Data_Point )
 {
    return Far_PassWord_Updata(Data_Point,4);
 

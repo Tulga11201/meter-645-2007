@@ -18,19 +18,19 @@
 //----------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------
 //" 开户卡,购电卡，比较合法性//  Buy_Count 为cpu卡的购电次数
-unsigned char Judge_User_Card_OK(unsigned char BuyCard_Kind,unsigned long Buy_Count){
-	unsigned long Money_Count_T;// 用来比较 
+INT8U Judge_User_Card_OK(INT8U BuyCard_Kind,INT32U Buy_Count){
+	INT32U Money_Count_T;// 用来比较 
         INT32U CurrMeter_MoneyCount;
         
        // INT8U MeterIDTemp[6];
 	struct Buy_Para_Inf_File file;// 参数信息文件结构体
 	//struct Moneybag_Data Moneybag_Data;//钱包文件结构体  4+4个字节
 	//从esam 读取 钱包文件,读出来后反相
-	//Read_Esam_Moneybag_File((unsigned char *)&Moneybag_Data);
+	//Read_Esam_Moneybag_File((INT8U *)&Moneybag_Data);
 	//Pre_Payment_Para.Buy_Count为黄工管理的当前电表购电次数
         
 	Money_Count_T = Get_Buy_Eng_Counts()+1;//用来比较次数是否大1
-        // 开始执行函数：Judge_User_Card_OK(unsigned char BuyCard_Kind,unsigned long Buy_Count) " );
+        // 开始执行函数：Judge_User_Card_OK(INT8U BuyCard_Kind,INT32U Buy_Count) " );
         String2ParaFile(  &file,&Card_WR_Buff[4], sizeof(struct Buy_Para_Inf_File) );
         
 	if( BuyCard_Kind !=GWFAR_USER_CARD_NEW && BuyCard_Kind !=GWFAR_USER_CARD_BUY && BuyCard_Kind !=GWFAR_USER_CARD_BACK)
@@ -40,7 +40,7 @@ unsigned char Judge_User_Card_OK(unsigned char BuyCard_Kind,unsigned long Buy_Co
 	 	return ERR;
 		}
         
-	if( My_Memcmp(&(file.Meter_ID[0]),(unsigned char *)&Pre_Payment_Para.BcdMeterID[0],6) )
+	if( My_Memcmp(&(file.Meter_ID[0]),(INT8U *)&Pre_Payment_Para.BcdMeterID[0],6) )
         {
                 ASSERT_FAILED();
 		Card_Error_State.CardErrorState.MeterIdErr=1;
@@ -50,7 +50,7 @@ unsigned char Judge_User_Card_OK(unsigned char BuyCard_Kind,unsigned long Buy_Co
 	if(  Pre_Payment_Para.Meter_Run_State  EQ MeterRunState_Run_3 )
         {
                // // 判断是否用户编号不对// " );
-		if( My_Memcmp(Pre_Payment_Para.UserID,file.Client_ID,6) )
+		if( My_Memcmp((INT8U *)Pre_Payment_Para.UserID,file.Client_ID,6) )
 		{
                           ASSERT_FAILED();
 			  Card_Error_State.CardErrorState.Client_Id_Err=1;
@@ -60,7 +60,7 @@ unsigned char Judge_User_Card_OK(unsigned char BuyCard_Kind,unsigned long Buy_Co
                  //"//如果购电次数相等则直接回写// " );
                 CurrMeter_MoneyCount=Get_Buy_Eng_Counts();
 		
-                if( My_Memcmp((unsigned char *)&Buy_Count, (unsigned char *)&(CurrMeter_MoneyCount),4) ==0 ) 
+                if( My_Memcmp((INT8U *)&Buy_Count, (INT8U *)&(CurrMeter_MoneyCount),4) ==0 ) 
                 {
 			Dir_Return_Flag = 0xFF;////标示购电次数相等时直接 返写cpu卡   " );
 			return OK;
@@ -105,7 +105,7 @@ unsigned char Judge_User_Card_OK(unsigned char BuyCard_Kind,unsigned long Buy_Co
 	}//正式运行和非正式运行状态的判断结束
        //"// 判断是否购电次数错//   购电次数必须符合：cpu卡的购电次数 与 esam 的 +1后购电次数 相等 " );
         
-	if( My_Memcmp((unsigned char *)&Buy_Count,(unsigned char *)&Money_Count_T,4) !=0)
+	if( My_Memcmp((INT8U *)&Buy_Count,(INT8U *)&Money_Count_T,4) !=0)
         {
                 ASSERT_FAILED();
 		Card_Error_State.CardErrorState.CARD_BUY_COUNT_ERR=1;
@@ -114,7 +114,7 @@ unsigned char Judge_User_Card_OK(unsigned char BuyCard_Kind,unsigned long Buy_Co
         // //判断是否离散因子错了 " );
 	if( BuyCard_Kind == GWFAR_USER_CARD_BUY )
 	{
-		 if( My_Memcmp(Pre_Payment_Para.Cpucard_Number_old_BackUpInEerom, cpucard_number, 8) )
+		 if( My_Memcmp((INT8U *)Pre_Payment_Para.Cpucard_Number_old_BackUpInEerom, (INT8U *)cpucard_number, 8) )
                  {
                            ASSERT_FAILED();
 			   Card_Error_State.CardErrorState.Cpu_Card_Li_San_Yin_Zi_Err=1 ;//卡错误。离散因子错了,有补卡更新了离散因子
@@ -128,15 +128,15 @@ unsigned char Judge_User_Card_OK(unsigned char BuyCard_Kind,unsigned long Buy_Co
 //----------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------
 //"开户卡,购电卡//
-unsigned char Buy_Card(void){
-	unsigned char Buy_Card_Kind;//用户卡类型，购电卡， 开户卡， 补卡
+INT8U Buy_Card(void){
+	INT8U Buy_Card_Kind;//用户卡类型，购电卡， 开户卡， 补卡
         INT8U UserID[6];//客户编号
 	struct Moneybag_Data Moneybag_Data;
 	struct Buy_Para_Inf_File  file;
         
         String2ParaFile(&file,(&Card_WR_Buff[4]), sizeof(struct Buy_Para_Inf_File) )  ;//初始化file变量
         //  读CPU卡中的剩余电费和购电次数 //02  0 读出来，但是会把 cpu卡中的数据反转，即高位在低位，cpu卡中数据时反得1 " );
-	if( Remain_Money_Moneybag_Add(USER_CARD_MONEYBAG_FILE,REMAIN_MONEY_CPU_ESAM,(unsigned char *)&Moneybag_Data) != OK )
+	if( Remain_Money_Moneybag_Add(USER_CARD_MONEYBAG_FILE,REMAIN_MONEY_CPU_ESAM,(INT8U *)&Moneybag_Data) != OK )
 		return ERR;
  
 	if( Cpucard_External_Auth() != OK )
@@ -270,12 +270,12 @@ unsigned char Buy_Card(void){
 		if( Buy_Card_Kind== GWFAR_USER_CARD_NEW )
                 {
                         // / 新卡保存用户号和变更表计运行状态 // " );
-                        My_memcpyRev(Pre_Payment_Para.UserID,UserID,6);
-		    	Write_Storage_Data(SDI_CUTOMER_ID, Pre_Payment_Para.UserID, 6);
-                        Reverse_data(   Pre_Payment_Para.UserID,6);
+                        My_memcpyRev((INT8U *)Pre_Payment_Para.UserID,UserID,6);
+		    	Write_Storage_Data(SDI_CUTOMER_ID, (INT8U *)Pre_Payment_Para.UserID, 6);
+                        Reverse_data(   (INT8U *)Pre_Payment_Para.UserID,6);
                         
 			Pre_Payment_Para.Meter_Run_State=MeterRunState_Run_3 ;
-                        Write_Storage_Data(_SDI_PREPAID_RUN_STATUS,&Pre_Payment_Para.Meter_Run_State, 1);
+                        Write_Storage_Data(_SDI_PREPAID_RUN_STATUS,(INT8U *)&Pre_Payment_Para.Meter_Run_State, 1);
 		}
 	} 
        // Meter_Ins_Flag = 0x00;
@@ -306,8 +306,8 @@ unsigned char Buy_Card(void){
 	if( Buy_Card_Kind != GWFAR_USER_CARD_BUY )//开户卡， 和补卡更新 离散因子
 	{
           //开户卡， 和补卡更新 离散因子   " );
-	  My_Memcpy(Pre_Payment_Para.Cpucard_Number_old_BackUpInEerom, cpucard_number, 8);
-	  Write_Storage_Data(_SDI_DISCRETE_INFO ,&Pre_Payment_Para.Cpucard_Number_old_BackUpInEerom,  8);
+	  My_Memcpy((INT8U *)Pre_Payment_Para.Cpucard_Number_old_BackUpInEerom, (INT8U *)cpucard_number, 8);
+	  Write_Storage_Data(_SDI_DISCRETE_INFO ,(INT8U *)&Pre_Payment_Para.Cpucard_Number_old_BackUpInEerom,  8);
         }
         
         // 回写文件处理 //
@@ -329,7 +329,7 @@ unsigned char Buy_Card(void){
 }
 
 //费率文件更新:SrcLen值为：总文件长减去4(68到16结尾) 减去4，是因为传过来的地址为第一个费率 WhichTable:1表示第一套费率， 2表示第二套费率
-void Deal_Triff_Data(unsigned char * Source_Point,unsigned char SrcLen,INT8U WhichTable){
+void Deal_Triff_Data(INT8U * Source_Point,INT8U SrcLen,INT8U WhichTable){
         //  这个地方调黄工给我的函数  ,更新黄工的费率数据
         INT8U j;
 	struct Triff_Data Triff_Data;
@@ -351,8 +351,8 @@ void Deal_Triff_Data(unsigned char * Source_Point,unsigned char SrcLen,INT8U Whi
         //把费率反相后 写到e方中取， 由黄工解释
         if(MAX_RATES <= ( sizeof(struct Triff_Data)/4 ) ){
         	for( j=0;j<MAX_RATES;j++ ){
-		   Reverse_data((unsigned char *)&(Triff_Data.Triff[j]),4);
-                   Write_Storage_Data(Temp+j, (unsigned char *)&(Triff_Data.Triff[j]), 4);
+		   Reverse_data((INT8U *)&(Triff_Data.Triff[j]),4);
+                   Write_Storage_Data(Temp+j, (INT8U *)&(Triff_Data.Triff[j]), 4);
 	        }
         }else{
              ASSERT_FAILED();
@@ -362,8 +362,8 @@ void Deal_Triff_Data(unsigned char * Source_Point,unsigned char SrcLen,INT8U Whi
 
 
 //告诉黄工，充值了，充了多少钱，同事更新我定义的变量
-//Curr_Buy_Money 当前充值费用,unsigned long Curr_Buy_Money_Count 当前cpu卡中的
-void Meter_Money_And_Count_Updata( unsigned long Curr_Buy_Money,unsigned long Curr_Buy_Money_Count )
+//Curr_Buy_Money 当前充值费用,INT32U Curr_Buy_Money_Count 当前cpu卡中的
+void Meter_Money_And_Count_Updata( INT32U Curr_Buy_Money,INT32U Curr_Buy_Money_Count )
 	{
           
           //告诉黄工 充了多少电，
@@ -371,15 +371,15 @@ void Meter_Money_And_Count_Updata( unsigned long Curr_Buy_Money,unsigned long Cu
           //更新我管理的全局变量
         }
 //////////////
-void Deal_Buy_Para_Inf_File(unsigned char * Source_Point ){
-	//unsigned char i;
+void Deal_Buy_Para_Inf_File(INT8U * Source_Point ){
+	//INT8U i;
 	struct Buy_Para_Inf_File Buy_Para_Inf_File;
         mem_cpy((INT8U *)&Buy_Para_Inf_File , Source_Point,sizeof(Buy_Para_Inf_File),(INT8U *)&Buy_Para_Inf_File,sizeof(Buy_Para_Inf_File));
 
 	Deal_Para_Table2( (INT8U *)&(Buy_Para_Inf_File.User_Kind) );
 	Deal_Para_Table4( (INT8U *)&(Buy_Para_Inf_File.Triff_Switch_Time)  );
 	Deal_Para_Table3( (INT8U *)&(Buy_Para_Inf_File.Remain_Money_Alarm1_Limit)  );
-	//Deal_Para_Table1((unsigned char *)&(Buy_Para_Inf_File->Meter_ID),Mode);
+	//Deal_Para_Table1((INT8U *)&(Buy_Para_Inf_File->Meter_ID),Mode);
         if(  (Para_Updata_Flag & 0x80 )||(Para_Updata_Flag & 0x02)  )
         {
           Card_Set_Para_Notice() ;

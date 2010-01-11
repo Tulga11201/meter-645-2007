@@ -43,40 +43,40 @@
 
 /*"**********************************************************************************"*/
 
-//void select_communication_port(unsigned char); /*" 选择UART口指向位置 "*/
+//void select_communication_port(INT8U); /*" 选择UART口指向位置 "*/
 
 
-unsigned char Cpucard_Esamcard_Internal_Auth(void);   
+INT8U Cpucard_Esamcard_Internal_Auth(void);   
                                                /*" 内部认证 "*/
                                                /*" FF表示错误响应，00表示正确响应 "*/
-unsigned char Cpucard_External_Auth(void);     /*" CPU卡外部认证 "*/
+INT8U Cpucard_External_Auth(void);     /*" CPU卡外部认证 "*/
                                                /*" FF表示错误响应，00表示正确响应 "*/
-unsigned char Esamcard_External_Auth(void);    /*" ESAM卡外部认证 "*/
+INT8U Esamcard_External_Auth(void);    /*" ESAM卡外部认证 "*/
                                                /*" FF表示错误响应，00表示正确响应 "*/
-unsigned char Esam_Remain_Money_Dec(void);
-unsigned char Get_File_Data(unsigned char,unsigned char,unsigned char,unsigned char,unsigned char * );
-unsigned char CPU_Counter_Dec(unsigned char ,unsigned char );
-unsigned char Esam_Safe_Password_Updata(unsigned char ,unsigned char  ,unsigned char );
-unsigned char PassWord_Updata(unsigned char);
+INT8U Esam_Remain_Money_Dec(void);
+INT8U Get_File_Data(INT8U,INT8U,INT8U,INT8U,INT8U * );
+INT8U CPU_Counter_Dec(INT8U ,INT8U );
+INT8U Esam_Safe_Password_Updata(INT8U ,INT8U  ,INT8U );
+INT8U PassWord_Updata(INT8U);
 INT8U Remain_Money_Moneybag_To_Cpu(void);
-unsigned char Cpu_File_Updata(unsigned char Cpu_File_Name,
-								    unsigned char Esam_File_Name,
-							   		unsigned char Cpu_Start_Addr,
-							   		unsigned char Esam_Start_Addr,
-							   		unsigned char Updata_Data_L);
-unsigned char Esam_File_Updata(unsigned char Cpu_File_Name,
-									unsigned char Esam_File_Name,
-							   		unsigned char Cpu_Start_Addr,
-							   		unsigned char Esam_Start_Addr,
-							   		unsigned char Updata_Data_L,
-							   		unsigned char * Data_Output_Point) ;
+INT8U Cpu_File_Updata(INT8U Cpu_File_Name,
+								    INT8U Esam_File_Name,
+							   		INT8U Cpu_Start_Addr,
+							   		INT8U Esam_Start_Addr,
+							   		INT8U Updata_Data_L);
+INT8U Esam_File_Updata(INT8U Cpu_File_Name,
+									INT8U Esam_File_Name,
+							   		INT8U Cpu_Start_Addr,
+							   		INT8U Esam_Start_Addr,
+							   		INT8U Updata_Data_L,
+							   		INT8U * Data_Output_Point) ;
 
-unsigned char Updata_Esam_Return_File(unsigned char Order_Kind);//cpu卡 处理回写文件 
-void Deal_Run_Inf_Data(unsigned char * Source_Point,unsigned char Mode);
-unsigned char Read_Esam_Moneybag_File(unsigned char * Moneybag_Data_Point);
-unsigned char Remain_Money_Moneybag_Add(unsigned char File_Name,unsigned char Offset,
-		unsigned char * Remain_Money_Point);
-unsigned char Remain_Money_Moneybag_Init(void);
+INT8U Updata_Esam_Return_File(INT8U Order_Kind);//cpu卡 处理回写文件 
+void Deal_Run_Inf_Data(INT8U * Source_Point,INT8U Mode);
+INT8U Read_Esam_Moneybag_File(INT8U * Moneybag_Data_Point);
+INT8U Remain_Money_Moneybag_Add(INT8U File_Name,INT8U Offset,
+		INT8U * Remain_Money_Point);
+INT8U Remain_Money_Moneybag_Init(void);
 /*"************ **********************************************************************"*/
 #define Length_receive_send_buffer   350
 #define Length_Card_WR_Buff   350

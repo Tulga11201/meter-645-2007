@@ -11,19 +11,19 @@
 //-----------------------------------------------------------------------------
 struct Far_645_Frame_T1
 	{
-//	unsigned char Data_ID[4];
-	unsigned char PassWord[4];
-	unsigned char Do_man[4];
+//	INT8U Data_ID[4];
+	INT8U PassWord[4];
+	INT8U Do_man[4];
 	};
 #define LENGTH_FAR_645_FRAME_T1        sizeof(struct Far_645_Frame_T1 )
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 struct Far_Deal_Para_Flag_T1
 	{
-	unsigned char Data_ID[4];
-	unsigned char Esam_File;
-	unsigned int  Esam_Offset;
-	unsigned char Esam_Length;
+	INT8U Data_ID[4];
+	INT8U Esam_File;
+	INT16U  Esam_Offset;
+	INT8U Esam_Length;
 	};
 #define LENGTH_FAR_DEAL_PARA_FLAG_T1      sizeof(struct Far_Deal_Para_Flag_T1)
 //-----------------------------------------------------------------------------
@@ -51,7 +51,7 @@ const struct Far_Deal_Para_Flag_T1 Far_Deal_Para_List_T1[] = {
 INT8U Set_Esam_Para(  INT8U *pSrc, INT8U SrcLen)
 {//一类数据修改
         INT8U DataPdi[4];
-        unsigned char i,j;
+        INT8U i,j;
         INT16U Temp;
   
 	struct Far_Deal_Para_Flag_T1  Far_Deal_Para_Flag_T1;
@@ -104,7 +104,7 @@ INT8U Set_Esam_Para(  INT8U *pSrc, INT8U SrcLen)
         }
         ///////
 	for( j=0;j<LENGTH_FAR_DEAL_PARA_FLAG_T1;j++ )
-		*(((unsigned char *)(&Far_Deal_Para_Flag_T1))+j) = *(((const unsigned char *)&Far_Deal_Para_List_T1[i])+j);
+		*(((INT8U *)(&Far_Deal_Para_Flag_T1))+j) = *(((const INT8U *)&Far_Deal_Para_List_T1[i])+j);
         //检查数据合法性
         if( Set_Data_Format_Check(pSrc+LENGTH_FAR_645_FRAME_T1+4,Far_Deal_Para_Flag_T1.Esam_Length, &Temp) )
         {
@@ -112,7 +112,7 @@ INT8U Set_Esam_Para(  INT8U *pSrc, INT8U SrcLen)
             return 0;  
         }
 	if(Far_Write_Esam(0x04,Update_Binary,0x80+Far_Deal_Para_Flag_T1.Esam_File,
-			(unsigned char)Far_Deal_Para_Flag_T1.Esam_Offset,
+			(INT8U)Far_Deal_Para_Flag_T1.Esam_Offset,
 			Far_Deal_Para_Flag_T1.Esam_Length,
 			pSrc+LENGTH_FAR_645_FRAME_T1+4,0)!=OK)//这里为偏移16个字节即实际数据为N1N2...Nm
 	{
@@ -134,19 +134,19 @@ INT8U Set_Esam_Para(  INT8U *pSrc, INT8U SrcLen)
 //-----------------------------------------------------------------------------
 struct Far_645_Frame_T2
 	{
-//	unsigned char Length;
-//	unsigned char Data_ID[4];
-	unsigned char PassWord[4];
-	unsigned char Do_man[4];
+//	INT8U Length;
+//	INT8U Data_ID[4];
+	INT8U PassWord[4];
+	INT8U Do_man[4];
 	};
 #define LENGTH_FAR_645_FRAME_T2        sizeof(struct Far_645_Frame_T2 )
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 struct Far_Deal_Para_Flag_T2
 	{
-	unsigned char Data_ID[4];
-	unsigned char Source_Length;				/*"密文数据长度"*/
-	unsigned char TX_Length;					/*"实际数据长度"*/
+	INT8U Data_ID[4];
+	INT8U Source_Length;				/*"密文数据长度"*/
+	INT8U TX_Length;					/*"实际数据长度"*/
 	};
 #define LENGTH_FAR_DEAL_PARA_FLAG_T2      sizeof( struct Far_Deal_Para_Flag_T2 )
 //-----------------------------------------------------------------------------
@@ -183,7 +183,7 @@ const struct Far_Deal_Para_Flag_T2 Far_Deal_Para_List_T2[] =
 /*"标识DI2模5 = 2：采用参数更新文件3；"*/
 /*"标识DI2模5 = 3：采用参数更新文件4；"*/
 /*"标识DI2模5 = 4：采用参数更新文件5。"*/
-const unsigned char Data_ID_Offset[]=
+const INT8U Data_ID_Offset[]=
 {0x09,0x10,0x11,0x12,0x13};
 //-----------------------------------------------------------------------------
 //写数据时的esam权限判断和密文解密
@@ -201,7 +201,7 @@ INT8U  Esam_Auth_Check(  INT8U *pSrc, INT16U SrcLen, INT8U * DstLen)
         INT8U DataPdi[4];
 	struct Far_Deal_Para_Flag_T2  Far_Deal_Para_Flag_T2;
 	//struct Far_645_Frame_T2    Far_645_Frame_T2;
-	unsigned char ID_a,ID_b,ID_c,ID_d;
+	INT8U ID_a,ID_b,ID_c,ID_d;
         
         CPU_ESAM_CARD_Control(ESAM);
         if( Select_File(0,0x3F,0) != OK )
@@ -265,7 +265,7 @@ INT8U  Esam_Auth_Check(  INT8U *pSrc, INT16U SrcLen, INT8U * DstLen)
 	}
 	else{
 		for( j=0;j<LENGTH_FAR_DEAL_PARA_FLAG_T2;j++ )
-			*(((unsigned char *)(&Far_Deal_Para_Flag_T2))+j) = *(((const unsigned char *)&Far_Deal_Para_List_T2[i])+j);
+			*(((INT8U *)(&Far_Deal_Para_Flag_T2))+j) = *(((const INT8U *)&Far_Deal_Para_List_T2[i])+j);
 	}
 	//645协议中定义的 L字段的长度 ，应该 和 表中的定义的密文的长度 + 4 字节mac + 12字节 数据标示，密码，操作者代码 相等
 	//if(  SrcLen  != (Far_Deal_Para_Flag_T2.Source_Length+16) )

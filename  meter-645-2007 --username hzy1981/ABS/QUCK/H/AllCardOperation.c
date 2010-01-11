@@ -3,8 +3,8 @@
 #include "MyIncludesAll.h"
 
 #undef Debug_Print
-//#define Debug_Print(...)
-#define Debug_Print _Debug_Print
+#define Debug_Print(...)
+  //#define Debug_Print _Debug_Print
 extern INT8U Esam_Remote_Auth(INT8U *pSrc, INT8U SrcLen, INT8U *pDst, INT8U *pLen, INT8U *pDst_Start, INT16U DstLen);
 //C_Pre_Payment_Para Pre_Payment_Para;
 //ic卡 入口函数
@@ -177,6 +177,7 @@ void CardProgrammeEvent(void)
 {
         union Long_To_Char  progman,progdata;
 	INT32U Temp;
+        //得到管理卡的低4位
 	My_memcpyRev(&progman.U_char[0], (INT8U *)&cpucard_number[4], 4);
 	progdata.U_char[0] = Para_Updata_Flag;
 	progdata.U_char[1] = CardType;

@@ -22,29 +22,29 @@ INT8U Esam_Decrypt(INT8U *pSrc, INT16U SrcLen);//¶ÔÍâ½Ó¿Úº¯Êý
 //pDst_StartºÍDstLenÒ»ÆðÏÞ¶¨pDstºÍ·µ»ØµÄÊý¾Ý³¤¶È
 //1³É¹¦£¬ 0Ê§°Ü£¬
 INT8U Esam_Remote_Auth(INT8U *pSrc, INT8U SrcLen, INT8U *pDst, INT8U *pLen, INT8U *pDst_Start, INT16U DstLen);//¶ÔÍâ½Ó¿Ú
-unsigned char Far_Esamcard_Internal_Auth(unsigned char *Point);
+INT8U Far_Esamcard_Internal_Auth(INT8U *Point);
 ///ÄÚ²¿º¯Êý¶¨Òå
-unsigned char Far_Deal_078102FF(unsigned char * Data_Point );///Êý¾Ý»Ø³­
-unsigned char Far_Deal_07810201(unsigned char *Data_Point );//Êý¾Ý»Ø³­
-unsigned char Far_Deal_078001FF(unsigned char *Data_Point );//Êý¾Ý²éÑ¯
-unsigned char Far_Deal_070001FF(unsigned char * Data_Point );//
-unsigned char Far_Deal_07000201(unsigned char * Data_Point );
-unsigned char Far_Deal_070002FF(unsigned char * Data_Point );
-unsigned char Far_Deal_070102FF(unsigned char * Data_Point );//³äÖµ
-unsigned char Far_Deal_070101FF(unsigned char * Data_Point );//¿ª»§
-unsigned char Far_PassWord_Updata(unsigned char * Data_Point,unsigned char PassWord_ID );//ÃÜÔ¿¸üÐÂ
-unsigned char Far_Deal_070202FF(unsigned char * Data_Point );
-unsigned char Far_Deal_070203FF(unsigned char * Data_Point );
-unsigned char Far_Deal_070201FF(unsigned char * Data_Point );//D
-unsigned char Far_Deal_070204FF(unsigned char * Data_Point );//D
+INT8U Far_Deal_078102FF(INT8U * Data_Point );///Êý¾Ý»Ø³­
+INT8U Far_Deal_07810201(INT8U *Data_Point );//Êý¾Ý»Ø³­
+INT8U Far_Deal_078001FF(INT8U *Data_Point );//Êý¾Ý²éÑ¯
+INT8U Far_Deal_070001FF(INT8U * Data_Point );//
+INT8U Far_Deal_07000201(INT8U * Data_Point );
+INT8U Far_Deal_070002FF(INT8U * Data_Point );
+INT8U Far_Deal_070102FF(INT8U * Data_Point );//³äÖµ
+INT8U Far_Deal_070101FF(INT8U * Data_Point );//¿ª»§
+INT8U Far_PassWord_Updata(INT8U * Data_Point,INT8U PassWord_ID );//ÃÜÔ¿¸üÐÂ
+INT8U Far_Deal_070202FF(INT8U * Data_Point );
+INT8U Far_Deal_070203FF(INT8U * Data_Point );
+INT8U Far_Deal_070201FF(INT8U * Data_Point );//D
+INT8U Far_Deal_070204FF(INT8U * Data_Point );//D
 
-unsigned char Far_Read_Esam(unsigned char cla,unsigned char ins,unsigned char t_p1,
-              unsigned char t_p2,unsigned char lc,unsigned char *address);
+INT8U Far_Read_Esam(INT8U cla,INT8U ins,INT8U t_p1,
+              INT8U t_p2,INT8U lc,INT8U *address);
 /*" Ð´ESAM¿¨ £¬´øMAC  Ð´"*/
-unsigned char Far_Write_Esam(unsigned char cla,unsigned char ins,unsigned char t_p1,
-			unsigned char t_p2,unsigned char lc,unsigned char *address,unsigned char Flag );
-unsigned char    Far_Read_Esam(unsigned char ,unsigned char ,unsigned char ,unsigned char ,unsigned char ,unsigned char *);
-unsigned char Far_Deal_Order_0x03(unsigned char *,unsigned char  );
+INT8U Far_Write_Esam(INT8U cla,INT8U ins,INT8U t_p1,
+			INT8U t_p2,INT8U lc,INT8U *address,INT8U Flag );
+INT8U    Far_Read_Esam(INT8U ,INT8U ,INT8U ,INT8U ,INT8U ,INT8U *);
+INT8U Far_Deal_Order_0x03(INT8U *,INT8U  );
  
 ///////////
 //ÉÏµçÊ±´Óe·½È¡µÄÊý¾Ý£¬ÏÂµçºóÐèÒª±£´æµ½ e·½ÖÐÈ¡µÄ Êý¾Ý£¬ £¬¾ßÌå¼ûËµÃ÷
@@ -56,7 +56,7 @@ typedef struct {
     }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  C_Far_Pre_Payment_Para ;
 
 DECLARE_VAR_TYPE(C_Far_Pre_Payment_Para, _C_Far_Pre_Payment_Para);
-EXT   _C_Far_Pre_Payment_Para   _Far_Pre_Payment_Para;
+EXT  volatile _C_Far_Pre_Payment_Para   _Far_Pre_Payment_Para;
 #define  FarPrePayment  _Far_Pre_Payment_Para.Var 
 
 //EXT C_Pre_Payment_Para   Pre_Payment_Para;
@@ -69,26 +69,26 @@ union SECURITY_AUTH_ERR_INFORMATION
 {
     struct
       {  
-	unsigned char FAR_OTHER_ERR:1;		/*"--ÆäËû´íÎó----"*/
-	unsigned char FAR_REPEAT_INCREASE_ERR:1;		/*"--ÖØ¸´³äÖµ----------------"*/
-	unsigned char FAR_ESAM_AUTH_ERR:1;	/*"--ESAMÑéÖ¤Ê§°Ü-----------"*/
-	unsigned char FAR_IDENTITY_AUTH_ERR:1;	/*"--Éí·ÝÈÏÖ¤Ê§°Ü---------"*/
-	unsigned char FAR_CLIENT_ID_ERR:1;			/*"--¿Í»§±àºÅ²»Æ¥Åä-------"*/
-	unsigned char FAR_BUY_COUNT_ERR:1;			/*"--¹ºµç´ÎÊý´í---"*/
-	unsigned char FAR_BUY_MONEY_OVER_ERR:1;				/*"--µç·Ñ³¬¶Ú»ý---"*/
-	unsigned char :1;			/*"--±£Áô---"*/
-	unsigned char :1;						/*"--±£Áô------------"*/
-	unsigned char :1;						/*"--±£Áô------------"*/
-	unsigned char :1;						/*"--±£Áô------------"*/
-	unsigned char :1;						/*"--±£Áô------------"*/
-	unsigned char :1;						/*"--±£Áô------------"*/
-	unsigned char :1;						/*"--±£Áô------------"*/
-	unsigned char :1;						/*"--±£Áô------------"*/
-	unsigned char :1;						/*"--±£Áô------------"*/
+	INT8U FAR_OTHER_ERR:1;		/*"--ÆäËû´íÎó----"*/
+	INT8U FAR_REPEAT_INCREASE_ERR:1;		/*"--ÖØ¸´³äÖµ----------------"*/
+	INT8U FAR_ESAM_AUTH_ERR:1;	/*"--ESAMÑéÖ¤Ê§°Ü-----------"*/
+	INT8U FAR_IDENTITY_AUTH_ERR:1;	/*"--Éí·ÝÈÏÖ¤Ê§°Ü---------"*/
+	INT8U FAR_CLIENT_ID_ERR:1;			/*"--¿Í»§±àºÅ²»Æ¥Åä-------"*/
+	INT8U FAR_BUY_COUNT_ERR:1;			/*"--¹ºµç´ÎÊý´í---"*/
+	INT8U FAR_BUY_MONEY_OVER_ERR:1;				/*"--µç·Ñ³¬¶Ú»ý---"*/
+	INT8U :1;			/*"--±£Áô---"*/
+	INT8U :1;						/*"--±£Áô------------"*/
+	INT8U :1;						/*"--±£Áô------------"*/
+	INT8U :1;						/*"--±£Áô------------"*/
+	INT8U :1;						/*"--±£Áô------------"*/
+	INT8U :1;						/*"--±£Áô------------"*/
+	INT8U :1;						/*"--±£Áô------------"*/
+	INT8U :1;						/*"--±£Áô------------"*/
+	INT8U :1;						/*"--±£Áô------------"*/
       }bit;
-      unsigned int intd;  
+      INT16U intd;  
 }; 
-EXT union  SECURITY_AUTH_ERR_INFORMATION Far_Security_Auth_Err_Info;	/*°²È«ÈÏÖ¤´íÎóÐÅÏ¢×Ö*/
+EXT volatile union  SECURITY_AUTH_ERR_INFORMATION Far_Security_Auth_Err_Info;	/*°²È«ÈÏÖ¤´íÎóÐÅÏ¢×Ö*/
 
 #define OTHER_ERR_DEFINE						Far_Security_Auth_Err_Info.bit.FAR_OTHER_ERR
 #define REPEAT_INCREASE_ERR_DEFINE				        Far_Security_Auth_Err_Info.bit.FAR_REPEAT_INCREASE_ERR
@@ -100,10 +100,10 @@ EXT union  SECURITY_AUTH_ERR_INFORMATION Far_Security_Auth_Err_Info;	/*°²È«ÈÏÖ¤´
  
 union ID
 {
-        unsigned char d[4];
-        unsigned int  i;
-        unsigned int  new_i[2];//2008-7-9 17:54:13
-        unsigned long l;
+        INT8U d[4];
+        INT16U  i;
+        INT16U  new_i[2];//2008-7-9 17:54:13
+        INT32U l;
 }; 
 typedef struct  
 {
@@ -115,20 +115,20 @@ EXT _C_Far_Identity_Auth_Ok_Flag   _Far_Identity_Auth_Ok_Flag ;
 #define   Far_Identity_Auth_Ok_Flag   _Far_Identity_Auth_Ok_Flag.Var.Ok_Flag 
 
 //EXT INT8U  Far_Identity_Auth_Ok_Flag;						 		/*"Ô¶³ÌÉí·ÝÈÏÖ¤³É¹¦±êÖ¾"*/ 
-//qEXT unsigned long  FarCloseTime=0;
+//qEXT INT32U  FarCloseTime=0;
 
 //Êý¾Ý½á¹¹¶¨Òå//
 struct Authentication_Instruction
 {
-	unsigned char cryptograph1[8];								/*"ÃÜÎÄ1"*/
-	unsigned char	random_number1[8];							/*"Ëæ»úÊý1"*/
-	unsigned char disperse_gene[8];							/*"·ÖÉ¢Òò×Ó"*/
+	INT8U cryptograph1[8];								/*"ÃÜÎÄ1"*/
+	INT8U	random_number1[8];							/*"Ëæ»úÊý1"*/
+	INT8U disperse_gene[8];							/*"·ÖÉ¢Òò×Ó"*/
 };
 
 struct Authentication_Responsion
 {
-	unsigned char	random_number2[4];							/*"Ëæ»úÊý2"*/
-	unsigned char	esam_serial_number[8];						/*"ESAMÐòÁÐºÅ"*/	
+	INT8U	random_number2[4];							/*"Ëæ»úÊý2"*/
+	INT8U	esam_serial_number[8];						/*"ESAMÐòÁÐºÅ"*/	
 };
 
 struct Far_Identity_Authentication_Define
@@ -136,6 +136,6 @@ struct Far_Identity_Authentication_Define
 	struct Authentication_Instruction Instruction;					/*"Éí·ÝÈÏÖ¤Ö¸Áî"*/
         //struct Authentication_Responsion Responsion;					////Ó¦´ð²¢·µ»ØËæ»úÊý2//
 };
-EXT struct Far_Identity_Authentication_Define Far_Identity_Auth_Data;	//¸Ã±äÁ¿ÔÚÔ¶³ÌÉí·ÝÈÏÖ¤º¯ÊýFar_Esamcard_Internal_AuthÖÐ³õÊ¼»¯
+EXT volatile struct Far_Identity_Authentication_Define Far_Identity_Auth_Data;	//¸Ã±äÁ¿ÔÚÔ¶³ÌÉí·ÝÈÏÖ¤º¯ÊýFar_Esamcard_Internal_AuthÖÐ³õÊ¼»¯
 INT8U Check_Remote_Prog_Status();
 #endif

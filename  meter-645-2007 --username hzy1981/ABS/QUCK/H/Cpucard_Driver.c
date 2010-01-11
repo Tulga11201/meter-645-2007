@@ -9,9 +9,9 @@
 
    
 /*"**************************************************************************"*/
-unsigned char Cpucard_Esamcard_Internal_Auth(void)  //内部认证//
+INT8U Cpucard_Esamcard_Internal_Auth(void)  //内部认证//
 {
-    if(Check_CPU_Out())			
+    if(Check_Cpu_Card_Out())			
     {
         ASSERT_FAILED();   
         Card_Error_State.CardErrorState.CPU_CARD_LOSE=1;
@@ -23,7 +23,7 @@ unsigned char Cpucard_Esamcard_Internal_Auth(void)  //内部认证//
 		return ERR;
     My_Memcpy(receive_send_buffer+50,receive_send_buffer,8);
      //利用离散生产密钥" );
-    if(Internal_Auth(0x80,0xfa,0,1,8,cpucard_number)){
+    if(Internal_Auth(0x80,0xfa,0,1,8,(INT8U *)cpucard_number)){
         return ERR;
     }
     if( Judge_Return_Flag() )
@@ -54,10 +54,10 @@ unsigned char Cpucard_Esamcard_Internal_Auth(void)  //内部认证//
 }
 
 /*"**************************************************************************"*/
-unsigned char Cpucard_External_Auth(void)
+INT8U Cpucard_External_Auth(void)
 {
 
-    if(Check_CPU_Out())			
+    if(Check_Cpu_Card_Out())			
         {
          ASSERT_FAILED();
         Card_Error_State.CardErrorState.CPU_CARD_LOSE=1;
@@ -76,7 +76,7 @@ unsigned char Cpucard_External_Auth(void)
     My_Memcpy(receive_send_buffer+150,receive_send_buffer,8);  /*"转移随机数 "*/  
     CPU_ESAM_CARD_Control(ESAM);   /*"串口通向ESAM卡"*/
     Debug_Print("esam 利用离散 生成密钥 " );
-    Internal_Auth(0x80,0xfa,0,2,8,cpucard_number);      /*"加密ESAM随机数"*/
+    Internal_Auth(0x80,0xfa,0,2,8,(INT8U *)cpucard_number);      /*"加密ESAM随机数"*/
     if( Judge_Return_Flag() )
 	    return ERR;
    Debug_Print("esam利用密钥加密随机数 得到k1 " );
@@ -104,9 +104,9 @@ unsigned char Cpucard_External_Auth(void)
 }
     
 /*"**************************************************************************"*/
-unsigned char Esamcard_External_Auth(void)
+INT8U Esamcard_External_Auth(void)
 	{                  
-	if(Check_CPU_Out())			
+	if(Check_Cpu_Card_Out())			
 		{
                 ASSERT_FAILED();   
 		Card_Error_State.CardErrorState.CPU_CARD_LOSE=1;
@@ -134,7 +134,7 @@ unsigned char Esamcard_External_Auth(void)
 	CPU_ESAM_CARD_Control(ESAM);   /*"串口通向ESAM卡"*/
 	My_Memcpy(receive_send_buffer+100,receive_send_buffer,8);     /*"转移随机数"*/  
 
-	My_Memcpy(receive_send_buffer+108,cpucard_number,8);
+	My_Memcpy(receive_send_buffer+108,(INT8U *)cpucard_number,8);
 
 	if( External_Auth(1,0x10,receive_send_buffer+100) != OK )
 		{
@@ -152,9 +152,9 @@ unsigned char Esamcard_External_Auth(void)
 
 /*"**************************************************************************"*/
 /*" 功能：钱包文件剩余电费读出给CPU卡 "*///1,0   3,4
-unsigned char Remain_Money_Moneybag_To_Cpu_Step(unsigned char Rec_Addr,unsigned char Rec_Offset)
+INT8U Remain_Money_Moneybag_To_Cpu_Step(INT8U Rec_Addr,INT8U Rec_Offset)
 {
-	unsigned char temp_buffer_2[30],Order_Head[4];
+	INT8U temp_buffer_2[30],Order_Head[4];
 
 	  Debug_Print("从cpu卡得到4字节随机数  " );//821C48C29000
 	CPU_ESAM_CARD_Control(CPU);
@@ -175,14 +175,14 @@ unsigned char Remain_Money_Moneybag_To_Cpu_Step(unsigned char Rec_Addr,unsigned 
 	temp_buffer_2[7]=Rec_Offset;//0,4
 	temp_buffer_2[8]=0x08;/*" 6字节为0x0A,4字节为0x08 "*/
 
-	My_Memcpy(temp_buffer_2+9,cpucard_number,8);
+	My_Memcpy(temp_buffer_2+9,(INT8U *)cpucard_number,8);
 	CPU_ESAM_CARD_Control(ESAM);
          Debug_Print(" 明文 + mac  + 离散， 读esam  返回 钱包和mac " );//00000000573A712C9000
 	Order_Head[0] = 0x04;
 	Order_Head[1] = 0xB2;
 	Order_Head[2] = Rec_Addr;//1,3
 	Order_Head[3] = 0x0C;
-	if( CPU_Card_Driver((const unsigned char *)Order_Head,0x11,temp_buffer_2,0,CommunicationPortMode,0x08)!= OK )/*" 6字节为0x0A,4字节为0x08 "*/
+	if( CPU_Card_Driver((const INT8U *)Order_Head,0x11,temp_buffer_2,0,CommunicationPortMode,0x08)!= OK )/*" 6字节为0x0A,4字节为0x08 "*/
 		return ERR;
          //04D6820008 +XX
 	CPU_ESAM_CARD_Control(CPU);
@@ -192,7 +192,7 @@ unsigned char Remain_Money_Moneybag_To_Cpu_Step(unsigned char Rec_Addr,unsigned 
 	Order_Head[1] = 0xD6;
 	Order_Head[2] = 0x82;
 	Order_Head[3] = Rec_Offset;//0,4
-	if( CPU_Card_Driver((const unsigned char *)Order_Head,0x08,temp_buffer_2,0,CommunicationPortMode,0)!= OK )/*" 6字节为0x0A,4字节为0x08 "*/
+	if( CPU_Card_Driver((const INT8U *)Order_Head,0x08,temp_buffer_2,0,CommunicationPortMode,0)!= OK )/*" 6字节为0x0A,4字节为0x08 "*/
         {
           Debug_Print(" 明文 + mac 写cpu卡  写失败 " );
           ASSERT_FAILED();
@@ -206,9 +206,9 @@ unsigned char Remain_Money_Moneybag_To_Cpu_Step(unsigned char Rec_Addr,unsigned 
 /*"**************************************************************************"*/
 /*" 功能：钱包文件剩余电费或购电次数初始化 "*/
 /*" Length_LE: 读数据长度 "*/
-unsigned char Remain_Money_Moneybag_Step(unsigned char Rec_Addr,unsigned char Rec_Offset)
+INT8U Remain_Money_Moneybag_Step(INT8U Rec_Addr,INT8U Rec_Offset)
 	{
-	unsigned char temp_buffer_2[30],Order_Head[4];
+	INT8U temp_buffer_2[30],Order_Head[4];
 	
 	CPU_ESAM_CARD_Control(ESAM);
 	if(Read(0,Get_Challenge,0,0,4)!=OK)
@@ -230,7 +230,7 @@ unsigned char Remain_Money_Moneybag_Step(unsigned char Rec_Addr,unsigned char Re
 	Order_Head[1] = 0xB0;
 	Order_Head[2] = 0x82;
 	Order_Head[3] = Rec_Offset;
-	if( CPU_Card_Driver((const unsigned char *)Order_Head,9,temp_buffer_2,0,CommunicationPortMode,0x08)!= OK )
+	if( CPU_Card_Driver((const INT8U *)Order_Head,9,temp_buffer_2,0,CommunicationPortMode,0x08)!= OK )
 		return ERR;
 
 	CPU_ESAM_CARD_Control(ESAM);
@@ -242,15 +242,15 @@ unsigned char Remain_Money_Moneybag_Step(unsigned char Rec_Addr,unsigned char Re
 	Order_Head[1] = 0xDC;
 	Order_Head[2] = Rec_Addr;
 	Order_Head[3] = 0x0C;
-//	if( CPU_Card_Driver((const unsigned char *)Order_Head,0x10,temp_buffer_2,0,CommunicationPortMode,0)!= OK )
-	if( CPU_Card_Driver((const unsigned char *)Order_Head,0x08,temp_buffer_2,0,CommunicationPortMode,0)!= OK )
+//	if( CPU_Card_Driver((const INT8U *)Order_Head,0x10,temp_buffer_2,0,CommunicationPortMode,0)!= OK )
+	if( CPU_Card_Driver((const INT8U *)Order_Head,0x08,temp_buffer_2,0,CommunicationPortMode,0)!= OK )
 		return ERR;
 	return OK;
 	}
 /*"**************************************************************************"*/
 /*" 功能：钱包文件初始化 "*/
 /*" Length_LE: 读数据长度 "*/
-unsigned char Remain_Money_Moneybag_Init(void)
+INT8U Remain_Money_Moneybag_Init(void)
 	{
         //读取cpu卡钱包文件， 设置esam的钱包文件
 	if( Remain_Money_Moneybag_Step(1,0) !=OK )
@@ -262,7 +262,7 @@ unsigned char Remain_Money_Moneybag_Init(void)
 	}
 /*"**************************************************************************"*/
 /*" 功能：剩余电费钱包文件读到ESAM数据回抄卡 "*/
-unsigned char Remain_Money_Moneybag_To_Cpu()
+INT8U Remain_Money_Moneybag_To_Cpu()
 	{
 	if( Remain_Money_Moneybag_To_Cpu_Step(1,0) !=OK )
 		return ERR;
@@ -272,7 +272,7 @@ unsigned char Remain_Money_Moneybag_To_Cpu()
 	}
 /*"**************************************************************************"*/
 /*" 功能：读ESAM钱包文件剩余电费和购电次数 "*/
-unsigned char Read_Esam_Moneybag_File(unsigned char * Moneybag_Data_Point)
+INT8U Read_Esam_Moneybag_File(INT8U * Moneybag_Data_Point)
 	{	
   
 	CPU_ESAM_CARD_Control(ESAM);
@@ -290,19 +290,19 @@ unsigned char Read_Esam_Moneybag_File(unsigned char * Moneybag_Data_Point)
 /*" 功能：ESAM钱包文件剩余电费扣除函数 "*/
 /*" 电量走字的时候用 "*/
 /*" Flag=0走字的时候调用，Flag＝1上电或掉电的时候调用 "*/
-//unsigned long Reamin_Money_ESAM;
-unsigned long Reamin_Money_ESAM_Dec_Time;
-void Esam_Remain_Money_Do(unsigned char Flag)
+//INT32U Reamin_Money_ESAM;
+INT32U Reamin_Money_ESAM_Dec_Time;
+void Esam_Remain_Money_Do(INT8U Flag)
 	{
 	}
 
 /*"**************************************************************************"*/
 /*" 功能：钱包文件剩余电费累加 "*/
 /*" 新卡和购电卡用 "*/               // 2,0,0 ,           1,4,0
-unsigned char Remain_Money_Moneybag_Add(unsigned char File_Name,unsigned char Offset,
-		unsigned char * Remain_Money_Point)
+INT8U Remain_Money_Moneybag_Add(INT8U File_Name,INT8U Offset,
+		INT8U * Remain_Money_Point)
 	{
-	unsigned char  temp_buffer_2[30],Order_Head[4];
+	INT8U  temp_buffer_2[30],Order_Head[4];
 
 	//从esam得到4byte随机数
 	CPU_ESAM_CARD_Control(ESAM);
@@ -324,7 +324,7 @@ unsigned char Remain_Money_Moneybag_Add(unsigned char File_Name,unsigned char Of
 	Order_Head[1] = 0xB0;
 	Order_Head[2] = 0x80+File_Name;
 	Order_Head[3] = Offset;
-	if( CPU_Card_Driver((const unsigned char *)Order_Head,9,temp_buffer_2,0,CommunicationPortMode,0x0C)!= OK )
+	if( CPU_Card_Driver((const INT8U *)Order_Head,9,temp_buffer_2,0,CommunicationPortMode,0x0C)!= OK )
 		return ERR;
         
 	if( Remain_Money_Point != 0 )//判断要不要把从cpu卡读出的数据输出到缓冲，因为给电表使用所以反相
@@ -340,7 +340,7 @@ unsigned char Remain_Money_Moneybag_Add(unsigned char File_Name,unsigned char Of
 		Order_Head[1] = 0x32;
 		Order_Head[2] = 0x01;
 		Order_Head[3] = 0x0C;
-		if( CPU_Card_Driver((const unsigned char *)Order_Head,0x0C,temp_buffer_2,0,CommunicationPortMode,0)!= OK )/*" 6字节为0x18,4字节为0x14 "*/
+		if( CPU_Card_Driver((const INT8U *)Order_Head,0x0C,temp_buffer_2,0,CommunicationPortMode,0)!= OK )/*" 6字节为0x18,4字节为0x14 "*/
 			return ERR;
 	}
            return OK;
@@ -348,8 +348,8 @@ unsigned char Remain_Money_Moneybag_Add(unsigned char File_Name,unsigned char Of
 /*"**************************************************************************"*/
 /*" 功能：得到Esam或CPU文件中信息 "*/
 /*" 数据拜访顺序为高位在低字节 "*/
-unsigned char Get_File_Data(unsigned char Door,unsigned char File,unsigned char Offset,
-							unsigned char Length,unsigned char * Point)
+INT8U Get_File_Data(INT8U Door,INT8U File,INT8U Offset,
+							INT8U Length,INT8U * Point)
 	{
 	CPU_ESAM_CARD_Control(Door);
 	if( Read(0,Read_Binary,0x80+File,Offset,Length) != OK )
@@ -371,15 +371,15 @@ unsigned char Get_File_Data(unsigned char Door,unsigned char File,unsigned char 
 /*" Cpu_Start_Addr: "*/
 /*" Esam_Start_Addr: "*/
 /*" Updata_Data_L: "*///01  02   0404 02//01 02 0a 0a 05
-unsigned char Esam_File_Updata(unsigned char Cpu_File_Name,
-									unsigned char Esam_File_Name,
-							   		unsigned char Cpu_Start_Addr,
-							   		unsigned char Esam_Start_Addr,
-							   		unsigned char Updata_Data_L,
-							   		unsigned char * Data_Output_Point)
+INT8U Esam_File_Updata(INT8U Cpu_File_Name,
+									INT8U Esam_File_Name,
+							   		INT8U Cpu_Start_Addr,
+							   		INT8U Esam_Start_Addr,
+							   		INT8U Updata_Data_L,
+							   		INT8U * Data_Output_Point)
 	{
-	unsigned char temp_buffer_2[30],Order_Head[4];
-	unsigned char Head_Length;
+	INT8U temp_buffer_2[30],Order_Head[4];
+	INT8U Head_Length;
 
 	//得到随机数
          Debug_Print("/得到随机数 "  );
@@ -401,7 +401,7 @@ unsigned char Esam_File_Updata(unsigned char Cpu_File_Name,
 		Head_Length = 0x11;
 		temp_buffer_2[9] = 0x00;
 		temp_buffer_2[10] = 0x00;
-		My_Memcpy(&temp_buffer_2[11], Pre_Payment_Para.BcdMeterID,6);
+		My_Memcpy(&temp_buffer_2[11], (INT8U *)Pre_Payment_Para.BcdMeterID,6);
 	}
 	else
 		Head_Length = 0x09;
@@ -412,7 +412,7 @@ unsigned char Esam_File_Updata(unsigned char Cpu_File_Name,
 	Order_Head[1] = 0xB0;
 	Order_Head[2] = 0x80+Cpu_File_Name;//1
 	Order_Head[3] = Cpu_Start_Addr;//4
-	if( CPU_Card_Driver( (const unsigned char *)Order_Head,Head_Length,temp_buffer_2,0,CommunicationPortMode,Updata_Data_L+4)!= OK )
+	if( CPU_Card_Driver( (const INT8U *)Order_Head,Head_Length,temp_buffer_2,0,CommunicationPortMode,Updata_Data_L+4)!= OK )
 		return ERR;
         //明为+mac  写esam 二进制文件 
          Debug_Print("明为+mac  写esam 二进制文件 "  );
@@ -429,7 +429,7 @@ unsigned char Esam_File_Updata(unsigned char Cpu_File_Name,
 	Order_Head[1] = 0xD6;
 	Order_Head[2] = 0x80+Esam_File_Name;//2
 	Order_Head[3] = Esam_Start_Addr;//4
-	if( CPU_Card_Driver((const unsigned char *)Order_Head,Updata_Data_L+4, AppleBuffer,0,CommunicationPortMode,0)!= OK )
+	if( CPU_Card_Driver((const INT8U *)Order_Head,Updata_Data_L+4, AppleBuffer,0,CommunicationPortMode,0)!= OK )
 		return ERR;
         
 	return OK;
@@ -441,13 +441,13 @@ unsigned char Esam_File_Updata(unsigned char Cpu_File_Name,
 /*" Cpu_Start_Addr: "*/
 /*" Esam_Start_Addr: "*/
 /*" Updata_Data_L: "*///04,03,0,0,240 费率1文件更新 
-unsigned char Cpu_File_Updata(unsigned char Cpu_File_Name,
-								    unsigned char Esam_File_Name,
-							   		unsigned char Cpu_Start_Addr,
-							   		unsigned char Esam_Start_Addr,
-							   		unsigned char Updata_Data_L)
+INT8U Cpu_File_Updata(INT8U Cpu_File_Name,
+								    INT8U Esam_File_Name,
+							   		INT8U Cpu_Start_Addr,
+							   		INT8U Esam_Start_Addr,
+							   		INT8U Updata_Data_L)
 	{
-	unsigned char temp_buffer_2[30],Order_Head[4];
+	INT8U temp_buffer_2[30],Order_Head[4];
 
 	Debug_Print(" 开始cpu卡文件更新 cpu卡文件标示：%d esam文件标示:%d    ",Cpu_File_Name,Esam_File_Name  );
          Debug_Print("  //得到随机数    "  );//0084000004 B72B44369000  Debug_Print(" "  );
@@ -465,14 +465,14 @@ unsigned char Cpu_File_Updata(unsigned char Cpu_File_Name,
 	temp_buffer_2[7]=Cpu_Start_Addr;
 	temp_buffer_2[8]=Updata_Data_L+4;//这里规定了从cpu卡读几个字节，为什么要加4,是因为写esam的时候还要加上4字节mac，
         //04B0830011 71DDD3FD +  04D68200+changdu 1ED01F5FEAF7B53C
-	My_Memcpy(temp_buffer_2+9,cpucard_number,8);
+	My_Memcpy(temp_buffer_2+9,(INT8U *)cpucard_number,8);
          Debug_Print("  // 明文+ mac +离散  读取esam  二进制文件     "  );//
 	CPU_ESAM_CARD_Control(ESAM);
 	Order_Head[0] = 0x04;
 	Order_Head[1] = 0xB0;
 	Order_Head[2] = 0x80+Esam_File_Name;//2
 	Order_Head[3] = Esam_Start_Addr;
-	if( CPU_Card_Driver( (const unsigned char *)Order_Head,0x11,temp_buffer_2,0,CommunicationPortMode,Updata_Data_L+4)!= OK )
+	if( CPU_Card_Driver( (const INT8U *)Order_Head,0x11,temp_buffer_2,0,CommunicationPortMode,Updata_Data_L+4)!= OK )
         {
           ASSERT_FAILED();
           return ERR;
@@ -489,7 +489,7 @@ unsigned char Cpu_File_Updata(unsigned char Cpu_File_Name,
 	Order_Head[1] = 0xD6;
 	Order_Head[2] = 0x80+Cpu_File_Name;//3
 	Order_Head[3] = Cpu_Start_Addr;//
-	if( CPU_Card_Driver((const unsigned char *)Order_Head,Updata_Data_L+4,AppleBuffer,0,CommunicationPortMode,0)!= OK )
+	if( CPU_Card_Driver((const INT8U *)Order_Head,Updata_Data_L+4,AppleBuffer,0,CommunicationPortMode,0)!= OK )
         {
           ASSERT_FAILED();
           return ERR; 
@@ -502,9 +502,9 @@ unsigned char Cpu_File_Updata(unsigned char Cpu_File_Name,
 /*" CPU_File_Name: "*/
 /*" CPU_Counter_Length: "*/
 /*"计数器减一8030001404+00000001 "*/
-unsigned char CPU_Counter_Dec(unsigned char CPU_File_Name,unsigned char CPU_Counter_Length)
+INT8U CPU_Counter_Dec(INT8U CPU_File_Name,INT8U CPU_Counter_Length)
 	{
-	unsigned char Order_Head[4];
+	INT8U Order_Head[4];
 	
 	CPU_ESAM_CARD_Control(CPU);
 	Order_Head[0] = 0;
@@ -535,12 +535,12 @@ unsigned char CPU_Counter_Dec(unsigned char CPU_File_Name,unsigned char CPU_Coun
 /*"84d401ff20+ DATA"*/
 /*"84d401ff20+ DATA"*/
 /*"84d401ff20+ DATA"*/
-unsigned char Esam_Safe_Password_Updata(unsigned char Password_Addr,
-											    unsigned char Password_Off,
-											    unsigned char Card_ID)
+INT8U Esam_Safe_Password_Updata(INT8U Password_Addr,
+											    INT8U Password_Off,
+											    INT8U Card_ID)
 	{
-	unsigned char Order_Head[4],temp_buffer_2[32];
-	unsigned char i;
+	INT8U Order_Head[4],temp_buffer_2[32];
+	INT8U i;
 
 	CPU_ESAM_CARD_Control(CPU);
 	Order_Head[0] = 0x80;
@@ -549,14 +549,14 @@ unsigned char Esam_Safe_Password_Updata(unsigned char Password_Addr,
 	Order_Head[3] = Password_Addr;
 	temp_buffer_2[0] = 0;
 	temp_buffer_2[1] = 0;//
-	My_Memcpy(temp_buffer_2+2,Pre_Payment_Para.BcdMeterID  ,6); 
+	My_Memcpy(temp_buffer_2+2,(INT8U *)Pre_Payment_Para.BcdMeterID  ,6); 
 	if( Card_ID==GWFAR_RES_PASSWORD_CARD )
 		{
 		for( i=0;i<8;i++ )
 			temp_buffer_2[i] = 0;
 		temp_buffer_2[7] = 1;
 		}
-	if( CPU_Card_Driver((const unsigned char *)Order_Head,8,temp_buffer_2,0,CommunicationPortMode,0)!= OK )
+	if( CPU_Card_Driver((const INT8U *)Order_Head,8,temp_buffer_2,0,CommunicationPortMode,0)!= OK )
 		return ERR;
 
 	Order_Head[0] = 0xBF;
@@ -567,7 +567,7 @@ unsigned char Esam_Safe_Password_Updata(unsigned char Password_Addr,
 	temp_buffer_2[0] = 0x01;
 	temp_buffer_2[1] = Password_Off;
 	temp_buffer_2[2] = 0x00;
-	if( CPU_Card_Driver((const unsigned char *)Order_Head,3,temp_buffer_2,0,CommunicationPortMode,0)!= OK )
+	if( CPU_Card_Driver((const INT8U *)Order_Head,3,temp_buffer_2,0,CommunicationPortMode,0)!= OK )
 		return ERR;
 
 	My_Memcpy(temp_buffer_2,receive_send_buffer,0x20); 
@@ -577,16 +577,16 @@ unsigned char Esam_Safe_Password_Updata(unsigned char Password_Addr,
 	Order_Head[1] = 0xD4;
 	Order_Head[2] = 0x01;
 	Order_Head[3] = 0xFF;
-	if( CPU_Card_Driver((const unsigned char *)Order_Head,0x20,temp_buffer_2,0,CommunicationPortMode,0)!= OK )
+	if( CPU_Card_Driver((const INT8U *)Order_Head,0x20,temp_buffer_2,0,CommunicationPortMode,0)!= OK )
 		return ERR;
 
 	return OK;
 	}
 /*"**************************************************************************"*/
 /*" 功能：密钥更新 "*/
-unsigned char PassWord_Updata(unsigned char Card_ID)
+INT8U PassWord_Updata(INT8U Card_ID)
 	{
-	unsigned char i;
+	INT8U i;
 	
 	if( Esam_Safe_Password_Updata(1,3,Card_ID) != OK )
         {
@@ -633,7 +633,7 @@ unsigned char PassWord_Updata(unsigned char Card_ID)
 
 //-----------------------------------------------------------------
 //根据电表信息，更新esam返写文件 "
-unsigned char Updata_Esam_Return_File(unsigned char Order_Kind)
+INT8U Updata_Esam_Return_File(INT8U Order_Kind)
 {
  
 	Card_WR_Buff[0] = 0x68;
@@ -664,21 +664,21 @@ unsigned char Updata_Esam_Return_File(unsigned char Order_Kind)
 //struct Run_Inf_Data
 //	{	
 //      INT8U    temp;
-//	unsigned char User_Kind;					/*" 用户类型 "*/
-//	unsigned char Current_CT[3];				/*" 电流互感器变比 "*/
-//	unsigned char Voltage_PT[3];				/*" 电压互感器变比 "*/	
-//	unsigned char Meter_ID[6];					/*" 表号 "*/
-//	unsigned char Client_ID[6];				/*" 客户编号 "*/
-//	unsigned long Remain_Money;				/*" 剩余金额 "*/
-//	unsigned long Buy_Count;					/*" 购电次数 "*/
-//	unsigned long Low_Zero_Money;				/*" 过零金额 "*/
-//	unsigned char Password_Info[4];			/*" 密钥信息，包括：状态，方式，条数，版本 "*/
-//	unsigned char Unlawful_Card_Count[3];		/*" 非法卡插入次数 "*/
-//	unsigned char Return_DT[5];				/*" 返写日期时间 "*/
+//	INT8U User_Kind;					/*" 用户类型 "*/
+//	INT8U Current_CT[3];				/*" 电流互感器变比 "*/
+//	INT8U Voltage_PT[3];				/*" 电压互感器变比 "*/	
+//	INT8U Meter_ID[6];					/*" 表号 "*/
+//	INT8U Client_ID[6];				/*" 客户编号 "*/
+//	INT32U Remain_Money;				/*" 剩余金额 "*/
+//	INT32U Buy_Count;					/*" 购电次数 "*/
+//	INT32U Low_Zero_Money;				/*" 过零金额 "*/
+//	INT8U Password_Info[4];			/*" 密钥信息，包括：状态，方式，条数，版本 "*/
+//	INT8U Unlawful_Card_Count[3];		/*" 非法卡插入次数 "*/
+//	INT8U Return_DT[5];				/*" 返写日期时间 "*/
 //	};
 //#define LENGTH_RUN_INF_DATA  sizeof(struct Run_Inf_Data)
 //当为esam回抄卡时 和 用户卡 时使用
-void Deal_Run_Inf_Data(unsigned char * Source_Point,unsigned char Mode)
+void Deal_Run_Inf_Data(INT8U * Source_Point,INT8U Mode)
 {
 	struct Run_Inf_Data  Run_Inf_Data;
         INT32U CurrMeter_MoneyCount;
@@ -688,31 +688,31 @@ void Deal_Run_Inf_Data(unsigned char * Source_Point,unsigned char Mode)
         
         Temp=sizeof(Run_Inf_Data);
         //" 用户编号，表号，用户类型"
-        mem_cpy(&Run_Inf_Data.Client_ID[0],Pre_Payment_Para.UserID,6,&Run_Inf_Data.Client_ID[0],6);
-        mem_cpy(&Run_Inf_Data.Meter_ID[0],Pre_Payment_Para.BcdMeterID,6,&Run_Inf_Data.Meter_ID[0],6);
+        mem_cpy(&Run_Inf_Data.Client_ID[0],(INT8U *)Pre_Payment_Para.UserID,6,&Run_Inf_Data.Client_ID[0],6);
+        mem_cpy(&Run_Inf_Data.Meter_ID[0],(INT8U *)Pre_Payment_Para.BcdMeterID,6,&Run_Inf_Data.Meter_ID[0],6);
         Run_Inf_Data.User_Kind=CardType;
         ///剩余电费  
         CurrMeter_MoneyCount=Get_Left_Money();
- 	My_memcpyRev( (unsigned char *)&(Run_Inf_Data.Remain_Money),(INT8U *)&(CurrMeter_MoneyCount),4);
+ 	My_memcpyRev( (INT8U *)&(Run_Inf_Data.Remain_Money),(INT8U *)&(CurrMeter_MoneyCount),4);
         // 购电次数 
         CurrMeter_MoneyCount=Get_Buy_Eng_Counts();
-	My_memcpyRev( (unsigned char *)&(Run_Inf_Data.Buy_Count),(unsigned char *)&(CurrMeter_MoneyCount),4);
+	My_memcpyRev( (INT8U *)&(Run_Inf_Data.Buy_Count),(INT8U *)&(CurrMeter_MoneyCount),4);
         //  过零电费//这个地方可能会出问题
         Temp=Get_Overdraft_Money();
         Hex2Bcd(Temp, DataTemp,4,DataTemp,4);//从黄工哪里得到INT32U的hex型的 透支金额，并转换为4个字节的BCD码
- 	My_memcpyRev( (unsigned char *)&(Run_Inf_Data.Low_Zero_Money),DataTemp,4);
+ 	My_memcpyRev( (INT8U *)&(Run_Inf_Data.Low_Zero_Money),DataTemp,4);
         //  CT  //
         Read_Storage_Data(SDI_CURR_TRANS_RATIO, DataTemp, DataTemp, 4);//   从黄工那里电流互感器变比  
-	My_memcpyRev( ( unsigned char *)&(Run_Inf_Data.Current_CT),(unsigned char *)DataTemp,3);//只要3个字节因为esam中为3个字节
+	My_memcpyRev( ( INT8U *)&(Run_Inf_Data.Current_CT),(INT8U *)DataTemp,3);//只要3个字节因为esam中为3个字节
         //  PT  //电压互感变化
         Read_Storage_Data(SDI_VOLT_TRANS_RATIO, DataTemp, DataTemp, 4);//  从黄工那里电压互感变化
-	My_memcpyRev((unsigned char *)&(Run_Inf_Data.Voltage_PT),(unsigned char *)DataTemp,3);
+	My_memcpyRev((INT8U *)&(Run_Inf_Data.Voltage_PT),(INT8U *)DataTemp,3);
         //" 从esam中得到本地密钥信息 // 
 	Get_File_Data(ESAM,ESAM_PASSWORD_INF_FILE,0,4,Run_Inf_Data.Password_Info);
         // 非法卡插入次数 "//
         Read_Storage_Data (  _SDI_INVALID_CARD_COUNTS, &Temp, &Temp, 4  );//     
         Hex2Bcd(Temp, DataTemp,3,DataTemp,3);//
-        My_memcpyRev( (unsigned char *)&(Run_Inf_Data.Unlawful_Card_Count[0]),(unsigned char *)DataTemp,3);
+        My_memcpyRev( (INT8U *)&(Run_Inf_Data.Unlawful_Card_Count[0]),(INT8U *)DataTemp,3);
         //" 返写日期时间 "//
         DataTemp[0 ]=Cur_Time1.Year;
         DataTemp[ 1]=Cur_Time1.Month;
@@ -723,14 +723,14 @@ void Deal_Run_Inf_Data(unsigned char * Source_Point,unsigned char Mode)
         //把更新了的  数据 复制到 函数实参数(INT8U *)&Run_Inf_Data + 1 是应为考虑到该结构体的字节对齐问题，在其添加了一个多余的字 
         mem_cpy( Source_Point,((INT8U *)&Run_Inf_Data) + 1, sizeof(struct Run_Inf_Data) - 1,Source_Point, Length_Card_WR_Buff-4 );   
 }
-unsigned char Esam_Remain_Money_Dec(void)
+INT8U Esam_Remain_Money_Dec(void)
 {
-	unsigned char Order_Head[4];
+	INT8U Order_Head[4];
 	struct Moneybag_Data Moneybag_Data;
         INT32U MeterRemainMoney;
         MeterRemainMoney=Get_Left_Money();
        // Debug_Print("//从esam 读取 钱包文件 ，4字节， 并反相，  " );
-  	Read_Esam_Moneybag_File((unsigned char *)&Moneybag_Data);
+  	Read_Esam_Moneybag_File((INT8U *)&Moneybag_Data);
         //与表中的 钱包金额 比较， 并相减 得到差额
 	if( MeterRemainMoney>0 )
         {
@@ -743,13 +743,13 @@ unsigned char Esam_Remain_Money_Dec(void)
 
 	if(Moneybag_Data.Remain_Money>0)
         {
-		Reverse_data((unsigned char *)&Moneybag_Data.Remain_Money,4);
+		Reverse_data((INT8U *)&Moneybag_Data.Remain_Money,4);
              //    Debug_Print(" 从esam得到的购电金额反相后为：%lx",Moneybag_Data.Remain_Money );
 		Order_Head[0] = 0x80;
 		Order_Head[1] = 0x30;
 		Order_Head[2] = 0x00;
 		Order_Head[3] = 0x0C;
-		if( CPU_Card_Driver((const unsigned char *)&Order_Head[0],4,(unsigned char *)&Moneybag_Data.Remain_Money,0,CommunicationPortMode,0)!= OK )
+		if( CPU_Card_Driver((const INT8U *)&Order_Head[0],4,(INT8U *)&Moneybag_Data.Remain_Money,0,CommunicationPortMode,0)!= OK )
                 {
                    ASSERT_FAILED();
                    return ERR;
@@ -757,7 +757,7 @@ unsigned char Esam_Remain_Money_Dec(void)
 			
 	}
         //Debug_Print("//查看扣款后从esam 读取 钱包文件 ，4字节， 并反相，  " );
-  	//Read_Esam_Moneybag_File((unsigned char *)&Moneybag_Data);
+  	//Read_Esam_Moneybag_File((INT8U *)&Moneybag_Data);
         //mem_cpy(Order_Head,(INT8U *)&Moneybag_Data,4,Order_Head,4);
         //Debug_Print(" 从esam卡得到的购电金额为： %x  %x  %x  %x", Order_Head[ 3], Order_Head[ 2], Order_Head[1 ], Order_Head[0 ]  );
 	

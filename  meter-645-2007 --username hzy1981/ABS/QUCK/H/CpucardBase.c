@@ -219,7 +219,7 @@ INT8U Cpucard_Reset(void){
 	}
         //这里不需要反相， 存取的e方中 没有反相， 从cpu卡中读取也没有反相， 并且只是判断是否相等或不相等
         
-	mem_cpy((INT8U *)cpucard_number,receive_send_buffer+Length-8,8,(INT8U *)cpucard_number,sizeof(cpucard_number));//最后8为为离散
+	mem_cpy((INT8U *)cpucard_number,receive_send_buffer+Length-8,8,(INT8U *)cpucard_number,LENGTH_CARD_ID_WHEN_CARD_INSERT);//最后8为为离散
 	return OK;    
   
 }
@@ -379,12 +379,12 @@ INT8U  WhenCardInsertedInitPrePayData(void) { //上电从e方读取数据到全局变量
      //  当充值的时候，是先反相主站的客户编号后再与e方中的客户编号相比较的
       //由此可以看出,主站来的数据是正常顺序，把数据给esam要反相顺序，  然而给 e方用正常顺序
     //除去　客户编号外，　客户编号从主站来时反是的顺序，写到ｅ方中要反相  发给主站要用反得顺序
-     Read_Storage_Data( SDI_CUTOMER_ID, (INT8U *)Pre_Payment_Para.UserID,  (INT8U *)Pre_Payment_Para.UserID,sizeof(Pre_Payment_Para.UserID)  ); 
-     Reverse_data(   (INT8U *)Pre_Payment_Para.UserID,6);
+     Read_Storage_Data( SDI_CUTOMER_ID, (INT8U *)Pre_Payment_Para.UserID,  (INT8U *)Pre_Payment_Para.UserID,LENGTH_USER_ID  ); 
+     Reverse_data(   (INT8U *)Pre_Payment_Para.UserID,LENGTH_USER_ID);
      //如果是读写运行状态
      Read_Storage_Data( _SDI_PREPAID_RUN_STATUS, (INT8U *)&Pre_Payment_Para.Meter_Run_State ,  (INT8U *)&Pre_Payment_Para.Meter_Run_State,sizeof(Pre_Payment_Para.Meter_Run_State)  );    
      //如果是写离散因子
-     Read_Storage_Data( _SDI_DISCRETE_INFO, (INT8U *)Pre_Payment_Para.Cpucard_Number_old_BackUpInEerom, (INT8U *)Pre_Payment_Para.Cpucard_Number_old_BackUpInEerom, 8);    
+     Read_Storage_Data( _SDI_DISCRETE_INFO, (INT8U *)Pre_Payment_Para.Cpucard_Number_old_BackUpInEerom, (INT8U *)Pre_Payment_Para.Cpucard_Number_old_BackUpInEerom,LENGTH_CARD_ID_BACKUP);    
      //密钥类型,密钥下装卡， 还是密钥恢复卡 
      Read_Storage_Data( _SDI_PREPAID_PSW_KIND, (INT8U *)&Pre_Payment_Para.PassWord_Kind,  (INT8U *)&Pre_Payment_Para.PassWord_Kind,1);  
      //取表号  
@@ -392,7 +392,7 @@ INT8U  WhenCardInsertedInitPrePayData(void) { //上电从e方读取数据到全局变量
      //使用的时候要反相表号 ，注意，只是使用在 现场参数卡， 返写操作， 密钥更新，购电卡判断
      Reverse_data((INT8U *)Pre_Payment_Para.BcdMeterID,6);
     //现场参数设置卡版本号  
-     Read_Storage_Data(_SDI_PREPAID_PARA_CARD_VER,(INT8U *)&Pre_Payment_Para.Para_Card_Version, (INT8U *)&Pre_Payment_Para.Para_Card_Version, 4) ;
+     Read_Storage_Data(_SDI_PREPAID_PARA_CARD_VER,(INT8U *)&Pre_Payment_Para.Para_Card_Version, (INT8U *)&Pre_Payment_Para.Para_Card_Version, sizeof(Pre_Payment_Para.Para_Card_Version)) ;
      //Pre_Payment_Para.Remain_Money_Hoard_Limit=Get_Money_Hoard_Limit();
      //Pre_Payment_Para.Buy_Count=Get_Buy_Eng_Counts();//从黄工那里获得购电次数，
      Card_Error_State.CardErrorState_INT32U=0x00000000;

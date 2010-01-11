@@ -134,7 +134,7 @@ INT8U Esamcard_External_Auth(void)
 	CPU_ESAM_CARD_Control(ESAM);   /*"串口通向ESAM卡"*/
 	My_Memcpy(receive_send_buffer+100,receive_send_buffer,8);     /*"转移随机数"*/  
 
-	My_Memcpy(receive_send_buffer+108,(INT8U *)cpucard_number,8);
+	My_Memcpy(receive_send_buffer+108,(INT8U *)cpucard_number,LENGTH_CARD_ID_WHEN_CARD_INSERT);
 
 	if( External_Auth(1,0x10,receive_send_buffer+100) != OK )
 		{
@@ -175,7 +175,7 @@ INT8U Remain_Money_Moneybag_To_Cpu_Step(INT8U Rec_Addr,INT8U Rec_Offset)
 	temp_buffer_2[7]=Rec_Offset;//0,4
 	temp_buffer_2[8]=0x08;/*" 6字节为0x0A,4字节为0x08 "*/
 
-	My_Memcpy(temp_buffer_2+9,(INT8U *)cpucard_number,8);
+	My_Memcpy(temp_buffer_2+9,(INT8U *)cpucard_number,LENGTH_CARD_ID_WHEN_CARD_INSERT);
 	CPU_ESAM_CARD_Control(ESAM);
          Debug_Print(" 明文 + mac  + 离散， 读esam  返回 钱包和mac " );//00000000573A712C9000
 	Order_Head[0] = 0x04;
@@ -465,7 +465,7 @@ INT8U Cpu_File_Updata(INT8U Cpu_File_Name,
 	temp_buffer_2[7]=Cpu_Start_Addr;
 	temp_buffer_2[8]=Updata_Data_L+4;//这里规定了从cpu卡读几个字节，为什么要加4,是因为写esam的时候还要加上4字节mac，
         //04B0830011 71DDD3FD +  04D68200+changdu 1ED01F5FEAF7B53C
-	My_Memcpy(temp_buffer_2+9,(INT8U *)cpucard_number,8);
+	My_Memcpy(temp_buffer_2+9,(INT8U *)cpucard_number,LENGTH_CARD_ID_WHEN_CARD_INSERT);
          Debug_Print("  // 明文+ mac +离散  读取esam  二进制文件     "  );//
 	CPU_ESAM_CARD_Control(ESAM);
 	Order_Head[0] = 0x04;
@@ -688,7 +688,7 @@ void Deal_Run_Inf_Data(INT8U * Source_Point,INT8U Mode)
         
         Temp=sizeof(Run_Inf_Data);
         //" 用户编号，表号，用户类型"
-        mem_cpy(&Run_Inf_Data.Client_ID[0],(INT8U *)Pre_Payment_Para.UserID,6,&Run_Inf_Data.Client_ID[0],6);
+        mem_cpy(&Run_Inf_Data.Client_ID[0],(INT8U *)Pre_Payment_Para.UserID,6,&Run_Inf_Data.Client_ID[0],LENGTH_USER_ID);
         mem_cpy(&Run_Inf_Data.Meter_ID[0],(INT8U *)Pre_Payment_Para.BcdMeterID,6,&Run_Inf_Data.Meter_ID[0],6);
         Run_Inf_Data.User_Kind=CardType;
         ///剩余电费  

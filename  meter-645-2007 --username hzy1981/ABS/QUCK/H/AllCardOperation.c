@@ -25,10 +25,14 @@ INT8U ICcardMain(void) {
 	ret=ICcardProcess();//Card Operate
         OS_Mutex_Post(PUB_BUF0_SEM_ID);
         OS_Mutex_Post(PUB_BUF_SEM_ID);
-        if(!CHECK_STRUCT_VAR(_Far_Pre_Payment_Para))
+        //检测头尾是否正确
+        if( (!CHECK_STRUCT_VAR(_Far_Pre_Payment_Para))
+             ||(!CHECK_STRUCT_VAR(c_Card_Error_State))
+           )
         {
             ASSERT_FAILED();
         }
+   
         Prepaid_Card_Op_Aft_Proc(); //处理卡处理的遗留操作，包括编程记录等
         Debug_Print("-------ret:%d---- ------ ",ret );
         //处理放回状态字
@@ -459,7 +463,7 @@ INT8U Field_Para_Set_Card(void){//现场参数设置卡
 		
         //我管理的 ESAM版本号更新  
 	Pre_Payment_Para.Para_Card_Version = Version_Temp;
-        if( 0 EQ Write_Storage_Data(_SDI_PREPAID_PARA_CARD_VER ,(INT8U *)&Pre_Payment_Para.Para_Card_Version,  4) ){
+        if( 0 EQ Write_Storage_Data(_SDI_PREPAID_PARA_CARD_VER ,(INT8U *)&Pre_Payment_Para.Para_Card_Version,  sizeof(Pre_Payment_Para.Para_Card_Version)) ){
             //假如写e方失败
           Debug_Print( " //假如写e方失败  "  );
             Card_Error_State.CardErrorState.ReadWriteE2romErr=1;
@@ -608,8 +612,8 @@ INT8U Set_In_Card(void){///出厂预制卡"
         //更新购电次数,更新剩余金额
         Prepaid_Set_Buy_Money_Counts(Moneybag_Data.Remain_Money, Moneybag_Data.Buy_Count);
         //表的运行状态
-	Pre_Payment_Para.Meter_Run_State=0;
-        Write_Storage_Data(_SDI_PREPAID_RUN_STATUS ,(INT8U *)&Pre_Payment_Para.Meter_Run_State  , 1 );
+	Pre_Payment_Para.Meter_Run_State=MeterRunState_Test_0;
+        Write_Storage_Data(_SDI_PREPAID_RUN_STATUS ,(INT8U *)&Pre_Payment_Para.Meter_Run_State  ,sizeof(Pre_Payment_Para.Meter_Run_State) );
         //清除远程非法攻击次数
         FarPrePayment.ID_Ins_Counter  =0;
 	Write_Storage_Data(_SDI_INVALID_COUNTS_AllOW, (INT8U *)&FarPrePayment.ID_Ins_Counter, 1);
@@ -632,8 +636,8 @@ void Deal_Init_Para_Inf_File(INT8U * Source_Point,INT8U Mode)
     
     //现场参数设置卡版本号
     if( Para_Updata_Flag&0x80 ){
-       My_memcpyRev((INT8U *)&Pre_Payment_Para.Para_Card_Version,(INT8U *)&Init_Para_Inf_File.Para_Card_Version,4  );
-       Write_Storage_Data( _SDI_PREPAID_PARA_CARD_VER,(INT8U *)&Pre_Payment_Para.Para_Card_Version  , 4 );
+       My_memcpyRev((INT8U *)&Pre_Payment_Para.Para_Card_Version,(INT8U *)&Init_Para_Inf_File.Para_Card_Version,sizeof(Pre_Payment_Para.Para_Card_Version)  );
+       Write_Storage_Data( _SDI_PREPAID_PARA_CARD_VER,(INT8U *)&Pre_Payment_Para.Para_Card_Version  ,sizeof(Pre_Payment_Para.Para_Card_Version) );
     }
     Debug_Print("// 更新电表的费率切换时间: ");  
     // 更新电表的费率切换时间
@@ -767,7 +771,7 @@ INT8U Password_Card(void)//密钥下装卡/恢复卡
         //// 保存用的是 密钥恢复卡，还是密钥下装卡 ");
         // 保存用的是 密钥恢复卡，还是密钥下装卡//该变量只有在这里修改，是用来做编程记录的
 	Pre_Payment_Para.PassWord_Kind=PassWord_Kind;////密钥类型,密钥下装卡， 还是密钥恢复卡
-        Write_Storage_Data(_SDI_PREPAID_PSW_KIND , (INT8U *)&Pre_Payment_Para.PassWord_Kind ,1) ;
+        Write_Storage_Data(_SDI_PREPAID_PSW_KIND , (INT8U *)&Pre_Payment_Para.PassWord_Kind ,sizeof(Pre_Payment_Para.PassWord_Kind)) ;
 	return OK;
 }
        
@@ -839,8 +843,8 @@ INT8U Modify_MeterID_Card(void){// 表号设置卡
 							0) != OK )
 		return ERR;
         //  更新表计表号  //如果发卡软件中写的是010203040506，那么下面Pre_Payment_Para.BcdMeterID【0】就为01
-         My_memcpyRev( (INT8U *)Pre_Payment_Para.BcdMeterID,&(MeterID_Return_Inf_File.Next_Meter_ID[0]),6);
-         Write_Storage_Data( SDI_METER_ID, (INT8U *)Pre_Payment_Para.BcdMeterID , 6);
+         My_memcpyRev( (INT8U *)Pre_Payment_Para.BcdMeterID,&(MeterID_Return_Inf_File.Next_Meter_ID[0]),sizeof(Pre_Payment_Para.BcdMeterID));
+         Write_Storage_Data( SDI_METER_ID, (INT8U *)Pre_Payment_Para.BcdMeterID , sizeof(Pre_Payment_Para.BcdMeterID) );
          Card_Set_Para_Notice() ;
 /*" 更新卡回写文件 "*/
 	Msb = 0;

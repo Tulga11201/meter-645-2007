@@ -633,10 +633,10 @@ INT8U Far_Deal_070101FF(INT8U * Data_Point )
         Meter_Money_And_Count_Updata(Far_Deal_070101FF_format.Remain_Money,Far_Deal_070101FF_format.Buy_Count );
 	
         //更新客户编号
-	My_Memcpy((INT8U *)Pre_Payment_Para.UserID,Far_Deal_070101FF_format.Client_ID,6);
-	Write_Storage_Data(SDI_CUTOMER_ID , (INT8U *)Pre_Payment_Para.UserID , 6);
-	Pre_Payment_Para.Meter_Run_State=0x03;
-	Write_Storage_Data(_SDI_PREPAID_RUN_STATUS  ,(INT8U *)&Pre_Payment_Para.Meter_Run_State , 1);
+	My_Memcpy((INT8U *)Pre_Payment_Para.UserID,Far_Deal_070101FF_format.Client_ID,LENGTH_USER_ID);
+	Write_Storage_Data(SDI_CUTOMER_ID , (INT8U *)Pre_Payment_Para.UserID , LENGTH_USER_ID);
+	Pre_Payment_Para.Meter_Run_State=MeterRunState_Run_3;
+	Write_Storage_Data(_SDI_PREPAID_RUN_STATUS  ,(INT8U *)&Pre_Payment_Para.Meter_Run_State , sizeof(Pre_Payment_Para.Meter_Run_State));
         //告诉黄工，修改了 数据
         Card_Set_Para_Notice();
         FarPrePayment.Far_SendLen=0;            
@@ -682,9 +682,9 @@ INT8U Far_Deal_070102FF(INT8U * Data_Point )
 	Reverse_data((INT8U *)&(Far_Deal_070102FF_format.Client_ID[0]),6);
 	Reverse_data((INT8U *)&(Far_Deal_070102FF_format.Client_ID_Mac[0]),4);
         // 比较客户编号， 在e方中 
-        Read_Storage_Data( SDI_CUTOMER_ID, (INT8U *)Pre_Payment_Para.UserID,  (INT8U *)Pre_Payment_Para.UserID,6 ); 
-        Reverse_data((INT8U *)Pre_Payment_Para.UserID,6);
-	if( My_Memcmp((INT8U *)Pre_Payment_Para.UserID,&Far_Deal_070102FF_format.Client_ID[0],6) != 0 )
+        Read_Storage_Data( SDI_CUTOMER_ID, (INT8U *)Pre_Payment_Para.UserID,  (INT8U *)Pre_Payment_Para.UserID,LENGTH_USER_ID ); 
+        Reverse_data((INT8U *)Pre_Payment_Para.UserID,LENGTH_USER_ID);
+	if( My_Memcmp((INT8U *)Pre_Payment_Para.UserID,&Far_Deal_070102FF_format.Client_ID[0],LENGTH_USER_ID) != 0 )
         {
                 ASSERT_FAILED();
 		CLIENT_ID_ERR_DEFINE = 1;

@@ -15,7 +15,7 @@
 typedef struct {
     INT8U	UserID[ 6 ];                          //用户编号 "// ，如果是运行态就从e方中取，如果为未开户态，取不取都无所谓
     INT8U	Cpucard_Number_old_BackUpInEerom[8];//离散因子，对表第一次上电值不作要求，当为开户卡，或补卡时修改，从e方取，无初始值
-    INT8U PassWord_Kind;                 //密钥类型"*/ //上电的时候要得到是 正式密钥状态，还是公开密钥状态
+    INT8U  PassWord_Kind;                 //密钥类型"*/ //上电的时候要得到是 正式密钥状态，还是公开密钥状态
     INT32U Para_Card_Version;           //"现场参数设置卡版本号,上电初始化要请零"
     //当开户卡插入时修改
     INT8U Meter_Run_State;  //电表运行状态，00厂内/01安装/02运行 "表第一次上电值为0，被存在e方中，上电时从e方取，当是补卡或开户卡时修改
@@ -42,8 +42,10 @@ EXT  volatile _C_Pre_Payment_Para  _Pre_Payment_Para;
 //EXT C_Pre_Payment_Para   Pre_Payment_Para;
 //Pre_Payment_Para.BcdMeterID 
 /*" 内部变量定义 "*/
- 
+#define LENGTH_USER_ID 6  // INT8U	UserID[ 6 ]; 
+#define LENGTH_CARD_ID_BACKUP 8  //INT8U	Cpucard_Number_old_BackUpInEerom[8];
 #define cpucard_number  (Pre_Payment_Para.C_cpucard_number_WhemCardInsert) //cpu卡号, 分散因子"  cpu卡 复位时得到
+#define LENGTH_CARD_ID_WHEN_CARD_INSERT 8 //Pre_Payment_Para.C_cpucard_number_WhemCardInsert
 #define CommunicationPortMode  (Pre_Payment_Para.C_CommunicationPortMode)
 #define Meter_Ins_Flag   (Pre_Payment_Para.C_Meter_Ins_Flag) //找不到，不知道用来干嘛的，暂时自己定义
 #define Para_Updata_Flag  (Pre_Payment_Para.C_Para_Updata_Flag)

@@ -17,19 +17,19 @@ void My_Memcpy(INT8U *pDst,INT8U *pSrc,INT8U length){
 }
 //
 /*"将原数据前后倒置地复制到目标数据"*/
-void My_memcpyRev(unsigned char *to,unsigned char *from,unsigned char len){	
-	unsigned char i;	
+void My_memcpyRev(INT8U *to,INT8U *from,INT8U len){	
+	INT8U i;	
 	for(i=0;i<len;i++)
 		*(to+i)=*(from+len-1-i);
 }
 //ASSERT_FAILED();
 /*******************************************************************************/	
 /*"将数据前后倒置"*/
-void Reverse_data(unsigned char *data, unsigned int len)
+void Reverse_data(INT8U *data, INT16U len)
 	{
-	unsigned char c_temp;
-	unsigned char *pc_temp;
-	unsigned int i;
+	INT8U c_temp;
+	INT8U *pc_temp;
+	INT16U i;
 	
 	pc_temp=data;
 	pc_temp+=len-1;
@@ -43,9 +43,9 @@ void Reverse_data(unsigned char *data, unsigned int len)
 		}
 	}
 //返回0相等， 返回1大于， 返回2小于
-unsigned char My_Memcmp(unsigned char *to,unsigned char *from,unsigned char lc)
+INT8U My_Memcmp(INT8U *to,INT8U *from,INT8U lc)
     {	
-    unsigned char count,flag;
+    INT8U count,flag;
     flag=0;
     for(count=0;count<lc;count++)
         {
@@ -64,14 +64,14 @@ unsigned char My_Memcmp(unsigned char *to,unsigned char *from,unsigned char lc)
     return(flag); 
     }
 /*" 判断返回标志的合法性 "*/    
-unsigned char Judge_Return_Flag(void)
+INT8U Judge_Return_Flag(void)
     {
     if(Card_Error_State.CardErrorState_INT32U)
         {
         return ERR;
         }
     if(CommunicationPortMode !=  ESAM ){
-         if(Check_CPU_Out())			
+         if(Check_Cpu_Card_Out())			
         {
         ASSERT_FAILED();
         Card_Error_State.CardErrorState.CPU_CARD_LOSE=1;
@@ -92,16 +92,16 @@ void CPU_ESAM_CARD_Control(INT8U Direct)//方向选择， 是发给esam还是cpu卡
 /*"**************************************************************************"*/
 /*"内部认证，CPU卡0x0088,ESAM卡0x80fa;p1:为0时加密,为1时解密；p2:密钥标识号"*/                 
 /*"address为需要加密的数据首地址"*/                                                                                
-unsigned char Internal_Auth(unsigned char cla,unsigned char ins,unsigned char t_p1,
-              unsigned char t_p2,unsigned char lc,unsigned char *address)
+INT8U Internal_Auth(INT8U cla,INT8U ins,INT8U t_p1,
+              INT8U t_p2,INT8U lc,INT8U *address)
     {
-	unsigned char Order_Head[4];
+	INT8U Order_Head[4];
 
 	Order_Head[0] = cla;
 	Order_Head[1] = ins;
 	Order_Head[2] = t_p1;
 	Order_Head[3] = t_p2;
-	if( CPU_Card_Driver((const unsigned char *)Order_Head,lc,address,0,CommunicationPortMode,0)== OK )
+	if( CPU_Card_Driver((const INT8U *)Order_Head,lc,address,0,CommunicationPortMode,0)== OK )
 		return OK;
         ASSERT_FAILED();
 	Card_Error_State.CardErrorState.CPU_CARD_COMM_DELAY_ERR=1;
@@ -110,15 +110,15 @@ unsigned char Internal_Auth(unsigned char cla,unsigned char ins,unsigned char t_
 
 /*"**************************************************************************"*/
 /*"外部认证，p2:密钥标识号, address为需要解密的数据首地址"*/
-unsigned char External_Auth(unsigned char t_p2,unsigned char lc,unsigned char *address)
+INT8U External_Auth(INT8U t_p2,INT8U lc,INT8U *address)
     {
-	unsigned char Order_Head[4];
+	INT8U Order_Head[4];
 
 	Order_Head[0] = 0x00;
 	Order_Head[1] = 0x82;
 	Order_Head[2] = 0x00;
 	Order_Head[3] = t_p2;
-	if( CPU_Card_Driver((const unsigned char *)Order_Head,lc,address,0,CommunicationPortMode,0)== OK )
+	if( CPU_Card_Driver((const INT8U *)Order_Head,lc,address,0,CommunicationPortMode,0)== OK )
 		return OK;
         ASSERT_FAILED();
 	Card_Error_State.CardErrorState.CPU_CARD_COMM_DELAY_ERR=1;
@@ -127,10 +127,10 @@ unsigned char External_Auth(unsigned char t_p2,unsigned char lc,unsigned char *a
 
 //**************************************************************************
 /*"cpu卡：文件选择 :3f01 "*/
-unsigned char Select_File(unsigned char t_p1,unsigned char date1,unsigned char date2)
+INT8U Select_File(INT8U t_p1,INT8U date1,INT8U date2)
     {
-		unsigned char Order_Head[4];
-		unsigned char W_Data[2];
+		INT8U Order_Head[4];
+		INT8U W_Data[2];
 		
 		Order_Head[0] = 0;
 		Order_Head[1] = 0xa4;
@@ -138,7 +138,7 @@ unsigned char Select_File(unsigned char t_p1,unsigned char date1,unsigned char d
 		Order_Head[3] = 0;
 		W_Data[0] = date1;
 		W_Data[1] = date2;
-		if( CPU_Card_Driver((const unsigned char *)Order_Head,2,W_Data,0,CommunicationPortMode,0)== OK )
+		if( CPU_Card_Driver((const INT8U *)Order_Head,2,W_Data,0,CommunicationPortMode,0)== OK )
 			return OK;
     ASSERT_FAILED();            
     Card_Error_State.CardErrorState.CPU_CARD_COMM_DELAY_ERR=1;
@@ -147,16 +147,16 @@ unsigned char Select_File(unsigned char t_p1,unsigned char date1,unsigned char d
 /*"**************************************************************************"*/
 /*"读二进制文件，ins=0xb0,         读出记录文件，ins=0xb2"*/                                                          
 /*"取随机数，ins=0x84,?            取响应数据，ins=0xc0"*/             
-unsigned char Read(unsigned char cla,unsigned char ins,unsigned char t_p1,
-                   unsigned char t_p2,unsigned char len)
+INT8U Read(INT8U cla,INT8U ins,INT8U t_p1,
+                   INT8U t_p2,INT8U len)
     {     
-	unsigned char Order_Head[4];
+	INT8U Order_Head[4];
 
 	Order_Head[0] = cla;
 	Order_Head[1] = ins;
 	Order_Head[2] = t_p1;
 	Order_Head[3] = t_p2;
-	if( CPU_Card_Driver( ( const unsigned char * )Order_Head,0,0,len,CommunicationPortMode,0)== OK )
+	if( CPU_Card_Driver( ( const INT8U * )Order_Head,0,0,len,CommunicationPortMode,0)== OK )
 		return OK;
          ASSERT_FAILED(); 
          Card_Error_State.CardErrorState.CPU_CARD_COMM_DELAY_ERR=1;
@@ -166,42 +166,32 @@ unsigned char Read(unsigned char cla,unsigned char ins,unsigned char t_p1,
 /*"**************************************************************************"*/
 /*"修改二进制文件，ins=0xd6   追加记录文件,ins=0xe2    修改记录 ,ins=0xdc "*/
 /*"增加或修改密钥:ins=0xd4    存款：ins=0x32         扣款：ins=0x30  "*/
-unsigned char Write(unsigned char cla,unsigned char ins,unsigned char t_p1,
-                    unsigned char t_p2,unsigned char lc,unsigned char *address){
+INT8U Write(INT8U cla,INT8U ins,INT8U t_p1,
+                    INT8U t_p2,INT8U lc,INT8U *address){
     
-	unsigned char Order_Head[4];
+	INT8U Order_Head[4];
 
 	Order_Head[0] = cla;
 	Order_Head[1] = ins;
 	Order_Head[2] = t_p1;
 	Order_Head[3] = t_p2;
-	if( CPU_Card_Driver( (const unsigned char *)Order_Head,lc,address,0,CommunicationPortMode,0)== OK )
+	if( CPU_Card_Driver( (const INT8U *)Order_Head,lc,address,0,CommunicationPortMode,0)== OK )
 		return OK;
         ASSERT_FAILED();
 	Card_Error_State.CardErrorState.CPU_CARD_COMM_DELAY_ERR=1;
 	return ERR; 	
 } 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 判断卡是否在 //
-INT8U Check_CPU_Out(void)
-    {
-        if(JUDGE_CPU_INSERT)//卡存在
-        {
-          return OK;
-        }else{//卡不存在
-          return ERR;
-        }
-    }
-
+ 
 /////////////////////////////////////////////////////////////////// 
 // 接收、判断CPU卡复位应答信号 //
-unsigned char Cpucard_Atr(void){
-	unsigned char Length;
+INT8U Cpucard_Reset(void){
+	INT8U Length;
 
         
 
 	CPU_ESAM_CARD_Control(CPU);
-	if(Check_CPU_Out() )			
+	if(Check_Cpu_Card_Out() )			
 	{      
                 ASSERT_FAILED(); 
 		Card_Error_State.CardErrorState.CPU_CARD_LOSE=1;
@@ -229,13 +219,13 @@ unsigned char Cpucard_Atr(void){
 	}
         //这里不需要反相， 存取的e方中 没有反相， 从cpu卡中读取也没有反相， 并且只是判断是否相等或不相等
         
-	mem_cpy(cpucard_number,receive_send_buffer+Length-8,8,cpucard_number,sizeof(cpucard_number));//最后8为为离散
+	mem_cpy((INT8U *)cpucard_number,receive_send_buffer+Length-8,8,(INT8U *)cpucard_number,sizeof(cpucard_number));//最后8为为离散
 	return OK;    
   
 }
 /////////////////////////////////////////////////////////////////////////// 
 //接收、判断SAM卡复位应答信号//                                                                  
-unsigned char Esamcard_Atr(void){
+INT8U Esamcard_Reset(void){
         
 	//判断是否卡存在
 	CPU_ESAM_CARD_Control(ESAM);
@@ -278,13 +268,13 @@ unsigned char Esamcard_Atr(void){
 //对于le  类型的命令， 如果Spec_Length_LE为0   该函数结束后， receive_send_buffer 存放的是 le+sw0和sw1 
 //对于le  类型的命令， 如果Spec_Length_LE不为0   该函数结束后， receive_send_buffer 存放的是 Spec_Length_LE +sw0和sw1
 //注意：W_Data 和receive_send_buffer  不能为同一个地址  两个地址之间至少相差350间隔
-unsigned char CPU_Card_Driver(const unsigned char *Order_Head,
-						     unsigned char Length_LC,
-			                             unsigned char *W_Data,
-			                             unsigned char Length_LE,
-			                             unsigned char Change_Door,
-			                             unsigned char Spec_Length_LE){
-	unsigned char i;
+INT8U CPU_Card_Driver(const INT8U *Order_Head,
+						     INT8U Length_LC,
+			                             INT8U *W_Data,
+			                             INT8U Length_LE,
+			                             INT8U Change_Door,
+			                             INT8U Spec_Length_LE){
+	INT8U i;
         INT8U Command_Temp[5];
         INT8U Length_Le_Temp;
         //判断 形参数数是否正确
@@ -389,20 +379,20 @@ INT8U  WhenCardInsertedInitPrePayData(void) { //上电从e方读取数据到全局变量
      //  当充值的时候，是先反相主站的客户编号后再与e方中的客户编号相比较的
       //由此可以看出,主站来的数据是正常顺序，把数据给esam要反相顺序，  然而给 e方用正常顺序
     //除去　客户编号外，　客户编号从主站来时反是的顺序，写到ｅ方中要反相  发给主站要用反得顺序
-     Read_Storage_Data( SDI_CUTOMER_ID, Pre_Payment_Para.UserID,  Pre_Payment_Para.UserID,sizeof(Pre_Payment_Para.UserID)  ); 
-     Reverse_data(   Pre_Payment_Para.UserID,6);
+     Read_Storage_Data( SDI_CUTOMER_ID, (INT8U *)Pre_Payment_Para.UserID,  (INT8U *)Pre_Payment_Para.UserID,sizeof(Pre_Payment_Para.UserID)  ); 
+     Reverse_data(   (INT8U *)Pre_Payment_Para.UserID,6);
      //如果是读写运行状态
-     Read_Storage_Data( _SDI_PREPAID_RUN_STATUS, &Pre_Payment_Para.Meter_Run_State ,  &Pre_Payment_Para.Meter_Run_State,sizeof(Pre_Payment_Para.Meter_Run_State)  );    
+     Read_Storage_Data( _SDI_PREPAID_RUN_STATUS, (INT8U *)&Pre_Payment_Para.Meter_Run_State ,  (INT8U *)&Pre_Payment_Para.Meter_Run_State,sizeof(Pre_Payment_Para.Meter_Run_State)  );    
      //如果是写离散因子
-     Read_Storage_Data( _SDI_DISCRETE_INFO, Pre_Payment_Para.Cpucard_Number_old_BackUpInEerom, Pre_Payment_Para.Cpucard_Number_old_BackUpInEerom, 8);    
+     Read_Storage_Data( _SDI_DISCRETE_INFO, (INT8U *)Pre_Payment_Para.Cpucard_Number_old_BackUpInEerom, (INT8U *)Pre_Payment_Para.Cpucard_Number_old_BackUpInEerom, 8);    
      //密钥类型,密钥下装卡， 还是密钥恢复卡 
-     Read_Storage_Data( _SDI_PREPAID_PSW_KIND, &Pre_Payment_Para.PassWord_Kind,  &Pre_Payment_Para.PassWord_Kind,1);  
+     Read_Storage_Data( _SDI_PREPAID_PSW_KIND, (INT8U *)&Pre_Payment_Para.PassWord_Kind,  (INT8U *)&Pre_Payment_Para.PassWord_Kind,1);  
      //取表号  
-     Read_Storage_Data( SDI_METER_ID, &Pre_Payment_Para.BcdMeterID,  &Pre_Payment_Para.BcdMeterID,6); 
+     Read_Storage_Data( SDI_METER_ID, (INT8U *)&Pre_Payment_Para.BcdMeterID,  (INT8U *)&Pre_Payment_Para.BcdMeterID,6); 
      //使用的时候要反相表号 ，注意，只是使用在 现场参数卡， 返写操作， 密钥更新，购电卡判断
-     Reverse_data(Pre_Payment_Para.BcdMeterID,6);
+     Reverse_data((INT8U *)Pre_Payment_Para.BcdMeterID,6);
     //现场参数设置卡版本号  
-     Read_Storage_Data(_SDI_PREPAID_PARA_CARD_VER,&Pre_Payment_Para.Para_Card_Version, &Pre_Payment_Para.Para_Card_Version, 4) ;
+     Read_Storage_Data(_SDI_PREPAID_PARA_CARD_VER,(INT8U *)&Pre_Payment_Para.Para_Card_Version, (INT8U *)&Pre_Payment_Para.Para_Card_Version, 4) ;
      //Pre_Payment_Para.Remain_Money_Hoard_Limit=Get_Money_Hoard_Limit();
      //Pre_Payment_Para.Buy_Count=Get_Buy_Eng_Counts();//从黄工那里获得购电次数，
      Card_Error_State.CardErrorState_INT32U=0x00000000;
@@ -412,6 +402,7 @@ INT8U  WhenCardInsertedInitPrePayData(void) { //上电从e方读取数据到全局变量
      Dir_Return_Flag = 0;
      Para_Updata_Flag=0;
      INIT_STRUCT_VAR(_Far_Pre_Payment_Para);
+     INIT_STRUCT_VAR(c_Card_Error_State);
      //SET_STRUCT_SUM(Pre_Payment_Para);
      return 1;
 }

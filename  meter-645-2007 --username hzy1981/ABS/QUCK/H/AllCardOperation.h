@@ -12,24 +12,24 @@
 INT8U ICcardMain(void);
 INT8U ICcardProcess(void);
 void CardProgrammeEvent(void);
-unsigned int ProgrammeEvent(unsigned long progman,unsigned long progdata);
+INT16U ProgrammeEvent(INT32U progman,INT32U progdata);
 // 判断文件数据结构的帧头帧尾和效验和是否合法 "
-unsigned char Frame_Judge(unsigned char * Point,unsigned char length);
+INT8U Frame_Judge(INT8U * Point,INT8U length);
 /*"计算累加效验和 "*/
-unsigned char Cal_Add_CS(unsigned char * Point,unsigned char L);
-unsigned char Check_Card(void);
-unsigned char Field_Para_Set_Card(void);//现场参数设置卡
-void Deal_Set_Para_Inf_File(unsigned char * Source_Point,unsigned char Mode);
-unsigned char Relay_TEST_Card(void);
-unsigned char Set_In_Card(void);
-unsigned char Password_Card(void);
-unsigned char Add_Money_Card(void);
-unsigned char Modify_MeterID_Card(void);
- void Relay_Deal(unsigned char Flag);
-void Deal_Init_Para_Inf_File(unsigned char * Source_Point,unsigned char Mode);
-void Deal_Para_Table2(unsigned char * Source_Point );
-void Deal_Para_Table4(unsigned char * Source_Point );
-void Deal_Para_Table3(unsigned char * Source_Point );
+INT8U Cal_Add_CS(INT8U * Point,INT8U L);
+INT8U Check_Card(void);
+INT8U Field_Para_Set_Card(void);//现场参数设置卡
+void Deal_Set_Para_Inf_File(INT8U * Source_Point,INT8U Mode);
+INT8U Relay_TEST_Card(void);
+INT8U Set_In_Card(void);
+INT8U Password_Card(void);
+INT8U Add_Money_Card(void);
+INT8U Modify_MeterID_Card(void);
+ void Relay_Deal(INT8U Flag);
+void Deal_Init_Para_Inf_File(INT8U * Source_Point,INT8U Mode);
+void Deal_Para_Table2(INT8U * Source_Point );
+void Deal_Para_Table4(INT8U * Source_Point );
+void Deal_Para_Table3(INT8U * Source_Point );
 ///给黄工调用的函数， 定时扣款
 void UpdataEsamMoneyBag(void);
 //////
@@ -178,186 +178,186 @@ void UpdataEsamMoneyBag(void);
 
 struct CardErrId
 {
-	unsigned int oldID;
-	unsigned char newID;
+	INT16U oldID;
+	INT8U newID;
 };
 #define CARDERRID_LENGTH  sizeof(struct CardErrId)
 union Long_To_Char
     {
-    unsigned long U_long;
-    unsigned int U_int[2];
-    unsigned char U_char[4];
+    INT32U U_long;
+    INT16U U_int[2];
+    INT8U U_char[4];
     };
 //-----------------------------------------------------
 struct USECARD_INFOR_FILE
 {
-	unsigned char Start;
-	unsigned char Command;
-	unsigned char Len;
-	unsigned char syeID[2];
-	unsigned char userID[5];
-	unsigned char meterID[5];
-	unsigned char cardID;
-	unsigned long triff[4];
-	unsigned long triffBottom[4];
-	unsigned long moneyLimit[2];
-	unsigned long moneyHoard;
-	unsigned char overPowerPlusLimit[3];
-	unsigned char powerPeriod;
-	unsigned char overPowerSwTimeLimit;
-	unsigned char overPowerOpenSwTime;
-	unsigned char overPowerCloseSwTime;
-	unsigned char buyTime[6];
-	unsigned char triffSwitchDate[4];
-	unsigned char	Cs;
-	unsigned char End;
+	INT8U Start;
+	INT8U Command;
+	INT8U Len;
+	INT8U syeID[2];
+	INT8U userID[5];
+	INT8U meterID[5];
+	INT8U cardID;
+	INT32U triff[4];
+	INT32U triffBottom[4];
+	INT32U moneyLimit[2];
+	INT32U moneyHoard;
+	INT8U overPowerPlusLimit[3];
+	INT8U powerPeriod;
+	INT8U overPowerSwTimeLimit;
+	INT8U overPowerOpenSwTime;
+	INT8U overPowerCloseSwTime;
+	INT8U buyTime[6];
+	INT8U triffSwitchDate[4];
+	INT8U	Cs;
+	INT8U End;
 };
 
 struct PARACARD_INFOR_FILE
 {
-  	unsigned char Start;
-	unsigned char Command;
-	unsigned char Len;
-	unsigned char sysID[2];
-	unsigned char userID[5];
-	unsigned char meterID[5];
-	unsigned char cardID;
-	unsigned long triff[4];
-	unsigned long moneyLimit[2];
-	unsigned long moneyHoard;
-	unsigned char overPowerPlusLimit[3];
-	unsigned char powerPeriod;
-	unsigned char overPowerSwTimeLimit;
-	unsigned char overPowerOpenSwTime;
-	unsigned char overPowerCloseSwTime;
-	unsigned char triffSwitchDate[4];
-	unsigned char Cs;
-	unsigned char End;
+  	INT8U Start;
+	INT8U Command;
+	INT8U Len;
+	INT8U sysID[2];
+	INT8U userID[5];
+	INT8U meterID[5];
+	INT8U cardID;
+	INT32U triff[4];
+	INT32U moneyLimit[2];
+	INT32U moneyHoard;
+	INT8U overPowerPlusLimit[3];
+	INT8U powerPeriod;
+	INT8U overPowerSwTimeLimit;
+	INT8U overPowerOpenSwTime;
+	INT8U overPowerCloseSwTime;
+	INT8U triffSwitchDate[4];
+	INT8U Cs;
+	INT8U End;
 };
 
 struct RIFFCARD_TIMEZONE_FILE
 {
-	unsigned char Start;
-	unsigned char Command;
-	unsigned char Len;
-	unsigned char yearSlotNumble;
-	unsigned char yearTable[4][4];
-	unsigned char dailySlotTableNumble;
-	unsigned char dayTable[4][12][3];
-	unsigned char holiday[13][3];
-	unsigned char weekEndTable;
-	unsigned char Cs;
-	unsigned char End;
+	INT8U Start;
+	INT8U Command;
+	INT8U Len;
+	INT8U yearSlotNumble;
+	INT8U yearTable[4][4];
+	INT8U dailySlotTableNumble;
+	INT8U dayTable[4][12][3];
+	INT8U holiday[13][3];
+	INT8U weekEndTable;
+	INT8U Cs;
+	INT8U End;
 };
 
 struct ADDCARD_COMMAND_FILE
 {
-	unsigned char Start;
-	unsigned char Command;
-	unsigned char Len;
-	unsigned char userID[5];
-	long               buyMoney;
-	unsigned int    buyCount;
-	unsigned char Cs;
-	unsigned char End;
+	INT8U Start;
+	INT8U Command;
+	INT8U Len;
+	INT8U userID[5];
+	INT32S               buyMoney;
+	INT16U    buyCount;
+	INT8U Cs;
+	INT8U End;
 };
 
 struct CHANGE_INIT_FILE1
 {
-	unsigned char Start;
-	unsigned char Command;
-	unsigned char Len;
-	unsigned char userID[5];
-	unsigned char oldMeterID[5];
-	unsigned char newMeterID[5];
-	unsigned char meterRunstate;
-	unsigned char Cs;
-	unsigned char End;
+	INT8U Start;
+	INT8U Command;
+	INT8U Len;
+	INT8U userID[5];
+	INT8U oldMeterID[5];
+	INT8U newMeterID[5];
+	INT8U meterRunstate;
+	INT8U Cs;
+	INT8U End;
 };
 
 struct CHANGE_INIT_FILE2
 {
-	unsigned char Start;
-	unsigned char Command;
-	unsigned char Len;
-	unsigned char sysID[2];
-	unsigned char userID[5];
-	unsigned char meterID[5];
-	unsigned char cardID;
-	unsigned long triff[4];
-	unsigned long moneyLimit[2];
-	unsigned long moneyHoard;
-	unsigned char overPowerPlusLimit[3];
-	unsigned char powerPeriod;
-	unsigned char overPowerSwTimeLimit;
-	unsigned char overPowerOpenSwTime;
-	unsigned char overPowerCloseSwTime;
-	unsigned char triffSwitchDate[4];
-	unsigned char Cs;
-	unsigned char End;
+	INT8U Start;
+	INT8U Command;
+	INT8U Len;
+	INT8U sysID[2];
+	INT8U userID[5];
+	INT8U meterID[5];
+	INT8U cardID;
+	INT32U triff[4];
+	INT32U moneyLimit[2];
+	INT32U moneyHoard;
+	INT8U overPowerPlusLimit[3];
+	INT8U powerPeriod;
+	INT8U overPowerSwTimeLimit;
+	INT8U overPowerOpenSwTime;
+	INT8U overPowerCloseSwTime;
+	INT8U triffSwitchDate[4];
+	INT8U Cs;
+	INT8U End;
 };
 
 struct CHANGE_INIT_FILE3
 {
-	unsigned char Start;
-	unsigned char Command;
-	unsigned char Len;
-		signed long remainMoney;
-	unsigned long totalBuyMoney;
-	unsigned long buyMoney;
-	unsigned int   	buyCount;
-	unsigned long triffEnergy[5];
-	unsigned long tickMoney;
-	unsigned long lastMonthFreezeEnergy;
-	unsigned long moneyLimit[2];
-	unsigned long moneyHoard;
-	unsigned char overPowerPlusLimit[3];
-	unsigned char powerPeriod;
-	unsigned char overPowerSwTime;
-	unsigned char unlawfulCardCount;
-	unsigned char Cs;
-	unsigned char End;	  
+	INT8U Start;
+	INT8U Command;
+	INT8U Len;
+		INT32S remainMoney;
+	INT32U totalBuyMoney;
+	INT32U buyMoney;
+	INT16U   	buyCount;
+	INT32U triffEnergy[5];
+	INT32U tickMoney;
+	INT32U lastMonthFreezeEnergy;
+	INT32U moneyLimit[2];
+	INT32U moneyHoard;
+	INT8U overPowerPlusLimit[3];
+	INT8U powerPeriod;
+	INT8U overPowerSwTime;
+	INT8U unlawfulCardCount;
+	INT8U Cs;
+	INT8U End;	  
 };
 
 //---back write---
 struct User_Back_Infor
 {
-		signed long remainMoney;
-	unsigned long totalBuyMoney;
-	unsigned long lastBuyMoney;
-	unsigned int 	buyCount;
-	unsigned long triffEnergy[5];
-	unsigned long overZeroMoney;
-	unsigned long lastMonthFreezeEnergy;
-	unsigned long moneyLimit[2];
-	unsigned long moneyHoard;
-	unsigned char overPowerPlusLimit[3];
-	unsigned char powerPeriod;
-	unsigned char overPowSwTime;
-	unsigned char unlawfulCardCount;
+		INT32S remainMoney;
+	INT32U totalBuyMoney;
+	INT32U lastBuyMoney;
+	INT16U 	buyCount;
+	INT32U triffEnergy[5];
+	INT32U overZeroMoney;
+	INT32U lastMonthFreezeEnergy;
+	INT32U moneyLimit[2];
+	INT32U moneyHoard;
+	INT8U overPowerPlusLimit[3];
+	INT8U powerPeriod;
+	INT8U overPowSwTime;
+	INT8U unlawfulCardCount;
 };
 
 struct Check_Back_Infor
 {
-	unsigned char sysID[2];
-	unsigned char userID[5];
-	unsigned char meterID[5];
-		signed long remainMoney;
-	unsigned long totalBuyMoney;
-	unsigned long lastBuyMoney;
-	unsigned int 	buyCount;
-	unsigned long triffEnergy[5];
-	unsigned long triff[4];
-	unsigned long overZeroMoney;
-	unsigned long lastMonthFreezeEnergy;
-	unsigned long moneyLimit[2];
-	unsigned long moneyHoard;
-	unsigned char overPowerPlusLimit[3];
-	unsigned char powerPeriod;
-	unsigned char overPowSwTime;
-	unsigned char unlawfulCardCount;
-	unsigned char meterStatus;
-	unsigned char writeBackTime[6];
+	INT8U sysID[2];
+	INT8U userID[5];
+	INT8U meterID[5];
+		INT32S remainMoney;
+	INT32U totalBuyMoney;
+	INT32U lastBuyMoney;
+	INT16U 	buyCount;
+	INT32U triffEnergy[5];
+	INT32U triff[4];
+	INT32U overZeroMoney;
+	INT32U lastMonthFreezeEnergy;
+	INT32U moneyLimit[2];
+	INT32U moneyHoard;
+	INT8U overPowerPlusLimit[3];
+	INT8U powerPeriod;
+	INT8U overPowSwTime;
+	INT8U unlawfulCardCount;
+	INT8U meterStatus;
+	INT8U writeBackTime[6];
 };
 
 

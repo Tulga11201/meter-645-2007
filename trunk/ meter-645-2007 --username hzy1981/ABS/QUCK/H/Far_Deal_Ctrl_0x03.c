@@ -630,8 +630,8 @@ INT8U Far_Deal_070101FF(INT8U * Data_Point )
 	Reverse_data((INT8U *)&(Far_Deal_070101FF_format.Buy_Count),4);
         //剩余金额必须保持 更新， 这个变量，在后面的扣款中会用到
         //mem_cpy((INT8U*)&Moneybag_Data.Remain_Money,(INT8U *)&(Far_Deal_070101FF_format.Remain_Money),4,(INT8U)&Moneybag_Data.Remain_Money,4);
-        Meter_Money_And_Count_Updata(Far_Deal_070101FF_format.Remain_Money,Far_Deal_070101FF_format.Buy_Count );
-	
+        //Meter_Money_And_Count_Updata(Far_Deal_070101FF_format.Remain_Money,Far_Deal_070101FF_format.Buy_Count );
+	Prepaid_Buy_Money_Proc(Far_Deal_070101FF_format.Remain_Money);
         //更新客户编号
 	My_Memcpy((INT8U *)Pre_Payment_Para.UserID,Far_Deal_070101FF_format.Client_ID,LENGTH_USER_ID);
 	Write_Storage_Data(SDI_CUTOMER_ID , (INT8U *)Pre_Payment_Para.UserID , LENGTH_USER_ID);
@@ -736,7 +736,8 @@ INT8U Far_Deal_070102FF(INT8U * Data_Point )
 	}
 	Reverse_data((INT8U *)&(Far_Deal_070102FF_format.Remain_Money),4);
 	Reverse_data((INT8U *)&(Far_Deal_070102FF_format.Buy_Count),4);
-	Meter_Money_And_Count_Updata(Far_Deal_070102FF_format.Remain_Money,Far_Deal_070102FF_format.Buy_Count );
+	//Meter_Money_And_Count_Updata(Far_Deal_070102FF_format.Remain_Money,Far_Deal_070102FF_format.Buy_Count );
+        Prepaid_Buy_Money_Proc(Far_Deal_070102FF_format.Remain_Money);
 //	if( Far_Write_Esam(0x04,Update_Binary,0x82,0x05,0x06,(Far_Deal_070102FF_format->Client_ID))!=OK)
 //		{
 //		return ERR;

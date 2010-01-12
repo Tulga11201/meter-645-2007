@@ -149,7 +149,7 @@ INT8U Buy_Card(void){
        My_Memcpy(UserID,file.Client_ID,6);
        //如果为开户卡，或者编程按钮被按下 
        //Meter_Ins_Flag = 0xFF;
-       if( (Buy_Card_Kind EQ GWFAR_USER_CARD_NEW)&&(Dir_Return_Flag !=0xff)) // || Check_Meter_Prog_Status() ){  
+       if( (Buy_Card_Kind EQ GWFAR_USER_CARD_NEW)&&(Dir_Return_Flag !=0xff)) // || Check_Meter_Prog_Fac_Status() ){  
        {
                        //如果为开户卡,或者编程按钮被按下 开始进入相应流程 " );
 			Para_Updata_Flag = file.Para_UpData_Flag;
@@ -263,10 +263,11 @@ INT8U Buy_Card(void){
                   ASSERT_FAILED();
                   return ERR;
                 }
-               /////告诉黄工，充值了，充了多少钱，同事更新我定义的变量   " );
-		//告诉黄工，充值了，充了多少钱，同事更新我定义的变量
-		Meter_Money_And_Count_Updata(Moneybag_Data.Remain_Money,Moneybag_Data.Buy_Count );
-               // 新卡保存用户号和变更表计运行状态 //  " ); 
+                /////告诉黄工，充值了，充了多少钱，同事更新我定义的变量   " );
+	        //告诉黄工，充值了，充了多少钱，同事更新我定义的变量
+	        //Meter_Money_And_Count_Updata(Moneybag_Data.Remain_Money,Moneybag_Data.Buy_Count );
+                Prepaid_Buy_Money_Proc( Moneybag_Data.Remain_Money );
+                // 新卡保存用户号和变更表计运行状态 //  " ); 
 		if( Buy_Card_Kind== GWFAR_USER_CARD_NEW )
                 {
                         // / 新卡保存用户号和变更表计运行状态 // " );

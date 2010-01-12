@@ -1613,6 +1613,7 @@ void Write_Def_Para()
   */
   Set_Def_Prepaid_Buy_Counts_Money(); //够电次数和金额需要单独设置
   Set_All_Def_Data();
+  Set_Def_Prepaid_Money(); //置默认金额
   Turn_Light_Off(); //关闭背光
   Debug_Print("--------------Set Def Para End!------------");
 }

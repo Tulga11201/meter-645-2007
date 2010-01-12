@@ -519,6 +519,7 @@ EXT void Save_Cur_Energy_PD_Data();
 EXT void Clear_Energy_Data();
 EXT void Set_Def_Prepaid_Buy_Counts_Money();
 EXT void Set_Def_Energy_Data();
+EXT void Set_Def_Prepaid_Money();
 
 EXT void Energy_Proc_Ram_Init();
 EXT void Read_Para_From_Rom();

@@ -4,8 +4,8 @@
 
 
 #undef Debug_Print
-#define Debug_Print(...)
-//#define Debug_Print _Debug_Print
+//#define Debug_Print(...)
+#define Debug_Print _Debug_Print
 
    
 /*"**************************************************************************"*/
@@ -328,12 +328,12 @@ INT8U Remain_Money_Moneybag_Add(INT8U File_Name,INT8U Offset,
 		return ERR;
         
 	if( Remain_Money_Point != 0 )//判断要不要把从cpu卡读出的数据输出到缓冲，因为给电表使用所以反相
-		{
+	{
 		My_memcpyRev(Remain_Money_Point,receive_send_buffer,4);
 		My_memcpyRev(Remain_Money_Point+4,receive_send_buffer+4,4);
-		}
-	else{//esam钱包文件充值   明文+mac  充值
-                  
+	}
+	else
+        {//esam钱包文件充值   明文+mac  充值
 		CPU_ESAM_CARD_Control(ESAM);
 		My_Memcpy(temp_buffer_2,receive_send_buffer,0x0C);
 		Order_Head[0] = 0x84;
@@ -446,9 +446,9 @@ INT8U Cpu_File_Updata(INT8U Cpu_File_Name,
 							   		INT8U Cpu_Start_Addr,
 							   		INT8U Esam_Start_Addr,
 							   		INT8U Updata_Data_L)
-	{
-	INT8U temp_buffer_2[30],Order_Head[4];
+{
 
+	INT8U temp_buffer_2[30],Order_Head[4];
 	Debug_Print(" 开始cpu卡文件更新 cpu卡文件标示：%d esam文件标示:%d    ",Cpu_File_Name,Esam_File_Name  );
          Debug_Print("  //得到随机数    "  );//0084000004 B72B44369000  Debug_Print(" "  );
 	CPU_ESAM_CARD_Control(CPU);
@@ -496,7 +496,7 @@ INT8U Cpu_File_Updata(INT8U Cpu_File_Name,
         }
 
 	return OK;
-	}
+}
 /*"**************************************************************************"*/
 /*" 功能：CPU卡计数器文件更新 "*/
 /*" CPU_File_Name: "*/
@@ -740,7 +740,7 @@ INT8U Esam_Remain_Money_Dec(void)
 			Moneybag_Data.Remain_Money = 0;
 			
 	}
-
+        //
 	if(Moneybag_Data.Remain_Money>0)
         {
 		Reverse_data((INT8U *)&Moneybag_Data.Remain_Money,4);

@@ -81,12 +81,7 @@ INT8U Judge_Return_Flag(void)
 
     return OK;
     }
-//
-void CPU_ESAM_CARD_Control(INT8U Direct)//方向选择， 是发给esam还是cpu卡
-{
-   CommunicationPortMode=Direct;
-
-}
+ 
 
 
 /*"**************************************************************************"*/

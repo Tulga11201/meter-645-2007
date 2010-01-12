@@ -25,8 +25,7 @@ void My_memcpyRev(INT8U *to,INT8U *from,INT8U len);
 void Reverse_data(INT8U *data, INT16U len);
 INT8U Judge_Return_Flag(void);
 INT8U My_Memcmp(INT8U *to,INT8U *from,INT8U lc);// if(My_Memcmp(receive_send_buffer+110,receive_send_buffer,8))  
-void CPU_ESAM_CARD_Control(INT8U Direct);//方向选择， 是发给esam还是cpu卡
-
+#define CPU_ESAM_CARD_Control(X) CommunicationPortMode=(X) //方向选择， 是发给esam还是cpu卡
 INT8U Internal_Auth(INT8U,INT8U,INT8U,INT8U,INT8U,INT8U *);
                                                /*" 内部命令，不公开 "*/
 INT8U External_Auth(INT8U ,INT8U ,INT8U *);

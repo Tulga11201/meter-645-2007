@@ -33,12 +33,12 @@ INT8U Judge_User_Card_OK(INT8U BuyCard_Kind,INT32U Buy_Count){
         // 开始执行函数：Judge_User_Card_OK(INT8U BuyCard_Kind,INT32U Buy_Count) " );
         String2ParaFile(  &file,&Card_WR_Buff[4], sizeof(struct Buy_Para_Inf_File) );
         
-	if( BuyCard_Kind !=GWFAR_USER_CARD_NEW && BuyCard_Kind !=GWFAR_USER_CARD_BUY && BuyCard_Kind !=GWFAR_USER_CARD_BACK)
-		{
+	if( (BuyCard_Kind !=GWFAR_USER_CARD_NEW) && (BuyCard_Kind !=GWFAR_USER_CARD_BUY) && (BuyCard_Kind !=GWFAR_USER_CARD_BACK))
+	{
                 ASSERT_FAILED();
 		Card_Error_State.CardErrorState.BUY_CARD_KIND_ERR=1;
 	 	return ERR;
-		}
+	}
         
 	if( My_Memcmp(&(file.Meter_ID[0]),(INT8U *)&Pre_Payment_Para.BcdMeterID[0],sizeof(Pre_Payment_Para.BcdMeterID)) )
         {
@@ -149,7 +149,7 @@ INT8U Buy_Card(void){
        My_Memcpy(UserID,file.Client_ID,6);
        //如果为开户卡，或者编程按钮被按下 
        //Meter_Ins_Flag = 0xFF;
-       if( Buy_Card_Kind == GWFAR_USER_CARD_NEW) // || Check_Meter_Prog_Status() ){  
+       if( (Buy_Card_Kind EQ GWFAR_USER_CARD_NEW)&&(Dir_Return_Flag !=0xff)) // || Check_Meter_Prog_Status() ){  
        {
                        //如果为开户 f1卡，或者编程按钮被按下 开始进入相应流程 " );
 			Para_Updata_Flag = file.Para_UpData_Flag;
@@ -249,7 +249,7 @@ INT8U Buy_Card(void){
           
 	}  
        Debug_Print(" //如果是非新卡，且 购电次数相等，Dir_Return_Flag被赋值0xff  " );
-	if( Dir_Return_Flag==0 )//如果是非新卡，且 购电次数相等，Dir_Return_Flag被赋值0xff
+	if( Dir_Return_Flag EQ 0 )//如果是非新卡，且 购电次数相等，Dir_Return_Flag被赋值0xff
         {
 		// 判断本次购电的囤积门限  //
 		if( Check_Buy_Money_Exceed_Limit( Moneybag_Data.Remain_Money) ){//Moneybag_Data.Remain_Money来自cpu卡
@@ -303,7 +303,8 @@ INT8U Buy_Card(void){
           ASSERT_FAILED();
           return ERR;
         }
-	if( Buy_Card_Kind != GWFAR_USER_CARD_BUY )//开户卡， 和补卡更新 离散因子
+        //
+	if( (Buy_Card_Kind != GWFAR_USER_CARD_BUY)&&(Dir_Return_Flag !=0xff) )//开户卡， 和补卡更新 离散因子
 	{
           //开户卡， 和补卡更新 离散因子   " );
 	  My_Memcpy((INT8U *)Pre_Payment_Para.Cpucard_Number_old_BackUpInEerom, (INT8U *)cpucard_number, LENGTH_CARD_ID_WHEN_CARD_INSERT);
@@ -367,7 +368,7 @@ void Deal_Triff_Data(INT8U * Source_Point,INT8U SrcLen,INT8U WhichTable){
 }
 
 
-//告诉黄工，充值了，充了多少钱，同事更新我定义的变量
+//告诉黄工，充值了，充了多少钱，同事更新我定义的变量,/
 //Curr_Buy_Money 当前充值费用,INT32U Curr_Buy_Money_Count 当前cpu卡中的
 void Meter_Money_And_Count_Updata( INT32U Curr_Buy_Money,INT32U Curr_Buy_Money_Count )
 	{

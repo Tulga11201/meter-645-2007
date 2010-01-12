@@ -166,7 +166,7 @@ INT8U ICcardProcess(){
 			ret=1;
 			break;
        }
-       if(Check_Meter_Prog_Status() && (Para_Updata_Flag != 0))
+       if(Check_Meter_Prog_Fac_Status() && (Para_Updata_Flag != 0))
        {
             CardProgrammeEvent();//编程按钮按下时 ，调用  z编程记录
        }
@@ -329,7 +329,7 @@ INT8U Check_Card(void){
 INT8U Field_Para_Set_Card(void){//现场参数设置卡
 	INT32U Version_Temp;
 	INT32U Count_Temp;
-	if(!Check_Meter_Prog_Status())
+	if(!Check_Meter_Prog_Fac_Status())
 		{
                   Debug_Print( "编程按钮没被按下  "  );
 		  Card_Error_State.CardErrorState.Meter_Not_Prog_Status_Err=1;  
@@ -496,7 +496,7 @@ INT8U Set_In_Card(void){///出厂预制卡"
 
 	struct Moneybag_Data Moneybag_Data;
 	
-	if(!Check_Meter_Prog_Status()){
+	if(!Check_Meter_Prog_Fac_Status()){
                  //编程按钮没被按下  "  );
 		 Card_Error_State.CardErrorState.Meter_Not_Prog_Status_Err=1;  
 		 return ERR;
@@ -710,7 +710,7 @@ INT8U Password_Card(void)//密钥下装卡/恢复卡
 	INT32U Temp;
 	INT8U PassWord_Kind;
 
-	if( !Check_Meter_Prog_Status() ){
+	if( !Check_Meter_Prog_Fac_Status() ){
 		Card_Error_State.CardErrorState.Meter_Not_Prog_Status_Err=1;  
 		return ERR;
 	}
@@ -809,7 +809,8 @@ INT8U Add_Money_Card(void){//增加电费卡
 		   return ERR;
 	}
 //告诉黄工， 充值了， 冲了多少钱
-	Meter_Money_And_Count_Updata(File.Buy_Money,File.Buy_Money_Count );
+	//Meter_Money_And_Count_Updata(File.Buy_Money,File.Buy_Money_Count );
+        Prepaid_Buy_Money_Proc(File.Buy_Money);
 	return OK;
 }
 //根据 和黄工的约定，存放在e方中表号pDst[0]应该为 开发套件软件上看到得表地址最右边的一个字节
@@ -818,7 +819,7 @@ INT8U Modify_MeterID_Card(void){// 表号设置卡
 	struct MeterID_Return_Inf_File MeterID_Return_Inf_File;//表号设置卡的返写信息文件,记录了当前要设置的表号
 	struct MeterID_Para_Inf_File   File;//表号设置卡的指令信息文件，记录了表号设置的范围
 	
-	if( !Check_Meter_Prog_Status() ){ 
+	if( !Check_Meter_Prog_Fac_Status() ){ 
 		Card_Error_State.CardErrorState.Meter_Not_Prog_Status_Err=1;  
 		return ERR;
 	}

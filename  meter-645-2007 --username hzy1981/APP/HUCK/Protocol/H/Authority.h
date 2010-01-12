@@ -112,6 +112,7 @@ EXT volatile S_PSW_Status Cur_PSW;
 EXT volatile S_Module_Set_Meter_Status Module_Set_Meter_Status;
 EXT volatile S_User_Authority_Flag User_Authority_Flag;
 
+EXT INT8U Check_Meter_Prog_Fac_Status();
 EXT INT8U Get_PSW_Flag_Map_Level(INT8U PSW_Flag);
 EXT INT8U Check_Debug_En();
 EXT INT8U Check_Set_ADDR_Key();

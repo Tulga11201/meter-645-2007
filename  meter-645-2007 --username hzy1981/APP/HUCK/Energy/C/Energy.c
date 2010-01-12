@@ -1994,6 +1994,31 @@ void Set_Def_Prepaid_Buy_Counts_Money()
   }  
 }
 
+void Set_Def_Prepaid_Money()
+{
+//--------------------------------------送检专用，正式版需去掉-------------------
+  if(PREPAID_EN > 0 && PREPAID_LOCAL_REMOTE EQ PREPAID_LOCAL) //本地费控表才预置电量电费
+  {
+    if(Check_Meter_Factory_Status())
+    {
+      if(PREPAID_MODE EQ PREPAID_MONEY)
+        Cur_Energy.Prepaid_Info.Left_Money = 200000; //置200元剩余金额
+      else
+        Cur_Energy.Prepaid_Info.Left_Energy = 200000; //置200度剩余电量
+      SET_STRUCT_SUM(Cur_Energy);
+     
+      #if USE_ENERGY_RAM_BAK EQ 1
+      mem_cpy((void *) &Cur_Energy_Bak, (void *) &Cur_Energy, sizeof(Cur_Energy), (void *) &Cur_Energy_Bak, sizeof(Cur_Energy_Bak));
+      SET_STRUCT_SUM(Cur_Energy_Bak);
+      #endif
+    
+      Save_Cur_Energy_PD_Data();
+      Save_Cur_Energy_Data();
+    }
+  }
+//------------------------------------------------------------------   
+}
+
 //设置默认的电量数据
 void Set_Def_Energy_Data()
 {
@@ -2074,28 +2099,7 @@ void Set_Def_Energy_Data()
 
   Write_Storage_Data(_SDI_LAST_SETTLE_ENERGY_DI, &SDI, sizeof(SDI));
   
-  Settle_Energy_FF_Data(0);
-//--------------------------------------送检专用，正式版需去掉-------------------
-  if(PREPAID_EN > 0 && PREPAID_LOCAL_REMOTE EQ PREPAID_LOCAL) //本地费控表才预置电量电费
-  {
-    if(Check_Meter_Factory_Status())
-    {
-      if(PREPAID_MODE EQ PREPAID_MONEY)
-        Cur_Energy.Prepaid_Info.Left_Money = 200000; //置200元剩余金额
-      else
-        Cur_Energy.Prepaid_Info.Left_Energy = 200000; //置200度剩余电量
-      SET_STRUCT_SUM(Cur_Energy);
-     
-      #if USE_ENERGY_RAM_BAK EQ 1
-      mem_cpy((void *) &Cur_Energy_Bak, (void *) &Cur_Energy, sizeof(Cur_Energy), (void *) &Cur_Energy_Bak, sizeof(Cur_Energy_Bak));
-      SET_STRUCT_SUM(Cur_Energy_Bak);
-      #endif
-    
-      Save_Cur_Energy_PD_Data();
-      Save_Cur_Energy_Data();
-    }
-  }
-//------------------------------------------------------------------  
+  Settle_Energy_FF_Data(0); 
 }
 
 //每隔一段时间自动保存当前电量、需量、需量时间等数据

@@ -79,6 +79,16 @@ INT8U Check_Meter_Prog_Status()
   return Check_Prog_Status();
 }
 
+//判断当前处于工厂或者编程状态
+//只要是出于工厂或者编程两种状态之一，就返回1，否则返回0
+INT8U Check_Meter_Prog_Fac_Status()
+{
+   if(Check_Meter_Prog_Status() || Check_Meter_Factory_Status())
+     return 1;
+   else
+     return 0;
+}
+
 //检查设置通信地址的案件是否按下，按下返回1，否则返回0
 INT8U Check_Set_ADDR_Key()
 {

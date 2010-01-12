@@ -3,8 +3,8 @@
 #include "MyIncludesAll.h"
 
 #undef Debug_Print
-//#define Debug_Print(...)
-  #define Debug_Print _Debug_Print
+#define Debug_Print(...)
+//  #define Debug_Print _Debug_Print
 extern INT8U Esam_Remote_Auth(INT8U *pSrc, INT8U SrcLen, INT8U *pDst, INT8U *pLen, INT8U *pDst_Start, INT16U DstLen);
 //C_Pre_Payment_Para Pre_Payment_Para;
 //ic卡 入口函数
@@ -13,42 +13,7 @@ INT8U ICcardMain(void) {
        
         INT32U Temp;
         INT8U ret;
-        INT32U GoodsTemp,PearTemp,AppleTemp;
-        INT32S DTemp,ATemp;
-        DTemp=1;ATemp=2;
-        DTemp-=ATemp;
-        Debug_Print("ddddd:%ld",DTemp);  
-        
-        GoodsTemp=1;
-        PearTemp=33;
-        
-        Temp=GoodsTemp-PearTemp;
-        Debug_Print("ddddd:%ld",Temp);
-        
-        Debug_Print("ddddd:%ld",GoodsTemp);
-        if(Temp>GoodsTemp)
-        {
-        Debug_Print("dddddg" );
-        
-        }
-        else
-        {
-        Debug_Print("dd   "  );
-        }
-        ////////
-        AppleTemp=(INT32U)Temp;
-        Debug_Print("dd  %ld ",AppleTemp  );
-        if(AppleTemp>GoodsTemp)
-        {
-        Debug_Print("dddddg" );
-        
-        }
-        else
-        {
-        Debug_Print("dd   "  );
-        }
-        
-        
+      
         WhenCardInsertedInitPrePayData();//更新我管理的全局变量
 	Prepaid_Card_Op_Bef_Proc();
 	if(Check_Cpu_Card_Out() ){

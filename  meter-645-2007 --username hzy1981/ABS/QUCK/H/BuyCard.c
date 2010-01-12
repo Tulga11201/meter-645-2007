@@ -145,13 +145,13 @@ INT8U Buy_Card(void){
 	Buy_Card_Kind = file.Card_Kind;//
 	if( Judge_User_Card_OK( Buy_Card_Kind ,Moneybag_Data.Buy_Count) != OK )
 		return ERR;
-       //   卡的合法条件满足  //  
+       //卡的合法条件满足  //  
        My_Memcpy(UserID,file.Client_ID,6);
        //如果为开户卡，或者编程按钮被按下 
        //Meter_Ins_Flag = 0xFF;
        if( (Buy_Card_Kind EQ GWFAR_USER_CARD_NEW)&&(Dir_Return_Flag !=0xff)) // || Check_Meter_Prog_Status() ){  
        {
-                       //如果为开户 f1卡，或者编程按钮被按下 开始进入相应流程 " );
+                       //如果为开户卡,或者编程按钮被按下 开始进入相应流程 " );
 			Para_Updata_Flag = file.Para_UpData_Flag;
                        //  参数信息文件处理 // " );
 			if( Para_Updata_Flag & 0x80 )
@@ -216,7 +216,7 @@ INT8U Buy_Card(void){
 										18,
 										Card_WR_Buff+240) !=OK )
 					return ERR;
-				Deal_Triff_Data(Card_WR_Buff+4,258-4,1);//这个地方可能有错误，从cpu卡读出来的数据太长了
+				Deal_Triff_Data(Card_WR_Buff+4,258-4,1);
 			}
                        ////  第二套费率表文件 //   " );
 			if( Para_Updata_Flag & 0x02 ){

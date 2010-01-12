@@ -436,6 +436,15 @@ void Self_Cal_Err_Proc(void)
     
       Real_Cal_Status.Cal_Info[i].Cal_First=1;
       Real_Cal_Status.Cal_Info[i].Cal_Times++;
+      
+      if(Get_SysParse_Mode() EQ PARSE_331)
+      {
+        Real_Cal_Status.Cal_Info[CAL_B_POWER].Cal_OK=1; 
+        Real_Cal_Status.Cal_Info[CAL_B_ANGLE].Cal_OK=1; 
+        Real_Cal_Status.Cal_Info[CAL_B_CURR].Cal_OK=1; 
+      }
+        
+          
       SET_STRUCT_SUM(Real_Cal_Status);  
   
       Debug_Print("Cal_Info----->Cal_Item=%d,Cal_Times=%d,Real_Data=%ld,Meter_Data=%ld",

@@ -388,23 +388,31 @@ CONST INT8U Def_04000405[] =
 {
   "  05.1"
 };
-#else
-//额定电流
-CONST INT8U Def_04000405[] =
-{
-  "    01"
-};
-#endif
 
 //最大电流
 CONST INT8U Def_04000406[] =
 {
   "   0.6"
 };
+#else
+//额定电流
+CONST INT8U Def_04000405[] =
+{
+  "    01"
+};
+
+//最大电流
+CONST INT8U Def_04000406[] =
+{
+  "    04"
+};
+#endif
+
+
 //有功准确度等级
 CONST INT8U Def_04000407[] =
 {
-  "S5.0"
+  " 0.1"
 };
 //无功准确度等级
 CONST INT8U Def_04000408[] =

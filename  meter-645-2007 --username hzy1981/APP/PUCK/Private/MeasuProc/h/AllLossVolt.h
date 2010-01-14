@@ -9,9 +9,14 @@
 #endif
 
 
+#ifdef MEASU_BAKPWR_NEW_EN
+  #define BAT_ON_7022       PM5_bit.no0=0,P5_bit.no0=1
+  #define BAT_OFF_7022      PM5_bit.no0=0,P5_bit.no0=0
+#else
+  #define BAT_ON_7022       PM6_bit.no3=0,P6_bit.no3=1
+  #define BAT_OFF_7022      PM6_bit.no3=0,P6_bit.no3=0
+#endif
 
-#define BAT_ON_7022       PM5_bit.no0=0,P5_bit.no0=1
-#define BAT_OFF_7022      PM5_bit.no0=0,P5_bit.no0=0
 
 #define MEASU_CS_DIR        PM13_bit.no0
 #define MEASU_CLK_DIR       PM2_bit.no4

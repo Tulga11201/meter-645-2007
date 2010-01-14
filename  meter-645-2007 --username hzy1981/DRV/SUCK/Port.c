@@ -47,6 +47,8 @@ void PORT_Init(INT32U Mode )
         PM5_bit.no3=1; //P5_3-----CPU卡插入检测
         PM5_bit.no4=0;  //WDI
         
+        PM6_bit.no3=0;  //7022_PWR
+        
         PM7_bit.no0=0; 
         LARGE_TOOGLE_OFF_SET;   //将常闭的关闭
         LARGE_TOOGLE_ON_SET;

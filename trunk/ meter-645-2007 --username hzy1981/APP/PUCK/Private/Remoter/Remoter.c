@@ -32,7 +32,8 @@ void Remoter_Cmd_Decode(INT8U Cmd)
         TURN_OFF_LIGHT
       else            
         START_LIGHT_ON;
-      LightCtrl=!LightCtrl;      
+      LightCtrl=!LightCtrl;
+      Light_Mode =LIGHT_ON_KEY;
       break;
     case IR_UP_KEY:
       Key_Value_Pub.Key.Bit.UpKey=1;

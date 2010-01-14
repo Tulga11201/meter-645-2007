@@ -3,8 +3,8 @@
 #include "MyIncludesAll.h"
 
 #undef Debug_Print
-#define Debug_Print(...)
-//  #define Debug_Print _Debug_Print
+// #define Debug_Print(...)
+ #define Debug_Print _Debug_Print
 extern INT8U Esam_Remote_Auth(INT8U *pSrc, INT8U SrcLen, INT8U *pDst, INT8U *pLen, INT8U *pDst_Start, INT16U DstLen);
 //C_Pre_Payment_Para Pre_Payment_Para;
 //ic卡 入口函数
@@ -814,7 +814,8 @@ INT8U Add_Money_Card(void){//增加电费卡
 	return OK;
 }
 //根据 和黄工的约定，存放在e方中表号pDst[0]应该为 开发套件软件上看到得表地址最右边的一个字节
-INT8U Modify_MeterID_Card(void){// 表号设置卡
+INT8U Modify_MeterID_Card(void)
+{// 表号设置卡
   	INT8U i,Msb,Ctrl;
 	struct MeterID_Return_Inf_File MeterID_Return_Inf_File;//表号设置卡的返写信息文件,记录了当前要设置的表号
 	struct MeterID_Para_Inf_File   File;//表号设置卡的指令信息文件，记录了表号设置的范围
@@ -891,8 +892,9 @@ INT8U Relay_TEST_Card()
  void Relay_Deal(INT8U Flag)
  {
  
-}       
-    
+}   
+
+//#pragma optimize=none    
 //远程 和 本地  每隔60分钟对 esam 扣款 
 void UpdataEsamMoneyBag(void)
 {
@@ -947,6 +949,7 @@ void UpdataEsamMoneyBag(void)
     if(PREPAID_EN > 0 &&   (PREPAID_LOCAL_REMOTE EQ PREPAID_LOCAL  )  )//
     {
        Esam_Remain_Money_Dec();
+       Debug_Print("jin ru 进入断点");
     }  
   }
   return ;

@@ -116,6 +116,8 @@ INT8U Set_Esam_Para(  INT8U *pSrc, INT8U SrcLen)
 			Far_Deal_Para_Flag_T1.Esam_Length,
 			pSrc+LENGTH_FAR_645_FRAME_T1+4,0)!=OK)//这里为偏移16个字节即实际数据为N1N2...Nm
 	{
+            FarPrePayment.Far_Error_State.CpuCardInternlAuthenticationErr=1; //这里的赋值没有任何意义
+            ReNew_Err_Code(DIS_CERTI_ERR);
             ASSERT_FAILED();
             return 0;
 	}
@@ -280,6 +282,8 @@ INT8U  Esam_Auth_Check(  INT8U *pSrc, INT16U SrcLen, INT8U * DstLen)
         //把N1N2....Nm 写到esam中去
 	if( Far_Write_Esam(0x04,Update_Binary,0x80+j,0x00,Far_Deal_Para_Flag_T2.Source_Length,pSrc+LENGTH_FAR_645_FRAME_T2+4,0)!=OK)
         {
+                 FarPrePayment.Far_Error_State.CpuCardInternlAuthenticationErr=1; //这里的赋值没有任何意义
+                 ReNew_Err_Code(DIS_CERTI_ERR);
 		 ASSERT_FAILED();
                  return 0;  
 	}
@@ -296,7 +300,6 @@ INT8U  Esam_Auth_Check(  INT8U *pSrc, INT16U SrcLen, INT8U * DstLen)
            ASSERT_FAILED();
            return ERR;
         }
-		
         //判断是否数据标示正确
 	Reverse_data(receive_send_buffer+1,4);
 	if( My_Memcmp(receive_send_buffer+1,Far_Deal_Para_Flag_T2.Data_ID,4) != 0 )

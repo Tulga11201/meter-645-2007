@@ -25,10 +25,7 @@ INT8U Esam_Remote_Auth(INT8U *pSrc, INT8U SrcLen, INT8U *pDst, INT8U *pLen, INT8
         
         OS_Mutex_Pend(PUB_BUF_SEM_ID);//使用缓冲：Pub_Buf0
         OS_Mutex_Pend(PUB_BUF0_SEM_ID); //使用信号量，以便使用缓冲
-        //错误状态字清0， 因为每个功能的开始都是从身份认证开始的 ，其实这里不清0也可以
-	Far_Security_Auth_Err_Info.intd=0;
-        Card_Error_State.CardErrorState_INT32U=0;	
-        
+
         // 判断身份认证有效时间是否过了，如果过了，ID_Ins_Counter就赋值为0
         Far_Identity_Auth_Ok_Flag=!Chk_Pay_Time_Arrive();
         //IT_STRUCT_VAR(_Far_Identity_Auth_Ok_Flag);
@@ -55,7 +52,7 @@ INT8U Esam_Remote_Auth(INT8U *pSrc, INT8U SrcLen, INT8U *pDst, INT8U *pLen, INT8
             FarPrePayment.ID_Ins_Counter  =0;
 	    Write_Storage_Data(_SDI_INVALID_COUNTS_AllOW, (INT8U *)&FarPrePayment.ID_Ins_Counter, 1);
           }
-        }
+         }
         mem_cpy(&Temp,pSrc,4,&Temp,4);
         //判断是否已经通过 身份验证，或者数据标示为请求安全认证
 	if( ( Far_Identity_Auth_Ok_Flag== 1 ) || ( Temp EQ 0x70000FF  && FarPrePayment.ID_Ins_Counter<15 ) )
@@ -64,6 +61,7 @@ INT8U Esam_Remote_Auth(INT8U *pSrc, INT8U SrcLen, INT8U *pDst, INT8U *pLen, INT8
         }else{
                 ASSERT_FAILED();
 		ret=ERR;
+                FarPrePayment.Far_Error_State.CpuCardInternlAuthenticationErr=1;
 		IDENTITY_AUTH_ERR_DEFINE = 1; 
 	}
         ///0x33类型函数执行成功 //// //返回1成功，移交数据给huck
@@ -88,13 +86,26 @@ INT8U Esam_Remote_Auth(INT8U *pSrc, INT8U SrcLen, INT8U *pDst, INT8U *pLen, INT8
 	mem_cpy( pDst, (INT8U *)&Far_Security_Auth_Err_Info.intd, 2,pDst_Start,DstLen);
         FarPrePayment.Far_SendLen=2;
         pLen=(INT8U *)&FarPrePayment.Far_SendLen;
-
+        
         OS_Mutex_Post(PUB_BUF0_SEM_ID);
         OS_Mutex_Post(PUB_BUF_SEM_ID);
+        //控制液晶显示错误代码， 目前只有2个
+        if(FarPrePayment.Far_Error_State.Password_Key_Updata_ERR)
+        {
+              ReNew_Err_Code(DIS_CUR_MODI_KEY_ERR);
+              
+        }
+        
+        if(FarPrePayment.Far_Error_State.CpuCardInternlAuthenticationErr)
+        {
+             ReNew_Err_Code(DIS_CERTI_ERR);
+            
+        }
+  
 	return  0;  
 }
 //////// 0x33类型的函数，的数据域的入口参数数据都为除去数据标示和操作者代码的 数据域，
-//出口都为：也不要管数据标示，的直接存放在FarPaidBuff,发送的长度放在：FarPrePayment.Far_SendLen
+//出口都为：也不要管数据标示，的直接存放在FarPaidBuff，前4个字节规定为数据标识,发送的长度放在：FarPrePayment.Far_SendLen,长度不要管数据标识的长度
   const struct Far_645_Frame_Flag_0x03  Far_645_Frame_Flag_0x03_List[]={
 	0xFF,0x01,0x80,0x07,16,Far_Deal_078001FF,//数据回抄
         
@@ -201,8 +212,14 @@ INT8U Far_Deal_070000FF(INT8U * Data_Point )
                    ValidTimeTemp=5;
                 }
                 Reset_Pay_Timer(ValidTimeTemp*60);// Reset_Pay_Timer(0);
-		return OK;
+                //错误状态字清0，
+	        Far_Security_Auth_Err_Info.intd=0;
+                Card_Error_State.CardErrorState_INT32U=0;
+                mem_set((INT8U *)&FarPrePayment.Far_Error_State,0x00,sizeof(FarPrePayment.Far_Error_State),(INT8U *)&FarPrePayment.Far_Error_State,sizeof(FarPrePayment.Far_Error_State));
+		
+                return OK;
 	}
+        FarPrePayment.Far_Error_State.CpuCardInternlAuthenticationErr=1;
         ASSERT_FAILED();
 	IDENTITY_AUTH_ERR_DEFINE = 1;
 	return ERR;
@@ -267,6 +284,8 @@ INT8U Far_Write_Esam(INT8U cla,INT8U ins,INT8U t_p1,
 	Order_Head[2] = t_p1;
 	Order_Head[3] = t_p2;
 	if( CPU_Card_Driver((const INT8U *)Order_Head,lc+4,Card_WR_Buff,0,CommunicationPortMode,0)!= OK ){
+          
+                FarPrePayment.Far_Error_State.CpuCardInternlAuthenticationErr=1;//液晶显示身份验证错误
 		ESAM_AUTH_ERR_DEFINE =1;
 		FarPrePayment.ID_Ins_Counter++;
                 Write_Storage_Data(_SDI_INVALID_COUNTS_AllOW, (INT8U *)&FarPrePayment.ID_Ins_Counter, 1);
@@ -337,7 +356,7 @@ INT8U Far_Deal_078001FF(INT8U *Data_Point )
 	struct Far_Read_078001FF_Format	 Far_Read_078001FF_Format;
 	INT8U Offset;
         mem_cpy(&Far_Read_078001FF_Format,Data_Point,sizeof(struct Far_Read_078001FF_Format),&Far_Read_078001FF_Format,sizeof(Far_Read_078001FF_Format));
-	/*
+	
         if( (INT8U)(Far_Read_078001FF_Format.File) == 0x01 ){
 		if(Far_Read_Esam(                                       0x04,Read_Record,0x01,
 							                                    0x0C,
@@ -347,7 +366,9 @@ INT8U Far_Deal_078001FF(INT8U *Data_Point )
                     ASSERT_FAILED();
                     return ERR;  
                 }
-                ///
+                mem_cpy(FarPaidBuff,Data_Point,8,FarPaidBuff,Length_FarPaidBuff);//8字节数据回抄标识
+	        My_memcpyRev( FarPaidBuff+8,receive_send_buffer,8 );
+                ///  
 		if(Far_Read_Esam(                                       0x04,Read_Record,0x03,
 							                                    0x0C,
 					                                                      4 , 
@@ -355,9 +376,11 @@ INT8U Far_Deal_078001FF(INT8U *Data_Point )
                 {
                     ASSERT_FAILED();
                     return ERR;  
-                }	
+                }
+                My_memcpyRev( FarPaidBuff+8+8,receive_send_buffer,8 );
+                FarPrePayment.Far_SendLen = 8+8+8;
 	}
-        */
+        /*
         ///
 	if( (INT8U)(Far_Read_078001FF_Format.File) == 0x01 ){
 		if( (INT8U)(Far_Read_078001FF_Format.Data_Start_Addr )== 0x00 )
@@ -372,7 +395,7 @@ INT8U Far_Deal_078001FF(INT8U *Data_Point )
                     ASSERT_FAILED();
                     return ERR;  
                 }
-        }
+        }*/
 	else{
 /*"04b082（83，84，86）+ P2(偏移地址)＋11+4字节随机数1+04d686+00+LC+8字节分散因子。
 LC是所要读取的明文数据＋MAC+分散因子的总长度，它是1字节的十六进制数。"*/
@@ -386,14 +409,14 @@ LC是所要读取的明文数据＋MAC+分散因子的总长度，它是1字节的十六进制数。"*/
                    return ERR;
                 }
 			
-	}
+	
         //组装发送的数据域，不管数据标示，/////////0x33类型函数中转站, 0x33类型的函数，的数据域的入口参数数据都为除去数据标示和操作者代码的 数据域，
 //出口都为：也不要管数据标示，的直接存放在FarPaidBuff
         mem_cpy(FarPaidBuff,Data_Point,8,FarPaidBuff,Length_FarPaidBuff);//8字节数据回抄标识
 	My_memcpyRev( FarPaidBuff+8,receive_send_buffer,(( INT8U)(Far_Read_078001FF_Format.Data_Length)) );
 	My_memcpyRev( FarPaidBuff+8+((INT8U )(Far_Read_078001FF_Format.Data_Length)),receive_send_buffer+((INT8U)(Far_Read_078001FF_Format.Data_Length)), 4);
 	FarPrePayment.Far_SendLen = 8+((INT8U)(Far_Read_078001FF_Format.Data_Length))+4;
-
+        }
 	
 //	My_memcpyRev( far_data_p+14,receive_send_buffer,((INT8U)(Far_Read_078001FF_Format->Data_Length)) );
 //	My_memcpyRev( far_data_p+14+((INT8U)(Far_Read_078001FF_Format->Data_Length)),receive_send_buffer+((INT8U)(Far_Read_078001FF_Format->Data_Length)), 4);
@@ -477,7 +500,15 @@ struct Far_Deal_070001FF_format
 //-----------------------------------------------------------------------------
 INT8U Far_Deal_070001FF(INT8U * Data_Point ){
         INT16U ValidTimeTemp;
+        INT8U Temp;
 	struct Far_Deal_070001FF_format   Far_Deal_070001FF_format;
+        //判断是否处于 公有密钥状态
+        Read_Storage_Data(_SDI_FAR_PASSWORD_STATE ,&Temp,&Temp, 1);
+        if(Temp != 0)
+        {
+           return ERR;
+        }
+        
 	mem_cpy(&Far_Deal_070001FF_format,Data_Point,sizeof(Far_Deal_070001FF_format),&Far_Deal_070001FF_format,sizeof(Far_Deal_070001FF_format));
 
 	if( Far_Deal_070001FF_format.Identity_Limit == 0 )
@@ -789,28 +820,33 @@ INT8U Far_PassWord_Updata(INT8U * Data_Point,INT8U PassWord_ID )
 	
 	CPU_ESAM_CARD_Control(ESAM);
 	Reverse_data((INT8U *)&(Far_Deal_070201FF_format.PassWord[0]),32);
+        //如果是更新是主控密钥，
         if(PassWord_ID EQ 4)
         {
 	  if( Write(0x84,Write_Key,0x01,0x00,0x20,(Far_Deal_070201FF_format.PassWord))!=OK)
 	  {
+                FarPrePayment.Far_Error_State.Password_Key_Updata_ERR=1;
                 ASSERT_FAILED();  
 		return ERR;
 	  }           
         }
-        else
+        else//如果是更新其他密钥
         {
 	  if( Write(0x84,Write_Key,0x01,0xFF,0x20,(Far_Deal_070201FF_format.PassWord))!=OK)
 	  {
+                FarPrePayment.Far_Error_State.Password_Key_Updata_ERR=1;
                 ASSERT_FAILED();  
 		return ERR;
 	  }        
         }
-
+        //写密钥信息，
 	if( Far_Write_Esam(0x04,Update_Binary,0x80+ESAM_FAR_PASSWORD_INF_FILE,0x00,0x04,(Far_Deal_070201FF_format.PassWord_Inf),0xFF)!=OK)  
         {      
+                FarPrePayment.Far_Error_State.Password_Key_Updata_ERR=1;
                 ASSERT_FAILED();
 		return ERR;
 	}
+        //
         Reverse_data(Far_Deal_070201FF_format.PassWord_Inf,8);
         Read_Storage_Data(_SDI_FAR_PASSWORD_STATE ,&Temp,&Temp, 1);
         if( Far_Deal_070201FF_format.PassWord_Inf[0] != Temp )
@@ -866,14 +902,6 @@ INT8U Far_Deal_070204FF(INT8U * Data_Point )
 //控制命令解密， 645帧的L字段 固定长度为 28 ， 解密后的实际 数据长度为8， 这部分全部由黄工管，我只管解密
 INT8U Esam_Decrypt(INT8U *pSrc, INT16U SrcLen)
 {
-  
-  CPU_ESAM_CARD_Control(ESAM);
-  if( Select_Directry(0,0x3F,0) != OK )
-  {
-      ASSERT_FAILED();
-      Card_Error_State.CardErrorState.CPU_CARD_ESAM_ATR_ERR=1;
-      return 0;
-  }
   //查看 身份认证有效时间有没有到
   Far_Identity_Auth_Ok_Flag=!Chk_Pay_Time_Arrive();
   if(Far_Identity_Auth_Ok_Flag != 1)
@@ -882,6 +910,15 @@ INT8U Esam_Decrypt(INT8U *pSrc, INT16U SrcLen)
            ASSERT_FAILED();
            return 0;
   }  
+  
+  CPU_ESAM_CARD_Control(ESAM);
+  if( Select_Directry(0,0x3F,0) != OK )
+  {
+      ASSERT_FAILED();
+      Card_Error_State.CardErrorState.CPU_CARD_ESAM_ATR_ERR=1;
+      return 0;
+  }
+
   if(28 !=  (SrcLen) )
   {
      ASSERT_FAILED();
@@ -892,12 +929,17 @@ INT8U Esam_Decrypt(INT8U *pSrc, INT16U SrcLen)
            if( Read(0,Read_Binary,0x88,0,8) == OK ){
 		My_Memcpy(pSrc + 8,receive_send_buffer, 8);
 	   }else{
+              FarPrePayment.Far_Error_State.CpuCardInternlAuthenticationErr=1; //这里的赋值没有任何意义
+              ReNew_Err_Code(DIS_CERTI_ERR);
               return 0;
            }
   }else
   {
         ASSERT_FAILED();
-	ESAM_AUTH_ERR_DEFINE=1;
+        FarPrePayment.Far_Error_State.CpuCardInternlAuthenticationErr=1;//根据补漏文件，这里要算身份验证错误，但是这里的赋值也是没有任何意义//d
+        ReNew_Err_Code(DIS_CERTI_ERR);
+	//ESAM_AUTH_ERR_DEFINE=1;
+        OTHER_ERR_DEFINE=1;
         return 0;
   }
   return 1;

@@ -249,7 +249,11 @@ INT16U Read_One_Load_Data_With_Index(INT8U Type, INT16U Index, INT8U* pDst, INT8
           DstLen += i - Type1;
         }
         else if(i != Type1)//读出的数据类型不正确，过大或者比前次读出的类型还小！
+        {
+          *(pDst + DstLen) = 0xAA;
+          DstLen ++;          
           break;
+        }
         
         Re = memcmp((INT8U *)Pub_Buf0 + 1, TempTime.Time, 5);
         if(Re EQ 0) //必须是同一个时间点
@@ -265,7 +269,11 @@ INT16U Read_One_Load_Data_With_Index(INT8U Type, INT16U Index, INT8U* pDst, INT8
           *pLast_Index = Index;
         }
         else //数据的时间不是起始数据的那个时间点了！
+        {
+          *(pDst + DstLen) = 0xAA;
+          DstLen ++;          
           break;
+        }
         
         Index ++;
         if(Index >= LOAD_DATA_NUM)

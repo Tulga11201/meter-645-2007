@@ -168,6 +168,11 @@ INT8U Far_Deal_070000FF(INT8U * Data_Point )
 {     
      
       INT16U ValidTimeTemp;
+      //错误状态字清0，
+       Far_Security_Auth_Err_Info.intd=0;
+       Card_Error_State.CardErrorState_INT32U=0;
+       mem_set((INT8U *)&FarPrePayment.Far_Error_State,0x00,sizeof(FarPrePayment.Far_Error_State),(INT8U *)&FarPrePayment.Far_Error_State,sizeof(FarPrePayment.Far_Error_State));
+		
         ///esam复位
        if( (Esamcard_Reset() )!=OK )
        { 
@@ -177,7 +182,7 @@ INT8U Far_Deal_070000FF(INT8U * Data_Point )
        } 
        mem_cpy((INT8U *)esam_number,receive_send_buffer+5,8,(INT8U *)esam_number,8);
        CPU_ESAM_CARD_Control(ESAM);
-	if( Select_Directry(0,0x3F,0) != OK )
+	if( Select_Directry(0,0xDF,1) != OK )
         {
                 ASSERT_FAILED();
                 Card_Error_State.CardErrorState.CPU_CARD_ESAM_ATR_ERR=1;
@@ -212,11 +217,7 @@ INT8U Far_Deal_070000FF(INT8U * Data_Point )
                    ValidTimeTemp=5;
                 }
                 Reset_Pay_Timer(ValidTimeTemp*60);// Reset_Pay_Timer(0);
-                //错误状态字清0，
-	        Far_Security_Auth_Err_Info.intd=0;
-                Card_Error_State.CardErrorState_INT32U=0;
-                mem_set((INT8U *)&FarPrePayment.Far_Error_State,0x00,sizeof(FarPrePayment.Far_Error_State),(INT8U *)&FarPrePayment.Far_Error_State,sizeof(FarPrePayment.Far_Error_State));
-		
+
                 return OK;
 	}
         FarPrePayment.Far_Error_State.CpuCardInternlAuthenticationErr=1;
@@ -356,7 +357,7 @@ INT8U Far_Deal_078001FF(INT8U *Data_Point )
 	struct Far_Read_078001FF_Format	 Far_Read_078001FF_Format;
 	INT8U Offset;
         mem_cpy(&Far_Read_078001FF_Format,Data_Point,sizeof(struct Far_Read_078001FF_Format),&Far_Read_078001FF_Format,sizeof(Far_Read_078001FF_Format));
-	
+        
         if( (INT8U)(Far_Read_078001FF_Format.File) == 0x01 ){
 		if(Far_Read_Esam(                                       0x04,Read_Record,0x01,
 							                                    0x0C,
@@ -367,7 +368,8 @@ INT8U Far_Deal_078001FF(INT8U *Data_Point )
                     return ERR;  
                 }
                 mem_cpy(FarPaidBuff,Data_Point,8,FarPaidBuff,Length_FarPaidBuff);//8字节数据回抄标识
-	        My_memcpyRev( FarPaidBuff+8,receive_send_buffer,8 );
+	        My_memcpyRev( FarPaidBuff+8,receive_send_buffer,4 );
+                My_memcpyRev( FarPaidBuff+8+4,receive_send_buffer+4,4 );
                 ///  
 		if(Far_Read_Esam(                                       0x04,Read_Record,0x03,
 							                                    0x0C,
@@ -377,7 +379,9 @@ INT8U Far_Deal_078001FF(INT8U *Data_Point )
                     ASSERT_FAILED();
                     return ERR;  
                 }
-                My_memcpyRev( FarPaidBuff+8+8,receive_send_buffer,8 );
+                
+                My_memcpyRev( FarPaidBuff+8+8,receive_send_buffer,4 );
+                My_memcpyRev( FarPaidBuff+8+8+4,receive_send_buffer+4,4 );
                 FarPrePayment.Far_SendLen = 8+8+8;
 	}
         /*
@@ -395,7 +399,12 @@ INT8U Far_Deal_078001FF(INT8U *Data_Point )
                     ASSERT_FAILED();
                     return ERR;  
                 }
-        }*/
+        mem_cpy(FarPaidBuff,Data_Point,8,FarPaidBuff,Length_FarPaidBuff);//8字节数据回抄标识
+	My_memcpyRev( FarPaidBuff+8,receive_send_buffer,(( INT8U)(Far_Read_078001FF_Format.Data_Length)) );
+	My_memcpyRev( FarPaidBuff+8+((INT8U )(Far_Read_078001FF_Format.Data_Length)),receive_send_buffer+((INT8U)(Far_Read_078001FF_Format.Data_Length)), 4);
+	FarPrePayment.Far_SendLen = 8+((INT8U)(Far_Read_078001FF_Format.Data_Length))+4;
+        }
+        */
 	else{
 /*"04b082（83，84，86）+ P2(偏移地址)＋11+4字节随机数1+04d686+00+LC+8字节分散因子。
 LC是所要读取的明文数据＋MAC+分散因子的总长度，它是1字节的十六进制数。"*/

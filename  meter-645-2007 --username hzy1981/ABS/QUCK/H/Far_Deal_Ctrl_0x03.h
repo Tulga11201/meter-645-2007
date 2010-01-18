@@ -11,7 +11,7 @@
 #define EXT extern
 #endif 
 INT16U GetSecurity_Auth_Err_Info(void);
- 
+//控制命令解密函数 
 INT8U Esam_Decrypt(INT8U *pSrc, INT16U SrcLen);//对外接口函数
 
 //远程认证命令接口(控制码为03)
@@ -53,8 +53,9 @@ typedef struct {
     INT8U Far_SendLen;//发送的数据域长度，645协议中定义的L字段值  //自己定义的
    // INT8U Far_Auth_Day_Follow;// 身份认证有效日 跟随日， 
     INT8U  c_esam_number[8];//可以局部变量代替，     扩展用
-    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  C_Far_Pre_Payment_Para ;
-
+    C_CardErrorState   Far_Error_State;
+    }C_Far_Pre_Payment_Para ;
+//Far_Error_State.Password_Key_Updata_ERR   CpuCardInternlAuthenticationErr
 DECLARE_VAR_TYPE(C_Far_Pre_Payment_Para, _C_Far_Pre_Payment_Para);
 EXT  volatile _C_Far_Pre_Payment_Para   _Far_Pre_Payment_Para;
 #define  FarPrePayment  _Far_Pre_Payment_Para.Var 

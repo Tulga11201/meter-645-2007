@@ -227,13 +227,19 @@ LCD_MAIN_EXT disp_t dispcode;
   {
     INT8U Head;    
     INT8U LoopDis:1;
-    INT8U DisIndex:7;                    //出错显示 
+    INT8U PauseDis:1;
+    INT8U DisIndex:6;                    //出错显示 
     INT8U ErrNum;     
     INT8U ErrCode[DIS_ERR_NUM/8+1];      //出错信息代码
     INT8U Tail;
   }SYS_ERR_INFO;
   LCD_MAIN_EXT SYS_ERR_INFO Sys_Err_Info;
 
+#ifdef LCD_MAIN_C
+  LCD_MAIN_EXT S_Int32U Sec_Timer_Pause={CHK_BYTE,0xFFFFFFEE,CHK_BYTE};
+#endif  
+  LCD_MAIN_EXT S_Int32U Sec_Timer_Pause;
+  
 #endif
 
 void LCD_main_LUCK (void);
@@ -256,4 +262,5 @@ void ReNew_Err_Code(INT8U ErrCode);
 void Clr_Err_Code(INT8U ErrCode);
 void  lcd_Pre_Pay    (INT8U shenyu,INT8U jine);
 void Refresh_Sleep_Countr(INT8U);
+INT8U Pause_Dis_Event(void) ;
 #endif

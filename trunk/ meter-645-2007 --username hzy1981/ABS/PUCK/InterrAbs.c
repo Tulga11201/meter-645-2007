@@ -7,11 +7,12 @@
 
 //江机硬件: IRDA_WAKE_UP_MS=25;     IRDA_WAKE_UP_NUM=1   
 //IBE: IRDA_WAKE_UP_10US=18000;     IRDA_WAKE_UP_NUM=62
+//待定： 200  11 25
 
-#define IRDA_WAKE_UP_TIME 200L
+#define IRDA_WAKE_UP_TIME 25L
 #define IRDA_WAKE_MAX_TIME (IRDA_WAKE_UP_TIME*3)
 #define IRDA_WAKE_MIN_NUM   11//7   //判定唤醒帧的最小脉冲数目：55hz以下
-#define IRDA_WAKE_MAX_NUM   65//7   //判定唤醒帧的最大脉冲数目：320hz以上
+#define IRDA_WAKE_MAX_NUM   1//7   //判定唤醒帧的最大脉冲数目：320hz以上
 
 #define PULSE_OUT_FLAG          0x36  
 #define MAX_CLR_AC_NUM          30
@@ -462,6 +463,10 @@ void count_1ms(void)
   static volatile S_Int8U Ms_Timer={CHK_BYTE,0,CHK_BYTE}; 
   static volatile S_Int16U Sec_Timr_Temp={CHK_BYTE,0,CHK_BYTE};
   
+#ifdef RST_IC_7X6_EN 
+  static volatile S_Int8U Num2={CHK_BYTE,0,CHK_BYTE};
+#endif
+  
   Ms_Timer_Pub++;    //公有毫秒定时器更新
   Ms_Timer.Var++;
   
@@ -477,6 +482,16 @@ void count_1ms(void)
     Ms10_Timer_Pub++;
     Num1.Var=0;
   }
+  
+#ifdef RST_IC_7X6_EN
+  Num2.Var++;
+  if(Num2.Var>=2)
+  {
+    B_WTD_1;
+    Num2.Var=0;
+  }
+#endif
+  
   
   Sec_Timr_Temp.Var++;
   if(Sec_Timr_Temp.Var>=1000)

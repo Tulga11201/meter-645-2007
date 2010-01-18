@@ -41,7 +41,23 @@
 /* Start user code for global definition. Do not edit comment generated here */
 /* End user code for global definition. Do not edit comment generated here */
 
-
+void Feed_Dog_Init(void)
+{
+  INT8U i;
+  
+#ifdef RST_IC_7X6_EN
+  Clear_CPU_Dog();    //清CPU内部看门狗
+  B_WTD_1;
+  for(i=0;i<65;i++)
+  {
+    B_WTD_0;
+  }
+  B_WTD_1;
+  Clear_CPU_Dog();    //清CPU内部看门狗
+#else
+  Clr_Ext_Inter_Dog();  
+#endif
+}
 /*
 **-----------------------------------------------------------------------------
 **

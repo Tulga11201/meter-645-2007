@@ -1025,18 +1025,32 @@ void Check_UpCover(void)
 #ifdef ID_EVENT_DOWN_COVER_OPEN
 void Check_DownCover(void)
 {
- if(Get_Sys_Status()!=SYS_NORMAL || DOWN_COVER_STATUS )    //VCC
- {
-    Clr_Event_Instant(ID_EVENT_DOWN_COVER_OPEN);
-    
-    return ;
- }
- 
-  if(DOWN_COVER_STATUS==0)  //1-----按下去,表示表盖是盖上;0-----表示表盖拿下
-  {
-    Set_Event_Instant(ID_EVENT_DOWN_COVER_OPEN);
+#ifdef DOWN_COVER_ERR  //硬件的设计逻辑错误
+   if(Get_Sys_Status()!=SYS_NORMAL || DOWN_COVER_STATUS )    //VCC
+   {
+      Clr_Event_Instant(ID_EVENT_DOWN_COVER_OPEN);
+      
+      return ;
+   }
+   
+    if(DOWN_COVER_STATUS==0)  //1-----按下去,表示表盖是盖上;0-----表示表盖拿下
+    {
+      Set_Event_Instant(ID_EVENT_DOWN_COVER_OPEN);
+    }
+#else  //江机的
+   if(Get_Sys_Status()!=SYS_NORMAL || DOWN_COVER_STATUS EQ 0)    //VCC
+   {
+      Clr_Event_Instant(ID_EVENT_DOWN_COVER_OPEN);
+      
+      return ;
+   }
+   
+    if(DOWN_COVER_STATUS)  //1-----按下去,表示表盖是盖上;0-----表示表盖拿下
+    {
+      Set_Event_Instant(ID_EVENT_DOWN_COVER_OPEN);
+    }
+#endif   
   }
-}
 #endif
 /***********************************************************************
 函数功能：判断铅封是否打开

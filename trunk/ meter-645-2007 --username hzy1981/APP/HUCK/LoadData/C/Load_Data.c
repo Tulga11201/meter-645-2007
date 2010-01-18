@@ -281,7 +281,7 @@ INT16U Read_One_Load_Data_With_Index(INT8U Type, INT16U Index, INT8U* pDst, INT8
         ASSERT_FAILED();
     }
   }
-  pDst[2] = DstLen + 2; //数据块长度, +校验和 +块结束符
+  pDst[2] = DstLen - 3; //数据块长度
   
   Sum = 0;
   for(i = 0; i < DstLen; i ++)

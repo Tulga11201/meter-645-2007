@@ -119,6 +119,9 @@
 #define ALL_LOSS_TYPE      ALL_LOSS_HARD_SINGLE       //宏打开，打开 硬件的全失压方法。关闭，通过软件全失压
 #define MEASU_BAKPWR_NEW_EN                    //打开:使用新的7022后备电源方式
 
+//#define RST_IC_7X6_EN                         //打开:使用最新的复位芯片
+#define DOWN_COVER_ERR                         //打开:后端子该错误
+
 //多合一端子排配置：秒脉冲、时段、需量、滑差
 //1:配置以下宏，与Const_Port_Status[]中的MultiFlag为0还是1含义不一样；
 //2：配置 Const_Port_Status[]中的 MultiFlag为0还是1

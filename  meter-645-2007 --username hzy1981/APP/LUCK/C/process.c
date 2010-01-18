@@ -298,6 +298,78 @@ PUCK:更新显示内容,周期是 UPDATETIME ms
 入口：
 返回：
 ********************************************************************************/
+INT8U Pause_Dis_Event(void) 
+{  
+  char temp[10]={0};
+  INT8U id;
+  
+  /*
+  if(UP_COVER_STATUS EQ 0)
+    ReNew_Err_Code(DIS_CERTI_ERR);
+  
+  if(DOWN_COVER_STATUS)
+    ReNew_Err_Code(DIS_CUR_MODI_KEY_ERR);
+  */
+   //全屏显示20秒内:138年翻转1次
+  if(Sec_Timer_Pub<=20 && (Get_Sys_Status()==SYS_NORMAL))  //正常模式下，20秒内全屏显示
+    return 1;
+  
+  if(poweroff())  //掉电情况下
+    return 1;
+  
+  if((Key_Value_Pub.Key.Bit.UpKey)||(Key_Value_Pub.Key.Bit.DownKey))
+    return 1;
+  
+  if(Sys_Err_Info.PauseDis EQ 0)
+    return 1;
+  
+  id=DIS_CERTI_ERR;
+  if(GET_BIT(Sys_Err_Info.ErrCode[id/8],id%8))  //找到显示的错误代码了
+  {
+    if(Sec_Timer_Pub-Sec_Timer_Pause.Var<=10)
+    {
+      strcpy(temp,"ERR-");
+      temp[4]=id/10+'0';
+      temp[5]=id%10+'0';
+      Main_Dis_Info(temp);
+      return 0;
+    }
+    else
+    {
+      Sys_Err_Info.PauseDis=0; 
+      CLR_BIT(Sys_Err_Info.ErrCode[id/8],id%8);
+    }    
+    return 0;
+  }
+  
+  id=DIS_CUR_MODI_KEY_ERR;
+  if(GET_BIT(Sys_Err_Info.ErrCode[id/8],id%8))  //找到显示的错误代码了
+  {
+    if(Sec_Timer_Pub-Sec_Timer_Pause.Var<=10)
+    {
+      strcpy(temp,"ERR-");
+      temp[4]=id/10+'0';
+      temp[5]=id%10+'0';
+      Main_Dis_Info(temp);
+      return 0;
+    }
+    else
+    {
+      Sys_Err_Info.PauseDis=0; 
+      CLR_BIT(Sys_Err_Info.ErrCode[id/8],id%8);
+    }    
+    return 0;
+  }
+  
+  return 1;
+  
+}
+/********************************************************************************
+PUCK:更新显示内容,周期是 UPDATETIME ms
+函数功能：按钮等快速响应的LCD处理
+入口：
+返回：
+********************************************************************************/
 void Key_Fast_LCD_Proc(void) 
 {
   INT8U KeyValue;
@@ -317,6 +389,8 @@ void Key_Fast_LCD_Proc(void)
           
             dispnext();  //下翻---------------PUCK
             Refresh_Sleep_Countr(1);
+            Clr_Err_Code(DIS_CERTI_ERR);
+            Clr_Err_Code(DIS_CUR_MODI_KEY_ERR);
             break;
         case DOWN_KEY_VALUE:
             //本地费控，才显示与电费相关信息;远程费控：此函数不会返回与电费相关信息
@@ -325,6 +399,8 @@ void Key_Fast_LCD_Proc(void)
           
             dispback();  //上翻---------------PUCK
             Refresh_Sleep_Countr(1);
+            Clr_Err_Code(DIS_CERTI_ERR);
+            Clr_Err_Code(DIS_CUR_MODI_KEY_ERR);
             break;
             
         case LEFT_KEY_VALUE :
@@ -585,6 +661,11 @@ void SetOrClr_Err_Code(INT8U ErrCode,INT8U SetOrClr)
       Sys_Err_Info.ErrNum++;
     SET_BIT(Sys_Err_Info.ErrCode[Byte],Bit);
     
+    if((ErrCode EQ DIS_CERTI_ERR) ||(ErrCode EQ DIS_CUR_MODI_KEY_ERR))
+    {
+      Sys_Err_Info.PauseDis=1; 
+      Sec_Timer_Pause.Var=Sec_Timer_Pub;
+    }
   }
   else
   {
@@ -594,7 +675,11 @@ void SetOrClr_Err_Code(INT8U ErrCode,INT8U SetOrClr)
     if(Sys_Err_Info.ErrNum EQ 0xff)
       Sys_Err_Info.ErrNum=0;
     
+    if((ErrCode EQ DIS_CERTI_ERR) ||(ErrCode EQ DIS_CUR_MODI_KEY_ERR))
+      Sys_Err_Info.PauseDis=0;   
   }
+  
+  
 #endif
 }
 

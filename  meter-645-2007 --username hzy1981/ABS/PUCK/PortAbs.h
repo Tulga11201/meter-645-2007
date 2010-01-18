@@ -36,8 +36,11 @@
 
 
 //喂狗信号
-#define Clear_Ext_Dog()       {B_WTD_1;  B_WTD_0; B_WTD_0; B_WTD_1;}    //一个B_WTD_0大约 240ns
-
+#ifdef RST_IC_7X6_EN
+  #define Clear_Ext_Dog()       B_WTD_0
+#else
+  #define Clear_Ext_Dog()       {B_WTD_1;  B_WTD_0; B_WTD_0; B_WTD_1;}    //一个B_WTD_0大约 100ns
+#endif
 
 #define BEEP_MODE_50        50
 #define BEEP_MODE_100       100

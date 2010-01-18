@@ -86,4 +86,5 @@ void  AppLCDTask_LUCK (void *p_arg);
 void  AppTestTask_HUCK (void *p_arg);
 void  AppEventTask_PUCK(void *p_arg);
 void Clr_Ext_Inter_Dog(void);
+void Feed_Dog_Init(void);
 #endif

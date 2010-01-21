@@ -174,7 +174,7 @@ INT32U Get_Time_Mins(INT8U Time[])
 INT16U Read_One_Load_Data_With_Index(INT8U Type, INT16U Index, INT8U* pDst, INT8U* pDst_Start, INT16U Dst_Len, INT16U *pLast_Index)
 {
   INT16U Len, DstLen; 
-  INT8U Re, Type1;
+  INT8U Re, Type0, Type1;
   INT8U i, Sum;
   S_HEX_Time TempTime;
 
@@ -242,13 +242,15 @@ INT16U Read_One_Load_Data_With_Index(INT8U Type, INT16U Index, INT8U* pDst, INT8
           continue;
         }
         
-        i = (Pub_Buf0[0] & 0x0F); //读出数据的类型，应该比前次读出的类型值大
-        if(i > Type1 && i < LOAD_DATA_TYPE_NUM)
+        Type0 = (Pub_Buf0[0] & 0x0F); //读出数据的类型，应该比前次读出的类型值大
+        if(Type0 > Type1 && Type0 < LOAD_DATA_TYPE_NUM)
         {
-          mem_set(pDst + DstLen, 0xAA, i - Type1, pDst_Start, Dst_Len); 
-          DstLen += i - Type1;
+          mem_set(pDst + DstLen, 0xAA, Type0 - Type1, pDst_Start, Dst_Len); 
+          DstLen += Type0 - Type1;
+          Type1 = Type0;
+          i = Type0;
         }
-        else if(i != Type1)//读出的数据类型不正确，过大或者比前次读出的类型还小！
+        else if(Type0 != Type1)//读出的数据类型不正确，过大或者比前次读出的类型还小！
         {
           *(pDst + DstLen) = 0xAA;
           DstLen ++;          

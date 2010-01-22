@@ -190,7 +190,7 @@ void Dis_Card_Result(INT8U Ok_Flag,INT8U Result)
         lcd_Pre_Pay (1,1);              ///< 显示"预付费类容"
         break;
     }
-    UpdataLcdShow();    
+    UpdataLcdShow();
   }
   else
   {
@@ -198,9 +198,9 @@ void Dis_Card_Result(INT8U Ok_Flag,INT8U Result)
       SetOnDevice_PUCK(S_TUNJI);
     
     SetOnDevice_PUCK(S_SHIBAI);
-    strcpy(temp,"ERR: ");
-    temp[5]=Result/10+'0';
-    temp[6]=Result%10+'0';
+    strcpy(temp,"ERR-");
+    temp[4]=Result/10+'0';
+    temp[5]=Result%10+'0';
     Main_Dis_Info(temp);
   }
 }
@@ -231,9 +231,9 @@ void CPU_Card_Main_Proc(void)
         Curr_Media_Status.Media_Type=PAY_CPU_CARD;
         SET_STRUCT_SUM(Curr_Media_Status);
         Light_Mode=LIGHT_ON_CARD;
-        SetOnDevice_PUCK(S_DUKA);
-        SetOnDevice_PUCK(S_ZHONG);
-        UpdataLcdShow();        
+        //SetOnDevice_PUCK(S_DUKA);
+        //SetOnDevice_PUCK(S_ZHONG);
+        //UpdataLcdShow();        
         
         Ok_Flag=1;
         if(Check_Max_Volt_Below(Get_Un()*0.7))   //电压太低，不能买电
@@ -256,7 +256,10 @@ void CPU_Card_Main_Proc(void)
         if(Ok_Flag EQ 0)           //电压太低，不能买电
           Result=DIS_LOW_VOLT_ERR;
         else
-          Result=Convert_Dis_Code(); 
+        {
+          Ok_Flag=Result;
+          Result=Convert_Dis_Code();          
+        }
         while(JUDGE_CPU_INSERT)
         {
           Turn_Light_On();

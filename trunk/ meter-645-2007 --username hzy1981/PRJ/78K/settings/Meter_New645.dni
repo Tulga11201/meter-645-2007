@@ -74,7 +74,7 @@ TriggerName=main
 LimitSize=0
 ByteLimit=50
 [DebugChecksum]
-Checksum=-1922385684
+Checksum=104760974
 [InstructionProfiling]
 Enabled=_ 0
 [DriverProfiling]
@@ -90,8 +90,6 @@ UseAuto=0
 TypeViolation=1
 UnspecRange=1
 ActionState=1
-[Breakpoints]
-Count=0
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
@@ -102,3 +100,5 @@ LogFile=_ ""
 [TraceHelper]
 Enabled=0
 ShowSource=1
+[Breakpoints]
+Count=0

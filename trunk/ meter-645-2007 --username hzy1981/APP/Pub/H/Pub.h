@@ -83,7 +83,7 @@ typedef float FP32S;
 
 //定义各种应用需要的函数
 #define ASSERT(x) Assert(x,__FILE__,__LINE__)//OS_ASSERT(x)//
-#define ASSERT_FAILED() Assert_Failed(__FILE__,__LINE__)//OS_ASSERT_FAILED()//
+#define ASSERT_FAILED() //Assert_Failed(__FILE__,__LINE__)//OS_ASSERT_FAILED()//
 #define TRACE() //Trace(__FILE__,__LINE__)
 
 #define SET_BIT(x,y) ((x)|=0x01<<(y))

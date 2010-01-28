@@ -56,8 +56,37 @@ void Cal_Dis_Proc(void)
     
     SetOnLED8Device_PUCK(N_LED(18),item/10+'0');
     SetOnLED8Device_PUCK(N_LED(19),item%10+'0');
-    
     strcpy((char *)Temp_Buf_PUCK," FAILED");
+    
+    //以下显示校表失败下的电压电流故障信息
+    if((FP32S)Measu_InstantData_ToPub_PUCK.Volt.A/UNIT_V>=Get_Un()*0.1)
+      SetOnDevice_PUCK(S_Ua);
+    if((FP32S)Measu_InstantData_ToPub_PUCK.Volt.B/UNIT_V>=Get_Un()*0.1)
+      SetOnDevice_PUCK(S_Ub);
+    if((FP32S)Measu_InstantData_ToPub_PUCK.Volt.C/UNIT_V>=Get_Un()*0.1)
+      SetOnDevice_PUCK(S_Uc);
+    
+    if((FP32S)Measu_InstantData_ToPub_PUCK.Curr.A/UNIT_A>=Get_In()*0.01)
+    {
+      SetOnDevice_PUCK(S_Ia);
+      if(Measu_Status_Mode_ToPub_PUCK.A_APwrDir)
+        SetOnDevice_PUCK(S_Ia_);      
+    }
+    if((FP32S)Measu_InstantData_ToPub_PUCK.Curr.B/UNIT_A>=Get_In()*0.01)
+    {
+      SetOnDevice_PUCK(S_Ib);
+      if(Measu_Status_Mode_ToPub_PUCK.B_APwrDir)
+        SetOnDevice_PUCK(S_Ib_);    
+    }
+    if((FP32S)Measu_InstantData_ToPub_PUCK.Curr.C/UNIT_A>=Get_In()*0.01)
+    {
+      SetOnDevice_PUCK(S_Ic);
+      if(Measu_Status_Mode_ToPub_PUCK.C_APwrDir)
+        SetOnDevice_PUCK(S_Ic_);    
+    }
+    
+      
+    
     
     Main_Dis_Info((char *)Temp_Buf_PUCK);
     return ;

@@ -1,6 +1,9 @@
 #define  FAR_DEAL_CTRL_0X33_C_
  
 #include "MyIncludesAll.h"
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "Q1"
+#endif
 
 
 

@@ -2,6 +2,9 @@
 #define CPUCARD_DRIVER_C_
 #include "MyIncludesAll.h"
 
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "Q2"
+#endif
 
 #undef Debug_Print
 #define Debug_Print(...)

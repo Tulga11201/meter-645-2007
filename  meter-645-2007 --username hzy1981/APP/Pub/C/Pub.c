@@ -2,6 +2,9 @@
 #include "includes.h"
 #include "OS_Port.h"
 
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "H26"
+#endif
 
 //检查BCD数据缓冲区的数据是否都是BCD码,是BCD的缓冲区则返回1，否则返回0
 INT8U Check_BCD_Data(void* pBCD, INT16U Len)

@@ -1,8 +1,11 @@
 #define DATA_TRANS_C
 #include "Includes.h"
 
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "H19"
+#endif
 
-#define SOFTWARE_VERSION "10012211 V1.3 " //软件版本号
+#define SOFTWARE_VERSION "10012610 V1.3 " //软件版本号
 
 
 CONST INT32U All_Loss_Vol_Curr = 1000;

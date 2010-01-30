@@ -2,6 +2,10 @@
 #include "includes.h"
 #include "OS_Port.h"
 
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "H27"
+#endif
+
 extern void OS_vsPrintf(CONST OS_INT8S* format, va_list ap);
 extern INT8U  Debug_Out_Public_Puck(INT8U *Srcbuf,INT16U Src_Len);
 

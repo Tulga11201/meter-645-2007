@@ -1,6 +1,10 @@
 #define EVENT_PROTO_C
 #include "Includes.h"
 
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "H12"
+#endif
+
 INT16U Event_Sub_Item_Len0[]={5,2,4,4, 4,4                                                                                                                            };//0--电量型购电   23    
 INT16U Event_Sub_Item_Len1[]={5,2,4,4, 4,4                                                                                                                            };//1--电费型购电   23
 INT16U Event_Sub_Item_Len2[]={6,6                                                                                                                                     };//2--最近1次失压发生时间记录  12

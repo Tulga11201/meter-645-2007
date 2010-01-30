@@ -1,6 +1,10 @@
 #define DATA_PARA_C
 #include "includes.h"
 
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "H20"
+#endif
+
 //#undef Debug_Print
 //#define Debug_Print(...)
 //#define Debug_Print _Debug_Print

@@ -1,6 +1,10 @@
 #define PREPAID_C
 #include "Includes.h"
 
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "H9"
+#endif
+
 //读取预付费参数
 void Read_Prepaid_Para_From_Rom()
 {

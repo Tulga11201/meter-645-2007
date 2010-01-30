@@ -1,6 +1,10 @@
 #define LOAD_DATA_C
 #include "Includes.h"
 
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "H15"
+#endif
+
 #define LOAD_DATA_SEARCH_NUM (60 / LOAD_DATA_INDEX_HOUR_NUM * LOAD_DATA_TYPE_NUM + 1) 
 
 //#ifdef LOAD_DATA_C

@@ -1,6 +1,10 @@
 #define EXTEND_C
 #include "Includes.h"
 
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "H14"
+#endif
+
 #if METER_PLACE == 0
 //分次事件数据项目的扩展处理
 INT16U Extend_Event_Separate_Proc(INT8U Event_ID, INT8U Occur_Or_End, INT8U Flag, INT8U* pReturn_Flag)

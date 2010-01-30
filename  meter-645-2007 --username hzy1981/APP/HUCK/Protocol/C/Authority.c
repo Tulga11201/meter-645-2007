@@ -1,6 +1,10 @@
 #define AUTHORITY_C
 #include "Includes.h"
 
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "H18"
+#endif
+
 CONST S_PSW_Map PSW_Map[]=
 {
 	{PSW_FAC_PARA, PSW_FACTORY}, //工厂参数

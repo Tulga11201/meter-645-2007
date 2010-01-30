@@ -1,6 +1,10 @@
 #define VOLSTAT_SETTLE_C
 #include <includes.h>
 
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "H25"
+#endif
+
 //计算历史电量、需量、和电压统计数据的存储DI
 //因为一般都是存储上N月的数据，所以存储的索引是根据总月数生成的
 STORA_DI Calc_His_VolStat_Data_DI(S_HEX_Time* pTime)

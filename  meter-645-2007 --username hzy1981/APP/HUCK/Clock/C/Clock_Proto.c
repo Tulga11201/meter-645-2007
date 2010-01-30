@@ -1,6 +1,10 @@
 #define CLOCK_PROTO_C
 #include "Includes.h"
 
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "H1"
+#endif
+
 INT16U Get_Clock_Proto_Data(PROTO_DI PDI, INT8U* pDst, INT8U* pDst_Start, INT16U DstLen)
 {
   S_BCD_Time TempTime;

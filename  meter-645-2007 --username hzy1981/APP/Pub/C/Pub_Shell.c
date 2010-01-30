@@ -1,6 +1,10 @@
 #define PUB_SHELL_C
 #include "Includes.h"
 
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "H28"
+#endif
+
 #define MAX_RD_MEM_LEN 300
 
 extern INT8U Shell_Read_Mem(INT8U argc, INT8S **argv);

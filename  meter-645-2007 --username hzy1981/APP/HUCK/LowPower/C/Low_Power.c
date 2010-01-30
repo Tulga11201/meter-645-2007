@@ -1,6 +1,11 @@
 #define LOW_POWER_C
 #include "Includes.h"
 
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "H16"
+#endif
+
+
 //检查电源状态，返回1
 INT8U Check_Power_Status()
 {

@@ -1,6 +1,9 @@
 #define ALL_CARD_OPERATION_C_
 
 #include "MyIncludesAll.h"
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "Q5"
+#endif
 
 #undef Debug_Print
 // #define Debug_Print(...)

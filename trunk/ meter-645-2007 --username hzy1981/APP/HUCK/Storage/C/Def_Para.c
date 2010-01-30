@@ -1,8 +1,12 @@
 #define DEF_PARA_C
 #include "Includes.h"
 
+#if REDEF_FILE_LINE_EN > 0
+#line __LINE__ "H21"
+#endif
+
 #define UB 2200UL //额定电压
-#define IB 1000UL//150 //1.50,两位小数 
+#define IB 150UL//150 //1.50,两位小数 
 #define PB (UB*IB) //额定功率
 #define PMAX (UB*IB*4) //最大功率
 

@@ -1,5 +1,10 @@
 #define CLOCK_C
 #include "Includes.h"
+
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "H0"
+#endif
+
 /*
 INT8U Read_PHY_Mem_PUCK(INT8U MemNo,INT32U Offset,void *pDst,INT16U RD_Len,void *pDst_Start,INT16U DstLen);
 INT8U Write_PHY_Mem_PUCK(INT8U MemNo,INT32U Offset,void *pSrc,INT16U SrcLen);

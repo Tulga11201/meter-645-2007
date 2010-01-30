@@ -1,6 +1,10 @@
 #define VOLSTAT_PROTO_C
 #include "Includes.h"
 
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "H24"
+#endif
+
 //读取电压统计数据
 INT16U _Get_VolStat_Proto_Data(PROTO_DI PDI, INT8U* pDst, INT8U* pDst_Start, INT16U DstLen)
 {

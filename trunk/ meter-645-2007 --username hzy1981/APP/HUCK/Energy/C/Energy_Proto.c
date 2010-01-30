@@ -1,6 +1,10 @@
 #define ENERGY_PROTO_C
 #include "Includes.h"
 
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "H7"
+#endif
+
 //读取有无功组合特征字
 void Read_Energy_Comb_Word()
 {

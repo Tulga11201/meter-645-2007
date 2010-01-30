@@ -1,6 +1,10 @@
 #define EVENT_SEPARATE_C
 #include <includes.h>
 
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "H13"
+#endif
+
 #define EVENT_DATA_LEN 700
 
 CONST PROTO_DI CONST_PDI0[] =

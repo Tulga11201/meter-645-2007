@@ -1,6 +1,10 @@
 #define SYS_MONITOR_C
 #include "Includes.h"
 
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "H17"
+#endif
+
 void Monitor_Init()
 {
   mem_set((void *) &Task_Monitor, 0, sizeof(Task_Monitor), (void *) &Task_Monitor, sizeof(Task_Monitor));

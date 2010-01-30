@@ -1,6 +1,10 @@
 #define DEMAND_SETTLE_C
 #include "Includes.h"
 
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "H5"
+#endif
+
 //检查DI是否是一个存储需量数据的DI
 INT8U Check_Demand_Stora_DI(STORA_DI SDI)
 {

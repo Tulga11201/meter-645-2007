@@ -1,5 +1,10 @@
 #define EVENT_CUMU_C
 #include "Includes.h"
+
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "H10"
+#endif
+
 /*
 CONST S_DI_Array NULL_DI_ARRAY =
 {

@@ -1,6 +1,10 @@
 #define ENERGY_C
 #include "Includes.h"
 
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "H6"
+#endif
+
 //extern void Event_Energy_Cumu(MEASU_ENERG *pEnergy);
 volatile MEASU_ENERG Accu_Energy;
 extern void Prepaid_Proc(MEASU_ENERG* pEnergy);

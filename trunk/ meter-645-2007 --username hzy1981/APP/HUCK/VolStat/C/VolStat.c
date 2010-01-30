@@ -1,6 +1,10 @@
 #define VOLSTAT_C
 #include "Includes.h"
 
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "H23"
+#endif
+
 void Read_VolStat_Para_From_Rom()
 {
   INT16U Len;

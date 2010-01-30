@@ -1,6 +1,10 @@
 #define POWER_CTRL_C
 #include "Includes.h"
 
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "H2"
+#endif
+
 #define SWITCH_POS_ACT_EN 1000
 
 //初始化负荷控制相关内存变量

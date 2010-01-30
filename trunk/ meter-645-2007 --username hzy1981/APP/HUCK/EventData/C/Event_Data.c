@@ -1,6 +1,10 @@
 #define EVENT_DATA_C
 #include <includes.h>
 
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "H11"
+#endif
+
 //检查当前事件是否在发生,Event_ID可以为总一类事件
 INT8U Check_Event_Occuring(INT8U Event_ID)
 {

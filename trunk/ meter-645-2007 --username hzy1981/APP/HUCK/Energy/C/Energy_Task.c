@@ -1,6 +1,10 @@
 #define ENERGY_TASK_C
 #include "Includes.h"
 
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "H9"
+#endif
+
 //初始化电量和需量数据
 void PowerOn_Read_Data_From_Rom()
 {

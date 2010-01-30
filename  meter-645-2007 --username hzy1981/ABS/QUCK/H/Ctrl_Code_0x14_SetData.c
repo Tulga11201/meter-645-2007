@@ -3,7 +3,7 @@
 /*"**************************************************************************"*/
 /*" 第一类参数远程写处理函数"*/
 /*" 支持表3 "*/
-/*" Data_Point:入:指向L DI0 DI1 DI2 DI3...... "*/
+/*" Data_Point:入:指向L DI0 DI1 DI2 DI3...... 第一组4个字节为数据标示，第二组8个字节为密码和操作者代码，第三组为明文+mac "*/
 /*"            出:数据格式见下 "*/
 /*" 如果结果正确 ，将数据格式转换成普通写数据格式，调用后续写处理"*/
 /*" 如果结果错误，直接错误退出"*/
@@ -105,8 +105,8 @@ INT8U Set_Esam_Para(  INT8U *pSrc, INT8U SrcLen)
         ///////
 	for( j=0;j<LENGTH_FAR_DEAL_PARA_FLAG_T1;j++ )
 		*(((INT8U *)(&Far_Deal_Para_Flag_T1))+j) = *(((const INT8U *)&Far_Deal_Para_List_T1[i])+j);
-        //检查数据合法性
-        if( Set_Data_Format_Check(pSrc+LENGTH_FAR_645_FRAME_T1+4,Far_Deal_Para_Flag_T1.Esam_Length, &Temp) )
+        //检查数据合法性因为多了4个字节mac  所以这里要减去4
+        if( Set_Data_Format_Check(pSrc,SrcLen-4, &Temp) )
         {
             ASSERT_FAILED();
             return 0;  

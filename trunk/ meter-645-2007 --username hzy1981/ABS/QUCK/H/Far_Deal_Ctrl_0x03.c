@@ -199,7 +199,9 @@ INT8U Far_Deal_070000FF(INT8U * Data_Point )
 		}
                 //组装要发送的数据
 		My_memcpyRev(FarPaidBuff,receive_send_buffer,4);    //转移随机数2//
-		My_memcpyRev(FarPaidBuff+4,(INT8U *)esam_number,8);     //转移ESAM序列号//
+		 //My_Memcpy(FarPaidBuff,receive_send_buffer,4);    //转移随机数2//
+		
+                My_memcpyRev(FarPaidBuff+4,(INT8U *)esam_number,8);     //转移ESAM序列号//
 		FarPrePayment.Far_SendLen=12;//不要管数据标示的长度，在上面会自动加4
                 //FarPrePayment.Far_SendLen=0;//不要管数据标示的长度，在上面会自动加4
                 //身份认证有效时长初始化 
@@ -241,7 +243,8 @@ INT8U Far_Read_Esam(INT8U cla,INT8U ins,INT8U t_p1,
 	else
 		*(Card_WR_Buff+7)=t_p2;
 	Card_WR_Buff[8]=lc+12;	//data+mac+disperse_gene
-	My_memcpyRev(Card_WR_Buff+9, (INT8U *)&Far_Identity_Auth_Data.Instruction.disperse_gene[0], 8);
+	//Card_WR_Buff[8]=lc+4;	//data+mac+disperse_gene
+        My_memcpyRev(Card_WR_Buff+9, (INT8U *)&Far_Identity_Auth_Data.Instruction.disperse_gene[0], 8);
         //明文+mac+离散读
 	Order_Head[0] = cla;
 	Order_Head[1] = ins;
@@ -424,7 +427,9 @@ LC是所要读取的明文数据＋MAC+分散因子的总长度，它是1字节的十六进制数。"*/
         mem_cpy(FarPaidBuff,Data_Point,8,FarPaidBuff,Length_FarPaidBuff);//8字节数据回抄标识
 	My_memcpyRev( FarPaidBuff+8,receive_send_buffer,(( INT8U)(Far_Read_078001FF_Format.Data_Length)) );
 	My_memcpyRev( FarPaidBuff+8+((INT8U )(Far_Read_078001FF_Format.Data_Length)),receive_send_buffer+((INT8U)(Far_Read_078001FF_Format.Data_Length)), 4);
-	FarPrePayment.Far_SendLen = 8+((INT8U)(Far_Read_078001FF_Format.Data_Length))+4;
+        //My_Memcpy( FarPaidBuff+8+((INT8U )(Far_Read_078001FF_Format.Data_Length)),receive_send_buffer+((INT8U)(Far_Read_078001FF_Format.Data_Length)), 4);
+	
+        FarPrePayment.Far_SendLen = 8+((INT8U)(Far_Read_078001FF_Format.Data_Length))+4;
         }
 	
 //	My_memcpyRev( far_data_p+14,receive_send_buffer,((INT8U)(Far_Read_078001FF_Format->Data_Length)) );
@@ -469,6 +474,7 @@ INT8U Far_Deal_07810201(INT8U *Data_Point )
 		return ERR;
 	My_memcpyRev((INT8U *)&(Far_Read_07810201_Format.Buy_Count), receive_send_buffer,4);
 	My_memcpyRev((INT8U *)&(Far_Read_07810201_Format.Buy_Count_MAC[0]), receive_send_buffer+4,4);
+        //My_Memcpy((INT8U *)&(Far_Read_07810201_Format.Buy_Count_MAC[0]), receive_send_buffer+4,4);
         //组装客户编号
 	if( Get_File_Data(ESAM,ESAM_PARA_INF_FILE,CLIENT_ID_ESAM,6,(INT8U *)&(Far_Read_07810201_Format.Client_ID[0])) != OK )
 		return ERR;

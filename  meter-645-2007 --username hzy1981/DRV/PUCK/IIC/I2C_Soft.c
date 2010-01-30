@@ -1,7 +1,10 @@
 #define SOFT_I2C_C
 #include "DrvPub.h"
 
-        
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "B1"
+#endif
+
 
 typedef struct
 { 

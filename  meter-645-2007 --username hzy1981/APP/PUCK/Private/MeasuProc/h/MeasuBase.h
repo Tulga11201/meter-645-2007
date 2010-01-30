@@ -155,6 +155,7 @@
 #define ENERG_SUM_MODE1     0x01    //341代数和加；331绝对和,此参数和TH_F模式字有关
 
 #define APP_ENERG_MODE     0x005523   //PQS视在能量表模式
+#define I_ORDER_EN_PARA    0x005678   //PQS视在能量表模式
 
 #define EnMeasuCal()  {Measu_WrData(0xc9,0x000000);Measu_WrData(0xc9,0x000000);Measu_WrData(0xc9,0x000000);}         //校表数据写使能
 #define DisMeasuCal() {Measu_WrData(0xc9,0x000001);Measu_WrData(0xc9,0x000001);Measu_WrData(0xc9,0x000001);}         //校表数据禁止

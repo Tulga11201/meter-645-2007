@@ -1,7 +1,9 @@
 #define DEVICE_ABS_PUCK
 #include "Pub_PUCK.h"
 
-
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "P1"
+#endif
 /********************************************************************************
 函数功能：各种模式下：CPU外围时钟初始化
 入口：
@@ -539,7 +541,7 @@ void Init_Inter_Abs(INT32U Mode)
 #if    ALL_LOSS_TYPE!=ALL_LOSS_SOFT
         if((All_Loss_Var.Status.Nums==0)||(All_Loss_Var.Status.Mins==0))   //没有事件发生
         START_ALL_LOSS;       //打开全失压
-#else
+#else   //软件实现全失压
         STOP_ALL_LOSS;       
 #endif
        
@@ -570,7 +572,7 @@ void Init_Inter_Abs(INT32U Mode)
         
 #if    ALL_LOSS_TYPE!=ALL_LOSS_SOFT 
         START_ALL_LOSS;       //打开全失压
-#else
+#else       //软件实现全失压
         STOP_ALL_LOSS;       
 #endif
         
@@ -692,7 +694,7 @@ void PwrCtrl_ExtDevice_HigSpeed(void)
      LARGE_TOOGLE_ON_CLR;
   }
 
-#if ALL_LOSS_TYPE EQ ALL_LOSS_SOFT 
+#if ALL_LOSS_TYPE EQ ALL_LOSS_SOFT   //软件实现全失压
   BAT_ON_7022;
 #endif
   

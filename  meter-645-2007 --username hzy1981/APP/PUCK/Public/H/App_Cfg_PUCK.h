@@ -100,9 +100,9 @@
 
 
 
-#define ALL_LOSS_SOFT              0
-#define ALL_LOSS_HARD_SINGLE        1
-#define ALL_LOSS_HARD_MULTI        2
+#define ALL_LOSS_SOFT              0  //全失压全部通过软件来实现
+#define ALL_LOSS_HARD_SINGLE       1  //全失压通过硬件来触发，软件来实现
+#define ALL_LOSS_HARD_MULTI        2  //全失压通过硬件来触发，硬件来实现
 
 
 //按钮配置
@@ -121,6 +121,8 @@
 
 //#define RST_IC_7X6_EN                         //打开:使用最新的复位芯片
 #define DOWN_COVER_ERR                         //打开:后端子该错误
+
+#define I_ORDER_CHK_EN                0         //1:电流逆相序使能；0：电流逆向相序禁止
 
 //多合一端子排配置：秒脉冲、时段、需量、滑差
 //1:配置以下宏，与Const_Port_Status[]中的MultiFlag为0还是1含义不一样；
@@ -180,12 +182,13 @@
 
 
 //串口属性
-#if NET_METER!=NONET_METER            //网路表，模块串口使能
-  #define UART1_EN                         //串口1使能
+#if ((NET_METER EQ CARRIER_METER)||(NET_METER EQ GPRS_METER))//载波表，GPRS表，
+  #define UART1_EN 
+#elif (PREPAID_EN && (PREPAID_LOCAL_REMOTE EQ PREPAID_REMOTE)) //非模块表：远程费控表
+  #define UART1_EN 
 #else
-  #undef UART1_EN                          //串口1禁止
+  #undef  UART1_EN
 #endif
-
 
 //内部时钟电池工作时间配置
 #define BAT_RUN_TIME_PWROFF       1   //统计掉电后RTC工作时间

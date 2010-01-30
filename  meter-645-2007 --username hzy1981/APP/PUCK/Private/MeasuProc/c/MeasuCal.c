@@ -2,6 +2,11 @@
 #define  CAL_METER_C
 #include "Pub_PUCK.h"
 
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "A1"
+#endif
+
+
 #undef Debug_Print
 #define Debug_Print(...)
 //#define Debug_Print _Debug_Print

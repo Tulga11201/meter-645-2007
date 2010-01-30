@@ -15,6 +15,10 @@ Over_Vol[3] 是你的
 */
 
 
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "A3"
+#endif
+
 
 typedef struct
 {
@@ -803,19 +807,16 @@ void Check_Volt_Curr_Seq(void)
   
     
   //电压逆相序，还需判定最小电压  
-  if((FP32S)Get_Min_Num(Measu_InstantData_ToPub_PUCK.Volt.A,Measu_InstantData_ToPub_PUCK.Volt.B,Measu_InstantData_ToPub_PUCK.Volt.C)<=UNIT_V*Get_Un()*0.6)  //最小电压需>=10％Un
+  if((FP32S)Get_Min_Num(Measu_InstantData_ToPub_PUCK.Volt.A,Measu_InstantData_ToPub_PUCK.Volt.B,Measu_InstantData_ToPub_PUCK.Volt.C)<=UNIT_V*Get_Un()*0.6)  //最小电压需>=60％Un
   {
     Clr_Event_Instant(ID_EVENT_VOLT_NEG_SEQ); //电压相序清除
-    Clr_Event_Instant(ID_EVENT_CUR_NEG_SEQ);  //电流相序错
   }
   
-  /*
   //电流逆相序，还需判定最小电流  
   if((FP32S)Get_Min_Num(Measu_InstantData_ToPub_PUCK.Curr.A,Measu_InstantData_ToPub_PUCK.Curr.B,Measu_InstantData_ToPub_PUCK.Curr.C)<=UNIT_A*Get_Un()*0.004)
   {
     Clr_Event_Instant(ID_EVENT_CUR_NEG_SEQ);  //电流相序错
   }
-  */
     
   //331表ABC失压时，不判逆相序
   if(Get_SysParse_Mode()==PARSE_331)  //331不判逆相序

@@ -1,6 +1,13 @@
 #define ALARM_C
 #include "Pub_PUCK.h"
 #include "Alarm.h"
+
+
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "A0"
+#endif
+
+
 /***********************************************************************
 函数功能：根据位或者字节单位，获取对应的位信息或字节信息
 入口：无

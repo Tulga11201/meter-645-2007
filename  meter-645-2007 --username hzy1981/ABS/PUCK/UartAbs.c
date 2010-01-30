@@ -2,6 +2,12 @@
 #include "Pub_PUCK.h"
 
 
+
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "P6"
+#endif
+
+
 /*智能表：         UART0-----红外,UART2-----485_1,UART3-----485_2(切换脚---P15),
   载波/GPRS费控表：UART0-----红外,UART2-----485_1,UART3-----ESAM/CPU，UART1-----载波/GPRS模块,(EVENT-GPRS---P04，EVENT-PLC---P04)
   远程费控表：     UART0-----红外,UART2-----485_1,UART3-----ESAM/CPU，UART1-----485_2(切换脚---P04)

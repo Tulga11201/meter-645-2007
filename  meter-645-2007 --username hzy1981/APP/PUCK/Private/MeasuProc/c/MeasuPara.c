@@ -1,6 +1,9 @@
 
 #define EEPROM_PUCK
 #include "Pub_PUCK.h"
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "A8"
+#endif
 
 /**********************************************************************************
 函数功能：根据buf，按照1/2/4自己的选择得出校验和

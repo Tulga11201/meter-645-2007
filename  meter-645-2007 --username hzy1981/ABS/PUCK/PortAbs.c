@@ -1,6 +1,9 @@
 #define PORT_ABS_PUCK
 #include "Pub_PUCK.h"
 
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "P4"
+#endif
 
 /********************************************************************************
 void  Get_Meter_Hard_Mode(void)

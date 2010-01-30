@@ -59,7 +59,7 @@
 void SystemInit(INT32U Mode)
 {
 	/*Process of reset*/
-	CG_ReadResetSource();
+	//CG_ReadResetSource();
 	/*Initialize the I/O ports*/
 	PORT_Init(Mode);
 	/*Initialize the clock generator*/

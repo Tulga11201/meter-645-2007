@@ -14,6 +14,9 @@
 #include "Pub_PUCK.h"
 #include "config.h"
 
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "L4"
+#endif
 
 typedef struct
 {

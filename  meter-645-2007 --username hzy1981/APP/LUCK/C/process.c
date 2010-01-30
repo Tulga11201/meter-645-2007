@@ -14,6 +14,9 @@
 #include "Pub_PUCK.h"
 
 
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "L3"
+#endif
 
 extern PROTO_DI Set_ParaModi_Proc(PROTO_DI ModiDI);
 extern unsigned char Ser_Support_Code(item_t code);

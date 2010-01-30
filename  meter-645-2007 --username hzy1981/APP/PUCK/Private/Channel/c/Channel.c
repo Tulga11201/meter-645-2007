@@ -1,6 +1,9 @@
 #define CHANNEL_C
 #include "Pub_PUCK.h"
 
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "A2"
+#endif
 
 /********************************************************************************
 
@@ -68,21 +71,18 @@ void Get_Buad_Para(void)
 void Init_All_Channel(void)
 {
   Get_Buad_Para();  
+  Open_Channel_PUCK(CHANEL_IRDA,Chanel_Para[CHANEL_IRDA].Baud,SAU_PARITY_EVEN);    
+  Open_Channel_PUCK(CHANEL_485_1,Chanel_Para[CHANEL_485_1].Baud,SAU_PARITY_EVEN);    
+  Open_Channel_PUCK(CHANEL_485_2,Chanel_Para[CHANEL_485_2].Baud,SAU_PARITY_EVEN);
   
-  if(CHANEL_IRDA!=CHANEL_DEBG)    //调试口单独初始化了
-    Open_Channel_PUCK(CHANEL_IRDA,Chanel_Para[CHANEL_IRDA].Baud,SAU_PARITY_EVEN);
+#ifdef CHANEL_MOUDEL
+  if(BAUD_MOUDLE)        //载波、GPRS表
+    Chanel_Para[CHANEL_MOUDEL].Baud=BAUD_MOUDLE;
+  else                   //远程费控表
+    Chanel_Para[CHANEL_MOUDEL].Baud=Chanel_Para[CHANEL_485_2].Baud;
     
-  if(CHANEL_485_1!=CHANEL_DEBG)     //调试口单独初始化了
-    Open_Channel_PUCK(CHANEL_485_1,Chanel_Para[CHANEL_485_1].Baud,SAU_PARITY_EVEN);  
-    
-  if(DI_CHANEL_485_2!=CHANEL_DEBG)  //调试口单独初始化了
-     Open_Channel_PUCK(CHANEL_485_2,Chanel_Para[CHANEL_485_2].Baud,SAU_PARITY_EVEN); 
-  
-#ifdef CHANEL_MOUDEL 
-  Chanel_Para[CHANEL_MOUDEL].Baud=BAUD_MOUDLE;
   SET_STRUCT_SUM(Chanel_Para[CHANEL_MOUDEL]);
-  if(CHANEL_MOUDEL!=CHANEL_DEBG)  //调试口单独初始化了
-     Open_Channel_PUCK(CHANEL_MOUDEL,Chanel_Para[CHANEL_MOUDEL].Baud,SAU_PARITY_EVEN); 
+  Open_Channel_PUCK(CHANEL_MOUDEL,Chanel_Para[CHANEL_MOUDEL].Baud,SAU_PARITY_EVEN); 
 #endif
 }
 

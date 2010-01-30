@@ -270,6 +270,7 @@ INT32U Get_HighPulse_Const(void);
 INT32U Get_Volt_Adj_Rate(void);
 INT32U GetEnergSumMode(void);
 INT32U Get_App_Mode(void);
+INT32U Get_I_Order(void);
 INT32U Get_Iregion4(void);
 void Test_HardWare_PUCK(void);
 void InitLcdAllRam(void);

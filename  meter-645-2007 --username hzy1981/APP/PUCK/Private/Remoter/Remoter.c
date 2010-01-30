@@ -1,6 +1,10 @@
 #define REMOTE_PUCK
 #include "Pub_PUCK.h"
 
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "AC"
+#endif
+
 
 #define IR_NONE        0x00
 #define IR_MIN_NUM     0X00

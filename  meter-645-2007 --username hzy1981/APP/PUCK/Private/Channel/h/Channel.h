@@ -39,12 +39,12 @@
 
 
 
-#if NET_METER == CARRIER_METER   //载波表
+#if NET_METER EQ CARRIER_METER   //载波表
   #define BAUD_MOUDLE  2400          //载波口波特率
-#elif  NET_METER == GPRS_METER   // GPRS网络表
+#elif  NET_METER EQ GPRS_METER   // GPRS网络表
   #define BAUD_MOUDLE  19200          //GPRS模块口波特率
 #else
-  #define BAUD_MOUDLE  2400          //其他
+  #define BAUD_MOUDLE  0         //其他:表示此口的波特率不是取自宏，取自参数
 #endif
 
 #define BAUD_IRDA_DEFAULT 1200            //默认的波特率

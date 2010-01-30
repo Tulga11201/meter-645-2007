@@ -211,7 +211,7 @@ static const scrn_t table[] = {
                                          .thismonth = 1,
                                          .total     = 1,
                                          .energy    = 1,}},                                            
-    */                                       
+                                          
     {0x00850000, {{.GroupFlag=GROUP_TARIFF,.BytePos=1},{.GroupFlag=GROUP_SETTLE,.BytePos=0}}, "XXXXX#.##|kWh", {    // 铜损有功总电能补偿量
                                          .negative  = 1,
                                          .active    = 1,
@@ -225,7 +225,7 @@ static const scrn_t table[] = {
                                          .total     = 1,
                                          .energy    = 1,}},
                                                                                             
-                                                                                          
+ */                                                                                          
 /***********************************A相当前/上结算日电能---与结算日相关：当前/上x次结算日****************************************************/
     {0x00150000, {{.GroupFlag=GROUP_NO},{.GroupFlag=GROUP_SETTLE,.BytePos=0}}, "XXXXX#.##|kWh", { // 当前/上x结算日正向有功电量
                                          .phase     = 1,
@@ -327,7 +327,7 @@ static const scrn_t table[] = {
                                            .negative  = 1,
                                            .thismonth = 1,
                                            .energy    = 1,}},                                           
-     */   
+        
      
     {0x00990000, {{.GroupFlag=GROUP_NO},{.GroupFlag=GROUP_SETTLE,.BytePos=0}}, "XXXXX#.##|kWh", {  // 当前/上x铜损有功总电能补偿量
                                            .phase     = 1, 
@@ -340,7 +340,7 @@ static const scrn_t table[] = {
                                            .negative  = 1,
                                            .thismonth = 1,
                                            .energy    = 1,}},     
-
+*/
 /***********************************B相电能---与结算日相关：当前/上x次结算日****************************************************/
     {0x00290000, {{.GroupFlag=GROUP_NO},{.GroupFlag=GROUP_SETTLE,.BytePos=0}}, "XXXXX#.##|kWh", { // 当前/上x结算日正向有功电量
                                            .phase     = 2,
@@ -441,7 +441,7 @@ static const scrn_t table[] = {
                                            .thismonth = 1,
                                            .energy    = 1,}},                                           
     
-    */
+    
     
     {0x00AD0000, {{.GroupFlag=GROUP_NO},{.GroupFlag=GROUP_SETTLE,.BytePos=0}}, "XXXXX#.##|kWh", {  // 当前/上x铜损有功总电能补偿量
                                            .phase     = 2, 
@@ -455,7 +455,7 @@ static const scrn_t table[] = {
                                            .thismonth = 1,
                                            .energy    = 1,}},     
      
-     
+   */  
 /***********************************C相电能---与结算日相关：当前/上x次结算日****************************************************/
     {0x003D0000, {{.GroupFlag=GROUP_NO},{.GroupFlag=GROUP_SETTLE,.BytePos=0}}, "XXXXX#.##|kWh", { // 当前/上x结算日正向有功电量
                                            .phase     = 3,
@@ -558,7 +558,7 @@ static const scrn_t table[] = {
                                            .negative  = 1,
                                            .thismonth = 1,
                                            .energy    = 1,}},                                           
-    */
+    
     
     {0x00C10000, {{.GroupFlag=GROUP_NO},{.GroupFlag=GROUP_SETTLE,.BytePos=0}}, "XXXXX#.##|kWh",{  // 当前/上x铜损有功总电能补偿量
                                            .phase     = 3, 
@@ -572,7 +572,7 @@ static const scrn_t table[] = {
                                            .thismonth = 1,
                                            .energy    = 1,}},                                           
                                            
-                
+     */           
 /***********************************当前/结算有功需量及发生时间---与费率和结算日相关：总/费率xx****************************************************/
     {0x01010000,{{.GroupFlag=GROUP_TARIFF,.BytePos=1},{.GroupFlag=GROUP_SETTLE,.BytePos=0}}, "#|",{   // 正向有功最大需量及时间
                                            .positive  = 1,

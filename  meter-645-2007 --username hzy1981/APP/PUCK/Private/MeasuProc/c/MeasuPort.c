@@ -1,6 +1,9 @@
 #define MEASU_PORT_C
 #include "Pub_PUCK.h"
 
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "A9"
+#endif
 
 void Init_Pulse_Port(INT8U Flag)
 {  

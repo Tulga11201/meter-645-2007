@@ -60,8 +60,8 @@
 #define EN_CARRIER_SET_ADDR     do{PM0_bit.no4=0; P0_bit.no4=0;}while(0)
 #define DIS_CARRIER_SET_ADDR    do{PM0_bit.no4=0; P0_bit.no4=1;}while(0)
 
-#define BAK_POWER_FOR_MEM        PORT_ChangeP05Output(1)           //内卡电源由低功耗电池供给;
-#define MAIN_POWER_FOR_MEM       PORT_ChangeP05Output(0)           //内卡电源由主电源供给;
+#define BAK_POWER_FOR_MEM       do{PM0_bit.no5=0; P0_bit.no5=1;}while(0)  // PORT_ChangeP05Output(1)           //内卡电源由低功耗电池供给;
+#define MAIN_POWER_FOR_MEM      do{PM0_bit.no5=0; P0_bit.no5=0;}while(0)  // PORT_ChangeP05Output(0)           //内卡电源由主电源供给;
 /*
 P02/SO10/TXD1	                TXD-GPRS	GPRS输出
 P03/SI10/RXD1/SDA10	        RXD-GPRS	GPRS输入
@@ -70,15 +70,17 @@ P06/\WAIT	16-SDA	24C16数据线
 */
 
 //-----------------------------------------------------------// 
-#define IRDA_SEND_EN            PORT_ChangeP10Output(1) 
-#define IRDA_SEND_DIS           PORT_ChangeP10Output(0)
+#define IRDA_SEND_EN            do{PM1_bit.no0=0; P1_bit.no0=1;}while(0)  //PORT_ChangeP10Output(1) 
+#define IRDA_SEND_DIS           do{PM1_bit.no0=0; P1_bit.no0=0;}while(0)  // PORT_ChangeP10Output(0)
 
-#if PREPAID_METER>0       //预付费表
-  #define B_2_485_0               
-  #define B_2_485_1               
+#if (PREPAID_EN >0) && (PREPAID_LOCAL_REMOTE EQ PREPAID_REMOTE)  //远程费控表
+  #define B_2_RMT_FK_485_0      do{PM0_bit.no4=0;P0_bit.no4=0;}while(0)             
+  #define B_2_RMT_FK_485_1      do{PM0_bit.no4=0;P0_bit.no4=1;}while(0)
+  #define B_2_485_0
+  #define B_2_485_1             
 #else                     //费预付费表：此口做为485切换脚
-  #define B_2_485_0               PORT_ChangeP15Output(0)
-  #define B_2_485_1               PORT_ChangeP15Output(1)
+  #define B_2_485_0             do{PM1_bit.no5=0; P1_bit.no5=0;}while(0)  //    PORT_ChangeP15Output(0)
+  #define B_2_485_1             do{PM1_bit.no5=0; P1_bit.no5=1;}while(0)  //   PORT_ChangeP15Output(1)
 #endif
 
 /*
@@ -92,16 +94,16 @@ P17/EX31/TI02/TO02	PWM	红外调制
 //-----------------------------------------------------------// 
 
 
-#define B_7022_RST_0              PORT_ChangeP20Output(0)//RST         
-#define B_7022_RST_1              PORT_ChangeP20Output(1) 
+#define B_7022_RST_0              do{PM2_bit.no0=0; P2_bit.no0=0;}while(0)  //PORT_ChangeP20Output(0)//RST         
+#define B_7022_RST_1              do{PM2_bit.no0=0; P2_bit.no0=1;}while(0)  //PORT_ChangeP20Output(1) 
 #define B_7022_SIG_STATUS         (P2_bit.no1)//SIG
-#define B_7022_SDO_0              PORT_ChangeP22Output(0)//SDO     
-#define B_7022_SDO_1              PORT_ChangeP22Output(1)//SDO     
+#define B_7022_SDO_0              do{PM2_bit.no2=0; P2_bit.no2=0;}while(0)  //PORT_ChangeP22Output(0)//SDO     
+#define B_7022_SDO_1              do{PM2_bit.no2=0; P2_bit.no2=1;}while(0)  //PORT_ChangeP22Output(1)//SDO     
 #define B_7022_SDI_STATUS         (P2_bit.no3)//SDI
-#define B_7022_SCK_0              PORT_ChangeP24Output(0)      //？？？？！！！！
-#define B_7022_SCK_1              PORT_ChangeP24Output(1)      //？？？？！！！！
-#define OPEN_MEASU_PWR            PORT_ChangeP25Output(1)      //计量芯片电源开启
-#define CLOSE_MEASU_PWR           PORT_ChangeP25Output(0)     //计量芯片电源关闭
+#define B_7022_SCK_0              do{PM2_bit.no4=0; P2_bit.no4=0;}while(0)  //PORT_ChangeP24Output(0)      //？？？？！！！！
+#define B_7022_SCK_1              do{PM2_bit.no4=0; P2_bit.no4=1;}while(0)  //PORT_ChangeP24Output(1)      //？？？？！！！！
+#define OPEN_MEASU_PWR            do{PM2_bit.no5=0; P2_bit.no5=1;}while(0)  //PORT_ChangeP25Output(1)      //计量芯片电源开启
+#define CLOSE_MEASU_PWR           do{PM2_bit.no5=0; P2_bit.no5=0;}while(0)  //PORT_ChangeP25Output(0)     //计量芯片电源关闭
 /*
 P26/ANI6	RTC1_SDA	3231数据
 P27/ANI7	RTC1_SCL	3231时钟
@@ -140,14 +142,14 @@ P40/TOOL0	TOOL0
 #define IC_CARD_SW                (P5_bit.no3)   //输入
 */
 //-----------------------------------------------------------// 
-#define A_DIR_1                   PORT_ChangeP64Output(1)  //有功方向输出
-#define A_DIR_0                   PORT_ChangeP64Output(0)
-#define R_DIR_1                   PORT_ChangeP65Output(1)  //无功方向输出
-#define R_DIR_0                   PORT_ChangeP65Output(0)
-#define A_OUT_1                   P6_bit.no6=1          //有功输出
-#define A_OUT_0                   P6_bit.no6=0
-#define R_OUT_1                   P6_bit.no7=1   //无功输出  
-#define R_OUT_0                   P6_bit.no7=0
+#define A_DIR_1                   do{PM6_bit.no4=0; P6_bit.no4=1;}while(0)  //PORT_ChangeP64Output(1)  //有功方向输出
+#define A_DIR_0                   do{PM6_bit.no4=0; P6_bit.no4=0;}while(0)  //PORT_ChangeP64Output(0)
+#define R_DIR_1                   do{PM6_bit.no5=0; P6_bit.no5=1;}while(0)  //PORT_ChangeP65Output(1)  //无功方向输出
+#define R_DIR_0                   do{PM6_bit.no5=0; P6_bit.no5=0;}while(0)  //PORT_ChangeP65Output(0)
+#define A_OUT_1                   do{PM6_bit.no6=0; P6_bit.no6=1;}while(0)  //P6_bit.no6=1          //有功输出
+#define A_OUT_0                   do{PM6_bit.no6=0; P6_bit.no6=0;}while(0)  //P6_bit.no6=0
+#define R_OUT_1                   do{PM6_bit.no7=0; P6_bit.no7=1;}while(0)  //P6_bit.no7=1   //无功输出  
+#define R_OUT_0                   do{PM6_bit.no7=0; P6_bit.no7=0;}while(0)  //P6_bit.no7=0
 /*
 #define IC_CARD_POWR_ON           P6_bit.no3=1   //输出
 #define IC_CARD_POWR_OFF          P6_bit.no3=0   //输出
@@ -159,8 +161,8 @@ P61/SDA0	MEM_SDA	内卡I2C总线数据线
 #define CLR_DEMAND_KEY_STATUS     (P7_bit.no1)    //清需量按钮
 #define Inter_Left_Key_STATUS     (P7_bit.no2)
 
-#define LARGE_TOOGLE_ON_SET      do{PM7_bit.no1=0; P7_bit.no1=1;}while(0)     //常开继电器开启 P7_bit.no1: 1 0 1
-#define LARGE_TOOGLE_ON_CLR      do{PM7_bit.no1=0; P7_bit.no1=0;}while(0)     //
+#define LARGE_TOOGLE_ON_SET       do{PM7_bit.no1=0; P7_bit.no1=1;}while(0)     //常开继电器开启 P7_bit.no1: 1 0 1
+#define LARGE_TOOGLE_ON_CLR       do{PM7_bit.no1=0; P7_bit.no1=0;}while(0)     //
 
 #define LARGE_TOOGLE_OFF_SET      do{PM7_bit.no2=0; P7_bit.no2=1;}while(0)     //
 #define LARGE_TOOGLE_OFF_CLR      do{PM7_bit.no2=0; P7_bit.no2=0;}while(0)     //常闭继电器关闭 P7_bit.no2: 1 0 1
@@ -183,19 +185,19 @@ P77/EX23/KR7/INTP11	IRD_WKP	红外唤醒
 //-----------------------------------------------------------// 
 
 //跳闸
-#define EXT_SWITCH_CLR            PORT_ChangeP80Output(0) //跳闸开关    
-#define EXT_SWITCH_SET            PORT_ChangeP80Output(1)
-#define EXT_ALARM_CLR             PORT_ChangeP81Output(0)     //端子排报警
-#define EXT_ALARM_SET             PORT_ChangeP81Output(1)
-#define EXT_SECOUT_CLR            PORT_ChangeP82Output(0)     //秒脉冲使能
-#define EXT_SECOUT_SET            PORT_ChangeP82Output(1)
-#define EXT_DEMAND_CLR            PORT_ChangeP83Output(0)    //需量周期
-#define EXT_DEMAND_SET            PORT_ChangeP83Output(1)
-#define EXT_PARSE_CLR             PORT_ChangeP84Output(0)     //时段切换
-#define EXT_PARSE_SET             PORT_ChangeP84Output(1)
+#define EXT_SWITCH_CLR            do{PM8_bit.no0=0; P8_bit.no0=0;}while(0)  //PORT_ChangeP80Output(0) //跳闸开关    
+#define EXT_SWITCH_SET            do{PM8_bit.no0=0; P8_bit.no0=1;}while(0)  //PORT_ChangeP80Output(1)
+#define EXT_ALARM_CLR             do{PM8_bit.no1=0; P8_bit.no1=0;}while(0)  //PORT_ChangeP81Output(0)     //端子排报警
+#define EXT_ALARM_SET             do{PM8_bit.no1=0; P8_bit.no1=1;}while(0)  //PORT_ChangeP81Output(1)
+#define EXT_SECOUT_CLR            do{PM8_bit.no2=0; P8_bit.no2=0;}while(0)  //PORT_ChangeP82Output(0)     //秒脉冲使能
+#define EXT_SECOUT_SET            do{PM8_bit.no2=0; P8_bit.no2=1;}while(0)  //PORT_ChangeP82Output(1)
+#define EXT_DEMAND_CLR            do{PM8_bit.no3=0; P8_bit.no3=0;}while(0)  //PORT_ChangeP83Output(0)    //需量周期
+#define EXT_DEMAND_SET            do{PM8_bit.no3=0; P8_bit.no3=1;}while(0)  //PORT_ChangeP83Output(1)
+#define EXT_PARSE_CLR             do{PM8_bit.no4=0; P8_bit.no4=0;}while(0)  //PORT_ChangeP84Output(0)     //时段切换
+#define EXT_PARSE_SET             do{PM8_bit.no4=0; P8_bit.no4=1;}while(0)  //PORT_ChangeP84Output(1)
 #define LOWCOST_BAT_LOW           (P8_bit.no5)//低功耗电池
-#define BAK_POWER_FOR_IRDA        PORT_ChangeP86Output(1)        //远红外电源由低功耗电池供给;
-#define MAIN_POWER_FOR_IRDA       PORT_ChangeP86Output(0)       //远红外电源由主电源供给;
+#define BAK_POWER_FOR_IRDA        do{PM8_bit.no6=0; P8_bit.no6=1;}while(0)  //PORT_ChangeP86Output(1)        //远红外电源由低功耗电池供给;
+#define MAIN_POWER_FOR_IRDA       do{PM8_bit.no6=0; P8_bit.no6=0;}while(0)  //PORT_ChangeP86Output(0)       //远红外电源由主电源供给;
 
 /*
 P82/EX2	SECOND_/EN	秒脉冲使能
@@ -204,21 +206,21 @@ P82/EX2	SECOND_/EN	秒脉冲使能
 */
 
 //-----------------------------------------------------------// 
-#define IRDA_FAR_REC_EN           PORT_ChangeP110Output(0) 
-#define IRDA_NEAR_REC_EN          PORT_ChangeP110Output(1)
+#define IRDA_FAR_REC_EN           do{PM11_bit.no0=0; P11_bit.no0=0;}while(0)  //PORT_ChangeP110Output(0) 
+#define IRDA_NEAR_REC_EN          do{PM11_bit.no0=0; P11_bit.no0=1;}while(0)  //PORT_ChangeP110Output(1)
 #define RTC_BAT_LOW               (P11_bit.no1)//时钟电池低
 
 
 
 //-----------------------------------------------------------// 
-#define B_7022_CS_0               PORT_ChangeP130Output(0)//CS         
-#define B_7022_CS_1               PORT_ChangeP130Output(1) 
+#define B_7022_CS_0               do{PM13_bit.no0=0; P13_bit.no0=0;}while(0)  //PORT_ChangeP130Output(0)//CS
+#define B_7022_CS_1               do{PM13_bit.no0=0; P13_bit.no0=1;}while(0)  //PORT_ChangeP130Output(1)
 #define LED_TOGGLE_CLR            P13_bit.no1=0   //PORT_ChangeP131Output(0)//跳闸指示      
 #define LED_TOGGLE_SET            P13_bit.no1=1   //PORT_ChangeP131Output(1) 
 
 //-----------------------------------------------------------// 
-#define B_1_485_0                 PORT_ChangeP145Output( 0 )//选择  
-#define B_1_485_1                 PORT_ChangeP145Output( 1 ) 
+#define B_1_485_0                 do{PM14_bit.no5=0; P14_bit.no5=0;}while(0)  //PORT_ChangeP145Output( 0 )//选择  
+#define B_1_485_1                 do{PM14_bit.no5=0; P14_bit.no5=1;}while(0)  //PORT_ChangeP145Output( 1 ) 
 #define ALL_V_LOSS_STATUS         (P14_bit.no1)  //全失压下的IO口状态查询,测试OK
 
 //-----------------------------------------------------------//
@@ -229,20 +231,20 @@ P82/EX2	SECOND_/EN	秒脉冲使能
 #define MEASU_R_LED_0             P15_bit.no1=0     //无功方向指示
 #define MEASU_R_LED_1             P15_bit.no1=1  
 
-#define LCD_BACK_LIGHT_0          PORT_ChangeP152Output( 0 )//液晶背光        
-#define LCD_BACK_LIGHT_1          PORT_ChangeP152Output( 1 ) 
+#define LCD_BACK_LIGHT_0          do{PM15_bit.no2=0; P15_bit.no2=0;}while(0)  //PORT_ChangeP152Output( 0 )//液晶背光        
+#define LCD_BACK_LIGHT_1          do{PM15_bit.no2=0; P15_bit.no2=1;}while(0)  //PORT_ChangeP152Output( 1 ) 
          
-#define LCD_CS_0                  PORT_ChangeP153Output( 0 )//液晶的CS         
-#define LCD_CS_1                  PORT_ChangeP153Output( 1 ) 
+#define LCD_CS_0                  do{PM15_bit.no3=0; P15_bit.no3=0;}while(0)  //PORT_ChangeP153Output( 0 )//液晶的CS         
+#define LCD_CS_1                  do{PM15_bit.no3=0; P15_bit.no3=1;}while(0)  //PORT_ChangeP153Output( 1 ) 
 
 #define BAK_POWER_FOR_LCD         P15_bit.no4=1          //LCD电源由低功耗电池供给;
 #define MAIN_POWER_FOR_LCD        P15_bit.no4=0          //LCD电源由主电源供给;
          
-#define LCD_DATA_0                PORT_ChangeP155Output( 0 )//液晶的DATA         
-#define LCD_DATA_1                PORT_ChangeP155Output( 1 ) 
+#define LCD_DATA_0                do{PM15_bit.no5=0; P15_bit.no5=0;}while(0)  //PORT_ChangeP155Output( 0 )//液晶的DATA         
+#define LCD_DATA_1                do{PM15_bit.no5=0; P15_bit.no5=1;}while(0)  //PORT_ChangeP155Output( 1 ) 
          
-#define LCD_WR_0                  PORT_ChangeP156Output( 0 )//液晶的WR         
-#define LCD_WR_1                  PORT_ChangeP156Output( 1 ) 
+#define LCD_WR_0                  do{PM15_bit.no6=0; P15_bit.no6=0;}while(0)  //PORT_ChangeP156Output( 0 )//液晶的WR         
+#define LCD_WR_1                  do{PM15_bit.no6=0; P15_bit.no6=1;}while(0)  //PORT_ChangeP156Output( 1 ) 
 
 
 //LED报警指示灯

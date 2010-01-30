@@ -1,6 +1,11 @@
 #include "Pub_PUCK.h"
 
 
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "B7"
+#endif
+
+
 
 #if LCD_DRV_CHIP==HT1623    
     #if LCD_PROPERTY==LCD_NORMAL

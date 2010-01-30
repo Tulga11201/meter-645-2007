@@ -1,6 +1,10 @@
 #define INTER_ABS_PUCK
 #include "Pub_PUCK.h"
 
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "P2"
+#endif
+
 //遥控器:200hz以上(即:5ms有一个低脉冲)
 //日光灯:100hz左右(即:10ms有1个低脉冲)
 //手抄器:50～100 hz左右(即:20/10ms有一个低脉冲)

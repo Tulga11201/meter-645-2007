@@ -54,6 +54,6 @@ void Clr_All_Loss_Data(void);
 void Save_All_Loss_Data(void);
 void Init_All_Loss_Sram(void);
 void Count_All_Loss_Proc(void);
-void Get_AllLoss_Curr(void);
+INT8U Get_AllLoss_Curr(void);
 void Get_Curr_Rate(void);
 #endif

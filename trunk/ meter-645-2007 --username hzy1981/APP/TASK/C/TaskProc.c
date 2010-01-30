@@ -3,6 +3,9 @@
 #include "Includes.h"
 #include "pub.h"
 
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "AE"
+#endif
 
 /**********************************************************************************
 函数功能：清除内狗和外狗

@@ -1,6 +1,11 @@
 #define CPU_ESAM_ABS_C
 #include "Pub_PUCK.h"
 
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "P0"
+#endif
+
+
 #if PREPAID_METER>0
 
 #undef Debug_Print

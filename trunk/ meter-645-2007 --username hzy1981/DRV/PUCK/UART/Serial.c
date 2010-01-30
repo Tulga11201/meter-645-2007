@@ -771,6 +771,11 @@ void UART1_Init_PUCK(ULONG baud_rate,INT16U CheckBit)
     return ;  
   
   UART1_Stop( );
+  
+#if (PREPAID_EN >0) && (PREPAID_LOCAL_REMOTE EQ PREPAID_REMOTE)  //远程费控表：用于显示 第二路485
+  B_2_RMT_FK_485_1;
+#endif
+  
   SAU0EN = 1;
   WAITFOR_DRV_CYCLE_TIMEOUT(4);
   SPS0 = (SPS0&0xf0)|Const_Uart_PUCK[Pos].FclkDiv;        //CK00提供给UART0和UART1；
@@ -783,7 +788,16 @@ PUCK:
 ********************************************************************************/
 INT8U UART1_SendData_PUCK(UCHAR* txbuf, USHORT txnum)
 {
-    UART1_SendData(txbuf, txnum );    
+  
+#if (PREPAID_EN >0) && (PREPAID_LOCAL_REMOTE EQ PREPAID_REMOTE)  //远程费控表：用于显示 第二路485
+  B_2_RMT_FK_485_0;
+#endif
+  
+    UART1_SendData(txbuf, txnum );
+    
+#if (PREPAID_EN >0) && (PREPAID_LOCAL_REMOTE EQ PREPAID_REMOTE)  //远程费控表：用于显示 第二路485
+  B_2_RMT_FK_485_1;
+#endif
     return SUCESS;
 
 }

@@ -3,6 +3,13 @@
 
 #if PREPAID_METER>0
 
+
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "B8"
+#endif
+
+
+
 typedef struct
 { 
   INT8U Pwr_Valid:1;

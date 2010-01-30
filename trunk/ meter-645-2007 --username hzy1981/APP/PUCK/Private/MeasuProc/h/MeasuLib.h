@@ -100,9 +100,15 @@ MEASULIB_PUCK_EXT const MEASU_ADJ_PARA InitMeasuPara[IC_PARA_NUM] =
 #else
       {DEFA_TYPE,0x00000000,0,0},                                      //w_EnLineFreq,000000H---------------------45
 #endif
+
       {DEFA_TYPE,0x00000000,0,0},                                      //w_EnUAngle,000000H-----------------------46
       {DEFA_TYPE,0x00000000,0,0},                                      //w_SelectPQSU,000000H---------------------47
+      
+#if I_ORDER_CHK_EN >0 //电流逆相序使能
+      {SPEC_TYPE,0x00000000,0,&Get_I_Order},                           //w_EnDtIorder,000000H---------------------48
+#else
       {DEFA_TYPE,0x00000000,0,0},                                      //w_EnDtIorder,000000H---------------------48
+#endif      
       {DEFA_TYPE,0x000020C4,0,0},                                      //w_LineFreqPg,0020C4H---------------------49
       {DEFA_TYPE,0x00040000,0,0},                                      //RESERVED,040000H-------------------------50
       {DEFA_TYPE,0x00000000,0,0},                                      //RESERVED,000000H-------------------------51

@@ -18,6 +18,11 @@
 
 #if LCD_PROPERTY==LCD_EASY_GZL
 
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "L6"
+#endif
+
+
 // 十六进制转字符串
 static const char hex2cha[] = {
     '0', '1', '2', '3', '4', '5', '6', '7',

@@ -1,5 +1,10 @@
 #include "Pub_PUCK.h"
 
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "B6"
+#endif
+
+
 #if LCD_DRV_CHIP==BL55076  
     #if LCD_PROPERTY==LCD_EASY_GZL
       #define BL_LCD_GZL_C

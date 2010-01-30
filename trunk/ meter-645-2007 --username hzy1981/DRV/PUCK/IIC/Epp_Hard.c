@@ -1,5 +1,10 @@
 #include "DrvPub.h"
 
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "B3"
+#endif
+
+
 //#pragma pack(1)
 typedef struct
 { 

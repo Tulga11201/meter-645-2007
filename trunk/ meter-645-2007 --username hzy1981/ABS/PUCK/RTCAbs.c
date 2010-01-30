@@ -1,5 +1,9 @@
 #define RTC_ABS_PUCK
 #include "Pub_PUCK.h"
+
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "P5"
+#endif
 /**********************************************************************************
 函数功能：初始化外部秒脉冲
 入口：

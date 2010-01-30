@@ -2,7 +2,9 @@
 #define LCD_MAIN_C
 #include "Pub_Puck.h"
 
-
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "L2"
+#endif
 /********************************************************************************
 PUCK:
 函数功能：设置取参数修改DI，设置跳屏标志

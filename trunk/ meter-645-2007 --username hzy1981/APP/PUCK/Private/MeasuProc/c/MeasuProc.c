@@ -5,7 +5,9 @@
 #define    MeasuProc_PUCK
 #include   "MeasuProc.h"
 
-
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "AA"
+#endif
 /**********************************************************************************
 函数功能：判定是否发生了校表事件
 入口：无

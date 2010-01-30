@@ -1,5 +1,9 @@
 #include "DrvPub.h"
 
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "B4"
+#endif
+
 
 #ifdef I2C_SOFT_EPP_EN
 //#pragma pack(1)

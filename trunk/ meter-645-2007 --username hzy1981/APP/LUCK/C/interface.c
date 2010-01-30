@@ -16,6 +16,13 @@
 
 #include "Pub_PUCK.h"
 
+
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "L1"
+#endif
+
+
+
 #if LCD_PROPERTY==LCD_NORMAL
 
 // 十六进制转字符串

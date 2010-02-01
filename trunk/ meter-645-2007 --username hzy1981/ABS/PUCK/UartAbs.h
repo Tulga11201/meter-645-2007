@@ -17,6 +17,8 @@
 
 #ifdef UART1_EN    //UART1使能
   #define UART1 3   //1144CPU无此口
+#else
+  #undef UART1    //1144CPU无此口
 #endif
 
 #ifdef UART1

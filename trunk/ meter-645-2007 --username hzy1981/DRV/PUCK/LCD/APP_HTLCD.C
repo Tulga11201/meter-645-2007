@@ -6,7 +6,6 @@
 #endif
 
 
-
 #if LCD_DRV_CHIP==HT1623    
     #if LCD_PROPERTY==LCD_NORMAL
       #define HTLCD_C

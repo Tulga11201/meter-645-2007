@@ -1,8 +1,7 @@
 [CodeCoverage]
 Enabled=_ 0
 [DisAssemblyWindow]
-NumStates=_ 1
-State 1=_ 1
+NumStates=_ 0
 [MINICUBE2]
 Map0=0,0,262143,262144
 Map1=1,1036032,1048319,12288
@@ -74,7 +73,7 @@ TriggerName=main
 LimitSize=0
 ByteLimit=50
 [DebugChecksum]
-Checksum=-1917292126
+Checksum=305650933
 [InstructionProfiling]
 Enabled=_ 0
 [DriverProfiling]

@@ -9,7 +9,6 @@
 #endif
 
 
-
 typedef struct
 { 
   INT8U Pwr_Valid:1;

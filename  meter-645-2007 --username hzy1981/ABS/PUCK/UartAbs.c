@@ -204,7 +204,16 @@ void Channel_DataReceive_PUCK(INT8U Type,INT32U Status)
     //先发送后打印调试信息，确保速度
     Debug_Print("--------->Send Data,Channel_Id=%d,Len=%d",Type,Len);
     //DEBUG_BUF_PRINT((INT8U *)Temp_Buf_PUCK,Len,PRINT_HEX,30);
+    
     Chanel_Para[Type].ExitFlag=1;
+#if (NET_METER EQ NONET_METER) &&(PREPAID_EN >0) && (PREPAID_LOCAL_REMOTE EQ PREPAID_REMOTE)  //远程费控表：用于显示 第二路485
+    if(Type EQ UART1)
+    {
+      Chanel_Para[Type].ExitFlag=0;
+      Chanel_Para[CHANEL_485_2].ExitFlag=1;
+    }      
+#endif
+    
     SET_STRUCT_SUM(Chanel_Para[Type]);
 
     if(CHECK_STRUCT_VAR(S_Buf_PUCK)==0)  //检查头尾，避免越界

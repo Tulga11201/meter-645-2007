@@ -772,7 +772,7 @@ void UART1_Init_PUCK(ULONG baud_rate,INT16U CheckBit)
   
   UART1_Stop( );
   
-#if (PREPAID_EN >0) && (PREPAID_LOCAL_REMOTE EQ PREPAID_REMOTE)  //远程费控表：用于显示 第二路485
+#if (NET_METER EQ NONET_METER) &&(PREPAID_EN >0) && (PREPAID_LOCAL_REMOTE EQ PREPAID_REMOTE)  //远程费控表：用于显示 第二路485
   B_2_RMT_FK_485_1;
 #endif
   
@@ -789,13 +789,13 @@ PUCK:
 INT8U UART1_SendData_PUCK(UCHAR* txbuf, USHORT txnum)
 {
   
-#if (PREPAID_EN >0) && (PREPAID_LOCAL_REMOTE EQ PREPAID_REMOTE)  //远程费控表：用于显示 第二路485
+#if (NET_METER EQ NONET_METER) &&(PREPAID_EN >0) && (PREPAID_LOCAL_REMOTE EQ PREPAID_REMOTE)  //远程费控表：用于显示 第二路485
   B_2_RMT_FK_485_0;
 #endif
   
     UART1_SendData(txbuf, txnum );
     
-#if (PREPAID_EN >0) && (PREPAID_LOCAL_REMOTE EQ PREPAID_REMOTE)  //远程费控表：用于显示 第二路485
+#if (NET_METER EQ NONET_METER) &&(PREPAID_EN >0) && (PREPAID_LOCAL_REMOTE EQ PREPAID_REMOTE)  //远程费控表：用于显示 第二路485
   B_2_RMT_FK_485_1;
 #endif
     return SUCESS;

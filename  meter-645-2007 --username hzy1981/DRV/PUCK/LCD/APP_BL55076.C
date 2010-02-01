@@ -4,7 +4,6 @@
 #line  __LINE__ "B6"
 #endif
 
-
 #if LCD_DRV_CHIP==BL55076  
     #if LCD_PROPERTY==LCD_EASY_GZL
       #define BL_LCD_GZL_C

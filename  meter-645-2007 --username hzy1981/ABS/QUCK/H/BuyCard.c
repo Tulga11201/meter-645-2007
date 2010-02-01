@@ -67,6 +67,13 @@ INT8U Judge_User_Card_OK(INT8U BuyCard_Kind,INT32U Buy_Count){
                 if( My_Memcmp((INT8U *)&Buy_Count, (INT8U *)&(CurrMeter_MoneyCount),4) ==0 ) 
                 {
 			Dir_Return_Flag = 0xFF;////标示购电次数相等时直接 返写cpu卡   " );
+                        
+                        if( My_Memcmp((INT8U *)Pre_Payment_Para.Cpucard_Number_old_BackUpInEerom, (INT8U *)cpucard_number, LENGTH_CARD_ID_WHEN_CARD_INSERT) )
+                        {
+                           ASSERT_FAILED();
+			   Card_Error_State.CardErrorState.Cpu_Card_Li_San_Yin_Zi_Err=1 ;//卡错误。离散因子错了,有补卡更新了离散因子
+		 	   return ERR;
+		        }
 			return OK;
 		}
                 ////如果是运行状态插入 开户卡 

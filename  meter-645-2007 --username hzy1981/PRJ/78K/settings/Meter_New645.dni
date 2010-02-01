@@ -1,7 +1,8 @@
 [CodeCoverage]
 Enabled=_ 0
 [DisAssemblyWindow]
-NumStates=_ 0
+NumStates=_ 1
+State 1=_ 1
 [MINICUBE2]
 Map0=0,0,262143,262144
 Map1=1,1036032,1048319,12288
@@ -73,7 +74,7 @@ TriggerName=main
 LimitSize=0
 ByteLimit=50
 [DebugChecksum]
-Checksum=305650933
+Checksum=-127857681
 [InstructionProfiling]
 Enabled=_ 0
 [DriverProfiling]
@@ -90,7 +91,10 @@ TypeViolation=1
 UnspecRange=1
 ActionState=1
 [Breakpoints]
-Count=0
+Bp0=_ "STD_CODE" "{F:\A\APP\Main\C\Main_Proc.c}.80.3@1" 1 0 0 0 "" 0 ""
+Bp1=_ "STD_CODE" "{F:\A\APP\TASK\C\TaskProc.c}.105.3@1" 1 0 0 0 "" 0 ""
+Bp2=_ "STD_CODE" "{F:\A\APP\LUCK\C\process.c}.350.7@1" 1 0 0 0 "" 0 ""
+Count=3
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""

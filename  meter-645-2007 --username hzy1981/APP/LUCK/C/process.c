@@ -29,6 +29,20 @@ CONST CONST_PORT_STATUS  S_Dis_Err_Code[]=
 };
 */
 
+
+#if DIS_METER_FAULT_EN >0
+  CONST INT8U CONST_DIS_DEFAULT_ITEM[]=
+  {DIS_CTRL_LOOP_ERR,DIS_ESAM_ERR,DIS_MEM_ERR,DIS_RTCBAT_LOW,DIS_RTC_ERR  
+  };
+  #define MAX_DIS_METER_DEFAULT_NUM (sizeof(CONST_DIS_DEFAULT_ITEM)/sizeof(INT8U))
+#endif
+
+CONST INT8U CONST_DIS_DELAY_ITEM[]=
+{DIS_CERTI_ERR,DIS_CUR_MODI_KEY_ERR  
+};
+#define MAX_DIS_METER_DELAYE_NUM (sizeof(CONST_DIS_DELAY_ITEM)/sizeof(INT8U))
+#define DIS_DELAY_SEC_TIME 10
+  
 void Refresh_Curr_Offset(void)
 {  
   if(modeA==dispmode)
@@ -296,15 +310,62 @@ void Refresh_Sleep_Countr(INT8U Flag)
   }
 }
 /********************************************************************************
-PUCK:更新显示内容,周期是 UPDATETIME ms
-函数功能：按钮等快速响应的LCD处理
+函数功能：电表故障信息:只能通过按钮才能消除
 入口：
-返回：
+返回：1-----------------有电表故障显示；0---------------无电表故障显示。
 ********************************************************************************/
-INT8U Pause_Dis_Event(void) 
+INT8U Dis_Meter_Default(void) 
+{
+ #if DIS_METER_FAULT_EN EQ 0   //不显示电表故障
+  return 0;
+#else
+  char temp[10]={0};
+  INT8U id,i;
+  
+  
+  if(UP_COVER_STATUS EQ 0)
+    ReNew_Err_Code(DIS_CERTI_ERR);
+  
+  if(DOWN_COVER_STATUS)
+    ReNew_Err_Code(DIS_CUR_MODI_KEY_ERR);
+  /**/
+   //全屏显示20秒内:138年翻转1次
+  if(Sec_Timer_Pub<=20 && (Get_Sys_Status()==SYS_NORMAL))  //正常模式下，20秒内全屏显示
+    return 0;
+  
+  if(poweroff())  //掉电情况下
+    return 0;
+  
+  if((Key_Value_Pub.Key.Bit.UpKey)||(Key_Value_Pub.Key.Bit.DownKey))
+    return 0;
+  
+  if(Sys_Err_Info.DelayDis EQ 0)
+    return 0;
+  
+  for(i=0;i<MAX_DIS_METER_DEFAULT_NUM;i++)
+  {
+    id=CONST_DIS_DEFAULT_ITEM[i];
+    if(GET_BIT(Sys_Err_Info.ErrCode[id/8],id%8))  //找到显示的错误代码了
+    {
+      strcpy(temp,"ERR-");
+      temp[4]=id/10+'0';
+      temp[5]=id%10+'0';
+      Main_Dis_Info(temp);
+      return 1;      
+    }
+  }
+  return 0;
+#endif 
+}
+/********************************************************************************
+函数功能：电表故障或者事件显示:通过按钮消除，或者定时消除
+入口：
+返回：1-----------------有电表故障显示；0---------------无电表故障显示。
+********************************************************************************/
+INT8U Dis_Meter_Delay(void) 
 {  
   char temp[10]={0};
-  INT8U id;
+  INT8U id,i;
   
   /*
   if(UP_COVER_STATUS EQ 0)
@@ -315,57 +376,38 @@ INT8U Pause_Dis_Event(void)
   */
    //全屏显示20秒内:138年翻转1次
   if(Sec_Timer_Pub<=20 && (Get_Sys_Status()==SYS_NORMAL))  //正常模式下，20秒内全屏显示
-    return 1;
+    return 0;
   
   if(poweroff())  //掉电情况下
-    return 1;
+    return 0;
   
   if((Key_Value_Pub.Key.Bit.UpKey)||(Key_Value_Pub.Key.Bit.DownKey))
-    return 1;
-  
-  if(Sys_Err_Info.PauseDis EQ 0)
-    return 1;
-  
-  id=DIS_CERTI_ERR;
-  if(GET_BIT(Sys_Err_Info.ErrCode[id/8],id%8))  //找到显示的错误代码了
-  {
-    if(Sec_Timer_Pub-Sec_Timer_Pause.Var<=10)
-    {
-      strcpy(temp,"ERR-");
-      temp[4]=id/10+'0';
-      temp[5]=id%10+'0';
-      Main_Dis_Info(temp);
-      return 0;
-    }
-    else
-    {
-      Sys_Err_Info.PauseDis=0; 
-      CLR_BIT(Sys_Err_Info.ErrCode[id/8],id%8);
-    }    
     return 0;
-  }
   
-  id=DIS_CUR_MODI_KEY_ERR;
-  if(GET_BIT(Sys_Err_Info.ErrCode[id/8],id%8))  //找到显示的错误代码了
-  {
-    if(Sec_Timer_Pub-Sec_Timer_Pause.Var<=10)
-    {
-      strcpy(temp,"ERR-");
-      temp[4]=id/10+'0';
-      temp[5]=id%10+'0';
-      Main_Dis_Info(temp);
-      return 0;
-    }
-    else
-    {
-      Sys_Err_Info.PauseDis=0; 
-      CLR_BIT(Sys_Err_Info.ErrCode[id/8],id%8);
-    }    
+  if(Sys_Err_Info.DelayDis EQ 0)
     return 0;
+  
+  for(i=0;i<MAX_DIS_METER_DELAYE_NUM;i++)
+  {
+    id=CONST_DIS_DELAY_ITEM[i];
+    if(GET_BIT(Sys_Err_Info.ErrCode[id/8],id%8))  //找到显示的错误代码了
+    {
+      if(Sec_Timer_Pub-Sec_Timer_Delay.Var<=DIS_DELAY_SEC_TIME)
+      {
+        strcpy(temp,"ERR-");
+        temp[4]=id/10+'0';
+        temp[5]=id%10+'0';
+        Main_Dis_Info(temp);
+        return 1;
+      }
+      else
+      {
+        Sys_Err_Info.DelayDis=0; 
+        CLR_BIT(Sys_Err_Info.ErrCode[id/8],id%8);
+      }
+    }
   }
-  
-  return 1;
-  
+  return 0;
 }
 /********************************************************************************
 PUCK:更新显示内容,周期是 UPDATETIME ms
@@ -392,8 +434,8 @@ void Key_Fast_LCD_Proc(void)
           
             dispnext();  //下翻---------------PUCK
             Refresh_Sleep_Countr(1);
-            Clr_Err_Code(DIS_CERTI_ERR);
-            Clr_Err_Code(DIS_CUR_MODI_KEY_ERR);
+            //Clr_Err_Code(DIS_CERTI_ERR);
+            //Clr_Err_Code(DIS_CUR_MODI_KEY_ERR);
             break;
         case DOWN_KEY_VALUE:
             //本地费控，才显示与电费相关信息;远程费控：此函数不会返回与电费相关信息
@@ -402,8 +444,8 @@ void Key_Fast_LCD_Proc(void)
           
             dispback();  //上翻---------------PUCK
             Refresh_Sleep_Countr(1);
-            Clr_Err_Code(DIS_CERTI_ERR);
-            Clr_Err_Code(DIS_CUR_MODI_KEY_ERR);
+            //Clr_Err_Code(DIS_CERTI_ERR);
+            //Clr_Err_Code(DIS_CUR_MODI_KEY_ERR);
             break;
             
         case LEFT_KEY_VALUE :
@@ -651,7 +693,7 @@ void Dis_Jump_Para(void)
 void SetOrClr_Err_Code(INT8U ErrCode,INT8U SetOrClr)
 {
  #if SYS_ERR_DIS_EN >0
-  INT8U Byte,Bit;
+  INT8U Byte,Bit,i;
   if(ErrCode>=DIS_ERR_NUM)
     return ;
   
@@ -664,10 +706,13 @@ void SetOrClr_Err_Code(INT8U ErrCode,INT8U SetOrClr)
       Sys_Err_Info.ErrNum++;
     SET_BIT(Sys_Err_Info.ErrCode[Byte],Bit);
     
-    if((ErrCode EQ DIS_CERTI_ERR) ||(ErrCode EQ DIS_CUR_MODI_KEY_ERR))
+    for(i=0;i<MAX_DIS_METER_DELAYE_NUM;i++)
     {
-      Sys_Err_Info.PauseDis=1; 
-      Sec_Timer_Pause.Var=Sec_Timer_Pub;
+      if(CONST_DIS_DELAY_ITEM[i] EQ ErrCode)
+      {
+        Sys_Err_Info.DelayDis=1; 
+        Sec_Timer_Delay.Var=Sec_Timer_Pub;          
+      }        
     }
   }
   else
@@ -678,8 +723,13 @@ void SetOrClr_Err_Code(INT8U ErrCode,INT8U SetOrClr)
     if(Sys_Err_Info.ErrNum EQ 0xff)
       Sys_Err_Info.ErrNum=0;
     
-    if((ErrCode EQ DIS_CERTI_ERR) ||(ErrCode EQ DIS_CUR_MODI_KEY_ERR))
-      Sys_Err_Info.PauseDis=0;   
+    for(i=0;i<MAX_DIS_METER_DELAYE_NUM;i++)
+    {
+      if(CONST_DIS_DELAY_ITEM[i] EQ ErrCode)
+      {
+        Sys_Err_Info.DelayDis=1;        
+      }        
+    }
   }
   
   

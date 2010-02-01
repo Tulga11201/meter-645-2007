@@ -2604,6 +2604,30 @@
         </group>
       </group>
       <group>
+        <name>INTER</name>
+        <file>
+          <name>$PROJ_DIR$\..\..\DRV\SUCK\Int.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\DRV\SUCK\Int.h</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\DRV\SUCK\Int_user.c</name>
+        </file>
+      </group>
+      <group>
+        <name>IO</name>
+        <file>
+          <name>$PROJ_DIR$\..\..\DRV\SUCK\Port.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\DRV\SUCK\port.h</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\DRV\SUCK\user_define.h</name>
+        </file>
+      </group>
+      <group>
         <name>LCD</name>
         <group>
           <name>APP</name>
@@ -2712,6 +2736,30 @@
         </file>
       </group>
       <group>
+        <name>SYSTEM</name>
+        <file>
+          <name>$PROJ_DIR$\..\..\DRV\SUCK\System.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\DRV\SUCK\System.h</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\DRV\SUCK\systeminit.c</name>
+        </file>
+      </group>
+      <group>
+        <name>TAU</name>
+        <file>
+          <name>$PROJ_DIR$\..\..\DRV\SUCK\TAU.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\DRV\SUCK\TAU.h</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\DRV\SUCK\TAU_user.c</name>
+        </file>
+      </group>
+      <group>
         <name>UART</name>
         <file>
           <name>$PROJ_DIR$\..\..\DRV\PUCK\UART\Serial.c</name>
@@ -2745,46 +2793,7 @@
         <name>$PROJ_DIR$\..\..\DRV\SUCK\data_flash.h</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\..\DRV\SUCK\Int.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\..\DRV\SUCK\Int.h</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\..\DRV\SUCK\Int_user.c</name>
-      </file>
-      <file>
         <name>$PROJ_DIR$\..\..\DRV\SUCK\macrodriver.h</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\..\DRV\SUCK\Port.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\..\DRV\SUCK\port.h</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\..\DRV\SUCK\System.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\..\DRV\SUCK\System.h</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\..\DRV\SUCK\System_user.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\..\DRV\SUCK\systeminit.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\..\DRV\SUCK\TAU.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\..\DRV\SUCK\TAU.h</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\..\DRV\SUCK\TAU_user.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\..\DRV\SUCK\user_define.h</name>
       </file>
     </group>
   </group>

@@ -123,6 +123,8 @@
 #define DOWN_COVER_ERR                         //打开:后端子该错误
 
 #define I_ORDER_CHK_EN                0         //1:电流逆相序使能；0：电流逆向相序禁止
+#define DIS_METER_FAULT_EN         1         //1:电表故障显示使能；0：电表故障不显示
+
 
 //多合一端子排配置：秒脉冲、时段、需量、滑差
 //1:配置以下宏，与Const_Port_Status[]中的MultiFlag为0还是1含义不一样；

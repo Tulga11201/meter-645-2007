@@ -7,7 +7,7 @@
 
 
 
-INT8U Get_Modi_Value(INT8U PageNo);
+#define Get_Modi_Value(PageNo) (INT8U)(PageNo<<1)
 //U10:地址冲突，目前程序没有实现
 INT8U Write_EEPROM_Dvice_PUCK(INT8U Mem_ID,INT16U SubAdr,INT16U size,INT8U *src);
 INT8U Read_EEPROM_Dvice_PUCK(INT8U Mem_ID,INT16U SubAdr,INT16U size,INT8U *src);

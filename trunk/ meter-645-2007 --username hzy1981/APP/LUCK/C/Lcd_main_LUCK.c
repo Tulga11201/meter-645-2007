@@ -162,10 +162,13 @@ void LCD_Dis_Switch (void)  //10ms调度一次
   }
   else
   {
-    if(Pause_Dis_Event())   //时间的暂停显示
+    if(Dis_Meter_Default() EQ 0)   //电表故障显示暂停
     {
-      Key_Fast_LCD_Proc();  //键显处理
-      Loop_Dis_LCD_Proc();  //循显处理
+      if(Dis_Meter_Delay() EQ 0)   //电表故障/事件显示
+      {
+        Key_Fast_LCD_Proc();  //键显处理
+        Loop_Dis_LCD_Proc();  //循显处理
+      }
     }
     /*
     Key_Fast_LCD_Proc();  //键显处理

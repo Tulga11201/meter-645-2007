@@ -472,7 +472,12 @@ INT8U Field_Para_Set_Card(void){//现场参数设置卡
             Card_Error_State.CardErrorState.ReadWriteE2romErr=1;
         }
         
-        Debug_Print( "函数执行成功  "  );  
+        if( Updata_Esam_Return_File(0x11)!=OK )  
+        {
+          ASSERT_FAILED();
+          return ERR;
+        }
+        
 	return OK;  
 }
 // //把从 cpu卡得到 的 用户类型，费率切换时间， 保存到电能表中去
@@ -627,7 +632,11 @@ INT8U Set_In_Card(void){///出厂预制卡"
         //事件记录清0， 只是改全局变量， 真正的清0 ，在后面的任务中进行
         My_memcpyRev(&DataTemp[0], (INT8U *)&cpucard_number[4], 4);
         Card_Clr_All_Data(DataTemp); 
-               
+        if( Updata_Esam_Return_File(0x11)!=OK )  
+        {
+          ASSERT_FAILED();
+          return ERR;
+        }       
 	return OK;
 }
 ///参数预置卡， 更改了esam中的参数后，改表中的
@@ -777,7 +786,12 @@ INT8U Password_Card(void)//密钥下装卡/恢复卡
         // 保存用的是 密钥恢复卡，还是密钥下装卡//该变量只有在这里修改，是用来做编程记录的
 	Pre_Payment_Para.PassWord_Kind=PassWord_Kind;////密钥类型,密钥下装卡， 还是密钥恢复卡
         Write_Storage_Data(_SDI_PREPAID_PSW_KIND , (INT8U *)&Pre_Payment_Para.PassWord_Kind ,sizeof(Pre_Payment_Para.PassWord_Kind)) ;
-	return OK;
+	if( Updata_Esam_Return_File(0x11)!=OK )  
+        {
+          ASSERT_FAILED();
+          return ERR;
+        }  
+        return OK;
 }
        
 INT8U Add_Money_Card(void){//增加电费卡
@@ -814,6 +828,11 @@ INT8U Add_Money_Card(void){//增加电费卡
 //告诉黄工， 充值了， 冲了多少钱
 	//Meter_Money_And_Count_Updata(File.Buy_Money,File.Buy_Money_Count );
         Prepaid_Buy_Money_Proc(File.Buy_Money);
+        if( Updata_Esam_Return_File(0x11)!=OK )  
+        {
+          ASSERT_FAILED();
+          return ERR;
+        }  
 	return OK;
 }
 //根据 和黄工的约定，存放在e方中表号pDst[0]应该为 开发套件软件上看到得表地址最右边的一个字节
@@ -880,10 +899,14 @@ INT8U Modify_MeterID_Card(void)
 	CPU_ESAM_CARD_Control(CPU);
         //更新cpu卡返写信息文件， 用来设置的表号变量 保存在该文件中，该变量已被减1 
 	if(Write(0,Update_Binary,0x80+METERID_CARD_RETURN_FILE,0,LENGTH_METERID_RETURN_INF_FILE,(INT8U *) &MeterID_Return_Inf_File)!=OK)
-		{
+	{
 		return ERR;
-		}
-        
+	}
+        if( Updata_Esam_Return_File(0x11)!=OK )  
+        {
+          ASSERT_FAILED();
+          return ERR;
+        }  
 	return OK;
 }
 INT8U Relay_TEST_Card()

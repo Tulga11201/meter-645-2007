@@ -47,7 +47,7 @@ INT8U Esam_Remote_Auth(INT8U *pSrc, INT8U SrcLen, INT8U *pDst, INT8U *pLen, INT8
           DataTemp[ 3]=Cur_Time1.Hour;
           Read_Storage_Data(_SDI_FAR_AUTH_DAY_FOLLOW ,(INT8U *)&Far_Auth_Day_Follow, (INT8U *)&Far_Auth_Day_Follow, 4) ;
           //Get_Array_Time(T_BCD, DataTemp,DataTemp, 5);//从黄工那里得到5个字节的当前时间bcd编码，DataTemp[0]开始分别为：分，时，日，月年，没必要反相了
-          if( memcmp( DataTemp,(INT8U *)&Far_Auth_Day_Follow,4 ) != 0 )//判断日期有没有变更
+          if( memcmp( DataTemp,(INT8U *)&Far_Auth_Day_Follow,3 ) != 0 )//判断日期有没有变更,这里为3而不是4，如果是4就是每一小时1清
           {
             //Far_Auth_Day_Follow=Cur_Time1.Date;
             mem_cpy((INT8U *)&Far_Auth_Day_Follow,DataTemp,4,(INT8U *)&Far_Auth_Day_Follow,4);
@@ -169,28 +169,28 @@ INT8U Far_Deal_Order_0x03(INT8U * Data_Point ,INT8U Source_Length)
 //-----------------------------------------------------------------------------
 INT8U Far_Deal_070000FF(INT8U * Data_Point )
 {     
-     
-      INT16U ValidTimeTemp;
-      //错误状态字清0，
-       Far_Security_Auth_Err_Info.intd=0;
-       Card_Error_State.CardErrorState_INT32U=0;
-       mem_set((INT8U *)&FarPrePayment.Far_Error_State,0x00,sizeof(FarPrePayment.Far_Error_State),(INT8U *)&FarPrePayment.Far_Error_State,sizeof(FarPrePayment.Far_Error_State));
+      
+        INT16U ValidTimeTemp;
+        //错误状态字清0，
+        Far_Security_Auth_Err_Info.intd=0;
+        Card_Error_State.CardErrorState_INT32U=0;
+        mem_set((INT8U *)&FarPrePayment.Far_Error_State,0x00,sizeof(FarPrePayment.Far_Error_State),(INT8U *)&FarPrePayment.Far_Error_State,sizeof(FarPrePayment.Far_Error_State));
 		
         ///esam复位
-       if( (Esamcard_Reset() )!=OK )
-       { 
+        if( (Esamcard_Reset() )!=OK )
+        { 
                 ASSERT_FAILED();
 		Card_Error_State.CardErrorState.CPU_CARD_ESAM_ATR_ERR=1;
 		return ERR;
-       } 
-       mem_cpy((INT8U *)esam_number,receive_send_buffer+5,8,(INT8U *)esam_number,8);
-       CPU_ESAM_CARD_Control(ESAM);
-	if( Select_Directry(0,0x3F,00) != OK )
+        } 
+        mem_cpy((INT8U *)esam_number,receive_send_buffer+5,8,(INT8U *)esam_number,8);
+        CPU_ESAM_CARD_Control(ESAM);
+        if( Select_Directry(0,0x3F,00) != OK )
         {
                 ASSERT_FAILED();
                 Card_Error_State.CardErrorState.CPU_CARD_ESAM_ATR_ERR=1;
 		return ERR;
-	}	
+        }	
 	///开始远程身份认证
 	if(Far_Esamcard_Internal_Auth(Data_Point)==OK)
         {
@@ -221,7 +221,7 @@ INT8U Far_Deal_070000FF(INT8U * Data_Point )
                 {
                    ValidTimeTemp=5;
                 }
-                Reset_Pay_Timer(ValidTimeTemp*60);// Reset_Pay_Timer(0);
+                Reset_Pay_Timer(ValidTimeTemp*60);// 
 
                 return OK;
 	}

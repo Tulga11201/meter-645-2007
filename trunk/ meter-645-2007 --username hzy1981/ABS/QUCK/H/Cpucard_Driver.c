@@ -688,12 +688,14 @@ void Deal_Run_Inf_Data(INT8U * Source_Point,INT8U Mode)
         
         INT32U Temp ;
         INT8U  DataTemp[5];
-        
-        Temp=sizeof(Run_Inf_Data);
+  
         //" 用户编号，表号，用户类型"
         mem_cpy(&Run_Inf_Data.Client_ID[0],(INT8U *)Pre_Payment_Para.UserID,6,&Run_Inf_Data.Client_ID[0],LENGTH_USER_ID);
         mem_cpy(&Run_Inf_Data.Meter_ID[0],(INT8U *)Pre_Payment_Para.BcdMeterID,6,&Run_Inf_Data.Meter_ID[0],6);
-        Run_Inf_Data.User_Kind=CardType;
+        //Run_Inf_Data.User_Kind=CardType;
+        //Write_Storage_Data(_SDI_SINGLE_OR_COMPLEX_USER_KIND, &SingleKing_OrComplexKing,1);
+        Read_Storage_Data(_SDI_SINGLE_OR_COMPLEX_USER_KIND, DataTemp, DataTemp, 4);
+        Run_Inf_Data.User_Kind=DataTemp[0];
         ///剩余电费  
         CurrMeter_MoneyCount=Get_Left_Money();
  	My_memcpyRev( (INT8U *)&(Run_Inf_Data.Remain_Money),(INT8U *)&(CurrMeter_MoneyCount),4);

@@ -146,9 +146,6 @@ typedef enum {
 // 获取按键值
 u8 getpkey (void);
 
-// 开关液晶背光
-void lcdlight (u8 stat);
-
 // 判断是否停电
 bool poweroff (void);
 
@@ -157,9 +154,6 @@ bool rtvalue (item_t item);
 
 // 参数初始化
 void lcdinit (void);
-
-// A屏轮显时间
-s16 rolltime ();
 
 // 获取协议数据内容
 s16 getdata (item_t id, void* buff, void* start, s16 maxlen);

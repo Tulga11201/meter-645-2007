@@ -488,21 +488,6 @@ void lcdinit (void) {
     
 }
 
-// 循显时间：秒
-s16 rolltime () {
-    return (rollcycle);
-}
-
-// 开关液晶背光
-void lcdlight (u8 stat) {
-    if (stat > 0) {
-        Turn_Light_On();
-    } else {
-        Turn_Light_Off();
-    }
-}
-
-
 /********************************************************************************
 函数原型：void Init_Event_DIS_PUCK(stat_t *stat )
 函数功能：初始化事件

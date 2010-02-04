@@ -21,7 +21,7 @@
 #define SECOND_1(x) ((1000/(UPDATETIME*4))*x)
 #define SECOND_2(x) ((1000/(UPDATETIME*2))*x)
 #define SECOND_3(x) ((1000/UPDATETIME)*x)
-#define CYCLE     rolltime()
+#define CYCLE     rollcycle
 
 typedef unsigned char  ikey_t; ///< irda key values.
 

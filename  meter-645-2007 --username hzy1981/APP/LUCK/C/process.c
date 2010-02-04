@@ -20,21 +20,21 @@
 
 extern PROTO_DI Set_ParaModi_Proc(PROTO_DI ModiDI);
 extern unsigned char Ser_Support_Code(item_t code);
+
 /*
-//以下对所有输出口的抽象定义
-CONST CONST_PORT_STATUS  S_Dis_Err_Code[]=
-{
-  DIS_N0_ERR,DIS_CTRL_LOOP_ERR,DIS_ESAM_ERR,DIS_MEM_ERR,DIS_RTC_ERR,DIS_RTCBAT_LOW,
-  DIS_POWER_EXCEED_ERR,DIS_CUR_VERY_NOEVEN_ERR,DIS_VOLT_EXCEED_ERR,DIS_PF_EXCEED_ERR,DIS_DEMAND_EXCEED_ERR
-};
+1:对于电能表故障类异常提示，异常一旦发生需将自动循环显示功能暂停，液晶屏固定显示该故障异常代码。当故障类异常只有一个发生时，液晶屏固定显示该故障类异常代码。当故障类异常有几个同时发生时，按照故障类异常代码递增顺序循环显示，显示间隔为循显时间，可以按任一键跳出故障异常代码显示。按键循环显示情况下无按键时间60S后，返回故障类异常代码自动循环显示。
+2:对于事件类异常提示，一旦发生需要在循环显示的第一屏插入事件类异常代码。当事件类异常代码只有一个发生时，在循环显示的第一屏插入该事件类异常代码。当事件类异常代码有几个同时发生时，在循环显示的第一屏前按照递增顺序插入全部发生的事件类异常代码，显示间隔为循显时间。通过按键可以按显发生的全部异常代码。
+3:对于CUP卡异常提示，在CPU卡处理过程中发生的异常需要在CPU卡处理结束后进行提示，抽出CPU卡后返回自动循环显示。（本地费控表具有该功能）
+4:远程费控：err10，err16显示处理。
 */
 
-
 #if DIS_METER_FAULT_EN >0
-  CONST INT8U CONST_DIS_DEFAULT_ITEM[]=
+  CONST INT8U CONST_DIS_FAULT_ITEM[]=
   {DIS_CTRL_LOOP_ERR,DIS_ESAM_ERR,DIS_MEM_ERR,DIS_RTCBAT_LOW,DIS_RTC_ERR  
   };
-  #define MAX_DIS_METER_DEFAULT_NUM (sizeof(CONST_DIS_DEFAULT_ITEM)/sizeof(INT8U))
+  #define MAX_DIS_METER_FAULT_NUM (sizeof(CONST_DIS_FAULT_ITEM)/sizeof(INT8U))
+  #define DIS_FAULT_SEC_TIME CYCLE
+  #define DIS_FAULT_SJMP_SEC 16
 #endif
 
 CONST INT8U CONST_DIS_DELAY_ITEM[]=
@@ -235,6 +235,11 @@ void Process (ikey_t key) {
             break;
         case 0x18 :
             lcdlight(flg ^= 1);
+            flg ^= 1;
+            if(flg)
+              Turn_Light_On();
+            else
+              Turn_Light_Off();
             break;
     }
 }
@@ -260,6 +265,7 @@ void Initial (void)
     */
 #if SYS_ERR_DIS_EN >0
     mem_set((void *)(&Sys_Err_Info),0x00,sizeof(Sys_Err_Info),(void *)(&Sys_Err_Info),sizeof(Sys_Err_Info));
+    Sys_Err_Info.LastFault=0xff;
     INIT_STRUCT_VAR(Sys_Err_Info);  //把头尾填齐
 #endif   
 }
@@ -316,20 +322,23 @@ void Refresh_Sleep_Countr(INT8U Flag)
 ********************************************************************************/
 INT8U Dis_Meter_Default(void) 
 {
- #if DIS_METER_FAULT_EN EQ 0   //不显示电表故障
+#if DIS_METER_FAULT_EN EQ 0   //不显示电表故障
   return 0;
 #else
   char temp[10]={0};
-  INT8U id,i;
-  
+  INT8U id,i,flag;
   
   if(UP_COVER_STATUS EQ 0)
-    ReNew_Err_Code(DIS_CERTI_ERR);
+    ReNew_Err_Code(DIS_CTRL_LOOP_ERR);
   
-  if(DOWN_COVER_STATUS)
-    ReNew_Err_Code(DIS_CUR_MODI_KEY_ERR);
-  /**/
+  //if(DOWN_COVER_STATUS)
+  //  ReNew_Err_Code(DIS_MEM_ERR);
+  
    //全屏显示20秒内:138年翻转1次
+  
+  if(Sys_Err_Info.FaultDis EQ 0)
+    return 0;
+  
   if(Sec_Timer_Pub<=20 && (Get_Sys_Status()==SYS_NORMAL))  //正常模式下，20秒内全屏显示
     return 0;
   
@@ -338,23 +347,41 @@ INT8U Dis_Meter_Default(void)
   
   if((Key_Value_Pub.Key.Bit.UpKey)||(Key_Value_Pub.Key.Bit.DownKey))
     return 0;
-  
-  if(Sys_Err_Info.DelayDis EQ 0)
+    
+  if((Sys_Err_Info.FaultCtrl EQ 0) && (Sec_Timer_Pub-Sec_Timer_Default.Var<DIS_FAULT_SJMP_SEC))
     return 0;
   
-  for(i=0;i<MAX_DIS_METER_DEFAULT_NUM;i++)
+  if((Sys_Err_Info.FaultCtrl) && (Sec_Timer_Pub-Sec_Timer_Default.Var<CYCLE))       //故障模式下的循显
+    return 1;
+  
+  if((Sys_Err_Info.FaultCtrl EQ 0) && (Sec_Timer_Pub-Sec_Timer_Default.Var>=DIS_FAULT_SJMP_SEC)) //按钮后，切换到故障模式
+  {    
+    Sys_Err_Info.FaultCtrl=1;
+  }
+  
+  flag=0;
+  for(i=0;i<MAX_DIS_METER_FAULT_NUM;i++)
   {
-    id=CONST_DIS_DEFAULT_ITEM[i];
+    id=CONST_DIS_FAULT_ITEM[i];
     if(GET_BIT(Sys_Err_Info.ErrCode[id/8],id%8))  //找到显示的错误代码了
     {
+      if(Sys_Err_Info.LastFault EQ id)
+      {
+        flag=1;
+        continue ;
+      }
+      
+      Sys_Err_Info.LastFault=id;
       strcpy(temp,"ERR-");
       temp[4]=id/10+'0';
       temp[5]=id%10+'0';
       Main_Dis_Info(temp);
+      INIT_DIS_FAULT_TIMR;
+      Turn_Light_Off();
       return 1;      
     }
   }
-  return 0;
+  return flag;
 #endif 
 }
 /********************************************************************************
@@ -363,7 +390,7 @@ INT8U Dis_Meter_Default(void)
 返回：1-----------------有电表故障显示；0---------------无电表故障显示。
 ********************************************************************************/
 INT8U Dis_Meter_Delay(void) 
-{  
+{
   char temp[10]={0};
   INT8U id,i;
   
@@ -410,6 +437,25 @@ INT8U Dis_Meter_Delay(void)
   return 0;
 }
 /********************************************************************************
+函数功能：按钮清除故障显示代码
+入口：
+返回：
+********************************************************************************/
+void  Clr_Dis_Err_Key(void)
+{
+  INT8U i;
+  
+  Sys_Err_Info.LastFault=0xff;
+  Sys_Err_Info.FaultCtrl=0;
+  INIT_DIS_FAULT_TIMR;
+  
+  
+  for(i=0;i<MAX_DIS_METER_DELAYE_NUM;i++)
+  {
+    Clr_Err_Code(CONST_DIS_DELAY_ITEM[i]);
+  }
+}
+/********************************************************************************
 PUCK:更新显示内容,周期是 UPDATETIME ms
 函数功能：按钮等快速响应的LCD处理
 入口：
@@ -434,8 +480,7 @@ void Key_Fast_LCD_Proc(void)
           
             dispnext();  //下翻---------------PUCK
             Refresh_Sleep_Countr(1);
-            //Clr_Err_Code(DIS_CERTI_ERR);
-            //Clr_Err_Code(DIS_CUR_MODI_KEY_ERR);
+            Clr_Dis_Err_Key();
             break;
         case DOWN_KEY_VALUE:
             //本地费控，才显示与电费相关信息;远程费控：此函数不会返回与电费相关信息
@@ -444,8 +489,7 @@ void Key_Fast_LCD_Proc(void)
           
             dispback();  //上翻---------------PUCK
             Refresh_Sleep_Countr(1);
-            //Clr_Err_Code(DIS_CERTI_ERR);
-            //Clr_Err_Code(DIS_CUR_MODI_KEY_ERR);
+            Clr_Dis_Err_Key();
             break;
             
         case LEFT_KEY_VALUE :
@@ -591,9 +635,9 @@ void Dis_Meter_Loop(void)
    if (LIGHT_SEC_TIMER_DIFF== 0) 
    {
      if(poweroff()||Chk_Light_Condition())      //掉电或者三相电压都低于75%Un时，关闭背光
-        lcdlight(FALSE);
+        Turn_Light_Off();
      else                   //非掉电情况下，打开背光
-        lcdlight(TRUE);
+        Turn_Light_On();
    }
    
    if(LIGHT_SEC_TIMER_DIFF!=0)
@@ -603,7 +647,7 @@ void Dis_Meter_Loop(void)
      {
        //Light_Mode=LIGHT_ON_NONE;
        CLR_LIGHT_ON;     
-       lcdlight(FALSE);
+       Turn_Light_Off();
      }
      
      //按钮/插卡
@@ -613,8 +657,8 @@ void Dis_Meter_Loop(void)
        //Sys_Err_Info.LoopDis=0;
 #endif  
        //Light_Mode=LIGHT_ON_NONE;
-       CLR_LIGHT_ON;     
-       lcdlight(FALSE);
+       CLR_LIGHT_ON;
+       Turn_Light_Off();
      }
    }
    
@@ -711,7 +755,17 @@ void SetOrClr_Err_Code(INT8U ErrCode,INT8U SetOrClr)
       if(CONST_DIS_DELAY_ITEM[i] EQ ErrCode)
       {
         Sys_Err_Info.DelayDis=1; 
-        Sec_Timer_Delay.Var=Sec_Timer_Pub;          
+        Sec_Timer_Delay.Var=Sec_Timer_Pub;
+        break ;
+      }        
+    }
+    for(i=0;i<MAX_DIS_METER_FAULT_NUM;i++)
+    {
+      if(CONST_DIS_FAULT_ITEM[i] EQ ErrCode)
+      {
+        Sys_Err_Info.FaultDis=1;
+        Sys_Err_Info.FaultCtrl=1;
+        return ;
       }        
     }
   }
@@ -723,11 +777,27 @@ void SetOrClr_Err_Code(INT8U ErrCode,INT8U SetOrClr)
     if(Sys_Err_Info.ErrNum EQ 0xff)
       Sys_Err_Info.ErrNum=0;
     
+    for(i=0;i<MAX_DIS_METER_FAULT_NUM;i++)
+    {
+      Byte=CONST_DIS_FAULT_ITEM[i]/8;
+      Bit=CONST_DIS_FAULT_ITEM[i]%8;
+      if(GET_BIT(Sys_Err_Info.ErrCode[Byte],Bit)) //故障信息存在
+      {
+        break ;
+      }        
+    }
+    
+    if(i>=MAX_DIS_METER_FAULT_NUM)  //故障信息不存在
+    {
+        Sys_Err_Info.FaultDis=0;
+        Sys_Err_Info.FaultCtrl=0;        
+    }
+    
     for(i=0;i<MAX_DIS_METER_DELAYE_NUM;i++)
     {
       if(CONST_DIS_DELAY_ITEM[i] EQ ErrCode)
       {
-        Sys_Err_Info.DelayDis=1;        
+        Sys_Err_Info.DelayDis=0;        
       }        
     }
   }

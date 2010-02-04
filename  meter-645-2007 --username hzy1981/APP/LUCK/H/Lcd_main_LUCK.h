@@ -271,6 +271,6 @@ void ReNew_Err_Code(INT8U ErrCode);
 void Clr_Err_Code(INT8U ErrCode);
 void  lcd_Pre_Pay    (INT8U shenyu,INT8U jine);
 void Refresh_Sleep_Countr(INT8U);
-INT8U Dis_Meter_Default(void) ;
+INT8U Dis_Meter_Fault(void) ;
 INT8U Dis_Meter_Delay(void);
 #endif

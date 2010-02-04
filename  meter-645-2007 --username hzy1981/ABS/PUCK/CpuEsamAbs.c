@@ -226,74 +226,72 @@ void CPU_Card_Main_Proc(void)
   
   if(JUDGE_CPU_INSERT)  //插卡处理
   {
-      if((Curr_Media_Status.Media_Type EQ PAY_NONE) && CHECK_STRUCT_SUM(Curr_Media_Status))
-      {
-        if(JUDGE_CPU_INSERT EQ 0)  //当前是拔卡状态，干扰
-        return;
-        
-        ENABLE_BEEP_ALARM;
-        Turn_Light_On();
-        Curr_Media_Status.Media_Type=PAY_CPU_CARD;
-        SET_STRUCT_SUM(Curr_Media_Status);
-        Light_Mode=LIGHT_ON_CARD;
-        //SetOnDevice_PUCK(S_DUKA);
-        //SetOnDevice_PUCK(S_ZHONG);
-        //UpdataLcdShow();        
-        
-        Ok_Flag=1;
-        if(Check_Max_Volt_Below(Get_Un()*0.7))   //电压太低，不能买电
-          Ok_Flag=0;
-
-        Result=ICcardMain();        
-        if(Ok_Flag && Result)   //操作成功
-        {
-          Port_Out_Pub(INTER_ID_ALARM_BEEP,300);  //叫1秒
-          Clr_Err_Code(DIS_CERTI_ERR);
-          Clr_Err_Code(DIS_CUR_MODI_KEY_ERR);
-        }
-        else
-        {
-          Port_Out_Pub(INTER_ID_ALARM_BEEP,1000);  //叫3秒
-          //strcpy(temp,"FAILED");
-        }
-        //Main_Dis_Info(temp);
-        //OS_TimeDly_Sec(1);//1s睡眠
-        
-        if(Ok_Flag EQ 0)           //电压太低，不能买电
-          Result=DIS_LOW_VOLT_ERR;
-        else
-        {
-          Ok_Flag=Result;
-          Result=Convert_Dis_Code();          
-        }
-        while(JUDGE_CPU_INSERT)
-        {
-          Turn_Light_On();
-          OS_TimeDly_Ms(100);
-          Clear_Ext_Dog();    //最快的任务：清CPU外部看门狗
-          Clear_Task_Dog();   //清任务看门狗          
-          Dis_Card_Result(Ok_Flag,Result);
-          CLR_LIGHT_ON;
-        }
-        Realse_Local_Pay_Source();
-      }
-  }
-  else                //拔卡处理
-  {
-    if((Curr_Media_Status.Media_Type EQ PAY_CPU_CARD) && CHECK_STRUCT_SUM(Curr_Media_Status))  //原先已插卡
+    if(Curr_Media_Status.LastStus EQ CARD_IN)  //卡还是插入状态，没有拔出
+      return ;
+    
+    if((Curr_Media_Status.Media_Type EQ PAY_NONE) && CHECK_STRUCT_SUM(Curr_Media_Status))
     {
-       if(JUDGE_CPU_INSERT)  //当前是插卡状态，干扰
+      if(JUDGE_CPU_INSERT EQ 0)  //当前是拔卡状态，干扰
         return;
-        
-        Sys_Err_Info.DisIndex=0;
-        Port_Out_Pub(INTER_ID_ALARM_BEEP,300);
-        Curr_Media_Status.Media_Type=PAY_NONE;
-        SET_STRUCT_SUM(Curr_Media_Status);
-        Realse_Local_Pay_Source();
-        OS_TimeDly_Sec(1);//1s睡眠
-        RESET_LOOP_DIS;
-        dispmode = modeA;
+      
+      Curr_Media_Status.LastStus=CARD_IN;
+      ENABLE_BEEP_ALARM;
+      Turn_Light_On();
+      Curr_Media_Status.Media_Type=PAY_CPU_CARD;
+      SET_STRUCT_SUM(Curr_Media_Status);
+      Light_Mode=LIGHT_ON_CARD;
+      //SetOnDevice_PUCK(S_DUKA);
+      //SetOnDevice_PUCK(S_ZHONG);
+      //UpdataLcdShow();        
+      
+      Ok_Flag=1;
+      if(Check_Max_Volt_Below(Get_Un()*0.7))   //电压太低，不能买电
+        Ok_Flag=0;
+
+      Result=ICcardMain();        
+      if(Ok_Flag && Result)   //操作成功
+      {
+        Port_Out_Pub(INTER_ID_ALARM_BEEP,300);  //叫1秒
+        Clr_Err_Code(DIS_CERTI_ERR);
+        Clr_Err_Code(DIS_CUR_MODI_KEY_ERR);
+      }
+      else
+      {
+        Port_Out_Pub(INTER_ID_ALARM_BEEP,1000);  //叫3秒
+        //strcpy(temp,"FAILED");
+      }
+      //Main_Dis_Info(temp);
+      //OS_TimeDly_Sec(1);//1s睡眠
+      
+      if(Ok_Flag EQ 0)           //电压太低，不能买电
+        Result=DIS_LOW_VOLT_ERR;
+      else
+      {
+        Ok_Flag=Result;
+        Result=Convert_Dis_Code();
+      }
+
+      Clear_Ext_Dog();    //最快的任务：清CPU外部看门狗
+      Dis_Card_Result(Ok_Flag,Result);
+      CLR_LIGHT_ON;      
+      
+      Sys_Err_Info.DisIndex=0;
+      Port_Out_Pub(INTER_ID_ALARM_BEEP,300);
+      Curr_Media_Status.Media_Type=PAY_NONE;
+      SET_STRUCT_SUM(Curr_Media_Status);
+      Realse_Local_Pay_Source();
+      
+      OS_TimeDly_Sec(1);//1s睡眠
+      
+      RESET_LOOP_DIS;
+      dispmode = modeA;        
+      OS_TimeDly_Sec(1);
     }
+  }
+  else
+  {
+    Curr_Media_Status.LastStus=CARD_OUT;
+    SET_STRUCT_SUM(Curr_Media_Status);
   }
 #endif
 }

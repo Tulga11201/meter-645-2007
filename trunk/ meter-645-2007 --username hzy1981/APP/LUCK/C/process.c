@@ -37,12 +37,16 @@ extern unsigned char Ser_Support_Code(item_t code);
   #define DIS_FAULT_SJMP_SEC 16
 #endif
 
-CONST INT8U CONST_DIS_DELAY_ITEM[]=
-{DIS_CERTI_ERR,DIS_CUR_MODI_KEY_ERR  
-};
-#define MAX_DIS_METER_DELAYE_NUM (sizeof(CONST_DIS_DELAY_ITEM)/sizeof(INT8U))
-#define DIS_DELAY_SEC_TIME 10
   
+  
+  
+#if (PREPAID_EN && (PREPAID_LOCAL_REMOTE EQ PREPAID_REMOTE))  //远程费控表
+  CONST INT8U CONST_DIS_DELAY_ITEM[]=
+  {DIS_CERTI_ERR,DIS_CUR_MODI_KEY_ERR};
+  
+  #define MAX_DIS_METER_DELAYE_NUM (sizeof(CONST_DIS_DELAY_ITEM)/sizeof(INT8U))
+  #define DIS_DELAY_SEC_TIME 10
+#endif  
 void Refresh_Curr_Offset(void)
 {  
   if(modeA==dispmode)
@@ -315,12 +319,28 @@ void Refresh_Sleep_Countr(INT8U Flag)
       Sleep_Sec_Countr.Var=Sec_Timer_Pub;
   }
 }
+
+INT8U Judge_Mask_Dis(void)
+{
+  //全屏显示20秒内:138年翻转1次
+  if(Sec_Timer_Pub<=20 && (Get_Sys_Status()==SYS_NORMAL))  //正常模式下，20秒内全屏显示
+    return 1;
+  
+  if(poweroff())  //掉电情况下
+    return 1;
+  
+  if((Key_Value_Pub.Key.Bit.UpKey)||(Key_Value_Pub.Key.Bit.DownKey))
+    return 1;  
+  
+  return 0;  
+}
+
 /********************************************************************************
 函数功能：电表故障信息:只能通过按钮才能消除
 入口：
 返回：1-----------------有电表故障显示；0---------------无电表故障显示。
 ********************************************************************************/
-INT8U Dis_Meter_Default(void) 
+INT8U Dis_Meter_Fault(void) 
 {
 #if DIS_METER_FAULT_EN EQ 0   //不显示电表故障
   return 0;
@@ -339,13 +359,7 @@ INT8U Dis_Meter_Default(void)
   if(Sys_Err_Info.FaultDis EQ 0)
     return 0;
   
-  if(Sec_Timer_Pub<=20 && (Get_Sys_Status()==SYS_NORMAL))  //正常模式下，20秒内全屏显示
-    return 0;
-  
-  if(poweroff())  //掉电情况下
-    return 0;
-  
-  if((Key_Value_Pub.Key.Bit.UpKey)||(Key_Value_Pub.Key.Bit.DownKey))
+  if(Judge_Mask_Dis())
     return 0;
     
   if((Sys_Err_Info.FaultCtrl EQ 0) && (Sec_Timer_Pub-Sec_Timer_Default.Var<DIS_FAULT_SJMP_SEC))
@@ -391,6 +405,7 @@ INT8U Dis_Meter_Default(void)
 ********************************************************************************/
 INT8U Dis_Meter_Delay(void) 
 {
+#if (PREPAID_EN && (PREPAID_LOCAL_REMOTE EQ PREPAID_REMOTE))  //远程费控表
   char temp[10]={0};
   INT8U id,i;
   
@@ -401,17 +416,11 @@ INT8U Dis_Meter_Delay(void)
   if(DOWN_COVER_STATUS)
     ReNew_Err_Code(DIS_CUR_MODI_KEY_ERR);
   */
-   //全屏显示20秒内:138年翻转1次
-  if(Sec_Timer_Pub<=20 && (Get_Sys_Status()==SYS_NORMAL))  //正常模式下，20秒内全屏显示
-    return 0;
-  
-  if(poweroff())  //掉电情况下
-    return 0;
-  
-  if((Key_Value_Pub.Key.Bit.UpKey)||(Key_Value_Pub.Key.Bit.DownKey))
-    return 0;
   
   if(Sys_Err_Info.DelayDis EQ 0)
+    return 0;
+  
+  if(Judge_Mask_Dis())
     return 0;
   
   for(i=0;i<MAX_DIS_METER_DELAYE_NUM;i++)
@@ -433,7 +442,9 @@ INT8U Dis_Meter_Delay(void)
         CLR_BIT(Sys_Err_Info.ErrCode[id/8],id%8);
       }
     }
-  }
+  }  
+#endif
+  
   return 0;
 }
 /********************************************************************************
@@ -443,17 +454,20 @@ INT8U Dis_Meter_Delay(void)
 ********************************************************************************/
 void  Clr_Dis_Err_Key(void)
 {
+  
+#if (PREPAID_EN && (PREPAID_LOCAL_REMOTE EQ PREPAID_REMOTE))  //远程费控表  
   INT8U i;
+ 
+  for(i=0;i<MAX_DIS_METER_DELAYE_NUM;i++)
+  {
+    Clr_Err_Code(CONST_DIS_DELAY_ITEM[i]);
+  }
+#endif
   
   Sys_Err_Info.LastFault=0xff;
   Sys_Err_Info.FaultCtrl=0;
   INIT_DIS_FAULT_TIMR;
   
-  
-  for(i=0;i<MAX_DIS_METER_DELAYE_NUM;i++)
-  {
-    Clr_Err_Code(CONST_DIS_DELAY_ITEM[i]);
-  }
 }
 /********************************************************************************
 PUCK:更新显示内容,周期是 UPDATETIME ms
@@ -749,7 +763,8 @@ void SetOrClr_Err_Code(INT8U ErrCode,INT8U SetOrClr)
     if(GET_BIT(Sys_Err_Info.ErrCode[Byte],Bit) EQ 0)
       Sys_Err_Info.ErrNum++;
     SET_BIT(Sys_Err_Info.ErrCode[Byte],Bit);
-    
+ 
+#if (PREPAID_EN && (PREPAID_LOCAL_REMOTE EQ PREPAID_REMOTE))  //远程费控表     
     for(i=0;i<MAX_DIS_METER_DELAYE_NUM;i++)
     {
       if(CONST_DIS_DELAY_ITEM[i] EQ ErrCode)
@@ -759,6 +774,8 @@ void SetOrClr_Err_Code(INT8U ErrCode,INT8U SetOrClr)
         break ;
       }        
     }
+#endif
+    
     for(i=0;i<MAX_DIS_METER_FAULT_NUM;i++)
     {
       if(CONST_DIS_FAULT_ITEM[i] EQ ErrCode)
@@ -793,6 +810,7 @@ void SetOrClr_Err_Code(INT8U ErrCode,INT8U SetOrClr)
         Sys_Err_Info.FaultCtrl=0;        
     }
     
+#if (PREPAID_EN && (PREPAID_LOCAL_REMOTE EQ PREPAID_REMOTE))  //远程费控表     
     for(i=0;i<MAX_DIS_METER_DELAYE_NUM;i++)
     {
       if(CONST_DIS_DELAY_ITEM[i] EQ ErrCode)
@@ -800,19 +818,10 @@ void SetOrClr_Err_Code(INT8U ErrCode,INT8U SetOrClr)
         Sys_Err_Info.DelayDis=0;        
       }        
     }
+#endif
+    
   }
   
   
 #endif
-}
-
-void ReNew_Err_Code(INT8U ErrCode)
-{
-  SetOrClr_Err_Code(ErrCode,1);
-}
-
-
-void Clr_Err_Code(INT8U ErrCode)
-{
-  SetOrClr_Err_Code(ErrCode,0);
 }

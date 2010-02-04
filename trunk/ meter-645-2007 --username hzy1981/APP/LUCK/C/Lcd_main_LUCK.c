@@ -162,7 +162,7 @@ void LCD_Dis_Switch (void)  //10ms调度一次
   }
   else
   {
-    if(Dis_Meter_Default() EQ 0)   //电表故障显示暂停
+    if(Dis_Meter_Fault() EQ 0)   //电表故障显示暂停
     {
       if(Dis_Meter_Delay() EQ 0)   //电表故障/事件显示
       {

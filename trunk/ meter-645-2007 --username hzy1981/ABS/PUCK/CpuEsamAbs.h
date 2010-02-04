@@ -54,10 +54,14 @@
 #define WRITE_CPU_ESAM      0
 #define READ_CPU_ESAM       1
 
+
+#define CARD_IN         1
+#define CARD_OUT        2
 typedef struct
 {
   INT8U Uart_Type;               //当前操作的串口类型:PAY_NONE,PAY_CPU_CARD,PAY_ESAM
-  INT8U Media_Type;              //当前介质类型:PAY_NONE,PAY_CPU_CARD
+  INT8U Media_Type:4;              //当前介质类型:PAY_NONE,PAY_CPU_CARD :0～4
+  INT8U LastStus:4;              //当前介质类型:PAY_NONE,PAY_CPU_CARD :0～4
   INT8U CS[CS_BYTES];            //校验和
 }PAY_CPU_ESAM_DRV;
 CPU_ESAM_ABS_EXT PAY_CPU_ESAM_DRV Curr_Media_Status;

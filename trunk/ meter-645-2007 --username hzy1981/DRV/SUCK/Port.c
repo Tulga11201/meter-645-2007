@@ -30,6 +30,10 @@ void PORT_Init(INT32U Mode )
         P15_bit.no0=1; P15_bit.no1=1; P15_bit.no3=0;P15_bit.no4=0; P15_bit.no5=0; P15_bit.no6=0;
         
         //模式寄存器初始化
+#if NET_METER == CARRIER_METER   //载波表,根据编程，将载波set置低，实现按钮复用
+        DIS_CARRIER_SET_ADDR;
+#endif
+     
         PM0_bit.no5=0; 
         //PM0_bit.no2=0;PM0_bit.no3=0;   //P0_2~P0_3 UART1  －－－09－04－16，因版本不同，可能悬空，在串口中初始化
         PM0|=PM0_DEFAULT;

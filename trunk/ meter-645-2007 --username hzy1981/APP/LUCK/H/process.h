@@ -31,4 +31,7 @@ void Process (ikey_t key);
 
 void Initial (void);
 
+void SetOrClr_Err_Code(INT8U ErrCode,INT8U SetOrClr);
+#define ReNew_Err_Code(ErrCode) SetOrClr_Err_Code(ErrCode,1)
+#define Clr_Err_Code(ErrCode)   SetOrClr_Err_Code(ErrCode,0)
 #endif

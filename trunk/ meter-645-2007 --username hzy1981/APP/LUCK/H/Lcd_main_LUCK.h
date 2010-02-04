@@ -225,10 +225,14 @@ LCD_MAIN_EXT disp_t dispcode;
 #if SYS_ERR_DIS_EN >0
   typedef struct
   {
-    INT8U Head;    
-    INT8U LoopDis:1;
+    INT8U Head;
+    INT8U FaultDis:1;
+    INT8U FaultCtrl:1;
     INT8U DelayDis:1;
-    INT8U DisIndex:6;                    //出错显示 
+    INT8U LoopDis:1; 
+    INT8U Res:4;
+    INT8U LastFault;
+    INT8U DisIndex;                    //出错显示 
     INT8U ErrNum;     
     INT8U ErrCode[DIS_ERR_NUM/8+1];      //出错信息代码
     INT8U Tail;
@@ -237,11 +241,16 @@ LCD_MAIN_EXT disp_t dispcode;
 
 #ifdef LCD_MAIN_C
   LCD_MAIN_EXT S_Int32U Sec_Timer_Delay={CHK_BYTE,0xFFFFFFEE,CHK_BYTE};
-#endif  
+  LCD_MAIN_EXT S_Int32U Sec_Timer_Default={CHK_BYTE,0xFFFFFFEE,CHK_BYTE};
+#endif
   LCD_MAIN_EXT S_Int32U Sec_Timer_Delay;
-  
+  LCD_MAIN_EXT S_Int32U Sec_Timer_Default;
 #endif
 
+  
+#define INIT_DIS_FAULT_TIMR  Sec_Timer_Default.Var=Sec_Timer_Pub
+#define INIT_DIS_DELAY_TIMR    Sec_Timer_Default.Var=Sec_Timer_Pub   
+  
 void LCD_main_LUCK (void);
 void Dis_Jump_Para(void);
 void Set_Para_Modi_DI(PROTO_DI Di);

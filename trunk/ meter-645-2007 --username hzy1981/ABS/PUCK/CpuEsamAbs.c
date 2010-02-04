@@ -248,7 +248,8 @@ void CPU_Card_Main_Proc(void)
         if(Ok_Flag && Result)   //操作成功
         {
           Port_Out_Pub(INTER_ID_ALARM_BEEP,300);  //叫1秒
-          //strcpy(temp,"SUCCEED");
+          Clr_Err_Code(DIS_CERTI_ERR);
+          Clr_Err_Code(DIS_CUR_MODI_KEY_ERR);
         }
         else
         {
@@ -271,7 +272,8 @@ void CPU_Card_Main_Proc(void)
           OS_TimeDly_Ms(100);
           Clear_Ext_Dog();    //最快的任务：清CPU外部看门狗
           Clear_Task_Dog();   //清任务看门狗          
-          Dis_Card_Result(Ok_Flag,Result); 
+          Dis_Card_Result(Ok_Flag,Result);
+          CLR_LIGHT_ON;
         }
         Realse_Local_Pay_Source();
       }

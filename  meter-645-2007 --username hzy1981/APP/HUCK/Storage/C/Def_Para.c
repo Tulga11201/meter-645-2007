@@ -638,7 +638,7 @@ typedef struct
 
 #if PREPAID_METER > 0 && PREPAID_LOCAL_REMOTE == PREPAID_LOCAL//费控电能表的显示项目
 //自动循环显示数据项
-CONST S_Disp_Item Def_04040101_13[] =
+CONST S_Disp_Item Def_04040101_13[MAX_AUTO_SCREEN_NUM] =
 {
 {0x00,0x04000101},//显示当前日期              
 {0x00,0x04000102},//显示当前时间              
@@ -666,7 +666,7 @@ CONST S_Disp_Item Def_04040101_13[] =
 
 
 //按键循环显示数据项
-CONST S_Disp_Item Def_04040201_20[] =
+CONST S_Disp_Item Def_04040201_20[MAX_KEY_SCREEN_NUM] =
 {
 {0x00,0x04000101},//当前日期                             
 {0x00,0x04000102},//当前时间                             
@@ -777,7 +777,7 @@ CONST S_Disp_Item Def_04040201_20[] =
 };
 #else //多功能表-非费控
 //自动循环显示数据项
-CONST S_Disp_Item Def_04040101_13[] =
+CONST S_Disp_Item Def_04040101_13[MAX_AUTO_SCREEN_NUM] =
 {
 {0x00,0x04000101},//显示当前日期              
 {0x00,0x04000102},//显示当前时间              
@@ -805,7 +805,7 @@ CONST S_Disp_Item Def_04040101_13[] =
 
 
 //按键循环显示数据项
-CONST S_Disp_Item Def_04040201_20[] =
+CONST S_Disp_Item Def_04040201_20[MAX_KEY_SCREEN_NUM] =
 {
 {0x00,0x04000101},//当前日期                             
 {0x00,0x04000102},//当前时间                             

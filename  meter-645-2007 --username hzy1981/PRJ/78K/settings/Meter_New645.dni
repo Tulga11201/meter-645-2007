@@ -90,15 +90,6 @@ UseAuto=0
 TypeViolation=1
 UnspecRange=1
 ActionState=1
-[Breakpoints]
-Bp0=_ "STD_CODE" "{F:\A\APP\LUCK\C\process.c}.394.7@1" 1 0 0 0 "" 0 ""
-Bp1=_ "STD_CODE" "{F:\A\APP\LUCK\C\process.c}.652.9@1" 1 0 0 0 "" 0 ""
-Bp2=_ "STD_CODE" "{F:\A\APP\LUCK\C\Cal_Dis.c}.73.5@1" 1 0 0 0 "" 0 ""
-Bp3=_ "STD_CODE" "{F:\A\APP\TASK\C\TaskProc.c}.119.3@1" 1 0 0 0 "" 0 ""
-Bp4=_ "STD_CODE" "{F:\A\APP\HUCK\Storage\C\Def_Para.c}.1711.9@1" 1 0 0 0 "" 0 ""
-Bp5=_ "STD_CODE" "{F:\A\APP\HUCK\Storage\C\Def_Para.c}.1678.14@1" 1 0 0 0 "" 0 ""
-Bp6=_ "STD_CODE" "{F:\A\ABS\PUCK\CpuEsamAbs.c}.232.5@1" 1 0 0 0 "" 0 ""
-Count=7
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
@@ -109,3 +100,11 @@ LogFile=_ ""
 [TraceHelper]
 Enabled=0
 ShowSource=1
+[Breakpoints]
+Bp0=_ "STD_CODE" "{F:\A\APP\LUCK\C\process.c}.394.7@1" 1 0 0 0 "" 0 ""
+Bp1=_ "STD_CODE" "{F:\A\APP\LUCK\C\Cal_Dis.c}.73.5@1" 1 0 0 0 "" 0 ""
+Bp2=_ "STD_CODE" "{F:\A\APP\TASK\C\TaskProc.c}.119.3@1" 1 0 0 0 "" 0 ""
+Bp3=_ "STD_CODE" "{F:\A\APP\HUCK\Storage\C\Def_Para.c}.1711.9@1" 1 0 0 0 "" 0 ""
+Bp4=_ "STD_CODE" "{F:\A\APP\HUCK\Storage\C\Def_Para.c}.1678.14@1" 1 0 0 0 "" 0 ""
+Bp5=_ "STD_CODE" "{F:\A\ABS\PUCK\CpuEsamAbs.c}.232.5@1" 1 0 0 0 "" 0 ""
+Count=6

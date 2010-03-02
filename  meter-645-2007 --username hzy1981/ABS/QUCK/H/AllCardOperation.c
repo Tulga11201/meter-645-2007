@@ -12,7 +12,6 @@ extern INT8U Esam_Remote_Auth(INT8U *pSrc, INT8U SrcLen, INT8U *pDst, INT8U *pLe
 //C_Pre_Payment_Para Pre_Payment_Para;
 //ic卡 入口函数
 //返回1 表示成功， 返回0 表示失败
-#define MIN_a(A,B) ((A)<=(B)?(A):(B)) 
 
 INT8U ICcardMain(void) {
        

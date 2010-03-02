@@ -4,36 +4,48 @@
 
 /**********************************************************************************/
 /**********************************************************************************/ 
-void Set_8025T_Sclk_Dir(INT8U Dir)
+void Set_8025_Sclk_Dir(INT8U Dir)
 {
-  SET_8025T_SCLK_DIR(Dir);
+  SET_8025_SCLK_DIR(Dir);
 }
 /**********************************************************************************
 **********************************************************************************/ 
-void Set_8025T_Sda_Dir(INT8U Dir)
+void Set_8025_Sda_Dir(INT8U Dir)
 {
 
-   SET_8025T_SDA_DIR(Dir);
+   SET_8025_SDA_DIR(Dir);
 }
 /**********************************************************************************
 **********************************************************************************/ 
-void Set_8025T_Sclk_Pin(INT8U Level)
+void Set_8025_Sclk_Pin(INT8U Level)
 {
-   SET_8025T_SCLK(Level);
+   SET_8025_SCLK(Level);
 }
 /**********************************************************************************
 **********************************************************************************/ 
-void Set_8025T_Sda_Pin(INT8U Level)
+void Set_8025_Sda_Pin(INT8U Level)
 {
-  SET_8025T_SDA(Level);
+  SET_8025_SDA(Level);
 }
 /**********************************************************************************
 **********************************************************************************/ 
-INT8U Get_8025T_Sda_Pin(void)
+INT8U Get_8025_Sda_Pin(void)
 {
-  return (GET_8025T_SDA);  
+  return (GET_8025_SDA);  
 }
 
+/**********************************************************************************
+**********************************************************************************/ 
+void Init_DS3231_IIC_Soft(void)
+{
+  I2cSoft_Open(IIC_SOFT_ID0);
+}
+/**********************************************************************************
+**********************************************************************************/ 
+void Close_DS3231_IIC_Soft(void)
+{
+  I2cSoft_Close(IIC_SOFT_ID0);  
+}
 
 /**********************************************************************************
 函数功能：
@@ -51,7 +63,7 @@ INT8U Read_EXT_RTC_Buf(INT8U addr,INT8U Len,INT8U *Dst)
 
    I2cSoft_Start(IIC_SOFT_ID0);
    OkFlag=I2cSoft_Send_Byte(IIC_SOFT_ID0,0x64);
-   OkFlag&=I2cSoft_Send_Byte(IIC_SOFT_ID0,addr);
+   OkFlag&=I2cSoft_Send_Byte(IIC_SOFT_ID0,addr<<4);
    I2cSoft_Start(IIC_SOFT_ID0);
    OkFlag&=I2cSoft_Send_Byte(IIC_SOFT_ID0,0x65);   
    OkFlag&=I2cSoft_Read_nByteS(IIC_SOFT_ID0,Len,Dst);
@@ -84,7 +96,7 @@ INT8U Write_EXT_RTC_Buf(INT8U addr,INT8U Len,INT8U *Src)
 #endif     
     I2cSoft_Start(IIC_SOFT_ID0);
     OkFlag=I2cSoft_Send_Byte(IIC_SOFT_ID0,0x64);	
-    OkFlag&=I2cSoft_Send_Byte(IIC_SOFT_ID0,addr);
+    OkFlag&=I2cSoft_Send_Byte(IIC_SOFT_ID0,addr<<4);
     for(i=0;i<Len;i++)
       OkFlag&=I2cSoft_Send_Byte(IIC_SOFT_ID0,Src[i]);
     OkFlag&=I2cSoft_Stop(IIC_SOFT_ID0);
@@ -110,47 +122,80 @@ INT8U Write_EXT_RTC_Buf(INT8U addr,INT8U Len,INT8U *Src)
 **********************************************************************************/   
 void Init_RTC_Pulse(INT8U Flag)
 {  
-  INT8U temp[2],i;  
+  INT8U temp[2]={0,0},i,Err=0;  
 
-  temp[1]=0XA0; 
-  temp[0]=0X20;
-  if(Flag)
-   temp[0]=0X23;
-  
+  //状态：读后不会清0
   for(i=0;i<3;i++)
   {
-    if(Write_EXT_RTC_Buf(0x0e,2,temp) EQ 0)
+    if(0==Read_EXT_RTC_Buf(0x0E,2,temp))
+      ASSERT_FAILED();
+    else
+    {
+      Debug_Print("Ext_RTC Power On,Reg(0x0E)=0x%x,Reg(0x0F)=0x%x!",temp[0],temp[1]);
+      break;
+    }
+  }
+  
+   if(i EQ 3)  //3次都读不出
+   return ;
+  
+  if(GET_BIT(temp[0],5) EQ 0)    //12/24时钟制错误
+  {
+    Err=1;
+    Debug_Print("Ext_RTC Error----->12/24 error,Res bit!");
+  }
+  
+  if(GET_BIT(temp[1],6))    //电源电压低
+  {
+    Err=1;
+    Debug_Print("Ext_RTC Error----->Bat Lowr,Res bit!");
+  }
+  
+  if(GET_BIT(temp[1],5) EQ 0)    //停振
+  {
+    Err=1;
+    Debug_Print("Ext_RTC Error----->OSC Stop,Res bit!");
+  }
+  
+  if(GET_BIT(temp[1],4))    //电源复位
+  {
+    Err=1;
+    Debug_Print("Ext_RTC Error----->Power Rst,Res bit!");
+  }
+  
+  
+  if(Flag &&((INT8U)(temp[0]&0x03) !=0x03))  //输出脉冲
+  {
+    Err=2;
+    temp[0]|=0x03;                 //使能秒脉冲
+  }
+  
+  if((Flag EQ 0) && ((INT8U)(temp[0]&0x03) !=0x00))  //禁止脉冲
+  {
+    Err=2;
+    temp[0]&=0xFC;                 //禁止秒脉冲
+  }
+  
+  if(Err<=1)  //不是脉冲输出模式字错误
+    return ;
+  
+  for(i=0;i<3;i++)  //有错误，只回写 0x0E 寄存器
+  {
+    if(0==Write_EXT_RTC_Buf(0x0E,1,temp))
       ASSERT_FAILED();
     else
       break;
   }
-  
-  /* 
- if(Read_EXT_RTC_Buf(0x0e,7,temp)  EQ 0)
-    ASSERT_FAILED();
-  
-   if(GET_BIT(temp[1],7) EQ 0 || GET_BIT(temp[1],5) EQ 0)  //1.3V电压检测/停振
-    ASSERT_FAILED();
-  
-  if(Flag)
-  {
-    if(temp[0]!=0x23) 
-      ASSERT_FAILED();
-  }
-  else
-  {
-    if(temp[0]!=0x20) 
-      ASSERT_FAILED();    
-  }
-  */
+
 }
 /**********************************************************************************
-函数功能：获取外部时钟的状态
+函数功能：获取外部时钟的状态0
 **********************************************************************************/
 INT8U Read_Ext_RTC_Status(void)
 {
-  INT8U temp[2],Re,i;
+  INT8U temp[2]={0,0},Re,i;
   
+  //读后不会清零！
   for(i=0;i<3;i++)
   {
     if(Read_EXT_RTC_Buf(0x0E,2,temp) EQ 0)
@@ -163,21 +208,64 @@ INT8U Read_Ext_RTC_Status(void)
   
   Re=EXT_RTC_OK;
   if(GET_BIT(temp[0],5) EQ 0)    //12/24时钟制错误
+  {
+    SET_BIT(temp[0],5);
     Re|=EXT_RTC_PSEC_ERR;
+    Debug_Print("Ext_RTC Error----->12/24 error,Clr bit!");
+  }
   
   if(GET_BIT(temp[1],6))    //电源电压低
+  {
+    CLR_BIT(temp[1],6);
     Re|=EXT_RTC_BAT_LOW;
+    Re|=EXT_RTC_COUNT_STOP;  //统一 HUCK接口
+    Debug_Print("Ext_RTC Error----->Bat Lowr,Clr bit!");
+  }
   
   if(GET_BIT(temp[1],5) EQ 0)    //停振
-    Re|=EXT_RTC_COUNT_STOP;
-  
-  if(GET_BIT(temp[1],4))    //电源电压低
-    Re|=EXT_RTC_FIRST_PWRON;
-  
-  if(Re!=EXT_RTC_OK)  //0x10:power_on reset flag PON bit=1; 0x20:oscillation stop flag /XST=0;  0x40: Power drop is detected. (Vdd<1.3V)
   {
-    Debug_Print("Ext_RTC Error----->Reg(0X0E/0x0F)=0x%x/0x%x",temp[0],temp[1]);
+    SET_BIT(temp[1],5);
+    Re|=EXT_RTC_COUNT_STOP;
+    Debug_Print("Ext_RTC Error----->OSC Stop,Clr bit!");
   }
+  
+  if(GET_BIT(temp[1],4))    //电源复位
+  {
+    CLR_BIT(temp[1],4);
+    Re|=EXT_RTC_FIRST_PWRON;
+    Re|=EXT_RTC_COUNT_STOP;  //统一 HUCK接口
+    Debug_Print("Ext_RTC Error----->Power Rst,Clr bit!");
+  }
+  
+  if(Get_Sys_Status() EQ SYS_NORMAL)
+  {
+    if((INT8U)(temp[0]&0x03) !=0x03)  //输出秒脉冲
+    {
+      Re|=EXT_RTC_PULSE_ERR;
+      temp[0]|=0x03;                 //使能秒脉冲
+    }
+  }
+  else
+  {
+    if((INT8U)(temp[0]&0x03) !=0x00)  //禁止脉冲
+    {
+      Re|=EXT_RTC_PULSE_ERR;
+      temp[0]&=0xFC;                 //禁止秒脉冲
+    }
+  }
+    
+  
+  if(Re EQ EXT_RTC_OK)  //没有错误
+    return EXT_RTC_OK;
+  
+  for(i=0;i<3;i++)  //有错误，回写 0x0E  0x0F 寄存器
+  {
+    if(0==Write_EXT_RTC_Buf(0x0E,2,temp))
+      ASSERT_FAILED();
+    else
+      break;
+  }  
+
   return Re;
 }
 /**********************************************************************************

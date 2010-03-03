@@ -5,7 +5,7 @@
 #line  __LINE__ "H19"
 #endif
 
-#define SOFTWARE_VERSION "10012610 V1.3 " //软件版本号
+#define SOFTWARE_VERSION "10030309 V1.3 " //软件版本号
 
 
 CONST INT32U All_Loss_Vol_Curr = 1000;

@@ -201,7 +201,7 @@ struct Buy_Para_Inf_File
 	INT8U Voltage_PT[3];             /*" 电压互感器变比 "*/
 	INT8U Meter_ID[6];               /*" 表号 "*/
 	INT8U Client_ID[6];              /*" 客户编号 "*/
-	INT8U Card_Kind;                 /*" 电卡类型 "*/
+	INT8U Card_Kind;                  /*" 电卡类型 "*/
 	};
 #define LENGTH_BUY_PARA_INF_FILE  sizeof(struct Buy_Para_Inf_File)
 	#define BUY_PARA_INF_FILE_BUY_CARD					4

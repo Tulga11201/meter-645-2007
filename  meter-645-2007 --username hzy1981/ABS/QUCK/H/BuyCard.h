@@ -1,6 +1,5 @@
 #ifndef BUU_CARD_H_
 #define BUY_CARD_H_
-#define String2ParaFile(Dst,Src,Len)   mem_cpy( Dst, Src, Len, Dst, Len)
 
 INT8U Judge_User_Card_OK(INT8U BuyCard_Kind,INT32U Buy_Count);
 INT8U Buy_Card(void);

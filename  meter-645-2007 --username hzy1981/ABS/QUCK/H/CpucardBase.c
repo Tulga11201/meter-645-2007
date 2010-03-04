@@ -382,11 +382,12 @@ INT8U  WhenCardInsertedInitPrePayData(void) { //上电从e方读取数据到全局变量
      //  当充值的时候，是先反相主站的客户编号后再与e方中的客户编号相比较的
       //由此可以看出,主站来的数据是正常顺序，把数据给esam要反相顺序，  然而给 e方用正常顺序
     //除去　客户编号外，　客户编号从主站来时反是的顺序，写到ｅ方中要反相  发给主站要用反得顺序
+     //该值在以下地方调用：远程开户函数， 远程充值函数， 购电卡，补卡判断， 开户卡流程中  ，用户卡返写时
      Read_Storage_Data( SDI_CUTOMER_ID, (INT8U *)Pre_Payment_Para.UserID,  (INT8U *)Pre_Payment_Para.UserID,LENGTH_USER_ID  ); 
      Reverse_data(   (INT8U *)Pre_Payment_Para.UserID,LENGTH_USER_ID);
-     //如果是读写运行状态
+     //读运行状态 在用户卡流程中 会被判断 和 更新， 值只有2个 
      Read_Storage_Data( _SDI_PREPAID_RUN_STATUS, (INT8U *)&Pre_Payment_Para.Meter_Run_State ,  (INT8U *)&Pre_Payment_Para.Meter_Run_State,sizeof(Pre_Payment_Para.Meter_Run_State)  );    
-     //如果是写离散因子
+     //读取离散因子  , 补卡和 开户卡时被更改， 购电卡是用来判断
      Read_Storage_Data( _SDI_DISCRETE_INFO, (INT8U *)Pre_Payment_Para.Cpucard_Number_old_BackUpInEerom, (INT8U *)Pre_Payment_Para.Cpucard_Number_old_BackUpInEerom,LENGTH_CARD_ID_BACKUP);    
      //密钥类型,密钥下装卡， 还是密钥恢复卡 
      Read_Storage_Data( _SDI_PREPAID_PSW_KIND, (INT8U *)&Pre_Payment_Para.PassWord_Kind,  (INT8U *)&Pre_Payment_Para.PassWord_Kind,1);  

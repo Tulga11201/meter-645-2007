@@ -28,12 +28,6 @@ INT8U Esam_Remote_Auth(INT8U *pSrc, INT8U SrcLen, INT8U *pDst, INT8U *pLen, INT8
         //ret=GetMoney();
         // 判断身份认证有效时间是否过了，如果过了，ID_Ins_Counter就赋值为0
         Far_Identity_Auth_Ok_Flag=!Chk_Pay_Time_Arrive();
-        //IT_STRUCT_VAR(_Far_Identity_Auth_Ok_Flag);
-        if(Far_Identity_Auth_Ok_Flag EQ 0)
-        {
-           Reset_Pay_Timer(0);
-        }
-        
         //初始化：FarPrePayment.ID_Ins_Counter
         Read_Storage_Data(_SDI_INVALID_COUNTS_AllOW ,(INT8U *)&FarPrePayment.ID_Ins_Counter,(INT8U *)&FarPrePayment.ID_Ins_Counter, 1) ;
         if(FarPrePayment.ID_Ins_Counter != 0 )//判断是否需要更新ID_Ins_Counter ，

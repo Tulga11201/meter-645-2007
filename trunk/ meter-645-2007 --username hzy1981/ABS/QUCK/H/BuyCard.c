@@ -35,8 +35,7 @@ INT8U Judge_User_Card_OK(INT8U BuyCard_Kind,INT32U Buy_Count){
         
 	Money_Count_T = Get_Buy_Eng_Counts()+1;//用来比较次数是否大1
         // 开始执行函数：Judge_User_Card_OK(INT8U BuyCard_Kind,INT32U Buy_Count) " );
-        String2ParaFile(  &file,&Card_WR_Buff[4], sizeof(struct Buy_Para_Inf_File) );
-        
+        mem_cpy(&file,&Card_WR_Buff[4], sizeof(struct Buy_Para_Inf_File),&file,sizeof(struct Buy_Para_Inf_File));
 	if( (BuyCard_Kind !=GWFAR_USER_CARD_NEW) && (BuyCard_Kind !=GWFAR_USER_CARD_BUY) && (BuyCard_Kind !=GWFAR_USER_CARD_BACK))
 	{
                 ASSERT_FAILED();
@@ -90,29 +89,30 @@ INT8U Judge_User_Card_OK(INT8U BuyCard_Kind,INT32U Buy_Count){
 			Card_Error_State.CardErrorState.BUY_CARD_KIND_ERR=1;
 			return ERR;
 		} */
-	} //运行状态判断结束
-	else{
+	}//运行状态判断结束
+	else
+        {
                //// 判断是否未开户状态插入购电卡，补卡  " );
 		if( BuyCard_Kind !=GWFAR_USER_CARD_NEW )
-			{
+		{
                          ASSERT_FAILED();
 			 Card_Error_State.CardErrorState.WhenInTest_Insert_UserCard_Err=1;
 			 return ERR;
-			}
+		}
 		else
-			{
-                        //判断是否已经回写过的新卡，那么不能重复开户// " );
-                        //"已经回写过的新卡不能重复开户//
-			CPU_ESAM_CARD_Control(CPU);
-			Read(0,Read_Binary,0x80+5,0,1);
-			CPU_ESAM_CARD_Control(ESAM);
-			if( receive_send_buffer[0] == 0x68 )
-				{
+		{
+                          //判断是否已经回写过的新卡，那么不能重复开户// " );
+                          //"已经回写过的新卡不能重复开户//
+			  CPU_ESAM_CARD_Control(CPU);
+			  Read(0,Read_Binary,0x80+5,0,1);
+			  CPU_ESAM_CARD_Control(ESAM);
+			  if( receive_send_buffer[0] == 0x68 )
+			  {
                                   ASSERT_FAILED();
 				  Card_Error_State.CardErrorState.CPU_NEW_CARD_INI_ERR=1;
 				  return ERR;
-				}
-			}
+			  }
+		}
 	}//正式运行和非正式运行状态的判断结束
        //"// 判断是否购电次数错//   购电次数必须符合：cpu卡的购电次数 与 esam 的 +1后购电次数 相等 " );
         
@@ -144,9 +144,8 @@ INT8U Buy_Card(void){
         INT8U UserID[6];//客户编号
 	struct Moneybag_Data Moneybag_Data;
 	struct Buy_Para_Inf_File  file;
-        
-        String2ParaFile(&file,(&Card_WR_Buff[4]), sizeof(struct Buy_Para_Inf_File) )  ;//初始化file变量
-        //  读CPU卡中的剩余电费和购电次数 //02  0 读出来，但是会把 cpu卡中的数据反转，即高位在低位，cpu卡中数据时反得1 " );
+        mem_cpy( &file, &Card_WR_Buff[4],  sizeof(struct Buy_Para_Inf_File), &file,  sizeof(struct Buy_Para_Inf_File));//初始化file变量
+        //读CPU卡中的剩余电费和购电次数 //02  0 读出来，但是会把 cpu卡中的数据反转，即高位在低位，cpu卡中数据时反得1 " );
 	if( Remain_Money_Moneybag_Add(USER_CARD_MONEYBAG_FILE,REMAIN_MONEY_CPU_ESAM,(INT8U *)&Moneybag_Data) != OK )
 		return ERR;
  
@@ -284,7 +283,7 @@ INT8U Buy_Card(void){
                         // / 新卡保存用户号和变更表计运行状态 // " );
                         My_memcpyRev((INT8U *)Pre_Payment_Para.UserID,UserID,LENGTH_USER_ID);
 		    	Write_Storage_Data(SDI_CUTOMER_ID, (INT8U *)Pre_Payment_Para.UserID, LENGTH_USER_ID);
-                        Reverse_data(   (INT8U *)Pre_Payment_Para.UserID,LENGTH_USER_ID);
+                        Reverse_data(   (INT8U *)Pre_Payment_Para.UserID,LENGTH_USER_ID);//返写用
                         
 			Pre_Payment_Para.Meter_Run_State=MeterRunState_Run_3 ;
                         Write_Storage_Data(_SDI_PREPAID_RUN_STATUS,(INT8U *)&Pre_Payment_Para.Meter_Run_State,sizeof(Pre_Payment_Para.Meter_Run_State) );
@@ -317,7 +316,7 @@ INT8U Buy_Card(void){
         }
         //
 	if( (Buy_Card_Kind != GWFAR_USER_CARD_BUY)&&(Dir_Return_Flag !=0xff) )//开户卡， 和补卡更新 离散因子
-	{
+	{  
           //开户卡， 和补卡更新 离散因子   " );
 	  My_Memcpy((INT8U *)Pre_Payment_Para.Cpucard_Number_old_BackUpInEerom, (INT8U *)cpucard_number, LENGTH_CARD_ID_WHEN_CARD_INSERT);
 	  Write_Storage_Data(_SDI_DISCRETE_INFO ,(INT8U *)&Pre_Payment_Para.Cpucard_Number_old_BackUpInEerom,LENGTH_CARD_ID_BACKUP);

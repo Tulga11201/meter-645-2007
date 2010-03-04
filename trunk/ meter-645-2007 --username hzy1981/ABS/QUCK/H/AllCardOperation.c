@@ -33,7 +33,7 @@ INT8U ICcardMain(void) {
         //检测头尾是否正确
         if( (!CHECK_STRUCT_VAR(_Far_Pre_Payment_Para))
              ||(!CHECK_STRUCT_VAR(c_Card_Error_State))
-           )
+          )
         {
             ASSERT_FAILED();
         }
@@ -91,7 +91,11 @@ INT8U ICcardProcess(){
            return ERR;
         }
 	if( OK  !=Select_Directry(0,0xDF,1) )
-		return ERR;
+        {
+           ASSERT_FAILED();
+           return ERR;
+        }
+		
         //读写cpu卡二进制文件
 	if(OK  != Read(0,Read_Binary,0x80+1,0,4) ){
             ASSERT_FAILED();
@@ -114,16 +118,19 @@ INT8U ICcardProcess(){
 	length+=6;
        
 	if( Read(0,Read_Binary,0x80+1,0,length) != OK ){
+                ASSERT_FAILED();
 		return ERR;
 	}
         //对读取的二进制文件进行 检查：  头尾， 效验和 
 	if( Frame_Judge(&receive_send_buffer[0],length)!= OK ){
-               return ERR;
+                ASSERT_FAILED();
+                return ERR;
         }
         //读取的cpu卡指令信息文件内容无错误 
 	My_Memcpy(Card_WR_Buff,receive_send_buffer,length);
        
 	if( Cpucard_Esamcard_Internal_Auth() != OK ){
+                ASSERT_FAILED();
                 Card_Error_State.CardErrorState.CpuCardInternlAuthenticationErr=1;
 		return ERR;
 	}
@@ -783,8 +790,8 @@ INT8U Password_Card(void)//密钥下装卡/恢复卡
 	{
 		return ERR;
 	}
-        //// 保存用的是 密钥恢复卡，还是密钥下装卡 ");
-        // 保存用的是 密钥恢复卡，还是密钥下装卡//该变量只有在这里修改，是用来做编程记录的
+        //保存用的是 密钥恢复卡，还是密钥下装卡 ");
+        //保存用的是 密钥恢复卡，还是密钥下装卡//该变量只有在这里修改，是用来做编程记录的
 	Pre_Payment_Para.PassWord_Kind=PassWord_Kind;////密钥类型,密钥下装卡， 还是密钥恢复卡
         Write_Storage_Data(_SDI_PREPAID_PSW_KIND , (INT8U *)&Pre_Payment_Para.PassWord_Kind ,sizeof(Pre_Payment_Para.PassWord_Kind)) ;
 	if( Updata_Esam_Return_File(0x11)!=OK )  

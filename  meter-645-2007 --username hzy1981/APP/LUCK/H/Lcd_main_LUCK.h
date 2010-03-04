@@ -84,6 +84,9 @@ LCD_MAIN_EXT INT32U  LCDLightSecTimer;
 #define IRDA_LIGHT_ON_TIME    (2*CYCLE)   //红外:背光在电能表2个自动轮显周期后关闭
 #define KEY_LIGHT_ON_TIME     60          //按键、插卡:60秒
 
+#define KEY_JUMP_LOOP_TIME     60          //键显自动跳到循显时间周期
+#define ALL_JUMP_LOOP_TIME     120          //全显自动跳到循显时间周期
+
 #define START_LIGHT_ON          {LCDLightSecTimer=Sec_Timer_Pub;}
 #define CLR_LIGHT_ON            {LCDLightSecTimer=Sec_Timer_Pub-1;}
 #define TURN_OFF_LIGHT          {LCDLightSecTimer=Sec_Timer_Pub-0xFF00;}

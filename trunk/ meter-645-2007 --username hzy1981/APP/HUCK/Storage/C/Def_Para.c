@@ -664,6 +664,7 @@ CONST S_Disp_Item Def_04040101_13[MAX_AUTO_SCREEN_NUM] =
 
 };
 
+#define AUTO_SCREEN_NUM 19
 
 //按键循环显示数据项
 CONST S_Disp_Item Def_04040201_20[MAX_KEY_SCREEN_NUM] =
@@ -753,7 +754,7 @@ CONST S_Disp_Item Def_04040201_20[MAX_KEY_SCREEN_NUM] =
 {0x00,0x02060000},//瞬时总功率因数                       
 {0x00,0x02060100},//瞬时A相功率因数                      
 {0x00,0x02060200},//瞬时B相功率因数                      
-{0x00,0x02060300},//瞬时C相功率因数     
+{0x00,0x02060300},//瞬时C相功率因数 --84    
 #if PREPAID_MONEY_MODE EQ PREPAID_RATE
 {0x00,PDI_CUR_RATE1_FEE},//当前尖费率电价                       
 {0x00,PDI_CUR_RATE2_FEE},//当前峰费率电价                       
@@ -775,6 +776,13 @@ CONST S_Disp_Item Def_04040201_20[MAX_KEY_SCREEN_NUM] =
 {0x00,0x00900201},//透支金额                             
 {0x00,0x04000b01},//结算日         
 };
+
+#if PREPAID_MONEY_MODE EQ PREPAID_RATE
+#define KEY_SCREEN_NUM 92
+#else
+#define KEY_SCREEN_NUM 97
+#endif
+
 #else //多功能表-非费控
 //自动循环显示数据项
 CONST S_Disp_Item Def_04040101_13[MAX_AUTO_SCREEN_NUM] =
@@ -803,6 +811,7 @@ CONST S_Disp_Item Def_04040101_13[MAX_AUTO_SCREEN_NUM] =
 
 };
 
+#define AUTO_SCREEN_NUM 20
 
 //按键循环显示数据项
 CONST S_Disp_Item Def_04040201_20[MAX_KEY_SCREEN_NUM] =
@@ -911,6 +920,9 @@ CONST S_Disp_Item Def_04040201_20[MAX_KEY_SCREEN_NUM] =
 //{0x00,0x00900201},//透支金额                             
 {0x00,0x04000b01},//结算日         
 };
+
+#define KEY_SCREEN_NUM 86
+
 #endif
 
 
@@ -921,11 +933,11 @@ CONST S_Disp_Item Def_04040201_20[MAX_KEY_SCREEN_NUM] =
 //显示相关参数
 CONST INT8U Def_04000301_5[] =
 {
-  HEX2BCD(S_NUM(Def_04040101_13)),//0x06, //自动循环显示屏数
+  HEX2BCD(AUTO_SCREEN_NUM),//0x06, //自动循环显示屏数
   0x05, //每屏显示时间
   0x02, //显示电能小数位
   0x04, //显示功率小数位
-  HEX2BCD(S_NUM(Def_04040201_20))//0x22, //按键循环显示屏数
+  HEX2BCD(KEY_SCREEN_NUM)//0x22, //按键循环显示屏数
 
 };
 

@@ -348,11 +348,11 @@ INT8U Dis_Meter_Fault(void)
   char temp[10]={0};
   INT8U id,i,flag;
   
-  if(UP_COVER_STATUS EQ 0)
-    ReNew_Err_Code(DIS_CTRL_LOOP_ERR);
+  //if(UP_COVER_STATUS EQ 0)
+  //  ReNew_Err_Code(DIS_CTRL_LOOP_ERR);
   
-  //if(DOWN_COVER_STATUS)
-  //  ReNew_Err_Code(DIS_MEM_ERR);
+  if(DOWN_COVER_STATUS)
+    ReNew_Err_Code(DIS_MEM_ERR);
   
    //全屏显示20秒内:138年翻转1次
   
@@ -639,10 +639,11 @@ void Dis_Meter_Loop(void)
      Refresh_Sleep_Countr(1);
    }
    
-   if((LOOP_SEC_TIMER_DIFF>2*CYCLE)&& (poweroff() EQ 0) && modeBtoA())// B模式下，在2个循显周期后，没有按键按下，进入A模式，获取A模式下的信息--------PUCK
+   //if((LOOP_SEC_TIMER_DIFF>2*CYCLE)&& (poweroff() EQ 0) && modeBtoA())// B模式下，在2个循显周期后，没有按键按下，进入A模式，获取A模式下的信息--------PUCK
+   if((LOOP_SEC_TIMER_DIFF>=KEY_JUMP_LOOP_TIME)&& (poweroff() EQ 0) && modeBtoA())// B模式下，在2个循显周期后，没有按键按下，进入A模式，获取A模式下的信息--------PUCK
       RESET_LOOP_DIS;
   
-   if((LOOP_SEC_TIMER_DIFF>120)&&modeCtoA())   // C模式下，在2分钟后无按键按下，进入A模式，获取A模式下的信息--------PUCK
+   if((LOOP_SEC_TIMER_DIFF>ALL_JUMP_LOOP_TIME)&&modeCtoA())   // C模式下，在2分钟后无按键按下，进入A模式，获取A模式下的信息--------PUCK
       RESET_LOOP_DIS;
 
    

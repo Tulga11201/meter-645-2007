@@ -34,7 +34,7 @@ extern unsigned char Ser_Support_Code(item_t code);
   };
   #define MAX_DIS_METER_FAULT_NUM (sizeof(CONST_DIS_FAULT_ITEM)/sizeof(INT8U))
   #define DIS_FAULT_SEC_TIME CYCLE
-  #define DIS_FAULT_SJMP_SEC 16
+  #define DIS_FAULT_SJMP_SEC 60
 #endif
 
   
@@ -369,7 +369,7 @@ INT8U Dis_Meter_Fault(void)
     return 1;
   
   if((Sys_Err_Info.FaultCtrl EQ 0) && (Sec_Timer_Pub-Sec_Timer_Default.Var>=DIS_FAULT_SJMP_SEC)) //按钮后，切换到故障模式
-  {    
+  {
     Sys_Err_Info.FaultCtrl=1;
   }
   

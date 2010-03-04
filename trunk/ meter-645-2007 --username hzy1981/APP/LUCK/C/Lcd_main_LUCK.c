@@ -96,7 +96,7 @@ void LCD_Task_Monitor(void)
    
   if(Get_Sys_Status()==SYS_RESUME)
   {
-    if((dispmode EQ modeA && Sleep_Sec_Countr.Var>=MODE_A_NUM) ||   //循显模式
+    if((dispmode EQ modeA && Sleep_Sec_Countr.Var>MODE_A_NUM) ||   //循显模式
        (dispmode EQ modeB && (Sec_Timer_Pub-Sleep_Sec_Countr.Var>=30)) )   //键显模式
     {
 

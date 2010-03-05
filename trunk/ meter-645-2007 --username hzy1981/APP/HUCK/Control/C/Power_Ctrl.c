@@ -843,7 +843,7 @@ INT8U Get_Alarm_Relay_Status()
   
   if(PREPAID_EN > 0 && PREPAID_LOCAL_REMOTE EQ PREPAID_LOCAL)
   {
-     if((PREPAID_MODE EQ PREPAID_MONEY && Cur_Energy.Prepaid_Info.Left_Energy / 10 < Prepaid_Para.Warn_Money1) ||\
+     if((PREPAID_MODE EQ PREPAID_MONEY && Cur_Energy.Prepaid_Info.Left_Money / 10 < Prepaid_Para.Warn_Money1) ||\
         (PREPAID_MODE EQ PREPAID_ENG && Cur_Energy.Prepaid_Info.Left_Energy / 10 < Prepaid_Para.Warn_Energy1))
      {
        SET_BIT(Byte, 7); //Ô¤ÌøÕ¢±¨¾¯

@@ -108,7 +108,7 @@ INT8U Cpucard_External_Auth(void)
     
 /*"**************************************************************************"*/
 INT8U Esamcard_External_Auth(void)
-	{                  
+{                  
 	if(Check_Cpu_Card_Out())			
 		{
                 ASSERT_FAILED();   
@@ -151,7 +151,7 @@ INT8U Esamcard_External_Auth(void)
           return ERR;
         }
 	return OK;  /*"ESAM卡外部认证结束"*/        
-	}
+}
 
 /*"**************************************************************************"*/
 /*" 功能：钱包文件剩余电费读出给CPU卡 "*///1,0   3,4

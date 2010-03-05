@@ -348,11 +348,12 @@ INT8U Dis_Meter_Fault(void)
   char temp[10]={0};
   INT8U id,i,flag;
   
-  //if(UP_COVER_STATUS EQ 0)
-  //  ReNew_Err_Code(DIS_CTRL_LOOP_ERR);
+  /*if(UP_COVER_STATUS EQ 0)
+    ReNew_Err_Code(DIS_CTRL_LOOP_ERR);
   
   if(DOWN_COVER_STATUS)
     ReNew_Err_Code(DIS_MEM_ERR);
+  */
   
    //全屏显示20秒内:138年翻转1次
   

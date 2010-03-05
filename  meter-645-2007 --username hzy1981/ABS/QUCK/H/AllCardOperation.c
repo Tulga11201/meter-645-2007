@@ -92,7 +92,7 @@ INT8U ICcardProcess(){
         }
 	if( OK  !=Select_Directry(0,0xDF,1) )
         {
-           ASSERT_FAILED();
+           Card_Error_State.CardErrorState.CPU_CARD_CARD_ATR_ERR=1;//cpu卡复位错误
            return ERR;
         }
 		
@@ -506,9 +506,9 @@ void Deal_Set_Para_Inf_File(INT8U * Source_Point,INT8U Mode )
 }
 //参数预置卡
 INT8U Set_In_Card(void){///出厂预制卡"
-        INT8U Order_Head[11];
+      //  INT8U Order_Head[11];
         INT8U DataTemp[4];
-        INT32U Temp;
+        INT8U Temp;
 
 	struct Moneybag_Data Moneybag_Data;
 	
@@ -563,41 +563,52 @@ INT8U Set_In_Card(void){///出厂预制卡"
 	}
         //更新数据到esam后，更新电能表保存的数据 "  );	
 	Deal_Init_Para_Inf_File(Card_WR_Buff+4,0x80);
-	// 第一套费率表文件 "  );
 	//  第一套费率表文件 //
-	if( Para_Updata_Flag & 0x01 ){
+	if( Para_Updata_Flag & 0x01 )
+        {
+                Temp=(MAX_RATES_QUCK+1)*4;//因为这里要加上费率文件的68标志等4个字节再加上cs和结尾标志
+                if(Temp>240)
+                {
+                   ASSERT_FAILED();
+                }
+                
 		if( Esam_File_Updata(INIT_CARD_TRIFF_1_FILE,
 								ESAM_TRIFF_1_FILE,
 								0,
 								0,
-								240,
+								Temp,//240,
 								Card_WR_Buff) !=OK )
                 {
                   ASSERT_FAILED(); 
                   return ERR;
                 }
-		// Esam_File_Updata  4  "  );	
 		if( Esam_File_Updata(INIT_CARD_TRIFF_1_FILE,
 								ESAM_TRIFF_1_FILE,
-								240,
-								240,
+								240,//20的意思是读文件起始地址为4个费率加4个字节开始等字节
+								240,//同上
 								18,
 								Card_WR_Buff+240) !=OK )
-                {
-                   ASSERT_FAILED();
-                   return ERR;
-                }
-			
-		Deal_Triff_Data(Card_WR_Buff+4,258-4,1);
-	}
+                 {
+                       ASSERT_FAILED();
+                       return ERR;
+                 }
+
+	         Deal_Triff_Data(Card_WR_Buff+4,258-4,1);
+        }
         //"第二套费率表文件 "  );
 	//  第二套费率表文件  //
-	if( Para_Updata_Flag & 0x02 ){
+	if( Para_Updata_Flag & 0x02 )
+        {
+                Temp=(MAX_RATES_QUCK+1)*4;//因为这里要加上费率文件的68标志等4个字节再加上cs和结尾标志
+                if(Temp>240)
+                {
+                   ASSERT_FAILED();
+                }
 		if( Esam_File_Updata(INIT_CARD_TRIFF_2_FILE,
 								ESAM_TRIFF_2_FILE,
 								0,
 								0,
-								240,
+								Temp,
 								Card_WR_Buff) !=OK )
                 {
                  // "Esam_File_Updata 6   "  );
@@ -632,8 +643,8 @@ INT8U Set_In_Card(void){///出厂预制卡"
 	Pre_Payment_Para.Meter_Run_State=MeterRunState_Test_0;
         Write_Storage_Data(_SDI_PREPAID_RUN_STATUS ,(INT8U *)&Pre_Payment_Para.Meter_Run_State  ,sizeof(Pre_Payment_Para.Meter_Run_State) );
         //清除远程非法攻击次数
-        FarPrePayment.ID_Ins_Counter  =0;
-	Write_Storage_Data(_SDI_INVALID_COUNTS_AllOW, (INT8U *)&FarPrePayment.ID_Ins_Counter, 1);
+        //FarPrePayment.ID_Ins_Counter  =0;
+	//Write_Storage_Data(_SDI_INVALID_COUNTS_AllOW, (INT8U *)&FarPrePayment.ID_Ins_Counter, 1);
         //本地非法卡插入次数清0
         //Temp=0;
         //Write_Storage_Data(_SDI_INVALID_CARD_COUNTS ,&Temp,4);
@@ -703,7 +714,7 @@ void Deal_Para_Table3(INT8U * Source_Point )
 	struct Para_Table3 ParaTable3;
 	mem_cpy(&ParaTable3,Source_Point,sizeof(struct Para_Table3),&ParaTable3,sizeof(struct Para_Table3) );
 	if( Para_Updata_Flag&0x80 )
-         {
+        {
 		Reverse_data((INT8U *)&(ParaTable3.Remain_Money_Alarm1_Limit),4);
                 //从cpu卡读出来的报警金额1反相后为：Temp[3]:%x Temp[2]:%x Temp[1]:%x Temp[0]:%x  ",Temp[3],Temp[2],Temp[1],Temp[0]);
                 Write_Storage_Data(SDI_PREPAID_WARN_MONEY1 , (INT8U *)&(ParaTable3.Remain_Money_Alarm1_Limit) , 4)   ;

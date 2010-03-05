@@ -396,7 +396,7 @@ INT8U  WhenCardInsertedInitPrePayData(void) { //上电从e方读取数据到全局变量
      //使用的时候要反相表号 ，注意，只是使用在 现场参数卡， 返写操作， 密钥更新，购电卡判断
      Reverse_data((INT8U *)Pre_Payment_Para.BcdMeterID,6);
     //现场参数设置卡版本号  
-     Read_Storage_Data(_SDI_PREPAID_PARA_CARD_VER,(INT8U *)&Pre_Payment_Para.Para_Card_Version, (INT8U *)&Pre_Payment_Para.Para_Card_Version, sizeof(Pre_Payment_Para.Para_Card_Version)) ;
+     //Read_Storage_Data(_SDI_PREPAID_PARA_CARD_VER,(INT8U *)&Pre_Payment_Para.Para_Card_Version, (INT8U *)&Pre_Payment_Para.Para_Card_Version, sizeof(Pre_Payment_Para.Para_Card_Version)) ;
      //Pre_Payment_Para.Remain_Money_Hoard_Limit=Get_Money_Hoard_Limit();
      //Pre_Payment_Para.Buy_Count=Get_Buy_Eng_Counts();//从黄工那里获得购电次数，
      Card_Error_State.CardErrorState_INT32U=0x00000000;

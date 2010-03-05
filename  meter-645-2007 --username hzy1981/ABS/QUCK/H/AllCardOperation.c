@@ -356,19 +356,21 @@ INT8U Field_Para_Set_Card(void){//现场参数设置卡
 	if( Read(0,0xB2,1,0x24,4) != OK)
 		return ERR;
 	My_memcpyRev( ( INT8U * )&Count_Temp,receive_send_buffer,4 );
-         Debug_Print( "// 比较cpu卡的版本号是否大于自己管理的版本号， 计数器文件的值是否为0  "  );
-       // 比较cpu卡的版本号是否大于自己管理的版本号， 计数器文件的值是否为0
-	if( Version_Temp<=Pre_Payment_Para.Para_Card_Version || Count_Temp ==0 )
-		{
+        Debug_Print( "// 比较cpu卡的版本号是否大于自己管理的版本号， 计数器文件的值是否为0  "  );
+        //现场参数设置卡版本号  
+        Read_Storage_Data(_SDI_PREPAID_PARA_CARD_VER,(INT8U *)&Pre_Payment_Para.Para_Card_Version, (INT8U *)&Pre_Payment_Para.Para_Card_Version, sizeof(Pre_Payment_Para.Para_Card_Version)) ;
+	// 比较cpu卡的版本号是否大于自己管理的版本号， 计数器文件的值是否为0
+        if( Version_Temp<=Pre_Payment_Para.Para_Card_Version || Count_Temp ==0 )
+	{
 		  Card_Error_State.CardErrorState.CPU_Para_Card_Version_Err=1;  
 		  return ERR;
-		}
+	}
 	Para_Updata_Flag = Card_WR_Buff[5];
 	Debug_Print( " 参数信息文件处理 "  );
 	/*" 参数信息文件处理 "*/
 	Meter_Ins_Flag = 0xFF;//指令变化
 	if( Para_Updata_Flag & 0x80 )
-		{
+	{
 		if( Esam_File_Updata(PARA_SET_CARD_PARA_INF_FILE,
 								ESAM_PARA_INF_FILE,
 								USER_KIND_SET_CARD,
@@ -381,9 +383,9 @@ INT8U Field_Para_Set_Card(void){//现场参数设置卡
                                          }
 			
                 
-		}
+	}
 	if( Para_Updata_Flag & 0x02 )
-		{
+	{
 		if( Esam_File_Updata(PARA_SET_CARD_PARA_INF_FILE,
 								ESAM_PARA_INF_FILE,
 								TRIFF_SWITCH_TIME_SET_CARD,
@@ -395,7 +397,7 @@ INT8U Field_Para_Set_Card(void){//现场参数设置卡
                                                           return ERR;
                             }
 			
-		}
+	}
         Debug_Print( " 把从 cpu卡得到 的 用户类型，费率切换时间， 保存到电能表中去 "  );
         //把从 cpu卡得到 的 用户类型，费率切换时间， 保存到电能表中去
 	Deal_Set_Para_Inf_File(Card_WR_Buff+4,0x80);
@@ -476,7 +478,7 @@ INT8U Field_Para_Set_Card(void){//现场参数设置卡
 	Pre_Payment_Para.Para_Card_Version = Version_Temp;
         if( 0 EQ Write_Storage_Data(_SDI_PREPAID_PARA_CARD_VER ,(INT8U *)&Pre_Payment_Para.Para_Card_Version,  sizeof(Pre_Payment_Para.Para_Card_Version)) ){
             //假如写e方失败
-          Debug_Print( " //假如写e方失败  "  );
+            Debug_Print( " //假如写e方失败  "  );
             Card_Error_State.CardErrorState.ReadWriteE2romErr=1;
         }
         

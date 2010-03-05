@@ -59,13 +59,13 @@ INT8U ICcardMain(void) {
                         Write_Storage_Data(_SDI_INVALID_CARD_COUNTS ,&Temp,4);
 		}
                 //_Debug_Print("Operate Type=%d,Card Time=%ld Ms",CardType,Get_Pay_Ms_Time());
-                PrintErrState();
-                Debug_Print("卡 操作结束 ， ，返回0" );
+                //PrintErrState();
+               // Debug_Print("卡 操作结束 ， ，返回0" );
                 return 0;
 	}else{
                    //_Debug_Print("Operate Type=%d,Card Time=%ld Ms",CardType,Get_Pay_Ms_Time());
-                   PrintErrState();
-                   Debug_Print("卡 操作结束 ，，返回1 " );
+                   //PrintErrState();
+                   //Debug_Print("卡 操作结束 ，，返回1 " );
                    return 1;
         }
 

@@ -30,7 +30,7 @@ INT8U Esam_Remote_Auth(INT8U *pSrc, INT8U SrcLen, INT8U *pDst, INT8U *pLen, INT8
         // 判断身份认证有效时间是否过了，如果过了，ID_Ins_Counter就赋值为0
         Far_Identity_Auth_Ok_Flag=!Chk_Pay_Time_Arrive();
         //初始化：FarPrePayment.ID_Ins_Counter
-        Read_Storage_Data(_SDI_INVALID_COUNTS_AllOW ,(INT8U *)&FarPrePayment.ID_Ins_Counter,(INT8U *)&FarPrePayment.ID_Ins_Counter, 1) ;
+        Read_Storage_Data(_SDI_FAR_ILLEGAL_ATTACK_COUNTS ,(INT8U *)&FarPrePayment.ID_Ins_Counter,(INT8U *)&FarPrePayment.ID_Ins_Counter, 1) ;
         if(FarPrePayment.ID_Ins_Counter != 0 )//判断是否需要更新ID_Ins_Counter ，
         {//Cur_Time0.Date
           DataTemp[0 ]=Cur_Time1.Year;
@@ -45,7 +45,7 @@ INT8U Esam_Remote_Auth(INT8U *pSrc, INT8U SrcLen, INT8U *pDst, INT8U *pLen, INT8
             mem_cpy((INT8U *)&Far_Auth_Day_Follow,DataTemp,4,(INT8U *)&Far_Auth_Day_Follow,4);
             Write_Storage_Data(_SDI_FAR_AUTH_DAY_FOLLOW ,&Far_Auth_Day_Follow, 4);
             FarPrePayment.ID_Ins_Counter  =0;
-	    Write_Storage_Data(_SDI_INVALID_COUNTS_AllOW, (INT8U *)&FarPrePayment.ID_Ins_Counter, 1);
+	    Write_Storage_Data(_SDI_FAR_ILLEGAL_ATTACK_COUNTS, (INT8U *)&FarPrePayment.ID_Ins_Counter, 1);
           }
          }
         mem_cpy(&Temp,pSrc,4,&Temp,4);
@@ -267,8 +267,8 @@ INT8U Far_Write_Esam(INT8U cla,INT8U ins,INT8U t_p1,
 	CPU_ESAM_CARD_Control(ESAM);
 
 	if( Flag )
-	{        //针对密钥信息数据，前面4个字节为mac 后4个为数据 ，    
-                  //然后在主站信息来了后，写数据时，要反转mac，数据，又要把mac和数据的位置交换的情况
+	{       //针对密钥信息数据，前面4个字节为mac 后4个为数据 ，    
+                //然后在主站信息来了后，写数据时，要反转mac，数据，又要把mac和数据的位置交换的情况
 		My_memcpyRev( Card_WR_Buff , address,lc+4);
 	}
 	else
@@ -287,7 +287,7 @@ INT8U Far_Write_Esam(INT8U cla,INT8U ins,INT8U t_p1,
                 FarPrePayment.Far_Error_State.CpuCardInternlAuthenticationErr=1;//液晶显示身份验证错误
 		ESAM_AUTH_ERR_DEFINE =1;
 		FarPrePayment.ID_Ins_Counter++;
-                Write_Storage_Data(_SDI_INVALID_COUNTS_AllOW, (INT8U *)&FarPrePayment.ID_Ins_Counter, 1);
+                Write_Storage_Data(_SDI_FAR_ILLEGAL_ATTACK_COUNTS, (INT8U *)&FarPrePayment.ID_Ins_Counter, 1);
 		if((FarPrePayment.ID_Ins_Counter %3)==0 ||  FarPrePayment.ID_Ins_Counter >=15){
                         Reset_Pay_Timer(0);
 			Far_Identity_Auth_Ok_Flag=0;
@@ -298,7 +298,7 @@ INT8U Far_Write_Esam(INT8U cla,INT8U ins,INT8U t_p1,
 		return ERR;
 	}
         FarPrePayment.ID_Ins_Counter  =0;
-	Write_Storage_Data(_SDI_INVALID_COUNTS_AllOW, (INT8U *)&FarPrePayment.ID_Ins_Counter, 1);
+	Write_Storage_Data(_SDI_FAR_ILLEGAL_ATTACK_COUNTS, (INT8U *)&FarPrePayment.ID_Ins_Counter, 1);
 	return OK;
 }
 INT8U Far_Esamcard_Internal_Auth(INT8U *Point)   //远程系统身份认证//

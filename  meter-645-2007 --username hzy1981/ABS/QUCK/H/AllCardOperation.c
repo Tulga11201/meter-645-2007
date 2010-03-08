@@ -645,11 +645,11 @@ INT8U Set_In_Card(void){///出厂预制卡"
 	Pre_Payment_Para.Meter_Run_State=MeterRunState_Test_0;
         Write_Storage_Data(_SDI_PREPAID_RUN_STATUS ,(INT8U *)&Pre_Payment_Para.Meter_Run_State  ,sizeof(Pre_Payment_Para.Meter_Run_State) );
         //清除远程非法攻击次数
-        //FarPrePayment.ID_Ins_Counter  =0;
-	//Write_Storage_Data(_SDI_INVALID_COUNTS_AllOW, (INT8U *)&FarPrePayment.ID_Ins_Counter, 1);
+        //FarPrePayment.ID_Ins_Counter  =0;  
+	//Write_Storage_Data(_SDI_FAR_ILLEGAL_ATTACK_COUNTS, (INT8U *)&FarPrePayment.ID_Ins_Counter, 1);
         //本地非法卡插入次数清0
-        //Temp=0;
-        //Write_Storage_Data(_SDI_INVALID_CARD_COUNTS ,&Temp,4);
+        Temp=0;
+        Write_Storage_Data(_SDI_INVALID_CARD_COUNTS ,&Temp,4);
         //事件记录清0， 只是改全局变量， 真正的清0 ，在后面的任务中进行
         My_memcpyRev(&DataTemp[0], (INT8U *)&cpucard_number[4], 4);
         Card_Clr_All_Data(DataTemp); 

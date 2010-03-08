@@ -23,6 +23,7 @@ INT8U Esam_Remote_Auth(INT8U *pSrc, INT8U SrcLen, INT8U *pDst, INT8U *pLen, INT8
         INT32U  Far_Auth_Day_Follow;
         INT8U DataTemp[4];
         INT32U Temp;
+       
         OS_Mutex_Pend(PUB_BUF_SEM_ID);//使用缓冲：Pub_Buf0
         OS_Mutex_Pend(PUB_BUF0_SEM_ID); //使用信号量，以便使用缓冲
         //ret=GetMoney();

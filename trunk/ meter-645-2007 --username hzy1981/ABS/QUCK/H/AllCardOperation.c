@@ -511,7 +511,7 @@ INT8U Set_In_Card(void){///出厂预制卡"
       //  INT8U Order_Head[11];
         INT8U DataTemp[4];
         INT8U Temp;
-
+        INT32U Data32UTemp;
 	struct Moneybag_Data Moneybag_Data;
 	
 	if(!Check_Meter_Prog_Fac_Status()){
@@ -648,8 +648,8 @@ INT8U Set_In_Card(void){///出厂预制卡"
         //FarPrePayment.ID_Ins_Counter  =0;  
 	//Write_Storage_Data(_SDI_FAR_ILLEGAL_ATTACK_COUNTS, (INT8U *)&FarPrePayment.ID_Ins_Counter, 1);
         //本地非法卡插入次数清0
-        Temp=0;
-        Write_Storage_Data(_SDI_INVALID_CARD_COUNTS ,&Temp,4);
+        Data32UTemp=0;
+        Write_Storage_Data(_SDI_INVALID_CARD_COUNTS ,&Data32UTemp,sizeof(Data32UTemp));
         //事件记录清0， 只是改全局变量， 真正的清0 ，在后面的任务中进行
         My_memcpyRev(&DataTemp[0], (INT8U *)&cpucard_number[4], 4);
         Card_Clr_All_Data(DataTemp); 

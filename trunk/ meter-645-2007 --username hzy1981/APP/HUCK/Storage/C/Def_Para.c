@@ -6,7 +6,7 @@
 #endif
 
 #define UB 2200UL //额定电压
-#define IB 1000UL//150 //1.50,两位小数 
+#define IB 2000UL//150 //1.50,两位小数 
 #define PB (UB*IB) //额定功率
 #define PMAX (UB*IB*4) //最大功率
 
@@ -1258,7 +1258,7 @@ CONST S_Def_Para_Info Def_Para[] =
   { _SDI_PREPAID_PARA_CARD_VER, 1, (INT8U *)Zero},// (0x0302|EXT_PARA_DATA)//现场参数设置卡版本号 数据长度为4
   { _SDI_PREPAID_PSW_KIND, 1, (INT8U *)Zero}, // (0x0303|EXT_PARA_DATA)//密钥类型数据长度为1
   { _SDI_INVALID_CARD_COUNTS, 1, (INT8U *)Zero}, //非法卡插入次数
-  { _SDI_INVALID_COUNTS_AllOW, 1, (INT8U *)Zero}, //非法卡插入次数
+  { _SDI_FAR_ILLEGAL_ATTACK_COUNTS, 1, (INT8U *)Zero}, //非法卡插入次数
   { _SDI_FAR_AUTH_DAY_FOLLOW, 1, (INT8U *)Zero},//身份认证跟随日
   { _SDI_SINGLE_OR_COMPLEX_USER_KIND, 1, (INT8U *)Zero}, //用户类型
   { _SDI_FAR_PASSWORD_STATE, 1, (INT8U *)Zero}, //远程密钥类型

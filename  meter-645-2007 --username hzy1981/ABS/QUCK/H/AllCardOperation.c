@@ -17,7 +17,7 @@ INT8U ICcardMain(void) {
        
         INT32U Temp;
         INT8U ret;
-        
+   
         WhenCardInsertedInitPrePayData();//更新我管理的全局变量
 	Prepaid_Card_Op_Bef_Proc();
 	if(Check_Cpu_Card_Out() ){

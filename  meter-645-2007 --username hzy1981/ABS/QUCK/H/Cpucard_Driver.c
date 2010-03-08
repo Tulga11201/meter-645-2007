@@ -380,7 +380,7 @@ INT8U Esam_File_Updata(INT8U Cpu_File_Name,
 							   		INT8U Esam_Start_Addr,
 							   		INT8U Updata_Data_L,
 							   		INT8U * Data_Output_Point)
-	{
+{
 	INT8U temp_buffer_2[30],Order_Head[4];
 	INT8U Head_Length;
 
@@ -400,7 +400,8 @@ INT8U Esam_File_Updata(INT8U Cpu_File_Name,
 	temp_buffer_2[6]=0x80+Esam_File_Name;//2
 	temp_buffer_2[7]=Esam_Start_Addr;//4
 	temp_buffer_2[8]=Updata_Data_L+4;// 这里规定了从cpu卡读几个字节，为什么要加4,是因为写esam的时候还要加上4字节mac，
-	if( Meter_Ins_Flag == 0xFF ){
+	if( Meter_Ins_Flag == 0xFF )
+        {
 		Head_Length = 0x11;
 		temp_buffer_2[9] = 0x00;
 		temp_buffer_2[10] = 0x00;
@@ -436,7 +437,7 @@ INT8U Esam_File_Updata(INT8U Cpu_File_Name,
 		return ERR;
         
 	return OK;
-	}
+}
 /*"**************************************************************************"*/
 /*" 功能：CPU卡其他文件更新 "*/
 /*" Cpu_File_Name: "*/

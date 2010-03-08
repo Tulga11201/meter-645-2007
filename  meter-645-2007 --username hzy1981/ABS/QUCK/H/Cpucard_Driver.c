@@ -716,7 +716,7 @@ void Deal_Run_Inf_Data(INT8U * Source_Point,INT8U Mode)
         //" 从esam中得到本地密钥信息 // 
 	Get_File_Data(ESAM,ESAM_PASSWORD_INF_FILE,0,4,Run_Inf_Data.Password_Info);
         // 非法卡插入次数 "//_SDI_INVALID_COUNTS_AllOW
-        Read_Storage_Data (  _SDI_INVALID_CARD_COUNTS, &Temp, &Temp, 4  );//     
+        Read_Storage_Data (  _SDI_INVALID_CARD_COUNTS, &Temp, &Temp, sizeof(Temp) );//     
         Hex2Bcd(Temp, DataTemp,3,DataTemp,3);//
         My_memcpyRev( (INT8U *)&(Run_Inf_Data.Unlawful_Card_Count[0]),(INT8U *)DataTemp,3);
         //" 返写日期时间 "//

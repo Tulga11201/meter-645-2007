@@ -326,4 +326,29 @@ INT8U  Esam_Auth_Check(  INT8U *pSrc, INT16U SrcLen, INT8U * DstLen)
         return 1;
 } 
 ///////////////
+/**********************************************************************************
+函数功能：读外部实时时钟
+入口：
+Dst---------------目标缓冲区,BCD码,顺序为从低到高:秒/分/时/星期/日/月/年
+DstLen-------------目标缓冲区长度
+出口：1---------读取成功；0--------读取失败
+注意:
+1: 读出的数据不检查BCD码的合法性;
+2: 读出的数据不检查年/月/日/星期/时/分/秒的合法性;
+**********************************************************************************/
+INT8U Read_ExtRTC_QUCK(INT8U *Dst,INT8U DstLen)
+{
+ INT8U Flag;
  
+ if(DstLen!=7)
+ {   
+   Debug_Print("Ext_RTC Error----->Dst_Buf Length is Error!");
+   return 0;
+ }
+ 
+ if(Check_ExtRTC_Busy()!=EXT_RTC_OK)
+   return 0;
+ 
+ Flag=Read_EXT_RTC_Buf(0,7,Dst);
+ return Flag;
+}

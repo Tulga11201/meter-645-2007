@@ -74,13 +74,13 @@ void PCLBUZ1_Init( void );
 void PCLBUZ1_Start( void );
 void PCLBUZ1_Stop( void );
 
-#define INIT_IC_CLK      PCLBUZ0_Init
-#define START_IC_CLK     PCLBUZ0_Start
-#define STOP_IC_CLK      PCLBUZ0_Stop
+#define INIT_IC_CLK      PCLBUZ0_Init()
+#define START_IC_CLK     PCLBUZ0_Start()
+#define STOP_IC_CLK      PCLBUZ0_Stop()
 
-#define INIT_ESAM_CLK    PCLBUZ1_Init
-#define START_ESAM_CLK   PCLBUZ1_Start
-#define STOP_ESAM_CLK    PCLBUZ1_Stop
+#define INIT_ESAM_CLK    PCLBUZ1_Init()
+#define START_ESAM_CLK   PCLBUZ1_Start()
+#define STOP_ESAM_CLK    PCLBUZ1_Stop()
 
 /* Start user code for definition. Do not edit comment generated here */
 /* End user code for definition. Do not edit comment generated here */

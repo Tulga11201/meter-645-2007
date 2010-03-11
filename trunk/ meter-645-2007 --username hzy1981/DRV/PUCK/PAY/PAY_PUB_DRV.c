@@ -65,6 +65,19 @@ INT8U Cpu_Esam_Hard_Operate(INT8U Type,INT8U Operate)  //8U pDstLen,INT8U *pDst,
       WAITFOR_DRV_CYCLE_TIMEOUT(1200)
       Clear_All_Dog();
         //CPU卡冷复位,需要得到 卡号和分散因子
+      /* 低成本
+      if(Type EQ PAY_ESAM)
+      {
+        INIT_IC_CLK;
+        START_IC_CLK;
+        return 1;
+      }
+      if(Type EQ PAY_CPU_CARD)
+      {
+        INIT_ESAM_CLK;
+        START_ESAM_CLK;
+      }      
+      */
       return 1;
       
     case CPU_ESAM_DRV_RST_HOT:
@@ -73,9 +86,33 @@ INT8U Cpu_Esam_Hard_Operate(INT8U Type,INT8U Operate)  //8U pDstLen,INT8U *pDst,
       CONST_PAY_IO[Type].Set_Io_Rst(!CONST_PAY_IO[Type].Rst_Valid);
       WAITFOR_DRV_CYCLE_TIMEOUT(1200)
       Clear_All_Dog();
+      /* 低成本
+      if(Type EQ PAY_ESAM)
+      {
+        INIT_IC_CLK;
+        START_IC_CLK;
+        return 1;
+      }
+      if(Type EQ PAY_CPU_CARD)
+      {
+        INIT_ESAM_CLK;
+        START_ESAM_CLK;
+      }      
+      */
       return 1;
       
     case CPU_ESAM_DRV_POWER_OFF:
+      /* 低成本
+      if(Type EQ PAY_ESAM)
+      {
+        STOP_IC_CLK;
+      }
+      if(Type EQ PAY_CPU_CARD)
+      {
+         STOP_ESAM_CLK;
+      }      
+      */
+      
       CONST_PAY_IO[Type].Set_Io_Rst(CONST_PAY_IO[Type].Rst_Valid);
       WAITFOR_DRV_CYCLE_TIMEOUT(1200)
       CONST_PAY_IO[Type].Set_Io_Clk(!CONST_PAY_IO[Type].Clk_Valid);

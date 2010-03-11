@@ -33,6 +33,7 @@
 #include "Pay_Pub_Drv.h"
 #include "CPU_CARD_DRV.h"
 #include "ESAM_DRV.h"
+#include "PCLBUZ.h"
 
 #define DIR_OUTPUT  0
 #define DIR_INPUT   1

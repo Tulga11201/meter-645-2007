@@ -605,7 +605,16 @@ void Check_Neg_Curr(void)
   }
 
   if(Get_SysParse_Mode()==PARSE_331)
-    Clr_Event_Instant(ID_EVENT_A_NEG_CURR);   
+  {
+    Clr_Event_Instant(ID_EVENT_B_NEG_CURR);
+  }
+  
+  if(Read_Event_Status(ID_EVENT_VOLT_NEG_SEQ))  //ƒÊœ‡–Ú¡À
+  {
+    Clr_Event_Instant(ID_EVENT_A_NEG_CURR);
+    Clr_Event_Instant(ID_EVENT_B_NEG_CURR);
+    Clr_Event_Instant(ID_EVENT_C_NEG_CURR);    
+  }
 }
 #endif
 

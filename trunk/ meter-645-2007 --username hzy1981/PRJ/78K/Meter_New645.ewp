@@ -352,6 +352,7 @@
           <state>$PROJ_DIR$\..\..\DRV\PUCK\ICCARD</state>
           <state>$PROJ_DIR$\..\..\DRV\PUCK\IIC</state>
           <state>$PROJ_DIR$\..\..\DRV\PUCK\LVI</state>
+          <state>$PROJ_DIR$\..\..\DRV\PUCK\BUZ</state>
           <state>$PROJ_DIR$\..\..\DRV\PUCK\WDT</state>
           <state>$PROJ_DIR$\..\..\DRV\PUCK\RTC</state>
           <state>$PROJ_DIR$\..\..\DRV\PUCK\UART</state>
@@ -2510,6 +2511,15 @@
     </group>
     <group>
       <name>PUCK</name>
+      <group>
+        <name>BUZ</name>
+        <file>
+          <name>$PROJ_DIR$\..\..\DRV\PUCK\BUZ\PCLBUZ.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\DRV\PUCK\BUZ\PCLBUZ.h</name>
+        </file>
+      </group>
       <group>
         <name>IIC</name>
         <group>

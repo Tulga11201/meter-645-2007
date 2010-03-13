@@ -499,7 +499,12 @@ void Init_Inter_Abs(INT32U Mode)
         START_PRG_KEY;
         START_RTC_COUNTER; 
         START_LASER_UP;
+        
+#ifdef REMOTER_FUNC_EN
         START_IR_DECODE;
+#else
+        STOP_IR_DECODE
+#endif       
         
         STOP_RTC_ALARM;   
         STOP_IRDA_WAKE;
@@ -520,9 +525,14 @@ void Init_Inter_Abs(INT32U Mode)
         if(Resume_Src.Src_Flag&IRAD_RESUME)  //是在sleep模式下的红外唤醒，停止唤醒
         {
           STOP_IRDA_WAKE;        //与 START_IR_DECODE 互斥
-          if(RESUME_REMOTER_EN)   //遥控器打开              
-            START_IR_DECODE;       //唤醒下，可以使用红外遥控器
-
+          if(RESUME_REMOTER_EN)   //遥控器打开
+          {  
+            #ifdef REMOTER_FUNC_EN
+                    START_IR_DECODE;
+            #else
+                    STOP_IR_DECODE
+            #endif       
+          }
         }
         else
         { 

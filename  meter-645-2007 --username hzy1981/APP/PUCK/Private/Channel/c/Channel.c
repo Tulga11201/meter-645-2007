@@ -150,7 +150,10 @@ void Channel_Data_Proc_PUCK(INT32U Status)
   {      
       Channel_DataReceive_PUCK(i,Status);     
   }
+  
+#ifdef REMOTER_FUNC_EN
   Remote_Key_Proc();   //resume模式下，还可以工作
+#endif 
 }
 
 void Debug_Channel_Switch(INT32U Mode)

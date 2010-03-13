@@ -35,10 +35,12 @@ void Init_Interr_Sram(void)
                (void *)(&Irda_Wake_Ctrl),sizeof(Irda_Wake_Ctrl));   
   INIT_STRUCT_VAR(Irda_Wake_Ctrl);
 
-  mem_set((void *)(&Irda_Decode_Ctrl),0,sizeof(Irda_Decode_Ctrl),\
-        (void *)(&Irda_Decode_Ctrl),sizeof(Irda_Decode_Ctrl));
-  INIT_STRUCT_VAR(Irda_Decode_Ctrl);
-  
+#ifdef REMOTER_FUNC_EN  
+    mem_set((void *)(&Irda_Decode_Ctrl),0,sizeof(Irda_Decode_Ctrl),\
+          (void *)(&Irda_Decode_Ctrl),sizeof(Irda_Decode_Ctrl));
+    INIT_STRUCT_VAR(Irda_Decode_Ctrl);
+#endif
+    
   mem_set((void *)(&Pulse_Num_Temp),0,sizeof(Pulse_Num_Temp),\
         (void *)(&Pulse_Num_Temp),sizeof(Pulse_Num_Temp));
   INIT_STRUCT_VAR(Pulse_Num_Temp); 
@@ -345,7 +347,8 @@ void Fast_Timer(void)
       return ;
     }
   }
-  
+
+#ifdef REMOTER_FUNC_EN  
   if(TDR06==0x6d || TDR06==0x36)   //单位：9.94647us,程序快速晶振跑
   {
     Fast_Timer_Reg++;
@@ -360,10 +363,12 @@ void Fast_Timer(void)
       Irda_Decode_Ctrl.TrigTimer=0;
     }
   }
+#endif
 }
 //遥控器解码:所有碼接收时间 64.02ms左右,中断等级--------INTER_GRADE_LOW(默认：INTP5_vect)
 void IR_Decode_Proc(void)
 {
+#ifdef REMOTER_FUNC_EN 
   EI();
   if(Irda_Decode_Ctrl.Done)
    return ;
@@ -431,7 +436,8 @@ void IR_Decode_Proc(void)
       STOP_FAST_TIMER;
       Fast_Timer_Reg=0;
     } 
-  }      
+  }
+#endif
 }
 //1秒脉冲,中断等级--------INTER_GRADE_LOWERST
 void INT_1HZ(void)

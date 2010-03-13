@@ -166,7 +166,7 @@ void Init_RTC_Pulse(INT8U Flag)
   if(Err<=1)  //²»ÊÇÂö³åÊä³öÄ£Ê½×Ö´íÎó
     return ;
   
-  for(i=0;i<3;i++)  //ÓÐ´íÎó£¬Ö»»ØÐ´ 0x0E ¼Ä´æÆ÷
+  for(i=0;i<3;i++)  //ÊÇÂö³åÊä³ö´íÎó£¬Ö»»ØÐ´ 0x0E ¼Ä´æÆ÷
   {
     if(0==Write_EXT_RTC_Buf(0x0E,1,temp))
       ASSERT_FAILED();

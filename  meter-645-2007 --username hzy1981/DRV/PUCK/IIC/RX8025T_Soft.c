@@ -50,7 +50,7 @@ INT8U Read_EXT_RTC_Buf(INT8U addr,INT8U Len,INT8U *Dst)
 
    I2cSoft_Start(IIC_SOFT_ID0);
    OkFlag=I2cSoft_Send_Byte(IIC_SOFT_ID0,0x64);
-   OkFlag&=I2cSoft_Send_Byte(IIC_SOFT_ID0,addr<<4);
+   OkFlag&=I2cSoft_Send_Byte(IIC_SOFT_ID0,addr);
    I2cSoft_Start(IIC_SOFT_ID0);
    OkFlag&=I2cSoft_Send_Byte(IIC_SOFT_ID0,0x65);   
    OkFlag&=I2cSoft_Read_nByteS(IIC_SOFT_ID0,Len,Dst);
@@ -83,7 +83,7 @@ INT8U Write_EXT_RTC_Buf(INT8U addr,INT8U Len,INT8U *Src)
 #endif     
     I2cSoft_Start(IIC_SOFT_ID0);
     OkFlag=I2cSoft_Send_Byte(IIC_SOFT_ID0,0x64);	
-    OkFlag&=I2cSoft_Send_Byte(IIC_SOFT_ID0,addr<<4);
+    OkFlag&=I2cSoft_Send_Byte(IIC_SOFT_ID0,addr);
     for(i=0;i<Len;i++)
       OkFlag&=I2cSoft_Send_Byte(IIC_SOFT_ID0,Src[i]);
     OkFlag&=I2cSoft_Stop(IIC_SOFT_ID0);
@@ -109,66 +109,57 @@ INT8U Write_EXT_RTC_Buf(INT8U addr,INT8U Len,INT8U *Src)
 **********************************************************************************/   
 void Init_RTC_Pulse(INT8U Flag)
 {  
-  INT8U temp[2]={0,0},i,Err=0;  
+  INT8U temp[3]={0,0,0},i,Err=0;  
 
   //状态：读后不会清0
   for(i=0;i<3;i++)
   {
-    if(0==Read_EXT_RTC_Buf(0x0E,2,temp))
+    if(0==Read_EXT_RTC_Buf(0x0D,3,temp))
       ASSERT_FAILED();
     else
     {
-      Debug_Print("Ext_RTC Power On,Reg(0x0E)=0x%x,Reg(0x0F)=0x%x!",temp[0],temp[1]);
+      Debug_Print("Ext_RTC Power On,Reg(0x0D)=0x%x,Reg(0x0E)=0x%x,Reg(0x0F)=0x%x!",temp[0],temp[1],temp[2]);
       break;
     }
   }
   
-   if(i EQ 3)  //3次都读不出
+  if(i EQ 3)  //3次都读不出
    return ;
-  
-  if(GET_BIT(temp[0],5) EQ 0)    //12/24时钟制错误
+    
+  if(Flag && (temp[2]&0x6!=0x60) ) //输出脉冲
+  {    
+    SET_BIT(temp[2],5);
+    SET_BIT(temp[2],6); 
+  }
+   
+  /*
+  if(GET_BIT(temp[1],0))    //温补停止了
   {
     Err=1;
-    Debug_Print("Ext_RTC Error----->12/24 error,Res bit!");
+    Debug_Print("Ext_RTC Error----->Temp Stop!");
   }
   
-  if(GET_BIT(temp[1],6))    //电源电压低
+  if(GET_BIT(temp[1],1))    //电压低
   {
     Err=1;
-    Debug_Print("Ext_RTC Error----->Bat Lowr,Res bit!");
+    Debug_Print("Ext_RTC Error----->Power Low!");
   }
   
-  if(GET_BIT(temp[1],5) EQ 0)    //停振
+  
+  if(temp[2]!=0x10)         //0x0F寄存器不对
   {
-    Err=1;
+    Err=2;
+    temp[2]=0x10;
     Debug_Print("Ext_RTC Error----->OSC Stop,Res bit!");
   }
-  
-  if(GET_BIT(temp[1],4))    //电源复位
-  {
-    Err=1;
-    Debug_Print("Ext_RTC Error----->Power Rst,Res bit!");
-  }
-  
-  
-  if(Flag &&((INT8U)(temp[0]&0x03) !=0x03))  //输出脉冲
-  {
-    Err=2;
-    temp[0]|=0x03;                 //使能秒脉冲
-  }
-  
-  if((Flag EQ 0) && ((INT8U)(temp[0]&0x03) !=0x00))  //禁止脉冲
-  {
-    Err=2;
-    temp[0]&=0xFC;                 //禁止秒脉冲
-  }
-  
+ 
   if(Err<=1)  //不是脉冲输出模式字错误
     return ;
+  */
   
-  for(i=0;i<3;i++)  //有错误，只回写 0x0E 寄存器
+  for(i=0;i<3;i++)  //是脉冲输出错误，只回写 0x0E 寄存器
   {
-    if(0==Write_EXT_RTC_Buf(0x0E,1,temp))
+    if(0==Write_EXT_RTC_Buf(0x0D,3,temp)) //ZZZZZZZZZ
       ASSERT_FAILED();
     else
       break;

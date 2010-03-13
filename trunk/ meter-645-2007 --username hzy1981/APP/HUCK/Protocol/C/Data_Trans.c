@@ -5,10 +5,10 @@
 #line  __LINE__ "H19"
 #endif
 
-#define SOFTWARE_VERSION "10030516 V1.3 " //软件版本号
+#define SOFTWARE_VERSION "10031114 V1.3 " //软件版本号
 
 
-CONST INT32U All_Loss_Vol_Curr = 1000;
+//CONST INT32U All_Loss_Vol_Curr = 1000;
 
 extern INT8U Esam_Remote_Auth(INT8U *pSrc, INT8U SrcLen, INT8U *pDst, INT8U *pLen, INT8U *pDst_Start, INT16U DstLen);
 
@@ -6065,6 +6065,19 @@ CONST S_P_Data_Info P_Data_Info[] =
   INIT(Dst_Len, 6),
   INIT(Num, 0x00),
   INIT(Spec_Flag, SPEC_NO)},
+   //电表规格
+  {INIT(PDI, _PDI_SET_METER_SPEC),
+  INIT(DI_Set_Flag, 0),
+  INIT(PSW_Flag, PSW_SET_PARA),
+  INIT(Storage, S_RAM),
+  INIT(pSrc, (void*) 0),
+  //INIT(Src_Off, 0),
+  INIT(Src_Len, 8),
+  INIT(Src_Format, S_BCD),
+  INIT(Dst_Start, 0),
+  INIT(Dst_Len, 8),
+  INIT(Num, 0x00),
+  INIT(Spec_Flag, SPEC_METER_SPEC)},  
   //总AH
   {INIT(PDI, _PDI_TOTAL_AH),
   INIT(DI_Set_Flag, 0),
@@ -6983,6 +6996,12 @@ void Set_Prog_Record_Pre_Porc(INT8U Ch, PROTO_DI PDI, INT8U *pAck_Flag)
  ///////////////////////////////////////////////////////////////   
   if(*pAck_Flag EQ 1)  
     Event_Data_Proc(Event_ID, EVENT_OCCUR);  
+  
+  if(PDI EQ _PDI_SET_METER_SPEC) //设置默认的事件参数,先给应答再设置默认参数
+  {
+    *pAck_Flag = 1; 
+    Send_Set_Data_Ack_Frame(Ch);    
+  }
 }
 
 //设置编程记录
@@ -8824,6 +8843,12 @@ INT8U Set_Spec_Data_Proc(PROTO_DI PDI, INT8U Spec_Flag, INT8U* pSrc, INT8U SrcLe
       return Write_Storage_Data(SDI_METER_ID, pSrc, SrcLen); 
     }
   }
+  else if(Spec_Flag EQ SPEC_METER_SPEC)
+  {
+    Set_Def_Event_Judge_Para(pSrc);
+    return 1;
+  }
+  
   return 0;
 }
 

@@ -220,6 +220,7 @@ EXT volatile S_Para_Modify Para_Modify;
 //#define SPEC_ADJ_CLR  0x83 //校表清0
 #define SPEC_MODULE   0x83 //模块通信
 #define SPEC_ADJ      0x84 //校表
+#define SPEC_METER_SPEC 0x85 //电表规格
 //读和写都特殊
 #define SPEC_TIME     0xC1 //时间和日期
 
@@ -232,6 +233,7 @@ EXT volatile S_Para_Modify Para_Modify;
 #define _PDI_PD_TIME       0x80000005 //前次掉电时间
 #define _PDI_PO_TIME       0x80000006 //当此上电时间
 #define _PDI_PROG_TIME     0x80000007 //编程时间
+#define _PDI_SET_METER_SPEC 0x80000008 //电表规格
 
 #define _PDI_POS_ACTIVE_DEMAND  0x80000010 //需量超限期间最大有功需量及时间
 #define _PDI_NEG_ACTIVE_DEMAND  0x80000011

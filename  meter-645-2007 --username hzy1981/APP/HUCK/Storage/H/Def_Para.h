@@ -65,4 +65,5 @@ EXT void Set_All_Def_Data();
 EXT INT32U Get_Def_Para_Info_CS();
 EXT void Check_Boot_On_Flag();
 EXT INT16U Read_Def_Para(STORA_DI SDI, void* pDst, INT16U Len, void* pDst_Start, INT16U DstLen);
+EXT void Set_Def_Event_Judge_Para(INT8U *pSrc);
 #endif

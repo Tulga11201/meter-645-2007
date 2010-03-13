@@ -5,8 +5,8 @@
 #line __LINE__ "H21"
 #endif
 
-#define UB 2200UL //额定电压
-#define IB 2000UL//150 //1.50,两位小数 
+#define UB 2200UL//2200UL //额定电压
+#define IB 1000UL//150 //1.50,两位小数 
 #define PB (UB*IB) //额定功率
 #define PMAX (UB*IB*4) //最大功率
 
@@ -1726,6 +1726,109 @@ void Check_Boot_On_Flag()
       }
     }
   }
+}
+
+//设置默认事件参数，这些参数和额定电压、额定电流、最大电流有关
+void Set_Def_Event_Judge_Para(INT8U *pSrc)
+{
+  INT8U i;
+  INT32U U_B, I_B, I_M; //额定电压、额定电流、最大电流
+  INT8U Temp[8] = {0};
+  
+  //Read_Storage_Data(_SDI_UB, Temp, Temp, sizeof(Temp));
+  U_B = Bcd2Hex(pSrc + 6, 2);
+  //Read_Storage_Data(_SDI_IB, Temp, Temp, sizeof(Temp));
+  I_B = Bcd2Hex(pSrc + 3, 3);
+  //Read_Storage_Data(_SDI_IM, Temp, Temp, sizeof(Temp));
+  I_M = Bcd2Hex(pSrc, 3);  
+  
+  //失压触发下限
+  Hex2Bcd(U_B*78/100, Temp, 2, Temp, sizeof(Temp));
+  Write_Storage_Data(0x04090101, Temp, 2);
+  //失压恢复上限
+  Hex2Bcd(U_B*85/100, Temp, 2, Temp, sizeof(Temp));
+  Write_Storage_Data(0x04090102, Temp, 2);
+  //失压电流触发下限
+  Hex2Bcd(I_B*5/10, Temp, 3, Temp, sizeof(Temp));
+  Write_Storage_Data(0x04090103, Temp, 3);  
+  //欠压事件电压触发上限
+  Hex2Bcd(U_B*90/100, Temp, 2, Temp, sizeof(Temp));
+  Write_Storage_Data(0x04090201, Temp, 2); 
+  //过压事件电压触发下限
+  Hex2Bcd(U_B*120/100, Temp, 2, Temp, sizeof(Temp));
+  Write_Storage_Data(0x04090301, Temp, 2);  
+  //断相事件电压触发上限
+  Hex2Bcd(U_B*60/100, Temp, 2, Temp, sizeof(Temp));
+  Write_Storage_Data(0x04090401, Temp, 2);    
+  //断相事件电流触发上限
+  Hex2Bcd(U_B*5/10, Temp, 3, Temp, sizeof(Temp));
+  Write_Storage_Data(0x04090402, Temp, 3);
+  //失流事件电压触发下限
+  Hex2Bcd(U_B*60/100, Temp, 2, Temp, sizeof(Temp));
+  Write_Storage_Data(0x04090701, Temp, 2);   
+  //失流事件电流触发上限
+  Hex2Bcd(I_B*5/10, Temp, 3, Temp, sizeof(Temp));
+  Write_Storage_Data(0x04090702, Temp, 3); 
+  //失流事件电流触发下限
+  Hex2Bcd(I_B*5, Temp, 3, Temp, sizeof(Temp));
+  Write_Storage_Data(0x04090703, Temp, 3); 
+  //过流事件电流触发下限
+  Hex2Bcd(I_B*4/10, Temp, 2, Temp, sizeof(Temp));
+  Write_Storage_Data(0x04090801, Temp, 2);
+  //断流事件电压触发下限  
+  Hex2Bcd(U_B*90/100, Temp, 2, Temp, sizeof(Temp));
+  Write_Storage_Data(0x04090901, Temp, 2); 
+  //断流事件电流触发上限
+  Hex2Bcd(I_B/10, Temp, 3, Temp, sizeof(Temp));
+  Write_Storage_Data(0x04090902, Temp, 3);  
+  //潮流反向事件有功功率触发下限
+  Hex2Bcd(U_B*I_B/1000, Temp, 3, Temp, sizeof(Temp));
+  Write_Storage_Data(0x04090A01, Temp, 3);  
+  //过载事件有功功率触发下限
+  Hex2Bcd(U_B*I_M*12/1000, Temp, 3, Temp, sizeof(Temp));
+  Write_Storage_Data(0x04090B01, Temp, 3);
+  //电压考核上限
+  Hex2Bcd(U_B*12/10, Temp, 2, Temp, sizeof(Temp));
+  Write_Storage_Data(0x04090C01, Temp, 2);  
+  //电压考核下限
+  Hex2Bcd(U_B*8/10, Temp, 2, Temp, sizeof(Temp));
+  Write_Storage_Data(0x04090C02, Temp, 2); 
+  //有功需量超下限
+  Hex2Bcd(U_B*I_M*30/1000, Temp, 3, Temp, sizeof(Temp));
+  Write_Storage_Data(0x04090D01, Temp, 3);  
+  //无功需量超下限
+  Hex2Bcd(U_B*I_M*30/1000, Temp, 3, Temp, sizeof(Temp));
+  Write_Storage_Data(0x04090D02, Temp, 3); 
+  
+  //额定电压
+  for(i = 0; i < 6; i ++)
+  {
+    Temp[i] = U_B % 10 + '0';
+    U_B = U_B / 10;
+    if(i EQ 0)
+      Temp[++ i] = '.';
+  }
+  Write_Storage_Data(0x04000404, Temp, 6);
+
+  //额定电流
+  for(i = 0; i < 6; i ++)
+  {
+    Temp[i] = I_B % 10 + '0';
+    I_B = I_B / 10;
+    if(i EQ 1)
+      Temp[++ i] = '.';
+  }
+  Write_Storage_Data(0x04000405, Temp, 6);
+
+  //最大电流
+  for(i = 0; i < 6; i ++)
+  {
+    Temp[i] = I_M % 10 + '0';
+    I_M = I_M / 10;
+    if(i EQ 1)
+      Temp[++ i] = '.';
+  }
+  Write_Storage_Data(0x04000406, Temp, 6);  
 }
 
 #undef DEF_PARA_C

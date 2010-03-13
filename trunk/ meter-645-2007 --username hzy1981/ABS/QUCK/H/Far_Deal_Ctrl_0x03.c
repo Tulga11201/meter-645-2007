@@ -406,7 +406,10 @@ INT8U Far_Deal_078001FF(INT8U *Data_Point )
 	else{
 /*"04b082（83，84，86）+ P2(偏移地址)＋11+4字节随机数1+04d686+00+LC+8字节分散因子。
 LC是所要读取的明文数据＋MAC+分散因子的总长度，它是1字节的十六进制数。"*/
-
+                if(ESAM_RUN_INF_FILE EQ Far_Read_078001FF_Format.File)
+                {
+                   Updata_Esam_Return_File(0x11);  
+                }
 		if(Far_Read_Esam(0x04,Read_Binary,0x80+(INT8U)(Far_Read_078001FF_Format.File),
 											 (INT8U)(Far_Read_078001FF_Format.Data_Start_Addr),
 											 (INT8U)(Far_Read_078001FF_Format.Data_Length), 

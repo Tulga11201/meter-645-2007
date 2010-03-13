@@ -1211,7 +1211,7 @@ CONST INT8U Def_04090D03[]=
 //总功率因素超下限阀值
 CONST INT8U Def_04090E01[]=
 {
-  0x00,0x02 //0.2
+  0x00,0x05 //0.5
 };
 
 //总功率因素超下限判定延时时间
@@ -1735,6 +1735,7 @@ void Set_Def_Event_Judge_Para(INT8U *pSrc)
   INT32U U_B, I_B, I_M; //额定电压、额定电流、最大电流
   INT8U Temp[8] = {0};
   
+  Main_Dis_Info("SET PArA");
   //Read_Storage_Data(_SDI_UB, Temp, Temp, sizeof(Temp));
   U_B = Bcd2Hex(pSrc + 6, 2);
   //Read_Storage_Data(_SDI_IB, Temp, Temp, sizeof(Temp));

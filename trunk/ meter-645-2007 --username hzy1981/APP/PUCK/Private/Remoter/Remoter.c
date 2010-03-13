@@ -5,6 +5,7 @@
 #line  __LINE__ "AC"
 #endif
 
+#ifdef REMOTER_FUNC_EN
 
 #define IR_NONE        0x00
 #define IR_MIN_NUM     0X00
@@ -86,3 +87,4 @@ void Remote_Key_Proc(void)
     INIT_STRUCT_VAR(Irda_Decode_Ctrl);
   }
 }
+#endif

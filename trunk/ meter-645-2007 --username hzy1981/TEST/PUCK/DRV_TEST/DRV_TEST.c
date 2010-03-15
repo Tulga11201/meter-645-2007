@@ -966,6 +966,14 @@ void LCD_Dis_Result(void)
 {  
   INT8U KeyValue;
   
+  /*
+  if(DOWN_COVER_STATUS EQ 0 || UP_COVER_STATUS EQ 0)     //开端盖(后端盖)铅封
+  {
+    FillAllScreen();   //用于显示液晶是否缺笔
+    return ;
+  }
+  */
+    
   KeyValue=Key_Value_Pub.Key.Byte;
   Key_Value_Pub.Key.Byte=0;
   switch(KeyValue)    //以下获取具体的现实元素信息------------PUCK
@@ -1095,8 +1103,15 @@ void Test_HardWare_PUCK(void)
   
   if(Get_Meter_Hard_Mode()!=MODE_TEST)
     return ;   
+  /*
+  INIT_ESAM_CLK;
+  START_ESAM_CLK;
   
-    
+  INIT_IC_CLK;
+  START_IC_CLK;
+  */
+  
+
   Ext_Device_Stat.Status=TEST_STATUS_PUCK;  //置自检模式
   
   Init_DebugChanel_PUCK(0);

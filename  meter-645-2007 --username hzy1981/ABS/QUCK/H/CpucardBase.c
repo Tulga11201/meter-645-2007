@@ -399,6 +399,7 @@ INT8U  WhenCardInsertedInitPrePayData(void) { //上电从e方读取数据到全局变量
      //Read_Storage_Data(_SDI_PREPAID_PARA_CARD_VER,(INT8U *)&Pre_Payment_Para.Para_Card_Version, (INT8U *)&Pre_Payment_Para.Para_Card_Version, sizeof(Pre_Payment_Para.Para_Card_Version)) ;
      //Pre_Payment_Para.Remain_Money_Hoard_Limit=Get_Money_Hoard_Limit();
      //Pre_Payment_Para.Buy_Count=Get_Buy_Eng_Counts();//从黄工那里获得购电次数，
+     Pre_Payment_Para.Special_Ic_Err=0;
      Card_Error_State.CardErrorState_INT32U=0x00000000;
      CardType=0x00;//卡类型 购电卡， 参数预置卡。。。
      Meter_Ins_Flag=0;

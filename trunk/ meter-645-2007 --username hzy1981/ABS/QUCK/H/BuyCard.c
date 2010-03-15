@@ -70,7 +70,8 @@ INT8U Judge_User_Card_OK(INT8U BuyCard_Kind,INT32U Buy_Count){
                         if( BuyCard_Kind ==GWFAR_USER_CARD_NEW )
                         {
                              ASSERT_FAILED();
-			     Card_Error_State.CardErrorState.WhenInOperation_Insert_FirstUserCard_Err=1;
+			     //.Card_Error_State.CardErrorState.WhenInOperation_Insert_FirstUserCard_Err=1;
+                             Pre_Payment_Para.Special_Ic_Err=1;//不用上面一句是因为 Cpucard_External_Auth()中调用了Judge_Return_Flag
 		        }  
                         if( My_Memcmp((INT8U *)Pre_Payment_Para.Cpucard_Number_old_BackUpInEerom, (INT8U *)cpucard_number, LENGTH_CARD_ID_WHEN_CARD_INSERT) )
                         {

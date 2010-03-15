@@ -33,6 +33,7 @@ typedef struct {
     INT8U C_Para_Updata_Flag;// 卡插进来时，从卡中得到，用来判断更新那个文件
     INT8U  C_CardType;// 卡类型，密钥恢复卡，还是用户卡，
     INT8U C_Dir_Return_Flag; //直接回写标志  当购电的次数相等时，使该变量为0xff，以便直接回写卡，不操作  
+    INT8U Special_Ic_Err;
     INT8U CS[CS_BYTES];
     } C_Pre_Payment_Para ;
 
@@ -94,6 +95,7 @@ typedef struct {
    INT32U re_erved  : 1; ///预留  bits
    
 } C_CardErrorState;
+
 //Card_Error_State.CardErrorState.CPU_CARD_ESAM_ATR_ERR
 typedef union {
   

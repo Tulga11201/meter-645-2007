@@ -34,6 +34,9 @@ void Dis_Cal_Volt_Curr(void)
       if(Measu_Status_Mode_ToPub_PUCK.C_APwrDir)
         SetOnDevice_PUCK(S_Ic_);
     }
+    
+    if(Get_Event_Instant(ID_EVENT_VOLT_NEG_SEQ))   //ÄæÏàÐò
+      SetOnDevice_PUCK(S_NIXIANGXU);
 }
 
 
@@ -113,7 +116,9 @@ void Cal_Dis_Proc(void)
     for(i=3;i<=12;i++)
       SetOnLED8Device_PUCK(N_LED(i),Temp_Buf_PUCK[i-3]); 
 #endif
+    
     Dis_Cal_Volt_Curr();
+    Main_Dis_Info((char *)Temp_Buf_PUCK);
     return ;
   }
   
@@ -178,8 +183,8 @@ void Cal_Dis_Proc(void)
     dotnum=0;
     for(i=0;i<=dotnum;i++)    
       SetOnLED8Device_PUCK(N_LED(14+i),'-');
-#endif
-  
+#endif  
+    
   Dis_Cal_Volt_Curr();
   UpdataLcdShow(); 
   

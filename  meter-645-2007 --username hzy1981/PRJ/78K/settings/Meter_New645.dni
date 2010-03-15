@@ -92,20 +92,15 @@ UnspecRange=1
 ActionState=1
 [Breakpoints]
 Bp0=_ "STD_CODE" "{F:\A\APP\LUCK\C\process.c}.394.7@1" 0 0 0 0 "" 0 ""
-Bp1=_ "STD_CODE" "{F:\A\APP\LUCK\C\Cal_Dis.c}.73.5@1" 0 0 0 0 "" 0 ""
+Bp1=_ "STD_CODE" "{F:\A\APP\LUCK\C\Cal_Dis.c}.76.5@1" 0 0 0 0 "" 0 ""
 Bp2=_ "STD_CODE" "{F:\A\APP\TASK\C\TaskProc.c}.119.3@1" 0 0 0 0 "" 0 ""
 Bp3=_ "STD_CODE" "{F:\A\APP\HUCK\Storage\C\Def_Para.c}.1711.6@1" 0 0 0 0 "" 0 ""
 Bp4=_ "STD_CODE" "{F:\A\APP\HUCK\Storage\C\Def_Para.c}.1685.12@1" 0 0 0 0 "" 0 ""
-Bp5=_ "STD_CODE" "{F:\A\ABS\PUCK\CpuEsamAbs.c}.297.1@1" 0 0 0 0 "" 0 ""
+Bp5=_ "STD_CODE" "{F:\A\ABS\PUCK\CpuEsamAbs.c}.304.1@1" 0 0 0 0 "" 0 ""
 Bp6=_ "STD_CODE" "Memory:0x00000" 0 0 0 0 "" 0 ""
-Bp7=_ "STD_CODE" "{F:\A\APP\Main\C\Main_Proc.c}.76.3@1" 1 0 0 0 "" 0 ""
-Bp8=_ "STD_CODE" "{F:\A\TEST\PUCK\DRV_TEST\DRV_TEST.c}.1117.3@1" 1 0 0 0 "" 0 ""
-Bp9=_ "STD_CODE" "{F:\A\TEST\PUCK\DRV_TEST\DRV_TEST.c}.1117.3@1" 1 0 0 0 "" 0 ""
-Bp10=_ "STD_CODE" "{F:\A\DRV\PUCK\IIC\RX8025T_Soft.c}.151.3@1" 1 0 0 0 "" 0 ""
-Bp11=_ "STD_CODE" "{F:\A\DRV\PUCK\IIC\RX8025T_Soft.c}.186.3@1" 1 0 0 0 "" 0 ""
-Bp12=_ "STD_CODE" "{F:\A\DRV\PUCK\IIC\RX8025T_Soft.c}.117.5@1" 1 0 0 0 "" 0 ""
-Bp13=_ "STD_CODE" "{F:\A\DRV\PUCK\IIC\RX8025T_Soft.c}.193.1@1" 1 0 0 0 "" 0 ""
-Count=14
+Bp7=_ "STD_CODE" "{F:\A\TEST\PUCK\DRV_TEST\DRV_TEST.c}.1115.1@1" 1 0 0 0 "" 0 ""
+Bp8=_ "STD_CODE" "{F:\A\TEST\PUCK\DRV_TEST\DRV_TEST.c}.614.5@1" 1 0 0 0 "" 0 ""
+Count=9
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""

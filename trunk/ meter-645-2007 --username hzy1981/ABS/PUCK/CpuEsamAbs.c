@@ -156,7 +156,7 @@ INT8U Convert_Dis_Code(void)
 void Dis_Card_Result(INT8U Ok_Flag,INT8U Result)
 {
   Mult_List temp_list={0};
-  char temp[10];
+  char temp[10]={0};
   
   SetOnDevice_PUCK(S_DUKA);
   if(Ok_Flag) //²Ù×÷³É¹¦
@@ -206,6 +206,7 @@ void Dis_Card_Result(INT8U Ok_Flag,INT8U Result)
     strcpy(temp,"ERR-");
     temp[4]=Result/10+'0';
     temp[5]=Result%10+'0';
+    temp[6]=0;
     Main_Dis_Info(temp);
   }
 }

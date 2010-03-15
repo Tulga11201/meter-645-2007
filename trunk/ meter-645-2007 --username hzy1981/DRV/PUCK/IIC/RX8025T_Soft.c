@@ -108,7 +108,7 @@ INT8U Write_EXT_RTC_Buf(INT8U addr,INT8U Len,INT8U *Src)
 出口：
 **********************************************************************************/   
 void Init_RTC_Pulse(INT8U Flag)
-{  
+{
   INT8U temp[3]={0,0,0},i,Err=0;  
 
   //状态：读后不会清0
@@ -126,52 +126,52 @@ void Init_RTC_Pulse(INT8U Flag)
   if(i EQ 3)  //3次都读不出
    return ;
     
-  if(Flag && (temp[2]&0x6!=0x60) ) //输出脉冲
-  {    
-    SET_BIT(temp[2],5);
-    SET_BIT(temp[2],6); 
+  if(GET_BIT(temp[0],5))
+  {
+    CLR_BIT(temp[0],5);
+    Err=1;
   }
+  
    
-  /*
-  if(GET_BIT(temp[1],0))    //温补停止了
+  if(GET_BIT(temp[1],5))
   {
+    CLR_BIT(temp[1],5);
     Err=1;
-    Debug_Print("Ext_RTC Error----->Temp Stop!");
   }
   
-  if(GET_BIT(temp[1],1))    //电压低
+  
+  if(Flag EQ 0 && (GET_BIT(temp[2],5) || GET_BIT(temp[2],5))) //禁止输出脉冲
   {
+    CLR_BIT(temp[2],5);
+    CLR_BIT(temp[2],6);
     Err=1;
-    Debug_Print("Ext_RTC Error----->Power Low!");
   }
   
   
-  if(temp[2]!=0x10)         //0x0F寄存器不对
+  if(Flag && (GET_BIT(temp[2],5) EQ 0 || GET_BIT(temp[2],5) EQ 0)) //输出脉冲
   {
-    Err=2;
-    temp[2]=0x10;
-    Debug_Print("Ext_RTC Error----->OSC Stop,Res bit!");
+    SET_BIT(temp[2],5);
+    SET_BIT(temp[2],6);
+    Err=1;
   }
- 
-  if(Err<=1)  //不是脉冲输出模式字错误
+  
+  if(Err EQ 0)
     return ;
-  */
-  
+   
   for(i=0;i<3;i++)  //是脉冲输出错误，只回写 0x0E 寄存器
   {
-    if(0==Write_EXT_RTC_Buf(0x0D,3,temp)) //ZZZZZZZZZ
+    if(0==Write_EXT_RTC_Buf(0x0D,3,temp))
       ASSERT_FAILED();
     else
       break;
   }
-
 }
 /**********************************************************************************
 函数功能：获取外部时钟的状态0
 **********************************************************************************/
 INT8U Read_Ext_RTC_Status(void)
 {
-  INT8U temp[2]={0,0},Re,i;
+  INT8U temp[3]={0,0,0},Re,i;
   
   //读后不会清零！
   for(i=0;i<3;i++)
@@ -185,50 +185,43 @@ INT8U Read_Ext_RTC_Status(void)
     return EXT_RTC_I2C_ERR;
   
   Re=EXT_RTC_OK;
-  if(GET_BIT(temp[0],5) EQ 0)    //12/24时钟制错误
+  if(GET_BIT(temp[0],5))    //脉冲周期设置不对
   {
-    SET_BIT(temp[0],5);
-    Re|=EXT_RTC_PSEC_ERR;
-    Debug_Print("Ext_RTC Error----->12/24 error,Clr bit!");
+    CLR_BIT(temp[0],5);
+    Re|=EXT_RTC_PULSE_ERR;
+    Debug_Print("Ext_RTC Error----->Period Err!");
   }
   
-  if(GET_BIT(temp[1],6))    //电源电压低
+  
+  if(GET_BIT(temp[1],0))    //温补停止了
   {
-    CLR_BIT(temp[1],6);
+    CLR_BIT(temp[1],0);
+    Re|=EXT_RTC_PSEC_ERR;
+    Debug_Print("Ext_RTC Error----->Temp Stop!");
+  }
+  
+  if(GET_BIT(temp[1],1))    //电压低
+  {
+    CLR_BIT(temp[1],1);
     Re|=EXT_RTC_BAT_LOW;
     Re|=EXT_RTC_COUNT_STOP;  //统一 HUCK接口
-    Debug_Print("Ext_RTC Error----->Bat Lowr,Clr bit!");
-  }
-  
-  if(GET_BIT(temp[1],5) EQ 0)    //停振
-  {
-    SET_BIT(temp[1],5);
-    Re|=EXT_RTC_COUNT_STOP;
-    Debug_Print("Ext_RTC Error----->OSC Stop,Clr bit!");
-  }
-  
-  if(GET_BIT(temp[1],4))    //电源复位
-  {
-    CLR_BIT(temp[1],4);
-    Re|=EXT_RTC_FIRST_PWRON;
-    Re|=EXT_RTC_COUNT_STOP;  //统一 HUCK接口
-    Debug_Print("Ext_RTC Error----->Power Rst,Clr bit!");
-  }
-  
+    Debug_Print("Ext_RTC Error----->Power Low!");
+  }     
+                
   if(Get_Sys_Status() EQ SYS_NORMAL)
   {
-    if((INT8U)(temp[0]&0x03) !=0x03)  //输出秒脉冲
+    if((INT8U)(temp[2]&0x60) !=0x60)  //输出秒脉冲
     {
       Re|=EXT_RTC_PULSE_ERR;
-      temp[0]|=0x03;                 //使能秒脉冲
+      temp[0]|=0x60;                 //使能秒脉冲,设定周期
     }
   }
   else
   {
-    if((INT8U)(temp[0]&0x03) !=0x00)  //禁止脉冲
+    if((INT8U)(temp[0]&0x60) !=0x00)  //禁止脉冲
     {
       Re|=EXT_RTC_PULSE_ERR;
-      temp[0]&=0xFC;                 //禁止秒脉冲
+      temp[0]&=0x9F;                 //禁止秒脉冲
     }
   }
     
@@ -236,9 +229,9 @@ INT8U Read_Ext_RTC_Status(void)
   if(Re EQ EXT_RTC_OK)  //没有错误
     return EXT_RTC_OK;
   
-  for(i=0;i<3;i++)  //有错误，回写 0x0E  0x0F 寄存器
+  for(i=0;i<3;i++)  //有错误，回写 0x0D 0x0E  0x0F 寄存器
   {
-    if(0==Write_EXT_RTC_Buf(0x0E,2,temp))
+    if(0==Write_EXT_RTC_Buf(0x0D,3,temp))
       ASSERT_FAILED();
     else
       break;
@@ -254,6 +247,5 @@ INT8U Read_Ext_RTC_Status(void)
 INT8U Check_ExtRTC_Busy(void)
 {
   return EXT_RTC_OK;
-
 }
 #endif

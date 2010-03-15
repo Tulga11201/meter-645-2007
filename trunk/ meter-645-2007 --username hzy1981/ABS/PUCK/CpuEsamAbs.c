@@ -249,7 +249,13 @@ void CPU_Card_Main_Proc(void)
       if(Check_Max_Volt_Below(Get_Un()*0.7))   //电压太低，不能买电
         Ok_Flag=0;
 
-      Result=ICcardMain();        
+      Result=ICcardMain();
+      
+      if(INOP_INSERT_FIRSETUSERCARD_ERR)  //重复开户,错误
+      {
+        Ok_Flag=0;
+      }
+      
       if(Ok_Flag && Result)   //操作成功
       {
         Port_Out_Pub(INTER_ID_ALARM_BEEP,300);  //叫1秒

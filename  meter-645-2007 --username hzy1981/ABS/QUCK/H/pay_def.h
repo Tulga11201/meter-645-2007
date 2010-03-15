@@ -10,7 +10,7 @@
 #define EXT extern   
 #endif
 
-   
+
 //上电时从e方取的数据，下电后需要保存到 e方中取的 数据， ，具体见说明
 typedef struct {
     INT8U	UserID[ 6 ];                          //用户编号 "// ，如果是运行态就从e方中取，如果为未开户态，取不取都无所谓

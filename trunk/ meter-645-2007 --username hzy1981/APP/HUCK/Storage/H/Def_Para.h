@@ -13,7 +13,7 @@
 #define BYTE_1(x) (INT8U)(((INT32U)(x)&0x0000FF00)>>8)
 #define BYTE_2(x) (INT8U)(((INT32U)(x)&0x00FF0000)>>16)
 
-#define DISP_CLR_DATA_INFO Main_Dis_Info("CLr dATA")
+#define DISP_CLR_DATA_INFO Disp_Info("CLr dATA")
 
 #define E_VOL 0x01
 #define E_CUR 0x02
@@ -56,6 +56,7 @@ extern CONST INT8U Def_04000109[];
 extern CONST INT8U Def_04000601_3[];//有无功组合模式字
 
 
+EXT void Disp_Info(char *pStr);
 EXT void Write_Def_Para();
 EXT void Write_One_Def_Para(STORA_DI SDI);
 EXT INT8U Check_Def_Para(STORA_DI SDI);

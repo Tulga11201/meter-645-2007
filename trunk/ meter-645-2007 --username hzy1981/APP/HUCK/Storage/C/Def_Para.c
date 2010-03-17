@@ -1463,7 +1463,7 @@ void Set_Def_Adj_Para()
   if(Check_Meter_Factory_Status() EQ 0)//当前不是工厂状态则推出
     return;
   
-  Main_Dis_Info("SET PArA");  
+  Disp_Info("SET PArA");  
   
   mem_set(Temp, 0, sizeof(Temp), Temp, sizeof(Temp));
   for(SDI = _SDI_ADJ_METER_A_POW; SDI <= _SDI_ADJ_METER_C_CUR; SDI++)
@@ -1481,7 +1481,7 @@ void Set_Def_Para_Except_Adj()
   INT16U i,j,Len;
   INT8U Temp[10];
   
-  Main_Dis_Info("SET PArA");
+  Disp_Info("SET PArA");
   for(i=0;i<S_NUM(Def_Para);i++)
   {
     if(Check_Meter_Factory_Status() EQ 0)//当前不是工厂状态则推出
@@ -1599,6 +1599,12 @@ void Set_All_Def_Data()
   Clr_RTC_BatTime(); //清除电池工作时间
 }
 
+void Disp_Info(char *pStr)
+{
+  Turn_Light_On(); //打开背光
+  Main_Dis_Info(pStr);  
+}
+
 //写默认参数到存储器中,该函数必须在工厂状态下才能执行
 void Write_Def_Para()
 {
@@ -1616,7 +1622,6 @@ void Write_Def_Para()
     Set_Def_Adj_Para(); 
   }
   */
-  Turn_Light_On(); //打开背光
   Set_Def_Para_Except_Adj();  
   /*
   for(i = 0; i < S_NUM(Def_Para); i++)
@@ -1735,7 +1740,7 @@ void Set_Def_Event_Judge_Para(INT8U *pSrc)
   INT32U U_B, I_B, I_M; //额定电压、额定电流、最大电流
   INT8U Temp[8] = {0};
   
-  Main_Dis_Info("SET PArA");
+  Disp_Info("SET PArA");
   //Read_Storage_Data(_SDI_UB, Temp, Temp, sizeof(Temp));
   U_B = Bcd2Hex(pSrc + 6, 2);
   //Read_Storage_Data(_SDI_IB, Temp, Temp, sizeof(Temp));

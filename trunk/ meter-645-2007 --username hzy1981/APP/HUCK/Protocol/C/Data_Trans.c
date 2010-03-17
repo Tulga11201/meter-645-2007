@@ -8900,6 +8900,9 @@ INT8U Set_CommBaud_Proc(INT8U Ch, INT8U* pSrc, INT8U SrcLen)
 {
   TRACE();
 
+  if(*pSrc < 0x02)//波特率状态字不能小于2
+    return 0;
+  
   if(Ch EQ CH_RS485_1)//第一路485
   {
     Write_Storage_Data(SDI_COMM1_BAUD, pSrc, 1);

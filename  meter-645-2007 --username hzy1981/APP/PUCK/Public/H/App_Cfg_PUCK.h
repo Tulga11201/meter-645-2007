@@ -121,10 +121,10 @@
 
 //#define REMOTER_FUNC_EN                       //打开遥控器功能
 
-//#define RST_IC_7X6_EN                         //打开:使用最新的复位芯片
-#define DOWN_COVER_ERR                         //打开:后端子该错误
+#define RST_IC_7X6_EN                         //打开:使用最新的复位芯片
+//#define DOWN_COVER_ERR                         //打开:后端子该错误
 
-#define I_ORDER_CHK_EN                0         //1:电流逆相序使能；0：电流逆向相序禁止
+#define I_ORDER_CHK_EN             0         //1:电流逆相序使能；0：电流逆向相序禁止
 #define DIS_METER_FAULT_EN         1         //1:电表故障显示使能；0：电表故障不显示
 
 

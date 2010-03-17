@@ -614,7 +614,7 @@ void Test_All_RTC(INT8U RtcFlag)
     if(0==i) //记下第一次读出的秒
     {
       TempSec=Temp[0];
-      Dlyn10MS_ClrDog(100);  //延时2秒，等时钟秒更新
+      Dlyn10MS_ClrDog(180);  //延时2秒，等时钟秒更新
     }
   }
   //timr=Ms_Timer_Pub-Temp_Timer_Bak;  
@@ -966,13 +966,13 @@ void LCD_Dis_Result(void)
 {  
   INT8U KeyValue;
   
-  /*
-  if(DOWN_COVER_STATUS EQ 0 || UP_COVER_STATUS EQ 0)     //开端盖(后端盖)铅封
+
+  if(DOWN_COVER_STATUS EQ 1 || UP_COVER_STATUS EQ 0)     //开端盖(后端盖)铅封
   {
     FillAllScreen();   //用于显示液晶是否缺笔
     return ;
   }
-  */
+ 
     
   KeyValue=Key_Value_Pub.Key.Byte;
   Key_Value_Pub.Key.Byte=0;

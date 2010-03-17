@@ -90,6 +90,16 @@ UseAuto=0
 TypeViolation=1
 UnspecRange=1
 ActionState=1
+[Log file]
+LoggingEnabled=_ 0
+LogFile=_ ""
+Category=_ 0
+[TermIOLog]
+LoggingEnabled=_ 0
+LogFile=_ ""
+[TraceHelper]
+Enabled=0
+ShowSource=1
 [Breakpoints]
 Bp0=_ "STD_CODE" "{F:\A\APP\LUCK\C\process.c}.394.7@1" 0 0 0 0 "" 0 ""
 Bp1=_ "STD_CODE" "{F:\A\APP\LUCK\C\Cal_Dis.c}.76.5@1" 0 0 0 0 "" 0 ""
@@ -101,13 +111,3 @@ Bp6=_ "STD_CODE" "Memory:0x00000" 0 0 0 0 "" 0 ""
 Bp7=_ "STD_CODE" "{F:\A\TEST\PUCK\DRV_TEST\DRV_TEST.c}.1115.1@1" 1 0 0 0 "" 0 ""
 Bp8=_ "STD_CODE" "{F:\A\TEST\PUCK\DRV_TEST\DRV_TEST.c}.614.5@1" 1 0 0 0 "" 0 ""
 Count=9
-[Log file]
-LoggingEnabled=_ 0
-LogFile=_ ""
-Category=_ 0
-[TermIOLog]
-LoggingEnabled=_ 0
-LogFile=_ ""
-[TraceHelper]
-Enabled=0
-ShowSource=1

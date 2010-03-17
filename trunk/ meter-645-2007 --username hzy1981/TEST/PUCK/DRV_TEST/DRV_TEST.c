@@ -51,16 +51,17 @@ CONST INT8U TEST_INFO[2][9]={"Failed ","Succeed"};
 
 #define ID_TEST_EXT_U8  (ID_TEST_EXT_FM+1)  //5
 
+#define ID_TEST_RTC_BAT (ID_TEST_EXT_U8+1)    //6
 
-#define ID_TEST_MEASURE (ID_TEST_EXT_U8+1)    //6
-#define ID_TEST_EXT_RTC (ID_TEST_MEASURE+1)   //7
-#define ID_TEST_INTER_RTC (ID_TEST_EXT_RTC+1)   //8
-#define ID_TEST_EXT_DOG (ID_TEST_INTER_RTC+1)   //9
-#define ID_TEST_PDSAVE_TIME (ID_TEST_EXT_DOG+1) //10
+#define ID_TEST_MEASURE (ID_TEST_RTC_BAT+1)    //7
+#define ID_TEST_EXT_RTC (ID_TEST_MEASURE+1)   //8
+#define ID_TEST_INTER_RTC (ID_TEST_EXT_RTC+1)   //9
+#define ID_TEST_EXT_DOG (ID_TEST_INTER_RTC+1)   //10
+#define ID_TEST_PDSAVE_TIME (ID_TEST_EXT_DOG+1) //11
 
 #if PREPAID_METER>0
-  #define ID_TEST_ESAM (ID_TEST_PDSAVE_TIME+1) //11
-  #define ID_TEST_CPU  (ID_TEST_ESAM+1)       //12
+  #define ID_TEST_ESAM (ID_TEST_PDSAVE_TIME+1) //12
+  #define ID_TEST_CPU  (ID_TEST_ESAM+1)       //13
   #define MAX_ID_TEST  ID_TEST_CPU
 #else
   #define MAX_ID_TEST ID_TEST_PDSAVE_TIME
@@ -125,6 +126,8 @@ CONST INT8U Const_Drv_Test[MAX_ID_TEST_NUM][5]=
 #ifdef ID_TEST_EXT_U8  //Dataflash
   "U 5",
 #endif
+
+  "bAT",
 
 #ifdef ID_TEST_MEASURE
   "7022",
@@ -482,6 +485,15 @@ void Test_Lcd(void)
  #endif 
   UpdataLcdShow();    
 }
+
+
+/**********************************************************************************/
+void Test_RTC_Bat(void)
+{  
+    Drv_Test_Buf[ID_TEST_RTC_BAT]=RTC_BAT_LOW;
+}
+
+
 /**********************************************************************************
 测试计量
 **********************************************************************************/
@@ -963,16 +975,17 @@ void Dis_Per_Item(INT8U Item)
 LCD显示输出结果
 **********************************************************************************/
 void LCD_Dis_Result(void)
-{  
+{
   INT8U KeyValue;
   
 
+  /*
   if(DOWN_COVER_STATUS EQ 1 || UP_COVER_STATUS EQ 0)     //开端盖(后端盖)铅封
   {
     FillAllScreen();   //用于显示液晶是否缺笔
     return ;
   }
- 
+ */
     
   KeyValue=Key_Value_Pub.Key.Byte;
   Key_Value_Pub.Key.Byte=0;
@@ -1130,7 +1143,7 @@ void Test_HardWare_PUCK(void)
    
   Test_Lcd();
   Clr_Ext_Inter_Dog();
-  
+    
   Test_Measure();
   Clr_Ext_Inter_Dog();
   
@@ -1147,6 +1160,8 @@ void Test_HardWare_PUCK(void)
   Get_Power_Save_Time();
   
   Check_Card_Esam();
+  
+  Test_RTC_Bat();
   
   Chk_Table_Conflict();
   //Test_UART();

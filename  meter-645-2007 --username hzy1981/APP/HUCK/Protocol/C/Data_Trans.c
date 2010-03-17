@@ -5,7 +5,7 @@
 #line  __LINE__ "H19"
 #endif
 
-#define SOFTWARE_VERSION "10031114 V1.3 " //软件版本号
+#define SOFTWARE_VERSION "10031314 V1.3 " //软件版本号
 
 
 //CONST INT32U All_Loss_Vol_Curr = 1000;
@@ -7863,7 +7863,7 @@ INT16U _Get_DLT645_Data(PROTO_DI PDI, void* pPara, INT8U ParaLen, INT8U* pDst, I
     return Len;
   }
   ASSERT_FAILED();
-  Debug_Print("_Get_DLT645_Data return len = 0, PDI = 0x%lx",PDI);
+  _Debug_Print("_Get_DLT645_Data return len = 0, PDI = 0x%lx",PDI);
   return 0;
 }
 

@@ -2,7 +2,7 @@
 #include "Includes.h"
 
 #if REDEF_FILE_LINE_EN > 0
-#line  __LINE__ "H26"
+#line  __LINE__ "H30"
 #endif
 
 //初始化电量和需量数据

@@ -1138,9 +1138,6 @@ void Check_AB_Func_Key(void)
     Set_Event_Instant(ID_EVENT_AB_FUNC_KEY); 
   
 */
-#if METER_DEBUG_EN
- static INT8U Occur=0;
- 
  if(Get_Sys_Status()!=SYS_NORMAL)    //VCC
  {
     Clr_Event_Instant(ID_EVENT_AB_FUNC_KEY);
@@ -1156,20 +1153,6 @@ void Check_AB_Func_Key(void)
  {   
    Clr_Event_Instant(ID_EVENT_AB_FUNC_KEY);   
  }
- 
- 
-   
- if(Read_Event_Status(ID_EVENT_AB_FUNC_KEY))
- {
-   if(Occur EQ 0)
-   {
-    Occur=1;
-    Main_Dis_Info("db 120");
-    OS_TimeDly_Sec(3);    
-   }
- }
-
-#endif 
 }
 #endif
 /********************************************************************************

@@ -2262,9 +2262,6 @@
           <name>$PROJ_DIR$\..\..\APP\LUCK\H\config.h</name>
         </file>
         <file>
-          <name>$PROJ_DIR$\..\..\APP\LUCK\C\interface.c</name>
-        </file>
-        <file>
           <name>$PROJ_DIR$\..\..\APP\LUCK\H\interface.h</name>
         </file>
         <file>
@@ -2297,6 +2294,9 @@
       </group>
       <group>
         <name>LCD</name>
+        <file>
+          <name>$PROJ_DIR$\..\..\APP\LUCK\C\interface.c</name>
+        </file>
         <file>
           <name>$PROJ_DIR$\..\..\APP\LUCK\C\interface_EASY_GZL.c</name>
         </file>

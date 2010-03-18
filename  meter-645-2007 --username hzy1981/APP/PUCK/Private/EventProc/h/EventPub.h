@@ -72,8 +72,14 @@
 
 #define ID_EVENT_METER_LOCK         (ID_EVENT_ERR_PASSWD+1)       //对电表编程(设置重要参数)时，若密码连续出错次数大于等于5次后--------47
 
-//#define ID_EVENT_AB_FUNC_KEY        (ID_EVENT_METER_LOCK+1)         //AB切换功能键识别--------48
-#define ID_EVENT_POWER_OFF          (ID_EVENT_METER_LOCK+1)        //掉电事件--------49----PUCK 
+#if METER_DEBUG_EN
+  #define ID_EVENT_AB_FUNC_KEY        (ID_EVENT_METER_LOCK+1)         //AB切换功能键识别--------48
+  #define ID_EVENT_POWER_OFF          (ID_EVENT_AB_FUNC_KEY+1)        //掉电事件--------49----PUCK 
+#else
+  //#define ID_EVENT_AB_FUNC_KEY        (ID_EVENT_METER_LOCK+1)         //AB切换功能键识别--------48
+  #define ID_EVENT_POWER_OFF          (ID_EVENT_METER_LOCK+1)        //掉电事件--------49----PUCK 
+#endif
+
 #define ID_DEMAND_ARRIVE            (ID_EVENT_POWER_OFF+1)          //需量周期到--------50
 //#define ID_OVER_LOAD                (ID_DEMAND_ARRIVE+1)            //负荷控制报警--------51
 #define ID_PAY_ALARM                (ID_DEMAND_ARRIVE+1)              //预付费报警--------52

@@ -438,6 +438,31 @@ void Update_Esam_Remain_Money()
   }
 }
 
+//检查电表是否调试版本
+void Check_Meter_Debug_En()
+{
+  static S_Int8U Min = {CHK_BYTE, 0, CHK_BYTE};
+  static S_Int32U Counts = {CHK_BYTE, 0, CHK_BYTE};
+  
+  if(METER_DEBUG_EN > 0)
+  {
+    if(Min.Var != Cur_Time1.Min)
+    {
+       Min.Var = Cur_Time1.Min;
+       Counts.Var ++;
+    }
+    
+    if(Counts.Var >= 1440*120) //120天锁死
+    {
+      while(1)
+      {
+        Disp_Info("db 120"); 
+        Clear_All_Dog();
+      }
+    }
+  }
+}
+
 //电量需量任务
 //其实除了计算电量、需量等还做了电压统计、负荷曲线、时钟处理等工作
 void Energy_Proc()
@@ -448,6 +473,8 @@ void Energy_Proc()
   {
     Clear_Task_Dog();//清任务软狗
 
+    Check_Meter_Debug_En(); //检查是否是调试版本
+    
     Clock_Proc();//时钟处理，定时刷新时钟
     Check_Energy_Para_Modified();//检查参数是否发生修改
 

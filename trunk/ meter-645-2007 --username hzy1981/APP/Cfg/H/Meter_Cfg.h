@@ -37,8 +37,8 @@
 #define MAX_RATES     4///最大费率数
 
 #define METER_DEBUG_EN 1 //1表示测试版本，0表示正式版本
-#define NET_METER     CARRIER_METER//CARRIER_METER//是否用于网络表的基表，可以是NOT_NET_METER或CARRIER_METER或者GPRS_METER
-#define PREPAID_METER 1 //是否是预付费表? 0表示不是，1表示是
+#define NET_METER     NONET_METER//CARRIER_METER//是否用于网络表的基表，可以是NOT_NET_METER或CARRIER_METER或者GPRS_METER
+#define PREPAID_METER 0 //是否是预付费表? 0表示不是，1表示是
 
 #define SHELL_EN      0//shell使能
 

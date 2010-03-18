@@ -59,10 +59,19 @@ CONST INT8U TEST_INFO[2][9]={"Failed ","Succeed"};
 #define ID_TEST_EXT_DOG (ID_TEST_INTER_RTC+1)   //10
 #define ID_TEST_PDSAVE_TIME (ID_TEST_EXT_DOG+1) //11
 
-#if PREPAID_METER>0
-  #define ID_TEST_ESAM (ID_TEST_PDSAVE_TIME+1) //12
-  #define ID_TEST_CPU  (ID_TEST_ESAM+1)       //13
-  #define MAX_ID_TEST  ID_TEST_CPU
+#if PREPAID_METER>0          //付费
+  #if PREPAID_EN>0 
+      #if (PREPAID_LOCAL_REMOTE EQ PREPAID_REMOTE) //远程预付费
+        #define ID_TEST_ESAM (ID_TEST_PDSAVE_TIME+1) //12
+        #define MAX_ID_TEST  ID_TEST_ESAM
+      #elif (PREPAID_LOCAL_REMOTE EQ PREPAID_LOCAL)   //本地预付费
+        #define ID_TEST_ESAM (ID_TEST_PDSAVE_TIME+1) //12
+        #define ID_TEST_CPU  (ID_TEST_ESAM+1)       //13
+        #define MAX_ID_TEST  ID_TEST_CPU
+      #else
+        
+      #endif
+  #endif 
 #else
   #define MAX_ID_TEST ID_TEST_PDSAVE_TIME
 #endif

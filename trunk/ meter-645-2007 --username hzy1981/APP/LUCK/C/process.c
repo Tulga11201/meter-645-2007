@@ -355,6 +355,13 @@ INT8U Dis_Meter_Fault(void)
     ReNew_Err_Code(DIS_MEM_ERR);
   */
   
+#ifdef ID_EVENT_AB_FUNC_KEY  
+  if(Read_Event_Status(ID_EVENT_AB_FUNC_KEY))
+  {
+    Main_Dis_Info("DEBUG-1");
+    return 1;
+  }
+#endif   
    //全屏显示20秒内:138年翻转1次
   
   if(Sys_Err_Info.FaultDis EQ 0)

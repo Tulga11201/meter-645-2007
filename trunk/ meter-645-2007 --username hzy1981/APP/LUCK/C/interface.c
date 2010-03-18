@@ -714,7 +714,8 @@ void lcd_events (void)
   }
     
   ///< 事件告警(闪烁)
-  if (flag.event_warning & 0x01) {
+  if (flag.event_warning & 0x01) 
+  {
       SetOnDevice_PUCK(S_LIGHT);
   }
   ///< 编程键打开(常亮)

@@ -735,7 +735,19 @@ void lcd_events (void)
       flag.bit2maps ^= stat.bit2maps;     //取反，形成闪烁效果------PUCK
   }
   
-  //
+  #ifdef ALL_LOSS_DIS_U
+  if(poweroff() && All_Loss_Var.Status.start)  //唤醒且发生了全失压
+  {
+    if(flag.loss_volt_a)  //失压，闪烁
+    SetOnDevice_PUCK(S_Ua);
+  
+    if(!flag.loss_volt_b)  //失压，闪烁
+    SetOnDevice_PUCK(S_Ub);
+  
+    if(flag.loss_volt_c)  //失压，闪烁
+    SetOnDevice_PUCK(S_Uc);    
+  }
+#else 
   //电压无过压：正常状态(常亮)
   if(!stat.loss_volt_a &&!stat.cut_volt_a)                       //没失压，常亮
     SetOnDevice_PUCK(S_Ua);
@@ -751,6 +763,7 @@ void lcd_events (void)
     SetOnDevice_PUCK(S_Uc);
   if(!stat.cut_volt_c && stat.loss_volt_c && !flag.loss_volt_c)  //不断相，失压，闪烁
     SetOnDevice_PUCK(S_Uc);
+#endif 
 
    //电流状态(常亮或者闪烁)
   if(!stat.loss_cur_a)//没有失流，常亮

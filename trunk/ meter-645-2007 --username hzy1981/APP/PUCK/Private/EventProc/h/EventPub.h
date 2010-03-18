@@ -72,7 +72,7 @@
 
 #define ID_EVENT_METER_LOCK         (ID_EVENT_ERR_PASSWD+1)       //对电表编程(设置重要参数)时，若密码连续出错次数大于等于5次后--------47
 
-#if METER_DEBUG_EN
+#if METER_DEBUG_EN>0
   #define ID_EVENT_AB_FUNC_KEY        (ID_EVENT_METER_LOCK+1)         //AB切换功能键识别--------48
   #define ID_EVENT_POWER_OFF          (ID_EVENT_AB_FUNC_KEY+1)        //掉电事件--------49----PUCK 
 #else

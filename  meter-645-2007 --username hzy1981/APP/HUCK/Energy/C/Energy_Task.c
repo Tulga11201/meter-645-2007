@@ -447,7 +447,7 @@ void Check_Meter_Debug_En()
   if(METER_DEBUG_EN > 0)
   {
     if(Counts.Var % 60 EQ 0)
-      _Debug_Print("Meter debug version 120 days");
+      Debug_Print("Meter debug version run 120 days");
     
     if(Min.Var != Cur_Time1.Min)
     {
@@ -458,7 +458,7 @@ void Check_Meter_Debug_En()
       {
         while(1)
         {
-          Disp_Info("DEBUG-1"); 
+          Main_Dis_Info("DEBUG-1"); 
           Clear_All_Dog();
         }
       }

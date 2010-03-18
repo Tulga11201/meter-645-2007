@@ -836,7 +836,8 @@ INT8U Adj_Time(S_BCD_Time *pTime, INT8U Flag)
     
     if(Set_Time_EXT_INTER_Ram_RTC(pTime))
     {
-      Adj_Time_Flag.Var = 0x55;
+      if(Flag EQ 1)
+        Adj_Time_Flag.Var = 0x55;
       
       Adj_Aft_Time.Time[0] = pTime->Sec;
       Adj_Aft_Time.Time[1] = pTime->Min;

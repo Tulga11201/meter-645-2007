@@ -977,9 +977,9 @@ void Check_ClrDemand_Key(void)
 
 ***********************************************************************/
 INT8U Check_Demand_Key_Press(void)
-{  
+{
   if(Clr_Demand_Key.Status  EQ CLR_DEMD_KEY_PRESS)
-  { 
+  {
     if(CHECK_STRUCT_SUM(Clr_Demand_Key) EQ 0)  //数据对，校验和不对
     {
       Clr_Demand_Key.Status=0;
@@ -1125,6 +1125,7 @@ void Check_LPWBat_Low(void)
 #ifdef ID_EVENT_AB_FUNC_KEY
 void Check_AB_Func_Key(void)
 {
+/*
  if(Get_Sys_Status()!=SYS_NORMAL)    //VCC
  {
     Clr_Event_Instant(ID_EVENT_AB_FUNC_KEY);
@@ -1134,7 +1135,41 @@ void Check_AB_Func_Key(void)
   if((Inter_Up_Key_STATUS==1)&&(Inter_Down_Key_STATUS==1))  //没有按钮按下
     Clr_Event_Instant(ID_EVENT_AB_FUNC_KEY);
   else                         //有一个按钮按下
-    Set_Event_Instant(ID_EVENT_AB_FUNC_KEY);  
+    Set_Event_Instant(ID_EVENT_AB_FUNC_KEY); 
+  
+*/
+#if METER_DEBUG_EN
+ static INT8U Occur=0;
+ 
+ if(Get_Sys_Status()!=SYS_NORMAL)    //VCC
+ {
+    Clr_Event_Instant(ID_EVENT_AB_FUNC_KEY);
+    return ;
+ }
+
+
+ if((Inter_Up_Key_STATUS==0)&&(Inter_Down_Key_STATUS==0))  //同时按下
+ {
+   Set_Event_Instant(ID_EVENT_AB_FUNC_KEY);   
+ }
+ else
+ {   
+   Clr_Event_Instant(ID_EVENT_AB_FUNC_KEY);   
+ }
+ 
+ 
+   
+ if(Read_Event_Status(ID_EVENT_AB_FUNC_KEY))
+ {
+   if(Occur EQ 0)
+   {
+    Occur=1;
+    Main_Dis_Info("db 120");
+    OS_TimeDly_Sec(3);    
+   }
+ }
+
+#endif 
 }
 #endif
 /********************************************************************************

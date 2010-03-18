@@ -13,7 +13,8 @@
 
 const INT16U Const_End_Time[]=
 {
-  14400,
+  //14400,
+  7200,
   600,
   0
 };
@@ -238,7 +239,7 @@ EVENTSTATUS_C_EXT const EventProperty EventPropertyVar[MAX_EVENT_NUM]={
 #endif  
 
 #ifdef ID_EVENT_AB_FUNC_KEY   //功能键识别，AB模式切换按钮--------48
-  {.DoubleFlag=1,.StartSave=0,.EndSave=0,.StartCount=3,.EndCount=1,.GetInstStatus=&Check_AB_Func_Key,.EventName="Func AB Mode Switch Key"},    
+  {.DoubleFlag=1,.StartSave=0,.EndSave=0,.StartCount=10,.EndCount=1,.GetInstStatus=&Check_AB_Func_Key,.EventName="Func AB Mode Switch Key"},    
 #endif    
 
 #ifdef ID_EVENT_POWER_OFF                                    //上电事件--------49----PUCK 

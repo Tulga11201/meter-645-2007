@@ -453,14 +453,14 @@ void Check_Meter_Debug_En()
     {
        Min.Var = Cur_Time1.Min;
        Counts.Var ++;
-    }
     
-    if(Counts.Var >= (INT32U)1440*120) //120ÃÏÀ¯À¿
-    {
-      while(1)
+      if(Counts.Var >= (INT32U)1440*120) //120ÃÏÀ¯À¿
       {
-        Disp_Info("db 120"); 
-        Clear_All_Dog();
+        while(1)
+        {
+          Disp_Info("DEBUG-1"); 
+          Clear_All_Dog();
+        }
       }
     }
   }

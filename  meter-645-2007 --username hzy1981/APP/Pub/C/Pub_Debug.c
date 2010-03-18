@@ -165,6 +165,7 @@ void Init_Check_Code_License(void)
 {
   INT8U i;
   INT32U Code_ID;
+  INT8U Mode;
   
   OS_Debug_Print_Version_Date(); //打印操作系统的时间和版本号
   OS_Get_Code_ID((INT8U *)&Code_ID, (INT8U *)&Code_ID, sizeof(Code_ID));
@@ -186,6 +187,20 @@ void Init_Check_Code_License(void)
   {
     Debug_Print("License_Key correct!!!");    
   }
+  
+  if(METER_DEBUG_EN > 0) //外部测试版本--可发给客户的测试版本
+  {
+    Mode = Get_Meter_Hard_Mode();
+    if(Mode EQ MODE_FAC || Mode EQ MODE_DEBUG) //工厂或者调试模式
+    {
+      for(i = 0; i < 4; i ++)
+      {
+        Code_License_Err_Proc("DEBUG-1");
+        Clear_All_Dog();
+        OS_TimeDly_Ms(200);
+      }
+    }
+  } 
 }
 
 //获得当前表示版本运行信息的办公室

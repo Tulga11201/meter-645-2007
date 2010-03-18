@@ -2,7 +2,7 @@
 #include "Includes.h"
 
 #if REDEF_FILE_LINE_EN > 0
-#line  __LINE__ "H9"
+#line  __LINE__ "H26"
 #endif
 
 //初始化电量和需量数据
@@ -446,13 +446,16 @@ void Check_Meter_Debug_En()
   
   if(METER_DEBUG_EN > 0)
   {
+    if(Counts.Var % 60 EQ 0)
+      _Debug_Print("Meter debug version 120 days");
+    
     if(Min.Var != Cur_Time1.Min)
     {
        Min.Var = Cur_Time1.Min;
        Counts.Var ++;
     }
     
-    if(Counts.Var >= 1440*120) //120天锁死
+    if(Counts.Var >= (INT32U)1440*120) //120天锁死
     {
       while(1)
       {

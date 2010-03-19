@@ -32,13 +32,18 @@
 #define SWITCH_INTER    0x00 //内置开关方式
 #define SWITCH_EXT      0x01 //外部开关方式
 
+//----------------------------------------生成hex前需要配置的宏----------------------------
+#define METER_DEBUG_EN        1 //1表示测试版本，0表示正式版本
+#define NET_METER             NONET_METER//CARRIER_METER//是否用于网络表的基表，可以是NOT_NET_METER或CARRIER_METER或者GPRS_METER
+#define PREPAID_METER         0 //是否是预付费表? 0表示不是，1表示是
+#define PREPAID_LOCAL_REMOTE  PREPAID_LOCAL//Prepaid_Para.Mode[1].Bit.Bit3//PREPAID_LOCAL表示本地，PREPAID_REMOTE表示远程
+#define BLOCK_DATA_SETTLE_EN  1 //电量和需量的上1-12月块数据是否单独结算
+#define ASSERT_EN             1
+//-----------------------------------------------------------------------------------------
+
 #define CS_BYTES    1//内存中重要数据结构体的CS字节数  
 #define ROM_CS_BYTES  2//ROM中存储数据的校验和字节数
 #define MAX_RATES     4///最大费率数
-
-#define METER_DEBUG_EN 1 //1表示测试版本，0表示正式版本
-#define NET_METER     NONET_METER//CARRIER_METER//是否用于网络表的基表，可以是NOT_NET_METER或CARRIER_METER或者GPRS_METER
-#define PREPAID_METER 0 //是否是预付费表? 0表示不是，1表示是
 
 #define SHELL_EN      0//shell使能
 
@@ -57,13 +62,12 @@
 #define RATE_SCH_SWITCH_EN   1 //Mode_Word.Mode[2].Bit.Bit7 //是否允许两套费率切换?
 #define STEP_SCH_SWITCH_EN   1 //是否允许切换两套阶梯方案
 
-#define PREPAID_EN            ((PREPAID_METER > 0)?1:0)//((PREPAID_METER > 0)?Mode_Word.Mode[1].Bit.Bit5:0) //预付费使能
 #define PREPAID_MODE          PREPAID_MONEY//Mode_Word.Mode[1].Bit.Bit4////预付费模式，PREPAID_MONEY表示电费型，PREPAID_ENG表示电量型, ENERGY_TYPE
 #define PREPAID_MONEY_MODE    PREPAID_RATE//Prepaid_Para.Mode[1].Bit.Bit4//PREPAID_RATE表示分时计费，PREPAID_STEP表示阶梯计费
-#define PREPAID_LOCAL_REMOTE  PREPAID_LOCAL//Prepaid_Para.Mode[1].Bit.Bit3//PREPAID_LOCAL表示本地，PREPAID_REMOTE表示远程
 
 #define SWITCH_EXT_INTER   SWITCH_INTER //SWITCH_INTER表示内置开关方式,SWITCH_EXT表示外置开关方式
 
+#define PREPAID_EN            ((PREPAID_METER > 0)?1:0)//((PREPAID_METER > 0)?Mode_Word.Mode[1].Bit.Bit5:0) //预付费使能
 #define PREPAID_WARN_EN 1//Prepaid_Para.Mode[2].Bit.Bit7 //预付费声报警是否打开?
 #define PREPAID_LIMIT1_WARN_EN    1//Prepaid_Para.Mode[2].Bit.Bit6 //低于门限1报警使能     
 #define PREPAID_LIMIT2_WARN_EN    0//Prepaid_Para.Mode[2].Bit.Bit5//低于门限2报警使能
@@ -74,7 +78,6 @@
 #define PREPAID_MAX_STEP      4 //阶梯预付费最大梯度值
 
 #define SCHEME_SWITCH_MODE 1 //年时区和日时段切换方式,0表示切换时间以前用主方案，切换时间后用副方案，
-#define BLOCK_DATA_SETTLE_EN 0 //电量和需量的上1-12月块数据是否单独结算
 
 //1表示只要跨切换时间就改变方案
 #define LOAD_DATA_NUM      43000//存储的负荷曲线条数

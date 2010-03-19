@@ -188,8 +188,7 @@ void Init_Check_Code_License(void)
     Debug_Print("License_Key correct!!!");    
   }
   
-  if(METER_DEBUG_EN > 0) //外部测试版本--可发给客户的测试版本
-  {
+#if METER_DEBUG_EN > 0
     Mode = Get_Meter_Hard_Mode();
     if(Mode EQ MODE_FAC || Mode EQ MODE_DEBUG) //工厂或者调试模式
     {
@@ -200,7 +199,7 @@ void Init_Check_Code_License(void)
         OS_TimeDly_Ms(200);
       }
     }
-  } 
+#endif
 }
 
 //获得当前表示版本运行信息的办公室

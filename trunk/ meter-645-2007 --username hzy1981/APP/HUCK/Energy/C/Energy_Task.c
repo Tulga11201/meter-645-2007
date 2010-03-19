@@ -441,29 +441,29 @@ void Update_Esam_Remain_Money()
 //检查电表是否调试版本
 void Check_Meter_Debug_En()
 {
+#if METER_DEBUG_EN > 0
+  
   static S_Int8U Min = {CHK_BYTE, 0, CHK_BYTE};
   static S_Int32U Counts = {CHK_BYTE, 0, CHK_BYTE};
   
-  if(METER_DEBUG_EN > 0)
+  if(Counts.Var % 60 EQ 0)
+    Debug_Print("Meter debug version run 120 days");
+  
+  if(Min.Var != Cur_Time1.Min)
   {
-    if(Counts.Var % 60 EQ 0)
-      Debug_Print("Meter debug version run 120 days");
-    
-    if(Min.Var != Cur_Time1.Min)
+     Min.Var = Cur_Time1.Min;
+     Counts.Var ++;
+  
+    if(Counts.Var >= (INT32U)1440*120) //120天锁死
     {
-       Min.Var = Cur_Time1.Min;
-       Counts.Var ++;
-    
-      if(Counts.Var >= (INT32U)1440*120) //120天锁死
+      while(1)
       {
-        while(1)
-        {
-          Main_Dis_Info("DEBUG-1"); 
-          Clear_All_Dog();
-        }
+        Main_Dis_Info("DEBUG-1"); 
+        Clear_All_Dog();
       }
     }
-  }
+  } 
+#endif
 }
 
 //电量需量任务

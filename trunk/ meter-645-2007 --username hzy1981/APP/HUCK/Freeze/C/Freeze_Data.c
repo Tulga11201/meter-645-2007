@@ -1,6 +1,10 @@
 #define FREEZE_DATA_C
 #include "includes.h"
 
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "H31"
+#endif
+
 #define HOUR_FREEZE_MIN_PERIOD 1
 
 //检查冻结参数
@@ -44,7 +48,7 @@ void Read_Freeze_Para_From_Rom()
   Len = Read_Storage_Data(SDI_HOUR_FREEZE_START_TIME, (void *)Freeze_Para.Hour_Freeze_Start_Time, \
                           (void *)Freeze_Para.Hour_Freeze_Start_Time, sizeof(Freeze_Para.Hour_Freeze_Start_Time));
   //BCD_2_HEX
-  Bcd2Hex_Buf((INT8U *)Freeze_Para.Hour_Freeze_Start_Time, sizeof((INT8U *)Freeze_Para.Hour_Freeze_Start_Time),
+  Bcd2Hex_Buf((INT8U *)Freeze_Para.Hour_Freeze_Start_Time, sizeof(Freeze_Para.Hour_Freeze_Start_Time),
               (INT8U *)Freeze_Para.Hour_Freeze_Start_Time,(INT8U *)Freeze_Para.Hour_Freeze_Start_Time, sizeof(Freeze_Para.Hour_Freeze_Start_Time));
   ASSERT(Len EQ 5);
   //整点冻结周期

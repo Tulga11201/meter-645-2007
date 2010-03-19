@@ -27,7 +27,7 @@ void Read_Adj_Time_Para_From_Rom()
 {
   INT16U Len;
   
-  Len = Read_Storage_Data(SDI_ADJ_TIME_COUNTS, (INT8U *)&Adj_Time_Para.Max_Counts, (INT8U *)&Adj_Time_Para.Max_Counts, sizeof((INT8U *)&Adj_Time_Para.Max_Counts));
+  Len = Read_Storage_Data(SDI_ADJ_TIME_COUNTS, (INT8U *)&Adj_Time_Para.Max_Counts, (INT8U *)&Adj_Time_Para.Max_Counts, sizeof(Adj_Time_Para.Max_Counts));
   if(Len EQ 0)
   {
     ASSERT_FAILED();

@@ -33,7 +33,7 @@
 #define SWITCH_EXT      0x01 //外部开关方式
 
 //----------------------------------------生成hex前需要配置的宏----------------------------
-#define METER_DEBUG_EN        1 //1表示测试版本，0表示正式版本
+#define METER_DEBUG_EN        0 //1表示测试版本，0表示正式版本
 #define NET_METER             NONET_METER//CARRIER_METER//是否用于网络表的基表，可以是NOT_NET_METER或CARRIER_METER或者GPRS_METER
 #define PREPAID_METER         1 //是否是预付费表? 0表示不是，1表示是
 #define PREPAID_LOCAL_REMOTE  PREPAID_REMOTE//Prepaid_Para.Mode[1].Bit.Bit3//PREPAID_LOCAL表示本地，PREPAID_REMOTE表示远程

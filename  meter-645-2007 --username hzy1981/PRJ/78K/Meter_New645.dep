@@ -2,7 +2,7 @@
 
 <project>
   <fileVersion>2</fileVersion>
-  <fileChecksum>3606818896</fileChecksum>
+  <fileChecksum>1141082674</fileChecksum>
   <configuration>
     <name>Debug</name>
     <outputs>
@@ -541,7 +541,7 @@
       <outputs>
         <tool>
           <name>XLINK</name>
-          <file> 416 254</file>
+          <file> 453 254</file>
         </tool>
       </outputs>
     </file>
@@ -2727,12 +2727,6 @@
     </file>
     <file>
       <name>$PROJ_DIR$\Debug\Exe\Meter_New645.d26</name>
-      <outputs>
-        <tool>
-          <name>XLINK</name>
-          <file> 254</file>
-        </tool>
-      </outputs>
       <inputs>
         <tool>
           <name>XLINK</name>
@@ -2742,6 +2736,12 @@
     </file>
     <file>
       <name>$PROJ_DIR$\Debug\Exe\Meter_New645.hex</name>
+      <outputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 254</file>
+        </tool>
+      </outputs>
       <inputs>
         <tool>
           <name>XLINK</name>

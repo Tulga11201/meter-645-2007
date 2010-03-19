@@ -219,12 +219,8 @@ void Dis_Card_Result(INT8U Ok_Flag,INT8U Result)
 void CPU_Card_Main_Proc(void)
 {
 
-#if PREPAID_METER>0
+#if PREPAID_METER>0 && (PREPAID_LOCAL_REMOTE EQ PREPAID_LOCAL)
   INT8U Result,Ok_Flag; 
-
-  if(PREPAID_LOCAL_REMOTE !=PREPAID_LOCAL)
-     return ;
-  
   if(JUDGE_CPU_INSERT)  //插卡处理
   {
     if(Curr_Media_Status.LastStus EQ CARD_IN)  //卡还是插入状态，没有拔出
@@ -336,8 +332,8 @@ INT8U Wait_For_Pay_Uart_Data(INT16U RdDstLen,INT8U *pDst,INT8U *pDstStart,INT16U
     return CPU_ESAM_DRV_OUT_ERR;
   }
 
-  if(Pay_Uart_Rec_Len>=RdDstLen)
-  {   
+  //if(Pay_Uart_Rec_Len>=RdDstLen)
+  //{
     mem_cpy((void *)(pDst),(void *)(Pay_Uart_Rec_Buf),RdDstLen,(void *)(pDstStart),MaxDstLen);
     Uart_Pay_Ready();
     
@@ -345,15 +341,31 @@ INT8U Wait_For_Pay_Uart_Data(INT16U RdDstLen,INT8U *pDst,INT8U *pDstStart,INT16U
         Debug_Print("<--------Rec From CPU_CARD--------");
       else
         Debug_Print("<--------Rec From ESAM------------");
-    //DEBUG_BUF_PRINT((INT8U *)pDst,RdDstLen,PRINT_HEX,30); 
+    DEBUG_BUF_PRINT((INT8U *)pDst,RdDstLen,PRINT_HEX,30); 
     
     return CPU_ESAM_DRV_OK;
-  }
-  else
-    return CPU_ESAM_DRV_RECLEN_ERR;  
+  //}
+  //else
+  //  return CPU_ESAM_DRV_RECLEN_ERR;  
 #else
   return CPU_ESAM_DRV_OK;
 #endif 
+}
+
+/**********************************************************************************/
+INT8U Find_Fram_Exist(INT8U *Src,INT16U MaxDstLen)
+{
+  INT16U i,j;
+  for(i=0;i<MaxDstLen;i++)
+  {
+     if((Src[i] EQ 0x3B)&&(Src[i+1] EQ 0x69)&&(Src[i+2] EQ 0x00)&&(Src[i+3] EQ 0x00)&&(Src[i+4] EQ 0x41))  
+     {
+       for(j=0;j<13;j++)
+         Src[j]=Src[j+i];
+       return 1;    
+     }
+  }
+  return 0;  
 }
 /**********************************************************************************
 函数功能：对 CPU卡,ESAM的底层操作,包括OPERATE_RST_COOL等.
@@ -400,11 +412,11 @@ INT8U Cpu_Esam_All_Operate(INT8U Type,INT8U Operate,INT8U *pDst,INT8U *pDstStart
     {
       case PAY_CPU_CARD:
       case PAY_ESAM:
-        Flag=Wait_For_Pay_Uart_Data(13,pDst,pDstStart,MaxDstLen);
+        Flag=Wait_For_Pay_Uart_Data(25,pDst,pDstStart,MaxDstLen);
         if(Flag != CPU_ESAM_DRV_OK)
           return Flag;
         
-        if((pDst[0]!=0x3B)||(pDst[1]!=0x69)||(pDst[2]!=0x00)||(pDst[3]!=0x00)||(pDst[4]!=0x41))
+        if(Find_Fram_Exist(pDst,MaxDstLen) EQ 0)
           return CPU_ESAM_DRV_DATA_ERR;        
       break;
 

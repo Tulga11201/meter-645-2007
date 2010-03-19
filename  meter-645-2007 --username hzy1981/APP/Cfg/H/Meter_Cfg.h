@@ -52,7 +52,7 @@
 #define METER_CLR_EN        1 //Mode_Word.Mode[0].Bit.Bit1 //是否允许出厂电表清零?
 #define NEG_ADD_POS_ACT_EN  0 //Mode_Word.Mode[0].Bit.Bit0 //反向有功是否计入正向
 
-#define REDEF_FILE_LINE_EN  1
+#define REDEF_FILE_LINE_EN  0
 
 #define POWER_CTRL_EN        0//Mode_Word.Mode[1].Bit.Bit3 //是否有负控功能
 #define RESUME_REMOTER_EN    0//Mode_Word.Mode[3].Bit.Bit4 //红外唤醒后遥控器功能是否打开,1打开，0关闭

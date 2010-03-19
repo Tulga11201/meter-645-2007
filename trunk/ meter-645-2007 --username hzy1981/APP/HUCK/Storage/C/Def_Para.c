@@ -5,8 +5,8 @@
 #line __LINE__ "H21"
 #endif
 
-#define UB 577UL//2200UL //额定电压
-#define IB 150UL//150 //1.50,两位小数 
+#define UB 2200UL//2200UL //额定电压
+#define IB 1000UL//150 //1.50,两位小数 
 #define PB (UB*IB) //额定功率
 #define PMAX (UB*IB*4) //最大功率
 
@@ -1834,7 +1834,26 @@ void Set_Def_Event_Judge_Para(INT8U *pSrc)
     if(i EQ 1)
       Temp[++ i] = '.';
   }
-  Write_Storage_Data(0x04000406, Temp, 6);  
+  Write_Storage_Data(0x04000406, Temp, 6); 
+  
+  Set_Def_Event_Judge_Para_Flag.Var = SET_DEF_EVENT_JUDGE_PARA;
 }
 
+//检查是否设置事件判定参数
+//返回1表示设置了，0表示没有
+INT8U Chk_Set_Def_Event_Judge_Para()
+{
+  INT8U Re;
+  
+  if(Check_Meter_Factory_Status() > 0)
+  {
+    if(Set_Def_Event_Judge_Para_Flag.Var EQ SET_DEF_EVENT_JUDGE_PARA)
+    {
+      Set_Def_Event_Judge_Para_Flag.Var = 0;
+      return 1;
+    }
+  }
+  
+  return 0;
+}
 #undef DEF_PARA_C

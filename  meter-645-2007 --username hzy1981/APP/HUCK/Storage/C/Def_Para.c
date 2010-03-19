@@ -1690,7 +1690,7 @@ void Check_Boot_On_Flag()
   INT8U i, Set_Def_Para_Flag = 0;
   
   TRACE();
-/*
+  
   //检查存储系统映射是否发生修改，如果发生了修改，则需要在工厂状态下重置默认参数!!!
   Chk_Flag = Get_Storage_Info_CS(); //获取整个存储系统的校验信息，如果发生修改则整个校验信息会发生改变
   
@@ -1731,7 +1731,6 @@ void Check_Boot_On_Flag()
       }
     }
   }
-  */
 }
 
 //设置默认事件参数，这些参数和额定电压、额定电流、最大电流有关

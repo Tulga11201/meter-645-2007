@@ -816,18 +816,23 @@ void Check_Card_Esam(void)
   INT8U SendBuf[8];
   
   
-  Drv_Test_Buf[ID_TEST_ESAM]=0; 
+  Drv_Test_Buf[ID_TEST_ESAM]=0;
+ 
+#ifdef ID_TEST_CPU
   Drv_Test_Buf[ID_TEST_CPU]=0;
+#endif
   
   //冷复位 ESAM 测试
   if(Cpu_Esam_All_Operate(PAY_ESAM,CPU_ESAM_DRV_RST_COOL,temp,temp,sizeof(temp)) EQ CPU_ESAM_DRV_OK)
     Drv_Test_Buf[ID_TEST_ESAM]=1;  
  
   Clr_Ext_Inter_Dog(); 
-  
+
+#ifdef ID_TEST_CPU  
   //冷复位 CPU 测试
   if(Cpu_Esam_All_Operate(PAY_CPU_CARD,CPU_ESAM_DRV_RST_COOL,temp,temp,sizeof(temp)) EQ CPU_ESAM_DRV_OK)
       Drv_Test_Buf[ID_TEST_CPU]=1;
+#endif
   
   Clr_Ext_Inter_Dog(); 
   
@@ -843,7 +848,7 @@ void Check_Card_Esam(void)
     Drv_Test_Buf[ID_TEST_ESAM]=0;
   Clr_Ext_Inter_Dog();   
   
-  
+#ifdef ID_TEST_CPU  
   //发送接收 CPU卡 测试
   mem_set(SendBuf,0x00,sizeof(SendBuf),SendBuf,sizeof(SendBuf));
   SendBuf[1]=0xA4;SendBuf[4]=0x02;  //选择用户卡应用目录:00 A4 00 00 02，接收0xA4
@@ -852,7 +857,8 @@ void Check_Card_Esam(void)
     if(temp[0] != 0xA4)
       Drv_Test_Buf[ID_TEST_CPU]=0;
   }
-
+#endif
+  
   Clr_Ext_Inter_Dog(); 
 #endif
 }

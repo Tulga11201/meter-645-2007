@@ -55,6 +55,13 @@ extern CONST INT8U Def_04000109[];
 
 extern CONST INT8U Def_04000601_3[];//有无功组合模式字
 
+#define SET_DEF_EVENT_JUDGE_PARA 0x5A
+
+#ifdef DEF_PARA_C
+EXT S_Int8U Set_Def_Event_Judge_Para_Flag = {CHK_BYTE, 0, CHK_BYTE};
+#else
+EXT S_Int8U Set_Def_Event_Judge_Para_Flag;
+#endif
 
 EXT void Disp_Info(char *pStr);
 EXT void Write_Def_Para();
@@ -67,4 +74,5 @@ EXT INT32U Get_Def_Para_Info_CS();
 EXT void Check_Boot_On_Flag();
 EXT INT16U Read_Def_Para(STORA_DI SDI, void* pDst, INT16U Len, void* pDst_Start, INT16U DstLen);
 EXT void Set_Def_Event_Judge_Para(INT8U *pSrc);
+EXT INT8U Chk_Set_Def_Event_Judge_Para();
 #endif

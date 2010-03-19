@@ -6068,7 +6068,7 @@ CONST S_P_Data_Info P_Data_Info[] =
    //电表规格
   {INIT(PDI, _PDI_SET_METER_SPEC),
   INIT(DI_Set_Flag, 0),
-  INIT(PSW_Flag, PSW_SET_PARA),
+  INIT(PSW_Flag, PSW_FAC_PARA),
   INIT(Storage, S_RAM),
   INIT(pSrc, (void*) 0),
   //INIT(Src_Off, 0),

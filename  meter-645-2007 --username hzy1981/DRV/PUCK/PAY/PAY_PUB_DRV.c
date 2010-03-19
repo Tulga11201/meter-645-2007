@@ -67,6 +67,11 @@ INT8U Cpu_Esam_Hard_Operate(INT8U Type,INT8U Operate)  //8U pDstLen,INT8U *pDst,
       Clear_All_Dog();
       */
       
+      if(Type EQ PAY_ESAM)
+      {
+        CONST_PAY_IO[Type].Set_Io_Pwr(CONST_PAY_IO[Type].Pwr_Valid);  
+        WAITFOR_DRV_CYCLE_TIMEOUT(600)
+      }      
       CONST_PAY_IO[Type].Set_Io_Rst(CONST_PAY_IO[Type].Rst_Valid);
       WAITFOR_DRV_CYCLE_TIMEOUT(1200)
       CONST_PAY_IO[Type].Set_Io_Clk(!CONST_PAY_IO[Type].Clk_Valid);

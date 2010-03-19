@@ -179,8 +179,5 @@
 #define REMOTE_RELAY_SWITCH_NUM 10 //远程拉合闸
 #define SET_ENERG_NUM 0 //设置初始电量
 
-
-
-#define FAC_INFO "SZJJ"  //工厂信息,深圳江机
 #define PROTOCOL_VERSION "DLT64507" //协议版本号
 #endif

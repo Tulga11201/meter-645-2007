@@ -104,7 +104,7 @@
 #define ALL_LOSS_HARD_SINGLE       1  //全失压通过硬件来触发，软件来实现
 #define ALL_LOSS_HARD_MULTI        2  //全失压通过硬件来触发，硬件来实现
 
-
+//----------------------------------------与硬件相关配置----------------------------------------------
 //按钮配置
 #undef  LEFT_KEY_EN                       //宏打开，使能左按钮
 #undef  NEAR_IRDA_EN                      //宏打开，使能吸附红外
@@ -118,16 +118,14 @@
 #define EXT_RTC_TYPE       DRV_SIMU_DS3231
 #define ALL_LOSS_TYPE      ALL_LOSS_HARD_SINGLE       //宏打开，打开 硬件的全失压方法。关闭，通过软件全失压
 #define MEASU_BAKPWR_NEW_EN                    //打开:使用新的7022后备电源方式
-
-#define ALL_LOSS_DIS_U                    //打开 :全失压发生，唤醒后闪烁电压
-
-//#define REMOTER_FUNC_EN                       //打开遥控器功能
-
 //#define RST_IC_7X6_EN                         //打开:使用最新的复位芯片
-#define DOWN_COVER_ERR                         //打开:后端子该错误
-
+//#define DOWN_COVER_ERR                         //打开:后端子该错误
+//----------------------------------------与功能相关配置----------------------------------------------
+//#define ALL_LOSS_DIS_U                    //打开 :全失压发生，唤醒后闪烁电压
+//#define REMOTER_FUNC_EN                       //打开遥控器功能
 #define I_ORDER_CHK_EN             0         //1:电流逆相序使能；0：电流逆向相序禁止
 #define DIS_METER_FAULT_EN         1         //1:电表故障显示使能；0：电表故障不显示
+
 
 
 //多合一端子排配置：秒脉冲、时段、需量、滑差
@@ -142,6 +140,7 @@
 #define SYS_ERR_DIS_EN          1 //0----------表计系统出错代码关闭；1----------表计系统出错代码打开
 #define HARD_ERR_BEEP           0 //1宏打开，硬件蜂鸣器和led报错：如计量，晶振错位，自检时候报警,0关闭
 
+//---------------------------------------------------------------------------------------------------
 #define HT1623    0
 #define BL55076   1
 

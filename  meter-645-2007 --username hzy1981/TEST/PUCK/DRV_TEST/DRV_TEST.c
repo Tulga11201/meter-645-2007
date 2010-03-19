@@ -497,9 +497,10 @@ void Test_Lcd(void)
 
 
 /**********************************************************************************/
-void Test_RTC_Bat(void)
+void Test_All_Bat(void)
 {  
     Drv_Test_Buf[ID_TEST_RTC_BAT]=RTC_BAT_LOW;
+    Drv_Test_Buf[ID_TEST_RTC_BAT]&=LOWCOST_BAT_LOW;
 }
 
 
@@ -986,19 +987,23 @@ LCD显示输出结果
 void LCD_Dis_Result(void)
 {
   INT8U KeyValue;
-  
 
-  /*
+#ifdef DOWN_COVER_ERR  //硬件的设计逻辑错误  
   if(DOWN_COVER_STATUS EQ 1 || UP_COVER_STATUS EQ 0)     //开端盖(后端盖)铅封
+#else
+  if(DOWN_COVER_STATUS EQ 0 || UP_COVER_STATUS EQ 0)     //开端盖(后端盖)铅封
+#endif    
   {
     FillAllScreen();   //用于显示液晶是否缺笔
     return ;
   }
- */
-    
+  
+  
+
   KeyValue=Key_Value_Pub.Key.Byte;
   Key_Value_Pub.Key.Byte=0;
-  switch(KeyValue)    //以下获取具体的现实元素信息------------PUCK
+  
+   switch(KeyValue)    //以下获取具体的现实元素信息------------PUCK
   {
         case UP_KEY_VALUE :
         case RIGHT_KEY_VALUE:
@@ -1034,16 +1039,15 @@ void LCD_Dis_Result(void)
             
             if(Judge_Test_Succeed() EQ 0) //自检失败
             {
-              strcpy((char *)Temp_Buf_PUCK," FAILED");              
+              Main_Dis_Info(" FAILED");           
             }
             else                        //自检成功
             {     
-              strcpy((char *)Temp_Buf_PUCK,"SUCCEED ");              
+              Main_Dis_Info("SUCCEED ");       
             }
-           Main_Dis_Info((char *)Temp_Buf_PUCK); 
            Temp_Timer_Bak=Sec_Timer_Pub;
            Beep_For_Err();            
-          }
+          }                  
           break;            
    }  
 }
@@ -1170,7 +1174,7 @@ void Test_HardWare_PUCK(void)
   
   Check_Card_Esam();
   
-  Test_RTC_Bat();
+  Test_All_Bat();
   
   Chk_Table_Conflict();
   //Test_UART();

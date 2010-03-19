@@ -37,7 +37,7 @@ void Init_Event_Sram(INT8U Flag)
 }
 
 /***********************************************************************
-函数功能：清除所有事件状态
+函数功能：清除所有事件状态，初始化所有事件参数
 入口：
 出口：无
 ***********************************************************************/
@@ -1197,6 +1197,9 @@ void Event_Proc_Sec(void)
     
   if(Sec_Timer_Bak.Var!=Sec_Timer_Pub)
   {
+    if(Chk_Set_Def_Event_Judge_Para())
+      Init_Event_Sram(1);
+      
     //Event_Para_Modi();    事件与计量同一任务
     Check_Event_StruCS();  
     Get_Meter_Instant_Status();  //获取表计瞬态字

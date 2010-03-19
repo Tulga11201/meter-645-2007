@@ -2,7 +2,7 @@
 
 <project>
   <fileVersion>2</fileVersion>
-  <fileChecksum>1141082674</fileChecksum>
+  <fileChecksum>3606818896</fileChecksum>
   <configuration>
     <name>Debug</name>
     <outputs>
@@ -541,7 +541,7 @@
       <outputs>
         <tool>
           <name>XLINK</name>
-          <file> 453 254</file>
+          <file> 416 254</file>
         </tool>
       </outputs>
     </file>
@@ -2727,6 +2727,12 @@
     </file>
     <file>
       <name>$PROJ_DIR$\Debug\Exe\Meter_New645.d26</name>
+      <outputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 254</file>
+        </tool>
+      </outputs>
       <inputs>
         <tool>
           <name>XLINK</name>
@@ -2736,12 +2742,6 @@
     </file>
     <file>
       <name>$PROJ_DIR$\Debug\Exe\Meter_New645.hex</name>
-      <outputs>
-        <tool>
-          <name>XLINK</name>
-          <file> 254</file>
-        </tool>
-      </outputs>
       <inputs>
         <tool>
           <name>XLINK</name>
@@ -2764,6 +2764,10 @@
       <inputs>
         <tool>
           <name>ICC78000</name>
+          <file> 128 86 4 282 5 397 312 15 463 225 218 217 229 219 233 221 226 231 223 92 88 213 466 96 91 90 94 36 69 62 107 468 66 64 457 20 40 38 35 52 60 58 472 54 474 42 44 470 28 30 22 33 72 31 26 24 130 70 291 56 476 462 488 495 487 492 460 461 494 485 490 125 175 183 126 483 481 479 169 209 7 236 445 168 208 202 199 165 193 205 196 0 477 454 170 113 117 123 101 80 119 111 100 105 317 74 49 46 76 78 135 133 185 132 149 145 143 147 157 161 163 153 151 159 139 191 187 189 137 216 104</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
           <file> 128 86 4 282 5 397 312 15 463 225 218 217 229 219 233 221 226 231 223 92 88 213 466 96 91 90 94 36 69 62 107 468 66 64 457 20 40 38 35 52 60 58 472 54 474 42 44 470 28 30 22 33 72 31 26 24 130 70 291 56 476 462 488 495 487 492 460 461 494 485 490 125 175 183 126 483 481 479 169 209 7 236 445 168 208 202 199 165 193 205 196 0 477 454 170 113 117 123 101 80 119 111 100 105 317 74 49 46 76 78 135 133 185 132 149 145 143 147 157 161 163 153 151 159 139 191 187 189 137 216 104</file>
         </tool>
       </inputs>

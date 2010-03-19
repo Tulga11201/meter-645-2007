@@ -552,6 +552,7 @@ void Key_Fast_LCD_Proc(void)
         return ;
   }
   START_LIGHT_ON;
+  Turn_Light_On();
   screen(dispmode, dispcursor);  //к╒фа----------PUCK
   LCD_Loop_Ms10Timr.Var=Ms10_Timer_Pub;
   LCD_Loop_Num.Var=0;

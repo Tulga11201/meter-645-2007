@@ -2,6 +2,7 @@
 #define PUB_H
 
 #include "OS_Port.h"
+#include "Meter_Cfg.h"
 
 #undef EXT
 #ifdef PUB_C
@@ -82,8 +83,14 @@ typedef float FP32S;
           }Name;
 
 //定义各种应用需要的函数
+#if ASSERT_EN > 0
 #define ASSERT(x) Assert(x,__FILE__,__LINE__)//OS_ASSERT(x)//
 #define ASSERT_FAILED() Assert_Failed(__FILE__,__LINE__)//OS_ASSERT_FAILED()//
+#else
+#define ASSERT(x)
+#define ASSERT_FAILED()
+#endif
+
 #define TRACE() //Trace(__FILE__,__LINE__)
 
 #define SET_BIT(x,y) ((x)|=0x01<<(y))

@@ -5,7 +5,7 @@
 #line  __LINE__ "H19"
 #endif
 
-#define SOFTWARE_VERSION "10031314 V1.3 " //软件版本号
+//#define SOFTWARE_VERSION "10031314 V1.3 " //软件版本号
 
 
 //CONST INT32U All_Loss_Vol_Curr = 1000;
@@ -7944,8 +7944,8 @@ INT16U Get_Factory_Info_Proto_Data(PROTO_DI PDI, INT8U* pDst, INT8U* pDst_Start,
      Temp[i] = '\0';
      
      mem_set(pDst, ' ', 32, pDst_Start, DstLen);
-     mem_cpy(pDst, (INT8U *)SOFTWARE_VERSION, sizeof(SOFTWARE_VERSION) - 1, pDst_Start, DstLen);
-     mem_cpy(pDst + sizeof(SOFTWARE_VERSION) - 1, Temp, strlen((char *)Temp), pDst_Start, DstLen);
+     mem_cpy(pDst, (INT8U *)__DATE__, strlen((char *)__DATE__), pDst_Start, DstLen);
+     mem_cpy(pDst + strlen((char *)__DATE__) + 1, Temp, strlen((char *)Temp), pDst_Start, DstLen);
      Reverse_data(pDst, 32);
      return 32;
    }

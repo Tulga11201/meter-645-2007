@@ -1,6 +1,10 @@
 #define FREEZE_PROTO_C
 #include "Includes.h"
 
+#if REDEF_FILE_LINE_EN > 0
+#line  __LINE__ "H32"
+#endif
+
 /*
 _PDI_CUR_TIME0
 0x0001FF00,//正向有功电能

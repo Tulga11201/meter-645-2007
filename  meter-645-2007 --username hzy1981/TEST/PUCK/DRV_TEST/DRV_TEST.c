@@ -822,6 +822,7 @@ void Check_Card_Esam(void)
   Drv_Test_Buf[ID_TEST_CPU]=0;
 #endif
   
+   Cpu_Esam_All_Operate(ESAM,CPU_ESAM_DRV_POWER_OFF,temp,temp,sizeof(temp) );
   //¿‰∏¥Œª ESAM ≤‚ ‘
   for(i=0;i<3;i++)
   {
@@ -1001,9 +1002,9 @@ void LCD_Dis_Result(void)
   INT8U KeyValue;
 
 #ifdef DOWN_COVER_ERR  //”≤º˛µƒ…Ëº∆¬ﬂº≠¥ÌŒÛ  
-  if(DOWN_COVER_STATUS EQ 1 || UP_COVER_STATUS EQ 0)     //ø™∂À∏«(∫Û∂À∏«)«¶∑‚
+  if(DOWN_COVER_STATUS EQ 1 || UP_COVER_STATUS EQ 0 || B_PRG_KEY_STATUS EQ 0)     //ø™∂À∏«(∫Û∂À∏«)«¶∑‚
 #else
-  if(DOWN_COVER_STATUS EQ 0 || UP_COVER_STATUS EQ 0)     //ø™∂À∏«(∫Û∂À∏«)«¶∑‚
+  if(DOWN_COVER_STATUS EQ 0 || UP_COVER_STATUS EQ 0 || B_PRG_KEY_STATUS EQ 0)     //ø™∂À∏«(∫Û∂À∏«)«¶∑‚
 #endif    
   {
     FillAllScreen();   //”√”⁄œ‘ æ“∫æß «∑Ò»±± 

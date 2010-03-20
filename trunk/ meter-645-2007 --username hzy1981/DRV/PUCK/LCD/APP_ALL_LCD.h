@@ -11,7 +11,7 @@
 
 
 
-#define Turn_Light_On()          LCD_BACK_LIGHT_1
+#define Turn_Light_On()          do{if(JUDGE_POWER_OFF EQ 0) LCD_BACK_LIGHT_1;}while(0)   //掉电下不开背光
 #define Turn_Light_Off()         LCD_BACK_LIGHT_0
 
 

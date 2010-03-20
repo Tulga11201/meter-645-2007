@@ -147,7 +147,7 @@ typedef enum {
 u8 getpkey (void);
 
 // 判断是否停电
-bool poweroff (void);
+#define poweroff()   (Get_Sys_Status() != SYS_NORMAL)
 
 // 判断是否为实时数据
 bool rtvalue (item_t item);

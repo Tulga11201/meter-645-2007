@@ -418,12 +418,6 @@ s16 getdata (item_t item, void* dst, void* dststart, s16 maxlen)
   return nlen;  
 }
 
-// 判断是否停电
-bool poweroff (void) 
-{
-  return (Get_Sys_Status() != SYS_NORMAL);
-}
-
 // 判断是否为实时数据
 bool rtvalue (item_t item) 
 {

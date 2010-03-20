@@ -812,8 +812,8 @@ void Get_Power_Save_Time(void)
 void Check_Card_Esam(void)
 {
 #ifdef ID_TEST_ESAM
-  INT8U temp[18];   
-  INT8U SendBuf[8];
+  INT8U temp[30];   
+  INT8U SendBuf[8],i;
   
   
   Drv_Test_Buf[ID_TEST_ESAM]=0;
@@ -823,10 +823,16 @@ void Check_Card_Esam(void)
 #endif
   
   //¿‰∏¥Œª ESAM ≤‚ ‘
-  if(Cpu_Esam_All_Operate(PAY_ESAM,CPU_ESAM_DRV_RST_COOL,temp,temp,sizeof(temp)) EQ CPU_ESAM_DRV_OK)
-    Drv_Test_Buf[ID_TEST_ESAM]=1;  
- 
-  Clr_Ext_Inter_Dog(); 
+  for(i=0;i<3;i++)
+  {
+    if(Cpu_Esam_All_Operate(PAY_ESAM,CPU_ESAM_DRV_RST_COOL,temp,temp,sizeof(temp)) EQ CPU_ESAM_DRV_OK)
+    {
+      Drv_Test_Buf[ID_TEST_ESAM]=1; 
+      break;
+    }
+   
+    Clr_Ext_Inter_Dog(); 
+  }
 
 #ifdef ID_TEST_CPU  
   //¿‰∏¥Œª CPU ≤‚ ‘

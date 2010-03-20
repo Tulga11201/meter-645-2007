@@ -253,7 +253,7 @@ LCD_MAIN_EXT disp_t dispcode;
   
 #define INIT_DIS_FAULT_TIMR  Sec_Timer_Default.Var=Sec_Timer_Pub
 #define INIT_DIS_DELAY_TIMR    Sec_Timer_Default.Var=Sec_Timer_Pub   
-  
+
 void LCD_main_LUCK (void);
 void Dis_Jump_Para(void);
 void Set_Para_Modi_DI(PROTO_DI Di);

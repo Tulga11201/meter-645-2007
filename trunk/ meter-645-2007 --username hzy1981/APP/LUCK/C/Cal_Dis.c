@@ -111,7 +111,6 @@ void Cal_Dis_Proc(void)
     Code_Dis_Info((char *)Temp_Buf_PUCK);
     
     strcpy((char *)Temp_Buf_PUCK,"   CAL  ");
-    Main_Dis_Info((char *)Temp_Buf_PUCK);
 #else  
     for(i=3;i<=12;i++)
       SetOnLED8Device_PUCK(N_LED(i),Temp_Buf_PUCK[i-3]); 

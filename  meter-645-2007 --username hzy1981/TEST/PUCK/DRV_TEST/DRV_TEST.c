@@ -16,6 +16,7 @@
 #define  counts                 DemandDisBit          //借用变量，省空间
 #define  ToogleTimr             LcdDisTemp1           //借用变量，省空间
 #define  ToogleMaxTime          LcdDisTemp2           //借用变量，省空间
+#define  ThreeKeyStus           Light_Mode            //借用变量，省空间
 
 #define  PD_Save_Data_Time      dispoffset            //借用变量，省空间
 
@@ -1008,8 +1009,16 @@ void LCD_Dis_Result(void)
 #endif    
   {
     FillAllScreen();   //用于显示液晶是否缺笔
+    ThreeKeyStus=0x34;
     return ;
   }
+  
+  if(ThreeKeyStus EQ 0x34)
+  {
+    Temp_Timer_Bak=0;   //立即刷新
+    ThreeKeyStus=0x00;
+  }
+    
   
   
 

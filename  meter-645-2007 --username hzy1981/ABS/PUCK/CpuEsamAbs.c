@@ -247,10 +247,12 @@ void CPU_Card_Main_Proc(void)
 
       Result=ICcardMain();
       
+      /*  贺自己搞定
       if(INOP_INSERT_FIRSETUSERCARD_ERR)  //重复开户,错误
       {
         Ok_Flag=0;
       }
+      */
       
       if(Ok_Flag && Result)   //操作成功
       {

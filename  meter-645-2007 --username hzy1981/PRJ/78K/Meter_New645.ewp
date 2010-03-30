@@ -656,7 +656,7 @@
         </option>
         <option>
           <name>OutputFile</name>
-          <state>Meter_New645.hex</state>
+          <state>Meter_New645.d26</state>
         </option>
         <option>
           <name>OutputFormat</name>
@@ -818,7 +818,7 @@
         </option>
         <option>
           <name>DebugInformation</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>RuntimeControl</name>
@@ -2598,6 +2598,12 @@
           </file>
           <file>
             <name>$PROJ_DIR$\..\..\DRV\PUCK\IIC\FM24C16_Soft.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\..\DRV\PUCK\IIC\RV3029_Soft.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\..\DRV\PUCK\IIC\RV3029_Soft.h</name>
           </file>
           <file>
             <name>$PROJ_DIR$\..\..\DRV\PUCK\IIC\RX8025_Soft.c</name>

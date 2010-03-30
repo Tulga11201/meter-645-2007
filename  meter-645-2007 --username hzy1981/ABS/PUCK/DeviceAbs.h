@@ -52,9 +52,14 @@
 #define STOP_PRG_KEY                     {CTRL_INTER_SWITCH_UPTKEY(INTER_DIS);}
 
 
+#ifdef LOW_COST_HARD_EN
+  #define CTRL_INTER_SWITCH_CF1(a) 	{PMK2 = a;}
+  #define CTRL_INTER_GRADE_CF1(a)	{PPR12=(a&0x02)>>1;PPR02=a&0x01;PIF2 = 0;}
+#else
+  #define CTRL_INTER_SWITCH_CF1(a) 	{PMK6 = a;}
+  #define CTRL_INTER_GRADE_CF1(a)	{PPR16=(a&0x02)>>1;PPR06=a&0x01;PIF6 = 0;}
+#endif
 
-#define CTRL_INTER_SWITCH_CF1(a) 	{PMK6 = a;}
-#define CTRL_INTER_GRADE_CF1(a)		{PPR16=(a&0x02)>>1;PPR06=a&0x01;PIF6 = 0;}
 #define START_CF1                       {CTRL_INTER_GRADE_CF1(INTER_GRADE_LOWERST); CTRL_INTER_SWITCH_CF1(INTER_EN);}
 #define STOP_CF1                        {CTRL_INTER_SWITCH_CF1(INTER_DIS);}
 

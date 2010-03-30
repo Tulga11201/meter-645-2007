@@ -34,8 +34,12 @@
 #define BAUD_IRDA    1200            //红外口波特率,
 #define CHANEL_DEBG  CHANEL_IRDA    //调试口通道号
 #define BAUD_DEBG    115200         //调试口波特率,
-#define BAUD_CPU_ESAM    9600         //CPU_ESAM波特率
 
+#ifdef LOW_COST_HARD_EN   //Level：0表示开启soft时钟
+  #define BAUD_CPU_ESAM    7415         //CPU_ESAM波特率
+#else
+  #define BAUD_CPU_ESAM    9600         //CPU_ESAM波特率
+#endif
 
 
 

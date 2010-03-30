@@ -66,7 +66,7 @@ void Inter_CF1(void)
   {
     if(Pri_MeasuStatVar.MeasuIntOk)
     {
-      if(P14_bit.no0) //Âö³åÊäÈë
+      if(CF1_PULSE_LVEL) //Âö³åÊäÈë
       {
         Pulse_Num_Temp.Ac_Pulse_Num++; 
         if(Pulse_Num_Temp.Ac_Pulse_Num>=Sys_Pulse_Var.Ac_Pulse_Freq)

@@ -146,10 +146,10 @@ CONST INT8U Const_Drv_Test[MAX_ID_TEST_NUM][5]=
 #ifdef ID_TEST_EXT_RTC
   #if EXT_RTC_TYPE==DRV_SIMU_DS3231 || DRV_HARD_DS3231==1
   "3231",
-  #elif EXT_RTC_TYPE==DRV_SIMU_RX8025
+  #elif EXT_RTC_TYPE==DRV_SIMU_RV3029C2
+  "3029",
+  #else         //8025或者8025T
   "8025",
-  #else
-  "802T",
   #endif
 #endif
 
@@ -614,13 +614,19 @@ void Test_All_RTC(INT8U RtcFlag)
   {
     //Init_DS3231_IIC_Soft();
     Init_ExtRTC_Pulse(1);   //输出秒脉冲 
-    //Temp[6]=0x09;Temp[5]=0x09;Temp[4]=0x11;Temp[3]=0x05;Temp[2]=0x17;Temp[1]=0x58;
-    //Write_ExtRTC_PUCK(Temp);
+    /*
+    if(Read_Ext_RTC_Status() EQ 0)
+    {
+      Temp[6]=0x10;Temp[5]=0x03;Temp[4]=0x27;Temp[3]=0x06;Temp[2]=0x15;Temp[1]=0x45;
+      Write_ExtRTC_PUCK(Temp);
+    }
+    */
   }
 
   Temp_Timer_Bak=Ms_Timer_Pub; //用来查看花费的时间
   //读写测试65535次，实验花费时间为Ms10_Timer_Pub=142460ms，即读和写一次，所花时间为2.17ms---------PUCK
   for(i=0;i<RTC_TEST_NUM-1;i++)
+  //while(1)
   {
     mem_set(Temp,0,sizeof(Temp),Temp,sizeof(Temp));
     if(RtcFlag==ID_TEST_EXT_RTC)
@@ -628,7 +634,8 @@ void Test_All_RTC(INT8U RtcFlag)
     else
       Flag=!Read_InterRTC_PUCK(Temp,7);
     
-    Flag|=!Check_BCD_Data(Temp,7);//检查数据格式?
+    Flag|=!Check_BCD_Data(Temp,3);//检查数据格式：年月日
+    Flag|=!Check_BCD_Data(Temp+4,3);//检查数据格式：时分秒
     RdWrErr+=Flag; 
     //if(Flag)
     //  Debug_Print("Current Time(Yea-Mon-Dat_Day_Hou:Min:Sec):%2x-%2x-%2x_%2x_%2x:%2x:%2x       |",\
@@ -637,7 +644,7 @@ void Test_All_RTC(INT8U RtcFlag)
     if(0==i) //记下第一次读出的秒
     {
       TempSec=Temp[0];
-      Dlyn10MS_ClrDog(180);  //延时2秒，等时钟秒更新
+      Dlyn10MS_ClrDog(150);  //延时1.5秒，等时钟秒更新
     }
   }
   //timr=Ms_Timer_Pub-Temp_Timer_Bak;  
@@ -814,7 +821,7 @@ void Check_Card_Esam(void)
 {
 #ifdef ID_TEST_ESAM
   INT8U temp[30];   
-  INT8U SendBuf[8],i;
+  INT8U SendBuf[8];
   
   
   Drv_Test_Buf[ID_TEST_ESAM]=0;
@@ -823,18 +830,16 @@ void Check_Card_Esam(void)
   Drv_Test_Buf[ID_TEST_CPU]=0;
 #endif
   
-   Cpu_Esam_All_Operate(ESAM,CPU_ESAM_DRV_POWER_OFF,temp,temp,sizeof(temp) );
+   Cpu_Esam_All_Operate(ESAM,CPU_ESAM_DRV_POWER_OFF,temp,temp,sizeof(temp));
   //冷复位 ESAM 测试
-  for(i=0;i<3;i++)
+
+  if(Cpu_Esam_All_Operate(PAY_ESAM,CPU_ESAM_DRV_RST_COOL,temp,temp,sizeof(temp)) EQ CPU_ESAM_DRV_OK)
   {
-    if(Cpu_Esam_All_Operate(PAY_ESAM,CPU_ESAM_DRV_RST_COOL,temp,temp,sizeof(temp)) EQ CPU_ESAM_DRV_OK)
-    {
-      Drv_Test_Buf[ID_TEST_ESAM]=1; 
-      break;
-    }
-   
-    Clr_Ext_Inter_Dog(); 
+    Drv_Test_Buf[ID_TEST_ESAM]=1; 
   }
+   
+  Clr_Ext_Inter_Dog(); 
+
 
 #ifdef ID_TEST_CPU  
   //冷复位 CPU 测试

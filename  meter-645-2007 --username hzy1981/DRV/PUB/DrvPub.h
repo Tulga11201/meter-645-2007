@@ -26,6 +26,7 @@
 #include "DS3231_soft.h"
 #include "RX8025_soft.h"
 #include "RX8025T_soft.h"
+#include "RV3029_Soft.h"
 #include "BL55076_Soft.h"
 #include "AT24C04_Soft.h"
 #include "FM24C16_Soft.h"

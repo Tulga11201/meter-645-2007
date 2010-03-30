@@ -407,7 +407,7 @@ void Init_Hard_PUCK(void)
   
   STOP_RTC_ALARM;   
   STOP_IRDA_WAKE;
-  STOP_1HZ;        
+  //STOP_1HZ;        
   STOP_ALL_LOSS;         //关闭全失压
 }
 /********************************************************************************
@@ -508,14 +508,14 @@ void Init_Inter_Abs(INT32U Mode)
         
         STOP_RTC_ALARM;   
         STOP_IRDA_WAKE;
-        STOP_1HZ;        
+        //STOP_1HZ;        
         STOP_ALL_LOSS;         //关闭全失压
     break;
     
     case SYS_RESUME:  //SYS_RESUME模式下，根据唤醒源开启中断
         STOP_CF1;
         STOP_CF2;
-        STOP_1HZ;
+        //STOP_1HZ;
         STOP_POWR_DOWN;
         STOP_LEFT_KEY;
         STOP_RIGHT_KEY;
@@ -560,7 +560,7 @@ void Init_Inter_Abs(INT32U Mode)
     case SYS_SLEEP:  //SYS_SLEEP模式下，不必判定唤醒源
         STOP_CF1;
         STOP_CF2;
-        STOP_1HZ;
+        //STOP_1HZ;
         STOP_POWR_DOWN;
         STOP_DOWN_KEY;
         STOP_LEFT_KEY;

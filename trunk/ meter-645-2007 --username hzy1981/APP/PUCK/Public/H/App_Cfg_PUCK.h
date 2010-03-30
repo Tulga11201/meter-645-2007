@@ -90,7 +90,7 @@
 #define DRV_SIMU_DS3231    0//宏开启，打开DS3231的软件模拟功能，关闭，打开IIC的硬件功能
 #define DRV_SIMU_RX8025    1
 #define DRV_SIMU_RX8025T   2
-
+#define DRV_SIMU_RV3029C2  3
 
 
 
@@ -109,17 +109,22 @@
 #undef  LEFT_KEY_EN                       //宏打开，使能左按钮
 #undef  NEAR_IRDA_EN                      //宏打开，使能吸附红外
 #undef  RIGHT_KEY_EN                      //宏打开，使能右按钮
-#undef  DIS_PARA_JUMP_EN                  //宏打开，使能参数修改跳屏  
-#define MEASU_IC_TYPE       MEASU_7022B          
+#undef  DIS_PARA_JUMP_EN                  //宏打开，使能参数修改跳屏
+
+#define MEASU_IC_TYPE       MEASU_7022B
 #define LCD_PROPERTY        LCD_GW_ZXW
 
 #define FM_ROM_FM16_EN                    //打开 FM16功能
+
 #define DRV_HARD_DS3231    0              //1:3231硬件I2C开起;0:硬件I2C关闭 
-#define EXT_RTC_TYPE       DRV_SIMU_DS3231
+#define EXT_RTC_TYPE       DRV_SIMU_RX8025T  //DRV_SIMU_DS3231 DRV_SIMU_RX8025T  DRV_SIMU_RV3029C2
+
 #define ALL_LOSS_TYPE      ALL_LOSS_HARD_SINGLE       //宏打开，打开 硬件的全失压方法。关闭，通过软件全失压
 #define MEASU_BAKPWR_NEW_EN                    //打开:使用新的7022后备电源方式
-//#define RST_IC_7X6_EN                         //打开:使用最新的复位芯片
-#define DOWN_COVER_ERR                         //打开:后端子该错误
+#define RST_IC_7X6_EN                         //打开:使用最新的复位芯片
+////#define DOWN_COVER_ERR                         //打开:后端子该错误
+#define LOW_COST_HARD_EN                         //打开：低成本硬件：ESAM_CLOCK,CPU_CLOCK,CF1,红外唤醒硬件
+
 //----------------------------------------与功能相关配置----------------------------------------------
 //#define ALL_LOSS_DIS_U                    //打开 :全失压发生，唤醒后闪烁电压
 //#define REMOTER_FUNC_EN                       //打开遥控器功能

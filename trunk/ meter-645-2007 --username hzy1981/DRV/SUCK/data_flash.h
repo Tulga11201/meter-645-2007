@@ -35,9 +35,17 @@
 
 
 //PUCK ADD:09-02-04
-#define DIR_FLASH_RDY                               (PM4_bit.no7)
-#define DATA_FLASH_RDY                              (P4_bit.no7)
-#define DATA_FLASH_RDY_OUT                          (P4_bit.no7)
+#ifdef LOW_COST_HARD_EN
+  #define SET_DIR_FLASH_RDY                         PM4_bit.no7=1
+  #define DATA_FLASH_RDY
+  #define DATA_FLASH_RDY_OUT
+#else
+  #define SET_DIR_FLASH_RDY                          PM4_bit.no7=1
+  #define DATA_FLASH_RDY                              (P4_bit.no7)
+  #define DATA_FLASH_RDY_OUT                          (P4_bit.no7)
+#endif
+
+
 
 //-----------------------------------------------------------
 

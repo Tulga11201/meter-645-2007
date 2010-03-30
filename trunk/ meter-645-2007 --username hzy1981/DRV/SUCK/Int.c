@@ -54,6 +54,19 @@
 **  Returns:
 **	None
 **
+中断0：CF2；
+中断1：全失压；
+中断2：低成本CF1，高成本座位普通IO口----dataflash_RDY；
+中断3：没用；
+中断4：掉电检测；
+中断5：没有，RXD1占用；
+中断6：低成本没用，CPU_CLOCK占用；高成本CF1；
+中断7：低成本没用，ESAM_CLOCK占用；高成本秒脉冲；
+中断8：下翻；
+中断9：没用，被16_WP占用；
+中断10：编程
+中断11：红外唤醒；
+
 **-----------------------------------------------------------------------------
 */
 void INTP_Init( void )
@@ -96,11 +109,19 @@ void INTP_Init( void )
 	PM7 |= 0x80;		/* INTP11 pin setting */
 
 
-           
+#ifdef LOW_COST_HARD_EN
+        EGN0 = INTP5_EDGE_FALLING_SEL   | INTP4_EDGE_FALLING_SEL | INTP3_EDGE_FALLING_SEL | INTP2_EDGE_FALLING_SEL |INTP0_EDGE_FALLING_SEL;
+	EGN1 = INTP11_EDGE_FALLING_SEL | INTP10_EDGE_FALLING_SEL | INTP9_EDGE_FALLING_UNSEL | INTP8_EDGE_FALLING_SEL;
+  
+        EGP0 = INTP2_EDGE_RISING_SEL | INTP0_EDGE_RISING_SEL;   //for rise interrupt
+ 
+#else
         EGN0 = INTP7_EDGE_FALLING_SEL | INTP6_EDGE_FALLING_SEL | INTP5_EDGE_FALLING_SEL   | INTP4_EDGE_FALLING_SEL | INTP3_EDGE_FALLING_SEL | INTP0_EDGE_FALLING_SEL;
 	EGN1 = INTP11_EDGE_FALLING_SEL | INTP10_EDGE_FALLING_SEL | INTP9_EDGE_FALLING_UNSEL | INTP8_EDGE_FALLING_SEL;
   
         EGP0 = INTP6_EDGE_RISING_SEL | INTP0_EDGE_RISING_SEL;   //for rise interrupt
+
+#endif
         
       //INTP_User_Init();
 }

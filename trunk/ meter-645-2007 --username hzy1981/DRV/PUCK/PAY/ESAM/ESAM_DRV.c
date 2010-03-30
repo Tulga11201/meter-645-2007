@@ -32,9 +32,15 @@ void Set_Esam_Rst(INT8U Level)
 **********************************************************************************/ 
 void Set_Esam_Clk(INT8U Level)
 {
+#ifdef LOW_COST_HARD_EN   //Level：0表示开启soft时钟
+  INIT_ESAM_CLK;
+  if(Level)
+    STOP_ESAM_CLK;
+  else    
+    START_ESAM_CLK;  
+#else  
   SET_ESAM_CLK_DIR;
   SET_ESAM_CLK(Level);
+#endif  
 }
-
-
 #endif

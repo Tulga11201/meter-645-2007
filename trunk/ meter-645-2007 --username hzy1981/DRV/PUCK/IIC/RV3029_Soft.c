@@ -1,37 +1,37 @@
 #include "DrvPub.h"
 
-#if EXT_RTC_TYPE==DRV_SIMU_RX8025T
+#if EXT_RTC_TYPE==DRV_SIMU_RV3029C2
 
 /**********************************************************************************/
 /**********************************************************************************/ 
-void Set_8025T_Sclk_Dir(INT8U Dir)
+void Set_RV3029_Sclk_Dir(INT8U Dir)
 {
-  SET_8025T_SCLK_DIR(Dir);
+  SET_RV3029_SCLK_DIR(Dir);
 }
 /**********************************************************************************
 **********************************************************************************/ 
-void Set_8025T_Sda_Dir(INT8U Dir)
+void Set_RV3029_Sda_Dir(INT8U Dir)
 {
 
-   SET_8025T_SDA_DIR(Dir);
+   SET_RV3029_SDA_DIR(Dir);
 }
 /**********************************************************************************
 **********************************************************************************/ 
-void Set_8025T_Sclk_Pin(INT8U Level)
+void Set_RV3029_Sclk_Pin(INT8U Level)
 {
-   SET_8025T_SCLK(Level);
+   SET_RV3029_SCLK(Level);
 }
 /**********************************************************************************
 **********************************************************************************/ 
-void Set_8025T_Sda_Pin(INT8U Level)
+void Set_RV3029_Sda_Pin(INT8U Level)
 {
-  SET_8025T_SDA(Level);
+  SET_RV3029_SDA(Level);
 }
 /**********************************************************************************
 **********************************************************************************/ 
-INT8U Get_8025T_Sda_Pin(void)
+INT8U Get_RV3029_Sda_Pin(void)
 {
-  return (GET_8025T_SDA);  
+  return (GET_RV3029_SDA);  
 }
 
 /**********************************************************************************
@@ -49,10 +49,10 @@ INT8U Read_EXT_RTC_Buf(INT8U addr,INT8U Len,INT8U *Dst)
 #endif  
 
    I2cSoft_Start(IIC_SOFT_ID0);
-   OkFlag=I2cSoft_Send_Byte(IIC_SOFT_ID0,0x64);
+   OkFlag=I2cSoft_Send_Byte(IIC_SOFT_ID0,0xAC);
    OkFlag&=I2cSoft_Send_Byte(IIC_SOFT_ID0,addr);
    I2cSoft_Start(IIC_SOFT_ID0);
-   OkFlag&=I2cSoft_Send_Byte(IIC_SOFT_ID0,0x65);   
+   OkFlag&=I2cSoft_Send_Byte(IIC_SOFT_ID0,0xAD);   
    OkFlag&=I2cSoft_Read_nByteS(IIC_SOFT_ID0,Len,Dst);
    OkFlag&=I2cSoft_Stop(IIC_SOFT_ID0);
 #ifdef SOFT_I2C_ENV
@@ -82,7 +82,7 @@ INT8U Write_EXT_RTC_Buf(INT8U addr,INT8U Len,INT8U *Src)
    { 
 #endif     
     I2cSoft_Start(IIC_SOFT_ID0);
-    OkFlag=I2cSoft_Send_Byte(IIC_SOFT_ID0,0x64);	
+    OkFlag=I2cSoft_Send_Byte(IIC_SOFT_ID0,0xAC);	
     OkFlag&=I2cSoft_Send_Byte(IIC_SOFT_ID0,addr);
     for(i=0;i<Len;i++)
       OkFlag&=I2cSoft_Send_Byte(IIC_SOFT_ID0,Src[i]);
@@ -176,7 +176,7 @@ INT8U Read_Ext_RTC_Status(void)
   //读后不会清零！
   for(i=0;i<3;i++)
   {
-    if(Read_EXT_RTC_Buf(0x0D,3,temp) EQ 0)
+    if(Read_EXT_RTC_Buf(0x0E,2,temp) EQ 0)
       ASSERT_FAILED();    
     else
       break;

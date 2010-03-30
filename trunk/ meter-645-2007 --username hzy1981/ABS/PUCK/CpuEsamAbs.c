@@ -385,7 +385,7 @@ INT8U Cpu_Esam_All_Operate(INT8U Type,INT8U Operate,INT8U *pDst,INT8U *pDstStart
 {
 #if PREPAID_METER>0
   
-  INT8U Flag;
+  INT8U Flag,i;
    
   if(pDst>pDstStart+MaxDstLen)
   {
@@ -403,32 +403,85 @@ INT8U Cpu_Esam_All_Operate(INT8U Type,INT8U Operate,INT8U *pDst,INT8U *pDstStart
   }
     
   
-  Uart_Pay_Ready();
-  
-  if(Cpu_Esam_Hard_Operate(Type,Operate) EQ 0)
-    ASSERT_FAILED();
-  
-  if(CPU_ESAM_DRV_RST_COOL EQ Operate)  //CPU卡冷复位,需要得到 卡号和分散因子
+  for(i=0;i<3;i++)
   {
-    switch(Type)
+    Uart_Pay_Ready();
+    
+    if(Cpu_Esam_Hard_Operate(Type,Operate) EQ 0)
+      ASSERT_FAILED();
+    
+    if(CPU_ESAM_DRV_RST_COOL EQ Operate)  //CPU卡冷复位,需要得到 卡号和分散因子
     {
-      case PAY_CPU_CARD:
-      case PAY_ESAM:
-        Flag=Wait_For_Pay_Uart_Data(25,pDst,pDstStart,MaxDstLen);
-        if(Flag != CPU_ESAM_DRV_OK)
-          return Flag;
-        
-        if(Find_Fram_Exist(pDst,MaxDstLen) EQ 0)
-          return CPU_ESAM_DRV_DATA_ERR;        
-      break;
-
-    }    
+      switch(Type)
+      {
+        case PAY_CPU_CARD:
+        case PAY_ESAM:
+          Flag=Wait_For_Pay_Uart_Data(25,pDst,pDstStart,MaxDstLen);
+          if(Flag != CPU_ESAM_DRV_OK)
+            continue;
+          
+          if(Find_Fram_Exist(pDst,MaxDstLen) EQ 0)
+            continue; 
+          return CPU_ESAM_DRV_OK;  
+      }    
+    }
   }
 #endif
   
-  return CPU_ESAM_DRV_OK;  
+  return CPU_ESAM_DRV_DATA_ERR;  
 }
+/**********************************************************************************
+函数功能：
+入口：
+出口： 
+**********************************************************************************/ 
+INT8U Wait_For_Pay_Uart_FixData(INT16U RdDstLen,INT8U *pDst,INT8U *pDstStart,INT16U MaxDstLen)
+{
+#if PREPAID_METER>0
+  
+  INT16U i;
+  
+  if(pDst>pDstStart+MaxDstLen)
+  {
+    ASSERT_FAILED();  
+    return CPU_ESAM_DRV_FUZZY_ERR;
+  }
+  
+  //写数据后，ESAM/CPU的延时 延时：
+  //1.14583 ms:1byte
+  for(i=0;i<RdDstLen*10;i++)
+  {
+    Clr_Ext_Inter_Dog(); 
+    WAITFOR_DRV_MS_TIMEOUT(5)
+    if(Pay_Uart_Rec_Len>=RdDstLen)
+      break;
+  } 
+    
+  
+  if((JUDGE_CPU_INSERT EQ 0)&& (Curr_Media_Status.Uart_Type EQ PAY_CPU_CARD))  //提前拔卡
+  {
+    return CPU_ESAM_DRV_OUT_ERR;
+  }
 
+  if(Pay_Uart_Rec_Len>=RdDstLen)
+  {
+    mem_cpy((void *)(pDst),(void *)(Pay_Uart_Rec_Buf),RdDstLen,(void *)(pDstStart),MaxDstLen);
+    Uart_Pay_Ready();
+    
+    if(Curr_Media_Status.Uart_Type EQ PAY_CPU_CARD)
+        Debug_Print("<--------Rec From CPU_CARD--------");
+      else
+        Debug_Print("<--------Rec From ESAM------------");
+    DEBUG_BUF_PRINT((INT8U *)pDst,RdDstLen,PRINT_HEX,30); 
+    
+    return CPU_ESAM_DRV_OK;
+  }
+  else
+    return CPU_ESAM_DRV_RECLEN_ERR;  
+#else
+  return CPU_ESAM_DRV_OK;
+#endif 
+}
 /**********************************************************************************
 函数功能：对 CPU卡,ESAM的通信数据操作,包括读写等.
 入口：
@@ -445,6 +498,8 @@ INT8U Cpu_Esam_All_Operate(INT8U Type,INT8U Operate,INT8U *pDst,INT8U *pDstStart
 INT8U Cpu_Esam_Comm_Proc(INT8U Type,INT8U *Srcbuf,INT16U SrcLen,INT8U RdOrWr,INT8U RdDstLen,INT8U *pDst,INT8U *pDstStart,INT16U MaxDstLen)
 {
 #if PREPAID_METER>0
+  INT8U i;
+  
   if(pDst>pDstStart+MaxDstLen || RdDstLen>MaxDstLen || Type>MAX_CPU_ESAM_TYPE)
   {
     ASSERT_FAILED();
@@ -460,13 +515,17 @@ INT8U Cpu_Esam_Comm_Proc(INT8U Type,INT8U *Srcbuf,INT16U SrcLen,INT8U RdOrWr,INT
     Switch_Uart_To_Pay(Type);
   }
   
-  Pay_Uart_Send(Srcbuf,SrcLen); 
-  Clr_Ext_Inter_Dog(); 
-  return Wait_For_Pay_Uart_Data(RdDstLen,pDst,pDstStart,MaxDstLen);
-  
+  for(i=0;i<3;i++)
+  {
+    Pay_Uart_Send(Srcbuf,SrcLen); 
+    Clr_Ext_Inter_Dog(); 
+    if(Wait_For_Pay_Uart_FixData(RdDstLen,pDst,pDstStart,MaxDstLen) EQ CPU_ESAM_DRV_OK)
+    {
+      return CPU_ESAM_DRV_OK; 
+    }
+  }
+  return CPU_ESAM_DRV_DATA_ERR; 
 #else
   return CPU_ESAM_DRV_OK; 
-#endif
+#endif  
 }
-
-

@@ -11,7 +11,7 @@ void Init_Bus_PUCK(void)
   DIR_FLASH_CS=0;    //输出
   
   DIR_FLASH_SO=1;    //输入
-  DIR_FLASH_RDY=1;   //输入
+  SET_DIR_FLASH_RDY;   //输入
   
   DATA_FLASH_SI=1;
   DATA_FLASH_SCL=1;

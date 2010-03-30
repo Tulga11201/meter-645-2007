@@ -31,7 +31,15 @@ void Set_CpuCard_Rst(INT8U Level)
 **********************************************************************************/ 
 void Set_CpuCard_Clk(INT8U Level)
 {
+#ifdef LOW_COST_HARD_EN           //Level：0表示开启soft时钟
+  INIT_IC_CLK;
+  if(Level)
+    STOP_IC_CLK;
+  else    
+    START_IC_CLK;
+#else  
   SET_CPU_CARD_CLK_DIR;        //输出:1-----开启电源
   SET_CPU_CARD_CLK(Level);
+#endif  
 }
 #endif

@@ -22,8 +22,10 @@ CONST CONST_SOFT_IIC  CONST_I2C_PORT[IIC_SOFT_MAX_ID+1]=
   {&Set_3231_Sclk_Dir,&Set_3231_Sda_Dir,&Set_3231_Sclk_Pin,&Set_3231_Sda_Pin,&Get_3231_Sda_Pin,0},    //----------------0
 #elif EXT_RTC_TYPE==DRV_SIMU_RX8025
   {&Set_8025_Sclk_Dir,&Set_8025_Sda_Dir,&Set_8025_Sclk_Pin,&Set_8025_Sda_Pin,&Get_8025_Sda_Pin,0},    //----------------0
-#else
+#elif EXT_RTC_TYPE==DRV_SIMU_RX8025T
   {&Set_8025T_Sclk_Dir,&Set_8025T_Sda_Dir,&Set_8025T_Sclk_Pin,&Set_8025T_Sda_Pin,&Get_8025T_Sda_Pin,0},    //----------------0
+#else
+  {&Set_RV3029_Sclk_Dir,&Set_RV3029_Sda_Dir,&Set_RV3029_Sclk_Pin,&Set_RV3029_Sda_Pin,&Get_RV3029_Sda_Pin,0},    //----------------0
 #endif
 
 #ifdef IIC_SOFT_ID1
@@ -31,7 +33,7 @@ CONST CONST_SOFT_IIC  CONST_I2C_PORT[IIC_SOFT_MAX_ID+1]=
 #endif
 
 #ifdef IIC_SOFT_ID2 
-  {&Set_55076_Sclk_Dir,&Set_55076_Sda_Dir,&Set_55076_Sclk_Pin,&Set_55076_Sda_Pin,&Get_55076_Sda_Pin,0}    //----------------0
+  {&Set_55076_Sclk_Dir,&Set_55076_Sda_Dir,&Set_55076_Sclk_Pin,&Set_55076_Sda_Pin,&Get_55076_Sda_Pin,0},    //----------------0
 #endif
 
 };

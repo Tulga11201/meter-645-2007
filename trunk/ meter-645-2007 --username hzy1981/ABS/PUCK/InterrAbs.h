@@ -101,7 +101,11 @@ typedef struct
 }RECORD_TIME;
 
 
-
+#ifdef LOW_COST_HARD_EN
+  #define  CF1_PULSE_LVEL P4_bit.no7
+#else
+  #define  CF1_PULSE_LVEL P14_bit.no0
+#endif
 
 
 #define SET_VAR_CS_PUCK(Var) {Var.cS=GetBufSum_Pub((INT8U *)(&Var),sizeof(Var)-1);}

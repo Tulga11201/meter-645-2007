@@ -44,6 +44,10 @@ INT8U Read_ExtRTC_PUCK(INT8U *Dst,INT8U DstLen)
 {
  INT8U Flag;
  
+#if   EXT_RTC_TYPE==DRV_SIMU_RV3029C2
+  INT8U temp;
+#endif 
+  
  if(DstLen!=7)
  {   
    Debug_Print("Ext_RTC Error----->Dst_Buf Length is Error!");
@@ -53,7 +57,14 @@ INT8U Read_ExtRTC_PUCK(INT8U *Dst,INT8U DstLen)
  if(Check_ExtRTC_Busy()!=EXT_RTC_OK)
    return 0;
  
- Flag=Read_EXT_RTC_Buf(0,7,Dst);
+ #if   EXT_RTC_TYPE==DRV_SIMU_RV3029C2
+  Flag=Read_EXT_RTC_Buf(0x08,7,Dst);   //实际顺序： 秒、分、时、日、星期、月、年
+  if(!Flag)
+    return 0;
+  temp=Dst[3];Dst[3]=Dst[4];Dst[4]=temp;
+ #else                                 //实际顺序： 秒、分、时、星期、日、月、年
+  Flag=Read_EXT_RTC_Buf(0,7,Dst);
+ #endif 
  return Flag;
 }
 /**********************************************************************************
@@ -67,11 +78,22 @@ Src---------------顺序为从低到高:秒/分/时/星期/日/月/年
 **********************************************************************************/
 INT8U Write_ExtRTC_PUCK(INT8U *Src)
 {
+#if   EXT_RTC_TYPE==DRV_SIMU_RV3029C2
+  INT8U temp[7],temp1;
+#endif 
+  
   INT8U Flag;  
   if(Check_ExtRTC_Busy()!=EXT_RTC_OK)
    return 0;
   
+#if   EXT_RTC_TYPE==DRV_SIMU_RV3029C2
+  mem_cpy(temp,Src,7,Src,sizeof(temp));
+  temp1=temp[3];temp[3]=temp[4];temp[4]=temp1;
+  
+  Flag=Write_EXT_RTC_Buf(0,7,temp);
+#else
   Flag=Write_EXT_RTC_Buf(0,7,Src);
+#endif  
   return Flag;
 }
 

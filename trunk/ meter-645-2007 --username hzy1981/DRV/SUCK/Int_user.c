@@ -64,6 +64,38 @@ __interrupt void MD_INTP0(void)
 	/* End user code. Do not edit comment generated here */
 }
 
+#pragma vector = INTP1_vect
+__interrupt void MD_INTP1(void)
+{
+	/* Start user code. Do not edit comment generated here */
+           //INT_1HZ();
+	/* End user code. Do not edit comment generated here */
+}
+
+#pragma vector = INTP3_vect
+__interrupt void MD_INTP3(void)
+{
+	/* Start user code. Do not edit comment generated here */
+
+	/* End user code. Do not edit comment generated here */
+}
+
+#pragma vector = INTP4_vect
+__interrupt void MD_INTP4(void)
+{
+	/* Start user code. Do not edit comment generated here */
+           POWER_DOWN();
+	/* End user code. Do not edit comment generated here */
+}
+
+#pragma vector = INTP5_vect
+__interrupt void MD_INTP5(void)
+{
+	/* Start user code. Do not edit comment generated here */
+        IR_Decode_Proc();
+	/* End user code. Do not edit comment generated here */
+}
+
 /*
 **-----------------------------------------------------------------------------
 **
@@ -78,11 +110,64 @@ __interrupt void MD_INTP0(void)
 **
 **-----------------------------------------------------------------------------
 */
-#pragma vector = INTP6_vect
-__interrupt void MD_INTP6(void)
+
+
+#ifdef LOW_COST_HARD_EN           //Level：0表示开启soft时钟
+  #pragma vector = INTP2_vect
+  __interrupt void MD_INTP2(void)
+  {
+          /* Start user code. Do not edit comment generated here */
+             Inter_CF1();
+          /* End user code. Do not edit comment generated here */
+  }
+
+  #pragma vector = INTP6_vect
+  __interrupt void MD_INTP6(void)
+  {
+          /* Start user code. Do not edit comment generated here */
+          //   Inter_CF1();
+          /* End user code. Do not edit comment generated here */
+  }
+#else
+ #pragma vector = INTP2_vect
+  __interrupt void MD_INTP2(void)
+  {
+          /* Start user code. Do not edit comment generated here */
+           //  Inter_CF1();
+          /* End user code. Do not edit comment generated here */
+  }
+  #pragma vector = INTP6_vect
+  __interrupt void MD_INTP6(void)
+  {
+          /* Start user code. Do not edit comment generated here */
+             Inter_CF1();
+          /* End user code. Do not edit comment generated here */
+  }
+#endif
+
+
+/*
+**-----------------------------------------------------------------------------
+**
+**  Abstract:
+**	This function is INTP10 interrupt service routine.
+**
+**  Parameters:
+**	None
+**
+**  Returns:
+**	None
+**
+**-----------------------------------------------------------------------------
+*/
+
+
+#pragma vector = INTP7_vect
+__interrupt void MD_INTP7(void)
 {
 	/* Start user code. Do not edit comment generated here */
-           Inter_CF1();
+           //Inter_ALL_LOSS();
+          INT_1HZ();
 	/* End user code. Do not edit comment generated here */
 }
 
@@ -130,63 +215,6 @@ __interrupt void MD_INTP9(void)
 	/* End user code. Do not edit comment generated here */
 }
 
-/*
-**-----------------------------------------------------------------------------
-**
-**  Abstract:
-**	This function is INTP10 interrupt service routine.
-**
-**  Parameters:
-**	None
-**
-**  Returns:
-**	None
-**
-**-----------------------------------------------------------------------------
-*/
-
-#pragma vector = INTP1_vect
-__interrupt void MD_INTP1(void)
-{
-	/* Start user code. Do not edit comment generated here */
-           //INT_1HZ();
-	/* End user code. Do not edit comment generated here */
-}
-
-#pragma vector = INTP3_vect
-__interrupt void MD_INTP3(void)
-{
-	/* Start user code. Do not edit comment generated here */
-
-	/* End user code. Do not edit comment generated here */
-}
-
-#pragma vector = INTP4_vect
-__interrupt void MD_INTP4(void)
-{
-	/* Start user code. Do not edit comment generated here */
-           POWER_DOWN();
-	/* End user code. Do not edit comment generated here */
-}
-
-
-
-#pragma vector = INTP5_vect
-__interrupt void MD_INTP5(void)
-{
-	/* Start user code. Do not edit comment generated here */
-        IR_Decode_Proc();
-	/* End user code. Do not edit comment generated here */
-}
-
-#pragma vector = INTP7_vect
-__interrupt void MD_INTP7(void)
-{
-	/* Start user code. Do not edit comment generated here */
-           //Inter_ALL_LOSS();
-          INT_1HZ();
-	/* End user code. Do not edit comment generated here */
-}
 
 
 #pragma vector = INTP10_vect

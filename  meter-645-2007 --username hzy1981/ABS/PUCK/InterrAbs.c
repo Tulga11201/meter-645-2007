@@ -5,6 +5,15 @@
 #line  __LINE__ "P2"
 #endif
 
+
+#ifdef LOW_COST_HARD_EN
+  #define  CF1_PULSE_LVEL P4_bit.no7
+#else
+  #define  CF1_PULSE_LVEL P14_bit.no0
+#endif
+
+
+
 //Ò£¿ØÆ÷:200hzÒÔÉÏ(¼´:5msÓÐÒ»¸öµÍÂö³å)
 //ÈÕ¹âµÆ:100hz×óÓÒ(¼´:10msÓÐ1¸öµÍÂö³å)
 //ÊÖ³­Æ÷:50¡«100 hz×óÓÒ(¼´:20/10msÓÐÒ»¸öµÍÂö³å)
@@ -66,7 +75,7 @@ void Inter_CF1(void)
   {
     if(Pri_MeasuStatVar.MeasuIntOk)
     {
-      if(CF1_PULSE_LVEL) //Âö³åÊäÈë
+      if(CF1_PULSE_LVEL) //Âö³åÊäÈë 
       {
         Pulse_Num_Temp.Ac_Pulse_Num++; 
         if(Pulse_Num_Temp.Ac_Pulse_Num>=Sys_Pulse_Var.Ac_Pulse_Freq)

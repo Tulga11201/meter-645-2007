@@ -79,6 +79,10 @@ void INTP_Init( void )
 	PIF0 = 0;			/* INTP0 IF clear */
 	PMK1 = 1;			/* INTP1 disable */
 	PIF1 = 0;			/* INTP1 IF clear */
+        
+        PMK2 = 1;			/* INTP2 disable */
+	PIF2 = 0;			/* INTP2 IF clear */
+        
 	PMK3 = 1;			/* INTP3 disable */
 	PIF3 = 0;			/* INTP3 IF clear */
 	PMK4 = 1;			/* INTP4 disable */
@@ -110,6 +114,9 @@ void INTP_Init( void )
 
 
 #ifdef LOW_COST_HARD_EN
+        
+        PM4_bit.no7=1;
+        
         EGN0 = INTP5_EDGE_FALLING_SEL   | INTP4_EDGE_FALLING_SEL | INTP3_EDGE_FALLING_SEL | INTP2_EDGE_FALLING_SEL |INTP0_EDGE_FALLING_SEL;
 	EGN1 = INTP11_EDGE_FALLING_SEL | INTP10_EDGE_FALLING_SEL | INTP9_EDGE_FALLING_UNSEL | INTP8_EDGE_FALLING_SEL;
   

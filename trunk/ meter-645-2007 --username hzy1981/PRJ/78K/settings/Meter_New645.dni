@@ -74,7 +74,7 @@ TriggerName=main
 LimitSize=0
 ByteLimit=50
 [DebugChecksum]
-Checksum=98474069
+Checksum=671812367
 [InstructionProfiling]
 Enabled=_ 0
 [DriverProfiling]
@@ -90,16 +90,6 @@ UseAuto=0
 TypeViolation=1
 UnspecRange=1
 ActionState=1
-[Log file]
-LoggingEnabled=_ 0
-LogFile=_ ""
-Category=_ 0
-[TermIOLog]
-LoggingEnabled=_ 0
-LogFile=_ ""
-[TraceHelper]
-Enabled=0
-ShowSource=1
 [Breakpoints]
 Bp0=_ "STD_CODE" "{F:\A\APP\LUCK\C\process.c}.401.7@1" 0 0 0 0 "" 0 ""
 Bp1=_ "STD_CODE" "{F:\A\APP\LUCK\C\Cal_Dis.c}.76.5@1" 0 0 0 0 "" 0 ""
@@ -116,6 +106,16 @@ Bp11=_ "STD_CODE" "{F:\A\DRV\PUCK\IIC\RX8025T_Soft.c}.177.3@1" 0 0 0 0 "" 0 ""
 Bp12=_ "STD_CODE" "{F:\A\DRV\PUCK\IIC\RX8025T_Soft.c}.188.3@1" 0 0 0 0 "" 0 ""
 Bp13=_ "STD_CODE" "{F:\A\DRV\PUCK\IIC\RX8025T_Soft.c}.196.3@1" 0 0 0 0 "" 0 ""
 Bp14=_ "STD_CODE" "{F:\A\DRV\PUCK\IIC\I2C_Soft.c}.90.5@1" 1 0 0 0 "" 0 ""
-Bp15=_ "STD_CODE" "{F:\A\TEST\PUCK\DRV_TEST\DRV_TEST.c}.435.7@1" 1 0 0 0 "" 0 ""
-Bp16=_ "STD_CODE" "{F:\A\TEST\PUCK\DRV_TEST\DRV_TEST.c}.428.6@1" 1 0 0 0 "" 0 ""
+Bp15=_ "STD_CODE" "{F:\A\APP\Main\C\Main_Proc.c}.75.3@1" 1 0 0 0 "" 0 ""
+Bp16=_ "STD_CODE" "{F:\A\DRV\SUCK\Int_user.c}.170.11@1" 1 0 0 0 "" 0 ""
 Count=17
+[Log file]
+LoggingEnabled=_ 0
+LogFile=_ ""
+Category=_ 0
+[TermIOLog]
+LoggingEnabled=_ 0
+LogFile=_ ""
+[TraceHelper]
+Enabled=0
+ShowSource=1

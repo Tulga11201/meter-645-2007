@@ -5,8 +5,8 @@
 #line __LINE__ "H21"
 #endif
 
-#define UB 2200UL//2200UL //额定电压
-#define IB 1000UL//150 //1.50,两位小数 
+#define UB 577UL//2200UL //额定电压
+#define IB 150UL//150 //1.50,两位小数 
 #define PB (UB*IB) //额定功率
 #define PMAX (UB*IB*4) //最大功率
 
@@ -1724,8 +1724,12 @@ void Check_Boot_On_Flag()
         Read_Ext_RTC_Status();//第一次上电读取一下外部时钟！震荡器停止状态位清除,避免报警
 
         Write_Def_Para();
-        Boot_Flag = Chk_Flag;
-        Write_Storage_Data(_SDI_BOOT_FLAG, &Boot_Flag, sizeof(Boot_Flag));
+        
+        if(Check_Meter_Factory_Status() EQ 1)
+        {
+          Boot_Flag = Chk_Flag;
+          Write_Storage_Data(_SDI_BOOT_FLAG, &Boot_Flag, sizeof(Boot_Flag));
+        }
         
         Init_All_Channel();//重新初始化各通道
       }

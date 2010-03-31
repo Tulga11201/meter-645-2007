@@ -87,27 +87,25 @@ CONST INT8U TEST_INFO[2][9]={"Failed ","Succeed"};
 #define MAX_MEM_NUM (MAX_EPPROM_NUM+1)  //多了个flash
 
 
-#define   EPPROM_TEST_NUM 10  //建议小于255次
-
 INT16U const TEST_ADDR[MAX_EPPROM_NUM]={
-  U10_SIZE-EPPROM_TEST_NUM,
-  U11_SIZE-EPPROM_TEST_NUM,
-  U12_SIZE-EPPROM_TEST_NUM,
-  U14_SIZE-EPPROM_TEST_NUM,
+  U10_SIZE-TEST_MEM_BUF_LEN,
+  U11_SIZE-TEST_MEM_BUF_LEN,
+  U12_SIZE-TEST_MEM_BUF_LEN,
+  U14_SIZE-TEST_MEM_BUF_LEN,
   
 #ifdef ID_MEM_FM24C16
- U16_SIZE-EPPROM_TEST_NUM,
+ U16_SIZE-TEST_MEM_BUF_LEN,
 #endif
 #ifdef ID_MEM_IIC_U15
- U15_SIZE-EPPROM_TEST_NUM,
+ U15_SIZE-TEST_MEM_BUF_LEN,
 #endif
    
 #ifdef ID_MEM_24C04
- U04_SIZE-EPPROM_TEST_NUM
+ U04_SIZE-TEST_MEM_BUF_LEN
 #endif  
 };
 
-#define TEST_FLASH_ADDR  (INT32U)((INT32U)PAGE_SIZE*PAGE_NUMBER-EPPROM_TEST_NUM)
+#define TEST_FLASH_ADDR  (INT32U)((INT32U)PAGE_SIZE*PAGE_NUMBER-TEST_MEM_BUF_LEN)
 
 CONST INT8U Const_Drv_Test[MAX_ID_TEST_NUM][5]=
 {
@@ -724,6 +722,7 @@ void Buf_Mem_Test(void)
 /**********************************************************************************
 测试EPPROM
 **********************************************************************************/
+#define   EPPROM_TEST_NUM 10  //建议小于255次
 void Test_Memory(void)
 {
   INT8U j,Flag,RandBuf[TEST_MEM_BUF_LEN];
@@ -741,10 +740,12 @@ void Test_Memory(void)
   {
     mem_set(RandBuf,0x55+i,sizeof(RandBuf),RandBuf,sizeof(RandBuf));
     for(j=ID_TEST_EXT_U10;j<ID_TEST_EXT_U8;j++)
-    {  
+    {
       Flag=!Write_EEPROM_Dvice_PUCK(j,TEST_ADDR[j],TEST_MEM_BUF_LEN,RandBuf);
       WrErr[j]+=Flag;
   
+      Clr_Ext_Inter_Dog();
+      
       mem_set((INT8U *)Test_Mem_Buf,0x33,sizeof(Test_Mem_Buf),(INT8U *)Test_Mem_Buf,sizeof(Test_Mem_Buf));
       Flag=!Read_EEPROM_Dvice_PUCK(j,TEST_ADDR[j],TEST_MEM_BUF_LEN,(INT8U *)Test_Mem_Buf);
       RdErr[j]+=Flag;

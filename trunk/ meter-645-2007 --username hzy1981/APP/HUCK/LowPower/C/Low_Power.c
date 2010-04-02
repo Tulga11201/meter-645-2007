@@ -179,6 +179,7 @@ void Save_PD_Data()
   Save_LoadData_PD_Data();
   Save_Event_PD_Data();//保存事件数据
   //Save_PD_Time();//保存掉电时间
+  SET_PD_RST_FLAG; //设置掉电重启标志
   
   STOP_1MS;  
   Temp_Timer=Ms_Timer_Pub;

@@ -74,7 +74,7 @@ TriggerName=main
 LimitSize=0
 ByteLimit=50
 [DebugChecksum]
-Checksum=1465999148
+Checksum=-912715692
 [InstructionProfiling]
 Enabled=_ 0
 [DriverProfiling]
@@ -95,20 +95,23 @@ Bp0=_ "STD_CODE" "{F:\A\APP\LUCK\C\process.c}.401.7@1" 0 0 0 0 "" 0 ""
 Bp1=_ "STD_CODE" "{F:\A\APP\LUCK\C\Cal_Dis.c}.76.5@1" 0 0 0 0 "" 0 ""
 Bp2=_ "STD_CODE" "{F:\A\APP\HUCK\Storage\C\Def_Para.c}.1713.5@1" 0 0 0 0 "" 0 ""
 Bp3=_ "STD_CODE" "{F:\A\APP\HUCK\Storage\C\Def_Para.c}.1690.12@1" 0 0 0 0 "" 0 ""
-Bp4=_ "STD_CODE" "{F:\A\ABS\PUCK\CpuEsamAbs.c}.315.3@1" 0 0 0 0 "" 0 ""
+Bp4=_ "STD_CODE" "{F:\A\ABS\PUCK\CpuEsamAbs.c}.313.3@1" 0 0 0 0 "" 0 ""
 Bp5=_ "STD_CODE" "Memory:0x00000" 0 0 0 0 "" 0 ""
 Bp6=_ "STD_CODE" "{F:\A\ABS\PUCK\UartAbs.c}.118.3@1" 0 0 0 0 "" 0 ""
 Bp7=_ "STD_CODE" "{F:\A\APP\LUCK\C\process.c}.638.4@1" 0 0 0 0 "" 0 ""
-Bp8=_ "STD_CODE" "{F:\A\DRV\PUCK\PAY\ESAM\ESAM_DRV.c}.15.5@1" 1 0 0 0 "" 0 ""
-Bp9=_ "STD_CODE" "{F:\A\ABS\PUCK\InterrAbs.c}.275.9@1" 1 0 0 0 "" 0 ""
+Bp8=_ "STD_CODE" "{F:\A\DRV\PUCK\PAY\ESAM\ESAM_DRV.c}.15.5@1" 0 0 0 0 "" 0 ""
+Bp9=_ "STD_CODE" "{F:\A\ABS\PUCK\InterrAbs.c}.275.9@1" 0 0 0 0 "" 0 ""
 Bp10=_ "STD_CODE" "{F:\A\DRV\PUCK\IIC\I2C_Soft.c}.28.1@1" 0 0 0 0 "" 0 ""
 Bp11=_ "STD_CODE" "{F:\A\DRV\PUCK\IIC\RX8025T_Soft.c}.177.3@1" 0 0 0 0 "" 0 ""
 Bp12=_ "STD_CODE" "{F:\A\DRV\PUCK\IIC\RX8025T_Soft.c}.188.3@1" 0 0 0 0 "" 0 ""
 Bp13=_ "STD_CODE" "{F:\A\DRV\PUCK\IIC\RX8025T_Soft.c}.196.3@1" 0 0 0 0 "" 0 ""
-Bp14=_ "STD_CODE" "{F:\A\DRV\PUCK\IIC\I2C_Soft.c}.90.5@1" 1 0 0 0 "" 0 ""
-Bp15=_ "STD_CODE" "{F:\A\APP\Main\C\Main_Proc.c}.75.3@1" 1 0 0 0 "" 0 ""
-Bp16=_ "STD_CODE" "{F:\A\DRV\SUCK\Int_user.c}.170.11@1" 1 0 0 0 "" 0 ""
-Count=17
+Bp14=_ "STD_CODE" "{F:\A\DRV\PUCK\IIC\I2C_Soft.c}.90.5@1" 0 0 0 0 "" 0 ""
+Bp15=_ "STD_CODE" "{F:\A\APP\Main\C\Main_Proc.c}.75.3@1" 0 0 0 0 "" 0 ""
+Bp16=_ "STD_CODE" "{F:\A\DRV\SUCK\Int_user.c}.170.11@1" 0 0 0 0 "" 0 ""
+Bp17=_ "STD_CODE" "{F:\A\APP\PUCK\Private\MeasuProc\c\AllLossVolt.c}.391.1@1" 0 0 0 0 "" 0 ""
+Bp18=_ "STD_CODE" "{F:\A\APP\TASK\C\TaskProc.c}.115.3@1" 1 0 0 0 "" 0 ""
+Bp19=_ "STD_CODE" "{F:\A\APP\PUCK\Private\MeasuProc\c\AllLossVolt.c}.341.3@1" 1 0 0 0 "" 0 ""
+Count=20
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""

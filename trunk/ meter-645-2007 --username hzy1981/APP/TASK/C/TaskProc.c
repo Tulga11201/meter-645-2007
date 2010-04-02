@@ -112,6 +112,7 @@ void  Main_Task_PUB(void *p_arg)
   Init_Measure_Ram();  //初始化相关sram
   
   Test_HardWare_PUCK();  //需等相关的sram初始化后，才能调用，如信号量初始化
+  Soft_All_Loss_Proc();
   
   Init_Low_Power_Proc();
   //PD_INT_EN_Flag= 1;

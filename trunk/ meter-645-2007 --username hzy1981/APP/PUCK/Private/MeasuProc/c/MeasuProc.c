@@ -2692,7 +2692,7 @@ void Init_Measu_PUCK(void)
 {
   
   GetSysModeProc();   //低功耗下需要获取电流规格
-  Get_Curr_Rate();    //获取低功耗下需要的电流增益参数
+  Get_Hard_Curr_Rate();    //获取低功耗下需要的电流增益参数
   
   if(Get_Sys_Status()!=SYS_NORMAL) //只有在正常模式下，才初始化计量任务
     return ;        

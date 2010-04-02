@@ -53,7 +53,9 @@ NO_INIT AllLossMeasu_EXT CURR_RATE Curr_Rate;
 void Clr_All_Loss_Data(void);
 void Save_All_Loss_Data(void);
 void Init_All_Loss_Sram(void);
-void Count_All_Loss_Proc(void);
+void Hard_All_Loss_Proc(void);
+void Soft_All_Loss_Proc(void);
 INT8U Get_AllLoss_Curr(void);
-void Get_Curr_Rate(void);
+void Get_Hard_Curr_Rate(void);
+void Get_Soft_Curr_Rate(void);
 #endif

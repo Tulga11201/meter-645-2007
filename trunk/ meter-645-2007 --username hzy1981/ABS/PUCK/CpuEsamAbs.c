@@ -256,13 +256,13 @@ void CPU_Card_Main_Proc(void)
       
       if(Ok_Flag && Result)   //²Ù×÷³É¹¦
       {
-        Port_Out_Pub(INTER_ID_ALARM_BEEP,300);  //½Ð1Ãë
+        Port_Out_Pub(INTER_ID_ALARM_BEEP,250);  //½Ð250msÃë
         Clr_Err_Code(DIS_CERTI_ERR);
         Clr_Err_Code(DIS_CUR_MODI_KEY_ERR);
       }
       else
       {
-        Port_Out_Pub(INTER_ID_ALARM_BEEP,1000);  //½Ð3Ãë
+        Port_Out_Pub(INTER_ID_ALARM_BEEP,1200);  //½Ð1.2Ãë
         //strcpy(temp,"FAILED");
       }
       //Main_Dis_Info(temp);
@@ -284,13 +284,11 @@ void CPU_Card_Main_Proc(void)
       Port_Out_Pub(INTER_ID_ALARM_BEEP,300);
       Curr_Media_Status.Media_Type=PAY_NONE;
       SET_STRUCT_SUM(Curr_Media_Status);
-      Realse_Local_Pay_Source();
-      
-      OS_TimeDly_Sec(1);//1sË¯Ãß
-      
+      Realse_Local_Pay_Source();      
+     
       RESET_LOOP_DIS;
       dispmode = modeA;        
-      OS_TimeDly_Sec(1);
+      OS_TimeDly_Sec(1);      //1sË¯Ãß
     }
   }
   else

@@ -223,8 +223,7 @@ INT8U Get_AllLoss_Curr(void)
 入口：无
 出口：无
 ***********************************************************************/
-#if ALL_LOSS_TYPE != ALL_LOSS_SOFT 
-void Count_All_Loss_Proc(void)
+void Hard_All_Loss_Proc(void)
 { 
 #if ALL_LOSS_TYPE EQ ALL_LOSS_HARD_SINGLE
   All_Loss_Var.Status.Exist=1;
@@ -319,19 +318,27 @@ void Count_All_Loss_Proc(void)
   SET_VAR_CS_PUCK(All_Loss_Var.Status); 
   SET_VAR_CS_PUCK(All_Loss_Var.RecordTime[All_Loss_Var.Status.Index]);
 }
-#endif 
-
 /***********************************************************************
 函数功能：计算全失压数据，调用条件：fxt晶振，RTC闹铃。在RTC中断中调用！
 入口：无
 出口：无
 ***********************************************************************/
-#if ALL_LOSS_TYPE EQ ALL_LOSS_SOFT 
-void Count_All_Loss_Proc(void)
-{ 
+void Soft_All_Loss_Proc(void)
+{
+#if ALL_LOSS_TYPE EQ ALL_LOSS_SOFT
+  
+  
   if(LOWCOST_BAT_LOW EQ 0) //没有低功耗电池了
     return  ;
   
+  
+  if(CHK_PD_RST_FLAG EQ 0) //当前不是掉电后的正常复位，不去判断全失压:
+  {
+    CLR_PD_RST_FLAG;
+    return ;
+  }
+    
+  Get_Soft_Curr_Rate();//获取增益参数  
    //全失压发生
    if(Get_AllLoss_Curr())
    {         
@@ -356,27 +363,17 @@ void Count_All_Loss_Proc(void)
    {
       All_Loss_Var.Status.Nums=0;    
       All_Loss_Var.Status.Mins=0;
-   }
+   }  
    
-   P13_bit.no0=0;   //7022_CS
-   P2_bit.no0=0;    //计量RST---------7022_RST   
-   P2_bit.no2=0;    //计量SDO---------7022_SDO     
-   P2_bit.no4=0;    //计量SCK---------7022_SCK
-   
-   PM2_bit.no1=0;    //计量SIG---------7022_SIG   
-   PM2_bit.no3=0;    //计量SDI ---------7022_SDI
-   P2_bit.no1=0;    //计量SIG---------7022_SIG   
-   P2_bit.no3=0;    //计量SDI ---------7022_SDI   
-   
-   BAT_OFF_7022;   //关闭后备电池
+   CLR_PD_RST_FLAG;   //游泳HUCK需求
+#endif   
 }
-#endif
 /***********************************************************************
 函数功能：获取电流增益参数
 入口：无
 出口：无
 ***********************************************************************/
-void Get_Curr_Rate(void)
+void Get_Hard_Curr_Rate(void)
 {
 #if ALL_LOSS_TYPE !=ALL_LOSS_SOFT 
   INT8U i,Rdflag,temp[3];
@@ -390,6 +387,32 @@ void Get_Curr_Rate(void)
       Curr_Rate.Rate[i]=(INT32U)(temp[2]*65536L+temp[1]*256L+temp[0]);      
     }    
   }
+#endif
+}
+
+/***********************************************************************
+函数功能：获取电流增益参数
+入口：无
+出口：无
+***********************************************************************/
+void Get_Soft_Curr_Rate(void)
+{
+#if ALL_LOSS_TYPE  EQ ALL_LOSS_SOFT 
+  INT8U i,Rdflag,temp[3];
+  
+  
+  BAK_POWER_FOR_MEM;  //打开内卡电源，获取电流增益
+  
+  for(i=0;i<3;i++)
+  {
+    INIT_STRUCT_VAR(Curr_Rate);
+    Rdflag=Read_Storage_Data_PUCK(DI_I_GAIN_A+i,temp,3);
+    if(Rdflag)
+    {
+      Curr_Rate.Rate[i]=(INT32U)(temp[2]*65536L+temp[1]*256L+temp[0]);      
+    }    
+  }
+  MAIN_POWER_FOR_MEM;  //关闭内卡电源
 #endif
 }
 

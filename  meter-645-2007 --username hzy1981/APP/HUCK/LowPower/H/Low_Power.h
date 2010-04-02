@@ -14,6 +14,7 @@
 #define MAIN_INITING      0x5AAAA55A
 #define MAIN_INITED       0
 
+#define PD_RST_FLAG       0x113435AA //掉电重启标志
 //#define MAIN_INIT_END     do{Main_Init_Flag.Var=MAIN_INITED;}while(0)
 
 //一、基本宏与函数
@@ -93,10 +94,13 @@ EXT volatile S_Task_Status Task_Status;
 EXT NO_INIT volatile S_Sys_Status Sys_Status;
 EXT volatile S_Resume_Src Resume_Src;
 EXT volatile INT8U Resume_Time_Flag;
+EXT __no_init volatile S_Int32U PD_Rst_Flag;
 
 #ifdef LOW_POWER_C
-EXT volatile S_Int32U Main_Init_Flag={CHK_BYTE,MAIN_INITING,CHK_BYTE};
+EXT __no_init volatile S_Int32U PD_Rst_Flag = {CHK_BYTE,PD_RST_FLAG,CHK_BYTE};
+EXT volatile S_Int32U Main_Init_Flag = {CHK_BYTE,MAIN_INITING,CHK_BYTE};
 #endif
+extern __no_init volatile S_Int32U PD_Rst_Flag;
 extern volatile S_Int32U Main_Init_Flag;
 
 #ifdef LOW_POWER_C
@@ -113,6 +117,10 @@ EXT INT8U PD_INT_EN_Flag;
 
 #define CHECK_SYS_STATUS_SUM() ((Sys_Status.Status+Sys_Status.Last_Status==Sys_Status.CS)?1:0)
 #define SET_SYS_STATUS_SUM() (Sys_Status.CS=Sys_Status.Status+Sys_Status.Last_Status)
+
+#define SET_PD_RST_FLAG {PD_Rst_Flag.Var = PD_RST_FLAG;}
+#define CLR_PD_RST_FLAG {PD_Rst_Flag.Var = 0;}
+#define CHK_PD_RST_FLAG ((PD_Rst_Flag.Var EQ PD_RST_FLAG)?1:0)
 
 EXT void Soft_Restart();
 EXT void Power_Down_Int_Proc();

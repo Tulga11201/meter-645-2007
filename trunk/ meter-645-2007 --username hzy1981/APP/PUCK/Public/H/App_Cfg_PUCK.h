@@ -118,7 +118,6 @@
 
 #define DRV_HARD_DS3231    0              //1:3231硬件I2C开起;0:硬件I2C关闭 
 
-#define ALL_LOSS_TYPE      ALL_LOSS_HARD_SINGLE       //宏打开，打开 硬件的全失压方法。关闭，通过软件全失压
 #define MEASU_BAKPWR_NEW_EN                    //打开:使用新的7022后备电源方式
 
 //#define LOW_COST_HARD_EN                         //打开：低成本硬件：ESAM_CLOCK,CPU_CLOCK,CF1,红外唤醒硬件
@@ -126,10 +125,12 @@
 #ifdef LOW_COST_HARD_EN
   #define RST_IC_7X6_EN
   #define EXT_RTC_TYPE       DRV_SIMU_RX8025T  //DRV_SIMU_DS3231 DRV_SIMU_RX8025T  DRV_SIMU_RV3029C2
+  #define ALL_LOSS_TYPE      ALL_LOSS_HARD_SINGLE       //宏打开，打开 硬件的全失压方法。关闭，通过软件全失压
   #undef  DOWN_COVER_ERR                         //打开:后端子该错误
 #else
   #undef RST_IC_7X6_EN
   #define EXT_RTC_TYPE       DRV_SIMU_DS3231  //DRV_SIMU_DS3231 DRV_SIMU_RX8025T  DRV_SIMU_RV3029C2
+  #define ALL_LOSS_TYPE      ALL_LOSS_SOFT       //宏打开，打开 硬件的全失压方法。关闭，通过软件全失压
   #define DOWN_COVER_ERR                         //打开:后端子该错误
 #endif
 

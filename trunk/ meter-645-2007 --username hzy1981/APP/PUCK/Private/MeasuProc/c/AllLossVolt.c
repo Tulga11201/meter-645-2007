@@ -328,8 +328,8 @@ void Soft_All_Loss_Proc(void)
 #if ALL_LOSS_TYPE EQ ALL_LOSS_SOFT
   
   
-  if(LOWCOST_BAT_LOW EQ 0) //没有低功耗电池了
-    return  ;
+  //if(LOWCOST_BAT_LOW EQ 0) //没有低功耗电池了
+  //  return  ;
   
   
   if(CHK_PD_RST_FLAG EQ 0) //当前不是掉电后的正常复位，不去判断全失压:

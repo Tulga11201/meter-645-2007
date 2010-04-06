@@ -5,9 +5,9 @@
 #line  __LINE__ "Q5"
 #endif
 
-//#undef Debug_Print
+#undef Debug_Print
  //#define Debug_Print(...)
-//#define Debug_Print _Debug_Print
+#define Debug_Print _Debug_Print
 extern INT8U Esam_Remote_Auth(INT8U *pSrc, INT8U SrcLen, INT8U *pDst, INT8U *pLen, INT8U *pDst_Start, INT16U DstLen);
 //C_Pre_Payment_Para Pre_Payment_Para;
 //ic卡 入口函数
@@ -891,6 +891,7 @@ INT8U Modify_MeterID_Card(void)
         //  更新表计表号  //如果发卡软件中写的是010203040506，那么下面Pre_Payment_Para.BcdMeterID【0】就为01
          My_memcpyRev( (INT8U *)Pre_Payment_Para.BcdMeterID,&(MeterID_Return_Inf_File.Next_Meter_ID[0]),sizeof(Pre_Payment_Para.BcdMeterID));
          Write_Storage_Data( SDI_METER_ID, (INT8U *)Pre_Payment_Para.BcdMeterID , sizeof(Pre_Payment_Para.BcdMeterID) );
+         Reverse_data((INT8U *)Pre_Payment_Para.BcdMeterID,sizeof(Pre_Payment_Para.BcdMeterID));
          Card_Set_Para_Notice() ;
 /*" 更新卡回写文件 "*/
 	Msb = 0;

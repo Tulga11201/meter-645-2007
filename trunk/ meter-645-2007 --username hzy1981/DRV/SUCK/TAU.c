@@ -161,7 +161,13 @@ void TAU_Init(void)
 	TOE0 |= TAU_CH2_OUTPUT_ENABLE;
 
         /* Channel 5 used as external event counter */
-#if ALL_LOSS_TYPE != ALL_LOSS_SOFT        
+        
+       
+        
+#if ALL_LOSS_TYPE EQ ALL_LOSS_SOFT
+        //软件实现全失压
+        STOP_ALL_LOSS;
+#else        
 	TMR05 = TAU_TMR0_INITIALVALUE | TAU_CLOCK_SELECT_CK00 | TAU_CLOCK_MODE_TI0N | TAU_TI0N_EDGE_FALLING | TAU_MODE_EVENT_COUNT;
 	TDR05 = TAU_TDR05_VALUE;	
 	TOM0 &= ~TAU_CH5_OUTPUT_COMBIN;
@@ -169,7 +175,8 @@ void TAU_Init(void)
 	TOE0 &= ~TAU_CH5_OUTPUT_ENABLE;	
 	NFEN1 |= TAU_CH5_NOISE_ON;
 #endif
-        
+       
+      
 	/* Channel 7 used as interval timer */
 	TMR07 = TAU_TMR0_INITIALVALUE | TAU_CLOCK_SELECT_CK00 | TAU_CLOCK_MODE_CKS | TAU_MODE_INTERVAL_TIMER | TAU_START_INT_USED;
 	if(Get_Main_Clock_Div()==0)

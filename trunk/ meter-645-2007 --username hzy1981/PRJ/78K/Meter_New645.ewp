@@ -656,7 +656,7 @@
         </option>
         <option>
           <name>OutputFile</name>
-          <state>YCFK_100402.hex</state>
+          <state>Meter_New645.d26</state>
         </option>
         <option>
           <name>OutputFormat</name>
@@ -818,7 +818,7 @@
         </option>
         <option>
           <name>DebugInformation</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>RuntimeControl</name>

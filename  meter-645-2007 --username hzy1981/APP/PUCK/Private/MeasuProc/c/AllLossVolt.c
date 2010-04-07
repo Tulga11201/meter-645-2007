@@ -5,6 +5,16 @@
 #line  __LINE__ "A5"
 #endif
 
+
+
+#if ALL_LOSS_TYPE  EQ ALL_LOSS_SOFT    
+    #define ALL_LOSS_FEED_DOG() Clr_Ext_Inter_Dog()   //低成本下，外部狗也要喂
+#else    
+    #define ALL_LOSS_FEED_DOG() Clear_CPU_Dog()
+#endif
+
+    
+    
 extern const INT32U I_RATE_CONST[];
 
 /***********************************************************************
@@ -133,26 +143,26 @@ INT8U Get_AllLoss_Curr(void)
    PM2_bit.no4=0;    //计量SCK---------7022_SCK
    
    PM2_bit.no1=1;    //计量SIG---------7022_SIG   
-   PM2_bit.no3=3;    //计量SDI ---------7022_SDI  
+   PM2_bit.no3=1;    //计量SDI ---------7022_SDI  
 
-   Clear_CPU_Dog();   
-   
+  ALL_LOSS_FEED_DOG();   
    
   for(i=0;i<10;i++)
     WAITFOR_DRV_CYCLE_TIMEOUT(CYCLE_NUM_IN_1MS);  
  
+  ALL_LOSS_FEED_DOG();
   MEASU_RST_0;
   for(i=0;i<10;i++)
     WAITFOR_DRV_CYCLE_TIMEOUT(CYCLE_NUM_IN_1MS);
   
   MEASU_RST_1;
   
-   //延时300ms
-   for(i=0;i<100;i++)
-   {
+   //延时100ms
+  for(i=0;i<100;i++)
+  {
      WAITFOR_DRV_CYCLE_TIMEOUT(CYCLE_NUM_IN_1MS);   
-     Clear_CPU_Dog();
-   }
+     ALL_LOSS_FEED_DOG();
+  }
    
 
    EnMeasuCal();  
@@ -160,16 +170,18 @@ INT8U Get_AllLoss_Curr(void)
    for(i=0;i<3;i++)
    {
       Flag=Measu_WrAndCompData(REG_W_IGAIN_A+i,Curr_Rate.Rate[i]);
-      Clear_CPU_Dog();
+      ALL_LOSS_FEED_DOG();
       if(!Flag)
         break;        
    }   
    DisMeasuCal();
-    //延时500ms
+   
+   
+    //延时100ms
    for(i=0;i<100;i++)
    {
      WAITFOR_DRV_CYCLE_TIMEOUT(CYCLE_NUM_IN_1MS);
-      Clear_CPU_Dog();
+      ALL_LOSS_FEED_DOG();
    }
    
    ResultData=0;
@@ -178,7 +190,7 @@ INT8U Get_AllLoss_Curr(void)
    for(i=0;i<3;i++)
    {
       Flag=Measu_RdAndCompData(REG_R_A_I+i,(INT8U *)(&RdData));
-      Clear_CPU_Dog();
+      ALL_LOSS_FEED_DOG();
       if(!Flag || RdData>=0x00800000)
       {
         break ;
@@ -189,6 +201,7 @@ INT8U Get_AllLoss_Curr(void)
       if(Temp/UNIT_A >=JudgeIn)
         OccurFlag=1;
    }
+   ALL_LOSS_FEED_DOG();
    if(OccurFlag)
    {
      if(i>=3)
@@ -202,7 +215,7 @@ INT8U Get_AllLoss_Curr(void)
       All_Loss_Var.Status.Mins=0;     
    }
    
-   Clear_CPU_Dog();
+   ALL_LOSS_FEED_DOG();
    
    P13_bit.no0=0;   //7022_CS
    P2_bit.no0=0;    //计量RST---------7022_RST   
@@ -341,7 +354,7 @@ void Soft_All_Loss_Proc(void)
   Get_Soft_Curr_Rate();//获取增益参数  
    //全失压发生
    if(Get_AllLoss_Curr())
-   {         
+   {
       All_Loss_Var.Status.Index=0;
       All_Loss_Var.Status.start=1;   //有发生没有结束
       All_Loss_Var.Status.Nums=1;
@@ -364,8 +377,9 @@ void Soft_All_Loss_Proc(void)
       All_Loss_Var.Status.Nums=0;    
       All_Loss_Var.Status.Mins=0;
    }  
-   
-   CLR_PD_RST_FLAG;   //游泳HUCK需求
+   ALL_LOSS_FEED_DOG();
+   CLR_PD_RST_FLAG;   //HUCK需求
+   _Debug_Print("All Loss Even Curr=%ld",All_Loss_Var.Curr[All_Loss_Var.Status.Index]);
 #endif   
 }
 /***********************************************************************
@@ -407,6 +421,7 @@ void Get_Soft_Curr_Rate(void)
   {
     INIT_STRUCT_VAR(Curr_Rate);
     Rdflag=Read_Storage_Data_PUCK(DI_I_GAIN_A+i,temp,3);
+    ALL_LOSS_FEED_DOG();
     if(Rdflag)
     {
       Curr_Rate.Rate[i]=(INT32U)(temp[2]*65536L+temp[1]*256L+temp[0]);      

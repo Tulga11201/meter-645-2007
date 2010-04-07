@@ -562,7 +562,8 @@ void Init_Event_DIS_PUCK(stat_t *stat)
 
   stat->jumper_short  = (B_TEST_FAC_STATUS && (B_TEST_HARD_STATUS EQ 0));     //调试模式
   stat->fac_status    = ((B_TEST_FAC_STATUS EQ 0) && B_TEST_HARD_STATUS);      //工厂模式
-  stat->switch_opened =  Key_Value_Pub.Key.Bit.PrgKey;
+  stat->switch_opened =  Key_Value_Pub.Key.Bit.PrgKey;  
+  stat->event_warning = Read_Event_Status(ID_ALARM_OUT);       //< 事件告警(闪烁)
   
    //< 显示当前费率，"尖, 峰, 平, 谷, T5, ...Tx",
   Get_Cur_Rate_Info(temp,temp,sizeof(temp));

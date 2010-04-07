@@ -74,7 +74,7 @@ TriggerName=main
 LimitSize=0
 ByteLimit=50
 [DebugChecksum]
-Checksum=-180330041
+Checksum=1894096772
 [InstructionProfiling]
 Enabled=_ 0
 [DriverProfiling]
@@ -90,13 +90,6 @@ UseAuto=0
 TypeViolation=1
 UnspecRange=1
 ActionState=1
-[Breakpoints]
-Bp0=_ "STD_CODE" "{F:\A\APP\LUCK\C\process.c}.401.7@1" 0 0 0 0 "" 0 ""
-Bp1=_ "STD_CODE" "{F:\A\APP\LUCK\C\Cal_Dis.c}.76.5@1" 0 0 0 0 "" 0 ""
-Bp2=_ "STD_CODE" "{F:\A\APP\HUCK\Storage\C\Def_Para.c}.1713.5@1" 0 0 0 0 "" 0 ""
-Bp3=_ "STD_CODE" "{F:\A\APP\TASK\C\TaskProc.c}.115.3@1" 1 0 0 0 "" 0 ""
-Bp4=_ "STD_CODE" "{F:\A\APP\PUCK\Private\MeasuProc\c\AllLossVolt.c}.391.1@1" 1 0 0 0 "" 0 ""
-Count=5
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
@@ -107,3 +100,13 @@ LogFile=_ ""
 [TraceHelper]
 Enabled=0
 ShowSource=1
+[Breakpoints]
+Bp0=_ "STD_CODE" "{F:\A\APP\LUCK\C\process.c}.401.7@1" 0 0 0 0 "" 0 ""
+Bp1=_ "STD_CODE" "{F:\A\APP\LUCK\C\Cal_Dis.c}.76.5@1" 0 0 0 0 "" 0 ""
+Bp2=_ "STD_CODE" "{F:\A\APP\HUCK\Storage\C\Def_Para.c}.1713.5@1" 0 0 0 0 "" 0 ""
+Bp3=_ "STD_CODE" "{F:\A\APP\PUCK\Private\MeasuProc\c\AllLossVolt.c}.356.7@1" 1 0 0 0 "" 0 ""
+Bp4=_ "STD_CODE" "{F:\A\APP\PUCK\Private\MeasuProc\c\AllLossVolt.c}.192.7@1" 1 0 0 0 "" 0 ""
+Bp5=_ "STD_CODE" "{F:\A\APP\PUCK\Private\MeasuProc\c\AllLossVolt.c}.161.3@1" 1 0 0 0 "" 0 ""
+Bp6=_ "STD_CODE" "{F:\A\APP\PUCK\Private\MeasuProc\c\AllLossVolt.c}.181.4@1" 1 0 0 0 "" 0 ""
+Bp7=_ "STD_CODE" "{F:\A\APP\PUCK\Private\MeasuProc\c\AllLossVolt.c}.204.4@1" 1 0 0 0 "" 0 ""
+Count=8

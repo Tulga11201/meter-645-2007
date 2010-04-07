@@ -64,15 +64,17 @@ INT8U Get_Pulse_Para(void)
   if(Sys_Pulse_Var.Ac_Pulse==0)  //有功脉冲常数不能为0
   {
     Sys_Pulse_Var.Ac_Pulse_Freq=1;
-    Sys_Pulse_Var.Ac_Pulse=DEFAULT_AC_PULSE;   //设置默认的5000
+    Sys_Pulse_Var.Ac_Pulse=DEFAULT_AC_PULSE;   //设置默认
     Debug_Print("Measure_Error----->Ac_Pulse Const Para Get Failed!"); 
   }
+  /*
   else if(Sys_Pulse_Var.Ac_Pulse>Get_Sys_Pulse())
   {
     Sys_Pulse_Var.Ac_Pulse_Freq=1;
-    Sys_Pulse_Var.Ac_Pulse=DEFAULT_AC_PULSE;   //设置默认的5000
+    Sys_Pulse_Var.Ac_Pulse=DEFAULT_AC_PULSE;   //设置默认
     Debug_Print("Measure_Error----->Ac_Pulse Const Para>AC_Pulse Spec!"); 
   }
+  */
   else
     Sys_Pulse_Var.Ac_Pulse_Freq=(Get_Sys_Pulse())/(Sys_Pulse_Var.Ac_Pulse);
   
@@ -80,15 +82,17 @@ INT8U Get_Pulse_Para(void)
   if(Sys_Pulse_Var.Rea_Pulse==0) //无功脉冲常数不能为0
   {
     Sys_Pulse_Var.Reac_Pulse_Freq=1;
-    Sys_Pulse_Var.Rea_Pulse=DEFAULT_REAC_PULSE;   //设置默认的2000
+    Sys_Pulse_Var.Rea_Pulse=DEFAULT_REAC_PULSE;   //设置默认
     Debug_Print("Measure_Error----->Reac_Pulse Const Para Get Failed!");
   }
+  /*
   else if(Sys_Pulse_Var.Rea_Pulse>Get_Sys_Pulse())
   {
     Sys_Pulse_Var.Reac_Pulse_Freq=1;
     Sys_Pulse_Var.Rea_Pulse=DEFAULT_REAC_PULSE;   //设置默认的2000
     Debug_Print("Measure_Error----->Reac_Pulse Const Para>Reac_Pulse Spec!"); 
   }
+  */
   else
     Sys_Pulse_Var.Reac_Pulse_Freq=(Get_Sys_Pulse())/(Sys_Pulse_Var.Rea_Pulse);
 
